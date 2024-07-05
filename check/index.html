@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>输入密码</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.9-1/crypto-js.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            text-align: center;
+        }
+        .password-box {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            display: inline-block;
+        }
+        input {
+            padding: 8px;
+            margin: 10px 0;
+            width: 200px;
+            display: block;
+        }
+        button {
+            padding: 8px 16px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div class="password-box">
+        <h2>受保护内容</h2>
+        <input type="password" id="passwordInput" placeholder="输入访问密码" autocomplete="off" autofocus>
+        <button onclick="verifyPassword()">提交</button>
+    </div>
+    <script src="../disable-devtool.js"></script>
+    <script> 
+        DisableDevtool({
+            detectors: [0,1,2,3,4,5,6,7],
+            interval: 500,
+            url: "https://www.yuanshen.com/#/",
+            stopIntervalTime: 1000,
+        });
+    </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // 双重保障聚焦
+            const input = document.getElementById("passwordInput");
+            if(document.activeElement !== input) {
+                input.focus();
+            }
+        });
+        let config = {
+            targetLink: null,
+            encryptedData: null,
+            verifyHash: null
+        };
+
+        // 解析URL参数
+        const urlParams = new URLSearchParams(window.location.search);
+        config.targetLink = urlParams.get('link');
+
+        // 加载code.txt
+        fetch('code.txt')
+            .then(response => response.text())
+            .then(text => {
+                const lines = text.trim().split('\n');
+                config.verifyHash = lines[0].trim();
+                
+                // 遍历查找目标链接
+                for(let i=1; i<lines.length; i++) {
+                    const [linkId, cipherData] = lines[i].split(' ');
+                    if(linkId === config.targetLink) {
+                        config.encryptedData = cipherData;
+                        return;
+                    }
+                }
+                
+                if(!config.encryptedData) {
+                    alert('无效链接参数');
+                    window.location.href = 'about:blank';
+                }
+            })
+            .catch(() => alert('系统初始化失败'));
+
+        function verifyPassword() {
+            if(!config.encryptedData) return;
+            
+            const password = document.getElementById("passwordInput").value;
+            const encryptedBytes = CryptoJS.enc.Base64.parse(config.encryptedData).toString(CryptoJS.enc.Latin1);
+
+            // 提取salt（前16字节）
+            const salt = CryptoJS.enc.Latin1.parse(encryptedBytes.substr(0, 16));
+            
+            // 提取IV（接下来16字节）
+            const iv = CryptoJS.enc.Latin1.parse(encryptedBytes.substr(16, 16));
+            
+            // 提取密文（剩余部分）
+            const ciphertext = CryptoJS.enc.Latin1.parse(encryptedBytes.substr(32));
+            
+            // 生成密钥
+            const passwordBytes = CryptoJS.enc.Utf8.parse(password);
+            const combinedBytes = passwordBytes.concat(salt);
+            const key = CryptoJS.SHA256(combinedBytes);
+            
+            // 验证哈希
+            const currentVerifyHash = CryptoJS.SHA256(key).toString(CryptoJS.enc.Hex);
+            if(currentVerifyHash !== config.verifyHash) {
+                alert('密码错误');
+                return;
+            }
+
+            // 解密逻辑
+            try {
+                const decrypted = CryptoJS.AES.decrypt(
+                    { ciphertext: ciphertext },
+                    key,
+                    { iv: iv, mode: CryptoJS.mode.CBC, padding: CryptoJS.pad.Pkcs7 }
+                );
+
+                const link = decrypted.toString(CryptoJS.enc.Utf8);
+                link ? window.location.href = link : alert('解密失败');
+            } catch (error) {
+                alert('解密失败，请联系管理员');
+            }
+        }
+
+        document.getElementById("passwordInput").addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault(); // 阻止默认表单提交行为
+                verifyPassword();
+            }
+        });
+    </script>
+</body>
+</html>

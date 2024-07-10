@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>你是人机</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            height: 5000px;  /* 让页面有足够的长度，可以滚动 */
+            margin: 0;
+            background-color: #f4f4f4;
+        }
+        .verification-container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 300px;
+            text-align: center;
+            position: fixed;  /* 固定在页面顶部 */
+            top: 20px;  /* 距离顶部20px */
+            left: 50%;  /* 居中 */
+            transform: translateX(-50%);  /* 完全居中 */
+            z-index: 10;  /* 确保它在最上层 */
+        }
+        .verification-container h2 {
+            margin-bottom: 20px;
+            font-size: 18px;
+            color: #333;
+        }
+        .verification-container .checkbox-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        .verification-container input[type="checkbox"] {
+            transform: scale(1.5); /* 增大复选框大小 */
+            margin-right: 10px;
+        }
+        .verification-container .verify-button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .verification-container .verify-button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+        .error-message {
+            color: red;
+            font-size: 16px;
+            margin-top: 10px;
+            display: none; /* 初始时隐藏错误消息 */
+        }
+
+        /* 按钮刚加载时位置在页面底部下方，向下滚动才能看到 */
+        .not-robot-btn {
+            padding: 10px 20px;
+            background-color: #ff5722;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            bottom: -4500px;  /* 初始时按钮在屏幕下方 */
+        }
+
+        
+    </style>
+</head>
+<body>
+    <div class="verification-container">
+        <h2>请完成以下操作，验证您是真人</h2>
+        <div class="checkbox-wrapper">
+            <input type="checkbox" id="humanVerification">
+            <label for="humanVerification">我是真人</label>
+        </div>
+        <button class="verify-button" id="verifyBtn" disabled>确认</button>
+        <p id="errorMessage" class="error-message">疑似人机，请再试一次</p>
+    </div>
+
+    <!-- 按钮位于页面底部 -->
+    <button class="not-robot-btn" id="notRobotBtn" onclick="window.location.href='../'">
+        我不是人机
+    </button>
+    <script src="../nof12.js"></script>
+    <script>
+        // 获取复选框、按钮和错误消息元素
+        const checkbox = document.getElementById('humanVerification');
+        const verifyBtn = document.getElementById('verifyBtn');
+        const errorMessage = document.getElementById('errorMessage');
+        const notRobotBtn = document.getElementById('notRobotBtn');
+
+        // 监听复选框的变化
+        checkbox.addEventListener('change', function() {
+            if (checkbox.checked) {
+                verifyBtn.disabled = false;  // 复选框选中时，启用按钮
+            } else {
+                verifyBtn.disabled = true;   // 复选框未选中时，禁用按钮
+            }
+        });
+
+        // 处理点击确认按钮的事件
+        verifyBtn.addEventListener('click', function() {
+            // 显示错误消息
+            errorMessage.style.display = 'block';
+        });
+
+        // 页面滚动事件监听
+        window.addEventListener('scroll', function() {
+            if (window.scrollY > 1000) {  // 滚动超过500px时，按钮显示
+                notRobotBtn.classList.add('visible');
+            } else {
+                notRobotBtn.classList.remove('visible');
+            }
+        });
+    </script>
+</body>
+</html>

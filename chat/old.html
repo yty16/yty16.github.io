@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>中转站</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 50px;
+        }
+    .code-block {
+        display: inline-block;
+        background-color: #f0f0f0;
+        padding: 10px;
+        border-radius: 5px;
+        font-family: 'Courier New', Courier, monospace;
+        font-size: 1.2em;
+        white-space: nowrap;
+        margin: 10px auto;
+        text-align: left;
+    }
+        button {
+            padding: 10px 20px;
+            font-size: 1em;
+            cursor: pointer;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>中转站</h1>
+    <p>5秒后自动跳转至聊天室</p>
+    <h3>如果链接打不开，请再试一次。</h3>
+    <h2 style="color:red">如果显示ERR_NGROK_3200，就是主机电脑关闭，需要等待主机电脑开启</h2>
+    <p>链接:</p>
+
+    <div class="code-block" id="urlBlock">https://55156e02ed23.ngrok-free.app</div>
+
+    <button id="redirectButton">跳转</button>
+
+    <script>
+        const targetUrl = 'https://55156e02ed23.ngrok-free.app';
+
+        setTimeout(() => {
+            window.location.href = targetUrl;
+        }, 5000);
+
+        document.getElementById('redirectButton').addEventListener('click', () => {
+            window.location.href = targetUrl;
+        });
+    </script>
+    <p>为什么要添加中转站?</p>
+    <p>这个链接时临时的，更新代码时可能会更新链接，感谢理解</p>
+</body>
+</html>

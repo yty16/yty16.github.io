@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bilibili Embed Player</title>
+  <style>
+    :root {
+      --bg: #0f1115;
+      --panel: #171a21;
+      --panel-2: #1f2430;
+      --text: #eef2f7;
+      --muted: #a6b0bf;
+      --line: #2b3240;
+      --accent: #4ea1ff;
+      --accent-2: #7bb8ff;
+      --danger: #ff6b6b;
+      --ok: #4cd17d;
+      --radius: 16px;
+      --shadow: 0 12px 30px rgba(0,0,0,.28);
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+        "PingFang SC", "Noto Sans CJK SC", "Microsoft YaHei", sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      padding: 18px;
+    }
+
+    .app {
+      width: min(1200px, 100%);
+      margin: 0 auto;
+      display: grid;
+      gap: 16px;
+    }
+
+    .card {
+      background: linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,.01));
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .controls {
+      padding: 16px;
+    }
+
+    h1 {
+      margin: 0 0 10px;
+      font-size: 22px;
+      line-height: 1.25;
+    }
+
+    .sub {
+      margin: 0 0 16px;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .row {
+      display: grid;
+      grid-template-columns: 1fr auto auto;
+      gap: 10px;
+      align-items: center;
+    }
+
+    @media (max-width: 860px) {
+      .row {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    input[type="text"],
+    input[type="number"] {
+      width: 100%;
+      background: var(--panel-2);
+      color: var(--text);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 12px 14px;
+      outline: none;
+      font-size: 14px;
+    }
+
+    input[type="text"]:focus,
+    input[type="number"]:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(78,161,255,.15);
+    }
+
+    button {
+      appearance: none;
+      border: 0;
+      border-radius: 12px;
+      background: var(--accent);
+      color: white;
+      padding: 12px 14px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 600;
+      min-width: 96px;
+    }
+
+    button:hover {
+      background: var(--accent-2);
+    }
+
+    .secondary {
+      background: #2a3342;
+    }
+
+    .secondary:hover {
+      background: #364257;
+    }
+
+    .mini {
+      min-width: 0;
+      width: 100%;
+    }
+
+    .grid2 {
+      display: grid;
+      grid-template-columns: 1fr 140px;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    @media (max-width: 640px) {
+      .grid2 {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .status {
+      margin-top: 12px;
+      padding: 12px 14px;
+      border-radius: 12px;
+      border: 1px solid var(--line);
+      font-size: 14px;
+      line-height: 1.6;
+      background: rgba(255,255,255,.03);
+    }
+
+    .status.ok {
+      border-color: rgba(76,209,125,.35);
+      color: #b7f0ca;
+      background: rgba(76,209,125,.08);
+    }
+
+    .status.err {
+      border-color: rgba(255,107,107,.35);
+      color: #ffc3c3;
+      background: rgba(255,107,107,.08);
+    }
+
+    .meta {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    @media (max-width: 720px) {
+      .meta {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .meta .item {
+      background: rgba(255,255,255,.03);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 12px 14px;
+    }
+
+    .meta .k {
+      color: var(--muted);
+      font-size: 12px;
+      margin-bottom: 4px;
+    }
+
+    .meta .v {
+      font-size: 14px;
+      word-break: break-all;
+    }
+
+    .player-card {
+      overflow: hidden;
+    }
+
+    .player-wrap {
+      width: 100%;
+      position: relative;
+      background: #000;
+      aspect-ratio: 16 / 9;
+    }
+
+    iframe {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      border: 0;
+      display: block;
+      background: #000;
+    }
+
+    a {
+      color: #8bc2ff;
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <section class="card controls">
+      <h1>B站视频嵌入播放器</h1>
+
+      <div class="row">
+        <input id="urlInput" type="text" placeholder="粘贴 B 站链接或输入 BV 号，例如 BV1vK4y1P74F" />
+        <button id="loadBtn">载入</button>
+        <button id="clearBtn" class="secondary">清空输入框</button>
+      </div>
+
+      <div class="grid2">
+        <div>
+          <label for="pInput" class="sub" style="display:block; margin:10px 0 6px;">选集（P）</label>
+          <div class="row" style="grid-template-columns: 1fr auto auto;">
+            <input id="pInput" type="number" min="1" step="1" value="1" />
+            <button id="prevBtn" class="secondary mini">上一集</button>
+            <button id="nextBtn" class="secondary mini">下一集</button>
+          </div>
+        </div>
+        <div>
+          <label for="dmSelect" class="sub" style="display:block; margin:10px 0 6px;">弹幕</label>
+          <select id="dmSelect" style="width:100%; background: var(--panel-2); color: var(--text); border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; font-size: 14px;">
+            <option value="1">开启</option>
+            <option value="0">关闭</option>
+          </select>
+        </div>
+      </div>
+
+      <div id="status" class="status">
+        请输入 B 站链接或 BV 号。
+      </div>
+
+      <div class="meta">
+        <div class="item">
+          <div class="k">当前 BV 号</div>
+          <div class="v" id="bvText">-</div>
+        </div>
+        <div class="item">
+          <div class="k">当前 P</div>
+          <div class="v" id="pText">1</div>
+        </div>
+        <div class="item">
+          <div class="k">解析来源</div>
+          <div class="v" id="modeText">-</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="card player-card">
+      <div class="player-wrap">
+        <iframe
+          id="player"
+          src="https://player.bilibili.com/player.html?isOutside=true&bvid=BV1vK4y1P74F&p=40"
+          scrolling="no"
+          frameborder="no"
+          allowfullscreen="true">
+        </iframe>
+      </div>
+    </section>
+  </main>
+
+<script>
+  const urlInput = document.getElementById('urlInput');
+  const pInput = document.getElementById('pInput');
+  const dmSelect = document.getElementById('dmSelect');
+  const loadBtn = document.getElementById('loadBtn');
+  const clearBtn = document.getElementById('clearBtn');
+  const prevBtn = document.getElementById('prevBtn');
+  const nextBtn = document.getElementById('nextBtn');
+  const player = document.getElementById('player');
+
+  const statusEl = document.getElementById('status');
+  const bvText = document.getElementById('bvText');
+  const pText = document.getElementById('pText');
+  const modeText = document.getElementById('modeText');
+
+  const DEFAULT_URL = 'https://www.bilibili.com/video/BV1vK4y1P74F?p=40';
+  const BV_RE = /BV[0-9A-Za-z]{10}/i;
+
+  function setStatus(text, type = '') {
+    statusEl.textContent = text;
+    statusEl.className = 'status' + (type ? ' ' + type : '');
+  }
+
+  function normalizeUrl(input) {
+    let value = (input || '').trim();
+    if (!value) return '';
+    if (value.startsWith('//')) value = 'https:' + value;
+    if (!/^https?:\/\//i.test(value)) value = 'https://' + value.replace(/^\/+/, '');
+    return value;
+  }
+
+  function normalizeBvid(value) {
+    const raw = String(value || '').trim();
+    const match = raw.match(BV_RE);
+    if (!match) return '';
+    return match[0];
+  }
+
+  function parseBiliInput(raw) {
+    const original = String(raw || '').trim();
+    if (!original) {
+      return { ok: false, reason: '请输入链接或 BV 号。' };
+    }
+
+    // 1) 直接支持纯 BV 号
+    const directBvid = normalizeBvid(original);
+    if (directBvid && /^BV[0-9A-Za-z]{10}$/i.test(original)) {
+      return {
+        ok: true,
+        bvid: directBvid,
+        p: 1,
+        mode: '直接输入 BV 号'
+      };
+    }
+
+    const input = normalizeUrl(original);
+
+    let url;
+    try {
+      url = new URL(input);
+    } catch (e) {
+      return { ok: false, reason: '输入内容格式无法识别。' };
+    }
+
+    const host = url.hostname.replace(/^www\./i, '').toLowerCase();
+    if (!host.endsWith('bilibili.com')) {
+      return { ok: false, reason: '目前只支持 bilibili.com 链接或纯 BV 号。' };
+    }
+
+    let bvid = '';
+    let p = 1;
+    let mode = '';
+
+    // 1) 优先从 /video/BV... 路径提取
+    const pathBvid = normalizeBvid(url.pathname);
+    if (pathBvid) {
+      bvid = pathBvid;
+      mode = '从 /video/BV... 路径提取';
+    }
+
+    // 2) 兼容 list 链接里的 ?bvid=
+    const queryBvid = normalizeBvid(url.searchParams.get('bvid'));
+    if (!bvid && queryBvid) {
+      bvid = queryBvid;
+      mode = '从 list 链接的 bvid 参数提取';
+    }
+
+    // 3) 最后兜底：整串匹配
+    if (!bvid) {
+      const anyBvid = normalizeBvid(decodeURIComponent(input));
+      if (anyBvid) {
+        bvid = anyBvid;
+        mode = '从完整字符串匹配提取';
+      }
+    }
+
+    const queryP = url.searchParams.get('p');
+    if (queryP && /^\d+$/.test(queryP) && Number(queryP) >= 1) {
+      p = Number(queryP);
+    }
+
+    if (!bvid) {
+      return {
+        ok: false,
+        reason: '没有找到 BV 号。请输入 /video/BV... 链接、带 bvid=... 的链接，或直接输入 BV 号。'
+      };
+    }
+
+    return { ok: true, bvid, p, mode };
+  }
+
+  function buildPlayerUrl(bvid, p, danmaku) {
+    const safeBvid = normalizeBvid(bvid);
+    const params = new URLSearchParams({
+      isOutside: 'true',
+      bvid: safeBvid,
+      p: String(Math.max(1, Number(p) || 1)),
+      danmaku: String(danmaku === '0' ? 0 : 1)
+    });
+    return 'https://player.bilibili.com/player.html?' + params.toString();
+  }
+
+  function applyState({ bvid, p, mode }, pushHash = true) {
+    const safeBvid = normalizeBvid(bvid);
+    const safeP = Math.max(1, Number(p) || 1);
+    const dm = dmSelect.value === '0' ? '0' : '1';
+
+    if (!safeBvid) {
+      setStatus('BV 号无效。', 'err');
+      return;
+    }
+
+    const playerUrl = buildPlayerUrl(safeBvid, safeP, dm);
+
+    player.src = playerUrl;
+    bvText.textContent = safeBvid;
+    pText.textContent = String(safeP);
+    modeText.textContent = mode || '手动设置';
+    pInput.value = safeP;
+
+    setStatus('已载入：' + safeBvid + '，P' + safeP, 'ok');
+
+    if (pushHash) {
+      const state = new URL(location.href);
+      state.searchParams.set('url', urlInput.value.trim() || ('https://www.bilibili.com/video/' + safeBvid + '/?p=' + safeP));
+      state.searchParams.set('p', String(safeP));
+      state.searchParams.set('dm', dm);
+      history.replaceState(null, '', state.toString());
+    }
+  }
+
+  function loadFromInput() {
+    const parsed = parseBiliInput(urlInput.value);
+    if (!parsed.ok) {
+      setStatus(parsed.reason, 'err');
+      return;
+    }
+    applyState(parsed, true);
+  }
+
+  loadBtn.addEventListener('click', loadFromInput);
+
+  urlInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') loadFromInput();
+  });
+
+  pInput.addEventListener('change', () => {
+    const bv = normalizeBvid(bvText.textContent);
+    if (!bv) {
+      setStatus('请先输入一个可识别的 B 站视频链接或 BV 号。', 'err');
+      return;
+    }
+    applyState({
+      bvid: bv,
+      p: Math.max(1, Number(pInput.value) || 1),
+      mode: modeText.textContent.trim() || '手动设置'
+    }, true);
+  });
+
+  dmSelect.addEventListener('change', () => {
+    const bv = normalizeBvid(bvText.textContent);
+    if (!bv) return;
+    applyState({
+      bvid: bv,
+      p: Math.max(1, Number(pInput.value) || 1),
+      mode: modeText.textContent.trim() || '手动设置'
+    }, true);
+  });
+
+  prevBtn.addEventListener('click', () => {
+    pInput.value = Math.max(1, Number(pInput.value || 1) - 1);
+    pInput.dispatchEvent(new Event('change'));
+  });
+
+  nextBtn.addEventListener('click', () => {
+    pInput.value = Math.max(1, Number(pInput.value || 1) + 1);
+    pInput.dispatchEvent(new Event('change'));
+  });
+
+  clearBtn.addEventListener('click', () => {
+    urlInput.value = '';
+    urlInput.focus();
+    setStatus('已清空输入框。当前视频保持不变。', 'ok');
+  });
+
+  (function init() {
+    const state = new URL(location.href);
+    const initialUrl = state.searchParams.get('url') || DEFAULT_URL;
+    const initialP = state.searchParams.get('p');
+    const initialDm = state.searchParams.get('dm');
+
+    urlInput.value = initialUrl;
+    if (initialDm === '0' || initialDm === '1') {
+      dmSelect.value = initialDm;
+    }
+
+    const parsed = parseBiliInput(initialUrl);
+    if (parsed.ok) {
+      if (initialP && /^\d+$/.test(initialP) && Number(initialP) >= 1) {
+        parsed.p = Number(initialP);
+      }
+      applyState(parsed, false);
+    } else {
+      pInput.value = 1;
+      setStatus(parsed.reason, 'err');
+    }
+  })();
+</script>
+
+</body>
+</html>

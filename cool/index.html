@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cool Page</title>
+    <style>
+        /* 重置所有元素的默认 margin 和 padding，使布局更加稳定 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* 设置页面的基础样式 */
+        body {
+            font-family: 'Arial', sans-serif;
+            overflow: hidden; /* 防止滚动条出现 */
+            height: 100vh; /* 设置页面高度为视口高度 */
+            display: flex; /* 使用 Flexbox 布局 */
+            justify-content: center; /* 水平居中 */
+            align-items: center; /* 垂直居中 */
+            flex-direction: column; /* 垂直排列 */
+            text-align: center; /* 文字居中 */
+        }
+
+        /* 设置显示动态文字的样式 */
+        #text {
+            font-size: 10vw; /* 初始文字大小为视口宽度的10% */
+            color: transparent; /* 文字颜色透明 */
+            background: linear-gradient(45deg, #ff6b6b, #ffcc00, #1de9b6, #00d8ff); /* 文字渐变背景 */
+            background-size: 400% 400%; /* 背景渐变的尺寸 */
+            -webkit-background-clip: text; /* 使渐变应用于文字 */
+            animation: rainbow 0.5s linear infinite; /* 使渐变动画加速5倍 */
+        }
+
+        /* 设置文字渐变动画 */
+        @keyframes rainbow {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* 粒子效果的容器 */
+        .particle-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            pointer-events: none; /* 防止粒子层与页面内容的交互 */
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- 粒子效果的容器 -->
+    <div class="particle-container" id="particles"></div>
+
+    <!-- 动态文字的容器 -->
+    <div id="text"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/particles.js"></script>
+    <script>
+        // 获取 URL 中的 key 参数，如果没有则使用默认值
+        const urlParams = new URLSearchParams(window.location.search);
+        const key = urlParams.get('key') || 'Hello, Cool World!'; // 默认文字内容
+
+        // 设置页面中间显示的文字
+        const textElement = document.getElementById('text');
+        textElement.textContent = key; // 赋值给文字元素
+
+        // 初始化粒子效果
+        particlesJS('particles', {
+            particles: {
+                number: {
+                    value: 150, // 粒子的数量
+                    density: {
+                        enable: true, // 启用密度控制
+                        value_area: 800 // 粒子密度的区域大小
+                    }
+                },
+                color: {
+                    value: "#ffffff" // 粒子颜色设置为白色
+                },
+                shape: {
+                    type: "circle", // 粒子形状为圆形
+                    stroke: {
+                        width: 0, // 粒子边框宽度为 0
+                        color: "#000000" // 边框颜色为黑色（但没有显示）
+                    }
+                },
+                opacity: {
+                    value: 0.9, // 粒子的初始透明度
+                    random: true, // 透明度是否随机
+                    anim: {
+                        enable: true, // 启用透明度动画
+                        speed: 1, // 动画速度
+                        opacity_min: 0.4, // 最小透明度
+                        sync: false // 不同步透明度变化
+                    }
+                },
+                size: {
+                    value: 3, // 粒子的初始大小
+                    random: true, // 粒子大小是否随机
+                    anim: {
+                        enable: true, // 启用大小变化动画
+                        speed: 3, // 动画速度
+                        size_min: 0.5, // 最小粒子大小
+                        sync: false // 不同步大小变化
+                    }
+                },
+                line_linked: {
+                    enable: true, // 启用粒子之间的连线
+                    distance: 150, // 连线的最大距离
+                    color: "#ffffff", // 连线的颜色为白色
+                    opacity: 0.6, // 连线的透明度
+                    width: 1 // 连线的宽度
+                },
+                move: {
+                    enable: true, // 启用粒子运动
+                    speed: 2, // 粒子移动的速度
+                    direction: "none", // 粒子移动方向随机
+                    random: true, // 随机运动
+                    straight: false, // 粒子是否直线运动
+                    out_mode: "out", // 粒子超出画布时会消失
+                    bounce: false, // 不启用反弹
+                    attract: {
+                        enable: false // 不启用吸引效果
+                    }
+                }
+            },
+            interactivity: {
+                detect_on: "canvas", // 交互事件检测区域为画布
+                events: {
+                    onhover: {
+                        enable: true, // 启用鼠标悬停事件
+                        mode: "repulse" // 启用粒子反弹效果
+                    },
+                    onclick: {
+                        enable: true, // 启用鼠标点击事件
+                        mode: "push" // 启用点击时添加粒子效果
+                    }
+                }
+            }
+        });
+
+        // 随机背景颜色变化，每秒更换一次背景颜色
+        const colors = ["#0f1011", "#1e262e", "#233143", "#0e735d", "#b8770a", "#6b9ab5", "#7ab77a", "#b3b000", "#cc7a7a", "#b86c3f", "#b24848", "#b04b92", "#8a64c0"]; // 定义几种背景颜色
+        let colorIndex = 0;
+
+        setInterval(() => {
+            document.body.style.backgroundColor = colors[colorIndex]; // 设置背景颜色
+            colorIndex = (colorIndex + 1) % colors.length; // 循环选择背景颜色
+        }, 600); // 每秒钟更换一次背景颜色
+
+        // 随机文字大小变化
+        setInterval(() => {
+            const randomSize = 15;
+            textElement.style.fontSize = `${randomSize}vw`; // 每秒钟改变文字大小
+        }, 500);
+
+    </script>
+
+</body>
+</html>

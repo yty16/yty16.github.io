@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>嵌入页面</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: #fff;
+      font-family: Arial, sans-serif;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    .panel {
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 10;
+      background: rgba(255, 255, 255, 0.96);
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      padding: 16px;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+      min-width: 320px;
+      max-width: 90vw;
+    }
+
+    .panel h3 {
+      margin-bottom: 10px;
+      font-size: 18px;
+      color: #222;
+      text-align: center;
+    }
+
+    .row {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    input {
+      flex: 1;
+      min-width: 260px;
+      padding: 12px;
+      font-size: 15px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      outline: none;
+    }
+
+    button {
+      padding: 12px 18px;
+      font-size: 15px;
+      background: #007bff;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    button:hover {
+      background: #0056b3;
+    }
+
+    .quick-links {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .quick-links button {
+      width: 100%;
+      text-align: left;
+      background: #fff;
+      color: #222;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      box-shadow: none;
+    }
+
+    .quick-links button:hover {
+      background: #fff;
+    }
+
+    .message {
+      margin-top: 10px;
+      font-size: 14px;
+      color: #d93025;
+      display: none;
+      line-height: 1.5;
+    }
+
+    iframe {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      border: none;
+      display: none;
+      background: #fff;
+    }
+  </style>
+</head>
+<body>
+  <div class="panel" id="panel">
+    <h3>输入需要嵌入的链接</h3>
+    <div class="row">
+      <input type="text" id="urlInput" placeholder="输入链接地址">
+      <button id="loadBtn">确认</button>
+    </div>
+    <div class="quick-links">
+      <button type="button" id="fillMainSite">https://yty16.github.io/</button>
+      <button type="button" id="fillBilibili">https://www.bilibili.com/</button>
+    </div>
+    <div class="message" id="message"></div>
+  </div>
+
+  <iframe id="iframe" referrerpolicy="no-referrer"></iframe>
+
+  <script>
+    const iframe = document.getElementById("iframe");
+    const urlInput = document.getElementById("urlInput");
+    const message = document.getElementById("message");
+    const panel = document.getElementById("panel");
+    const loadBtn = document.getElementById("loadBtn");
+    const fillMainSite = document.getElementById("fillMainSite");
+    const fillBilibili = document.getElementById("fillBilibili");
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const urlFromParams = urlParams.get("url");
+
+    function showMessage(text) {
+      message.textContent = text;
+      message.style.display = "block";
+    }
+
+    function hideMessage() {
+      message.textContent = "";
+      message.style.display = "none";
+    }
+
+    function normalizeURL(url) {
+      const trimmed = url.trim();
+      if (!trimmed) return "";
+      if (trimmed.startsWith("https://")) return trimmed;
+      return "https://" + trimmed;
+    }
+
+    function isValidURL(url) {
+      try {
+        const u = new URL(url);
+        return u.protocol === "https:";
+      } catch {
+        return false;
+      }
+    }
+
+    function openInIframe(url) {
+      hideMessage();
+      iframe.style.display = "block";
+      panel.style.display = "none";
+      iframe.src = url;
+    }
+
+    function loadURL() {
+      const normalizedURL = normalizeURL(urlInput.value);
+      if (!isValidURL(normalizedURL)) {
+        showMessage("请输入有效地址");
+        return;
+      }
+      urlInput.value = normalizedURL;
+      const newUrl = window.location.pathname + "?url=" + encodeURIComponent(normalizedURL);
+      history.replaceState(null, "", newUrl);
+      openInIframe(normalizedURL);
+    }
+
+    loadBtn.addEventListener("click", loadURL);
+    urlInput.addEventListener("keydown", function (e) {
+      if (e.key === "Enter") loadURL();
+    });
+
+    fillMainSite.addEventListener("click", function () {
+      urlInput.value = "https://yty16.github.io/";
+    });
+
+    fillBilibili.addEventListener("click", function () {
+      urlInput.value = "https://www.bilibili.com/";
+    });
+
+    if (urlFromParams) {
+      const normalizedParamURL = normalizeURL(urlFromParams);
+      if (isValidURL(normalizedParamURL)) {
+        urlInput.value = normalizedParamURL;
+        openInIframe(normalizedParamURL);
+      } else {
+        showMessage("无效的 URL 参数");
+      }
+    }
+
+    iframe.addEventListener("load", () => {
+      try {
+        const doc = iframe.contentDocument || iframe.contentWindow.document;
+        const win = iframe.contentWindow;
+
+        win.open = function(url) {
+          if (url) {
+            iframe.src = normalizeURL(url);
+          }
+          return null;
+        };
+
+        doc.querySelectorAll("a").forEach(a => {
+          a.setAttribute("target", "_self");
+          a.addEventListener("click", function () {
+            const href = a.getAttribute("href");
+            if (!href) return;
+          });
+        });
+
+        doc.querySelectorAll("form").forEach(form => {
+          form.setAttribute("target", "_self");
+        });
+
+      } catch (err) {
+        showMessage("当前页面已嵌入，但这是跨域网站，无法强制接管其弹窗、新窗口或内部跳转行为。若要完全控制，必须通过服务端代理重写页面。");
+      }
+    });
+
+    window.addEventListener("message", (event) => {
+      const data = event.data;
+      if (!data || typeof data !== "object") return;
+
+      if (data.type === "open-url" && data.url) {
+        const normalizedURL = normalizeURL(data.url);
+        if (isValidURL(normalizedURL)) {
+          iframe.src = normalizedURL;
+        }
+      }
+    });
+  </script>
+
+</body>
+</html>

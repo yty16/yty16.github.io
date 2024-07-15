@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>florr合卡模拟</title>
+</head>
+<body>
+    <p>此过程为模拟完成，并非纯计算，可能会与实际略有误差</p>
+    
+    <label for="n">输入个数:</label>
+    <input type="number" id="n" value="1000">
+    <br>
+
+    <label for="lv">输入初始等级 (1=C合Un, 2=Un合R, 以此类推, 7=Ul合S):</label>
+    <input type="number" id="lv" min="1" max="7" value="1">
+    <br>
+
+    <label for="a">输入模拟次数倍率 (越高越精确,但越慢,不建议超过5):</label>
+    <input type="number" id="a" value="1">
+    <br>
+
+    <button onclick="startSimulation()">开始模拟</button>
+    <h2 id="progress"></h2>
+    <div id="results"></div>
+
+    <script>
+        const per = [0, 64, 32, 16, 8, 4, 2, 1];
+
+        function pd(a, b) {
+            let cnt = 0;
+            while (a >= 5) {
+                let t = Math.floor(Math.random() * 100);
+                if (t < per[b]) {
+                    cnt++;
+                    a -= 5;
+                } else {
+                    a -= Math.floor(Math.random() * 4) + 1;
+                }
+            }
+            return cnt;
+        }
+
+        function startSimulation() {
+            const n = parseInt(document.getElementById("n").value);
+            const lv = parseInt(document.getElementById("lv").value);
+            const a = parseInt(document.getElementById("a").value);
+
+            if (n > 100000) {
+                alert("数据过大,误差可能略大");
+                return;
+            }
+            if (lv < 1 || lv > 7) {
+                alert("输入不合法");
+                return;
+            }
+
+            let maxx = -1;
+            let minn = 2147483647;
+            let cs = Math.floor(10000000 / (n / 5) * a);
+            let ans = new Array(Math.floor(n / 5) + 10).fill(0);
+
+            for (let i = 1; i <= cs; i++) {
+                let cnt = pd(n, lv);
+                if (cnt > maxx) maxx = cnt;
+                if (cnt < minn) minn = cnt;
+                ans[cnt]++;
+                if (i % Math.floor(cs / 20) === 0) {
+                    document.getElementById("progress").innerText = `模拟进度: ${Math.floor(i * 100 / cs)}%`;
+                }
+            }
+
+            displayResults(ans, cs, maxx, minn);
+        }
+
+        function displayResults(ans, cs, maxx, minn) {
+            let resultsDiv = document.getElementById("results");
+            resultsDiv.innerHTML = ""; // 清空之前的结果
+
+            for (let i = minn; i <= maxx; i++) {
+                let t = (ans[i] / cs * 100).toFixed(7);
+                resultsDiv.innerHTML += `${i} : ${t} %<br>`;
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,1522 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>四面音游读谱练习</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            user-select: none;
+        }
+        :root {
+            --bg: #0b0e14;
+            --panel: #11161f;
+            --panel-2: #0f151c;
+            --border: #2a3440;
+            --border-strong: #3a4a5e;
+            --text: #e7eef8;
+            --muted: #8ca1bf;
+            --muted-2: #b7c9e2;
+            --primary: #5b8cff;
+            --primary-2: #3f6ef0;
+            --danger: #f28b82;
+            --perfect: #ffd966;
+            --good: #6ea8fe;
+            --miss: #f28b82;
+            --shadow: rgba(7, 12, 20, 0.38);
+        }
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background: var(--bg);
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            font-family: 'Segoe UI', 'Inter', system-ui, -apple-system, sans-serif;
+            padding: 16px;
+            color: var(--text);
+            overflow-x: hidden;
+        }
+        .game-container {
+            max-width: 1200px;
+            width: 100%;
+            padding: 16px 20px 20px;
+        }
+        .settings-panel {
+            display: grid;
+            grid-template-columns: repeat(12, minmax(0, 1fr));
+            gap: 14px;
+            margin-bottom: 20px;
+            background: linear-gradient(180deg, rgba(19, 25, 36, 0.95), rgba(14, 19, 28, 0.98));
+            padding: 16px;
+            border-radius: 28px;
+            border: 1px solid var(--border);
+            box-shadow: 0 16px 36px var(--shadow);
+        }
+        .param-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            min-width: 0;
+            padding: 14px;
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.025), rgba(255, 255, 255, 0.01));
+            border: 1px solid rgba(110, 140, 190, 0.18);
+            border-radius: 20px;
+            min-height: 100%;
+        }
+        .param-group.span-2 { grid-column: span 2; }
+        .param-group.span-3 { grid-column: span 3; }
+        .param-group.span-4 { grid-column: span 4; }
+        .param-group.span-5 { grid-column: span 5; }
+        .param-group.span-6 { grid-column: span 6; }
+        .param-group.span-12 { grid-column: 1 / -1; }
+        .param-group.compact { justify-content: center; }
+        .param-group.actions { justify-content: flex-end; }
+        .param-group.checkboxes { justify-content: center; gap: 14px; }
+        .param-label-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .param-group label {
+            color: var(--muted-2);
+            font-size: 0.76rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+        .param-meta {
+            color: var(--muted);
+            font-size: 0.78rem;
+            font-weight: 600;
+        }
+        .param-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            min-width: 0;
+            flex-wrap: wrap;
+        }
+        .param-row input[type="range"] {
+            flex: 1 1 180px;
+            min-width: 120px;
+            height: 6px;
+            margin: 0;
+            border-radius: 999px;
+            background: linear-gradient(90deg, rgba(91, 140, 255, 0.28), rgba(91, 140, 255, 0.10));
+            -webkit-appearance: none;
+            appearance: none;
+        }
+        .param-row input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #dfe9ff;
+            border: 3px solid var(--primary);
+            cursor: pointer;
+        }
+        .param-row input[type="range"]::-moz-range-thumb {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #dfe9ff;
+            border: 3px solid var(--primary);
+            cursor: pointer;
+        }
+        .param-row input[type="number"],
+        select,
+        .custom-input {
+            background: var(--panel-2);
+            border: 1px solid var(--border-strong);
+            color: var(--text);
+            border-radius: 14px;
+            padding: 9px 12px;
+            font-weight: 600;
+            font-size: 0.94rem;
+        }
+        .param-row input[type="number"] { width: 88px; text-align: center; }
+        .readonly-box {
+            display: inline-flex;
+            align-items: center;
+            min-height: 42px;
+            background: var(--panel-2);
+            border: 1px solid var(--border-strong);
+            border-radius: 14px;
+            padding: 8px 14px;
+            color: #b0d0ff;
+            font-weight: 700;
+            font-size: 1rem;
+        }
+        .steppers, .speed-steps {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+        .step-btn {
+            min-width: 40px;
+            height: 36px;
+            padding: 0 10px;
+            border-radius: 12px;
+            border: 1px solid #4a627a;
+            background: #243141;
+            color: white;
+            font-weight: 700;
+            cursor: pointer;
+        }
+        .speed-steps .step-btn {
+            min-width: 56px;
+            height: 34px;
+            padding: 0 8px;
+            font-size: 0.84rem;
+            border-radius: 10px;
+        }
+        .btn {
+            background: #29384a;
+            border: none;
+            color: white;
+            font-weight: bold;
+            padding: 10px 22px;
+            border-radius: 40px;
+            font-size: 1rem;
+            cursor: pointer;
+            border: 1px solid #5f7f9f;
+            box-shadow: 0 4px 0 #0f151c;
+            transition: transform 0.12s ease;
+        }
+        .btn:active { transform: translateY(2px); box-shadow: 0 2px 0 #0f151c; }
+        .btn-primary { background: var(--primary-2); border-color: #8aadff; box-shadow: 0 4px 0 #1e3a9e; }
+        .btn-warning { background: #4e3a5e; border-color: #b392d6; }
+        .btn-danger { background: #c0392b; border-color: #ff9a8a; box-shadow: 0 4px 0 #7a1f17; }
+        .btn:disabled, .step-btn:disabled, select:disabled, input:disabled {
+            opacity: 0.45; box-shadow: none; pointer-events: none; filter: grayscale(0.5);
+        }
+        .field-stack { display: flex; flex-direction: column; gap: 8px; }
+        .pattern-section {
+            display: flex; flex-wrap: wrap; align-items: center; gap: 15px;
+            background: #11161f; padding: 12px 20px; border-radius: 22px;
+            border: 1px solid #2a3440; margin: 10px 0;
+        }
+        .custom-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+        .error-message { color: var(--danger); font-size: 0.8rem; margin-left: 8px; }
+        .syntax-hint { color: #7f95b5; font-size: 0.75rem; margin-left: 10px; line-height: 1.5; }
+        .syntax-line { display: block; }
+        .space-hint { text-align: center; color: #7f95b5; font-size: 0.9rem; margin-bottom: 8px; }
+        .btn-start-large { padding: 12px 60px; font-size: 1.4rem; min-width: 240px; border-radius: 60px; }
+        .stats-area {
+            display: flex; align-items: center; justify-content: space-between;
+            margin: 8px 10px 12px; gap: 12px;
+        }
+        .counters { display: flex; gap: 24px; font-size: 1.2rem; font-weight: 600; flex-wrap: wrap; }
+        .counter-item { display: flex; gap: 6px; }
+        .counter-perfect { color: var(--perfect); }
+        .counter-good { color: var(--good); }
+        .counter-miss { color: var(--miss); }
+        .canvas-wrapper {
+            position: relative; width: 100%; border-radius: 24px; overflow: hidden;
+            border: 2px solid #2e405b; touch-action: none;
+            box-shadow: 0 20px 42px rgba(0, 0, 0, 0.28); background: #0c0f15;
+        }
+        #gameCanvas { display: block; width: 100%; height: auto; background: #0c0f15; touch-action: none; }
+        .countdown-overlay {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            display: flex; align-items: center; justify-content: center; pointer-events: none;
+            font-size: 8rem; font-weight: 900; color: rgba(255, 255, 255, 0.92); z-index: 10;
+        }
+        .acc-display {
+            position: absolute; top: 12px; right: 16px; color: #fff; font-size: 1rem;
+            font-weight: 600; z-index: 5; background: rgba(0, 0, 0, 0.45);
+            padding: 3px 12px; border-radius: 30px; pointer-events: none;
+        }
+        .btn-ghost { background: rgba(20, 28, 42, 0.88); border-color: #60748e; box-shadow: none; }
+        .start-row {
+            position: relative; display: flex; justify-content: center; align-items: center;
+            margin: 0 0 8px; min-height: 56px;
+        }
+        .start-row-actions { position: absolute; right: 0; display: flex; gap: 10px; align-items: center; }
+        .checkbox-label {
+            display: flex; align-items: center; gap: 8px; cursor: pointer;
+            font-size: 0.82rem; font-weight: 600; color: var(--muted-2);
+            white-space: nowrap; padding: 6px 10px; border-radius: 10px;
+            transition: background 0.15s; letter-spacing: 0.03em;
+        }
+        .checkbox-label:hover { background: rgba(255, 255, 255, 0.04); }
+        .checkbox-label input[type="checkbox"] {
+            appearance: none; -webkit-appearance: none; width: 20px; height: 20px;
+            border: 2px solid #5f7f9f; border-radius: 6px; background: var(--panel-2);
+            cursor: pointer; position: relative; flex-shrink: 0; transition: all 0.18s;
+        }
+        .checkbox-label input[type="checkbox"]:checked { background: var(--primary-2); border-color: #8aadff; }
+        .checkbox-label input[type="checkbox"]:checked::after {
+            content: ''; position: absolute; left: 5px; top: 2px;
+            width: 5px; height: 10px; border: solid #fff;
+            border-width: 0 2px 2px 0; transform: rotate(45deg);
+        }
+        .fullscreen-hud {
+            display: none; position: absolute; top: env(safe-area-inset-top, 0px);
+            left: 0; width: 100%; z-index: 20; pointer-events: none; padding: 12px 14px; color: white;
+        }
+        .fullscreen-hud-left, .fullscreen-hud-right {
+            position: absolute; top: 12px; display: flex; align-items: center; gap: 8px;
+            background: rgba(0, 0, 0, 0.45); border: 1px solid rgba(180, 205, 235, 0.18);
+            border-radius: 18px; padding: 4px 10px; font-weight: 700; backdrop-filter: blur(6px);
+            font-size: 0.8rem;
+        }
+        .fullscreen-hud-left { left: 14px; }
+        .fullscreen-hud-right { right: 14px; }
+        .fullscreen-hud .btn { pointer-events: auto; padding: 4px 12px; font-size: 0.8rem; border-radius: 20px; }
+        body.fullscreen-mode {
+            padding: 0; overflow: hidden; background: #0c0f15;
+        }
+        body.fullscreen-mode .game-container {
+            max-width: none; width: 100vw; height: 100vh; padding: 0; display: block;
+        }
+        body.fullscreen-mode .settings-panel,
+        body.fullscreen-mode .pattern-section,
+        body.fullscreen-mode .space-hint,
+        body.fullscreen-mode .start-row,
+        body.fullscreen-mode .stats-area,
+        body.fullscreen-mode .acc-display { display: none; }
+        body.fullscreen-mode .canvas-wrapper {
+            width: 100vw; height: 100vh; border: none; border-radius: 0; box-shadow: none;
+        }
+        body.fullscreen-mode #gameCanvas { width: 100vw; height: 100vh; }
+        body.fullscreen-mode .fullscreen-hud { display: block; }
+
+        @media (max-width: 1080px) {
+            .param-group.span-2, .param-group.span-3,
+            .param-group.span-4, .param-group.span-5, .param-group.span-6 { grid-column: span 6; }
+            .param-group.actions { grid-column: 1 / -1; }
+            .param-group.checkboxes { grid-column: 1 / -1; }
+        }
+        @media (max-width: 720px) {
+            body { padding: 10px; }
+            .game-container { padding: 10px 0 18px; }
+            .settings-panel { grid-template-columns: 1fr; padding: 12px; gap: 12px; border-radius: 22px; }
+            .param-group, .param-group.span-2, .param-group.span-3,
+            .param-group.span-4, .param-group.span-5, .param-group.span-6,
+            .param-group.span-12 { grid-column: 1 / -1; }
+            .param-row input[type="number"] { width: 100%; }
+            .param-row input[type="range"] { flex-basis: 100%; }
+            .speed-steps { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); width: 100%; }
+            .speed-steps .step-btn { width: 100%; min-width: 0; }
+            .pattern-section { padding: 12px; border-radius: 18px; }
+            .btn-start-large { padding: 12px 30px; font-size: 1.2rem; }
+            .counters { gap: 16px; font-size: 1rem; }
+            .stats-area { align-items: flex-start; }
+            .countdown-overlay { font-size: 5rem; }
+            .checkbox-label { font-size: 0.78rem; padding: 5px 8px; }
+            .start-row { justify-content: stretch; flex-direction: column; gap: 10px; }
+            .start-row-actions { position: static; width: 100%; justify-content: center; }
+            .fullscreen-hud-left, .fullscreen-hud-right { top: 8px; padding: 6px 8px; gap: 8px; font-size: 0.82rem; }
+            .fullscreen-hud-left { left: 8px; }
+            .fullscreen-hud-right { right: 8px; }
+        }
+    </style>
+</head>
+<body>
+<div class="game-container" id="gameContainer">
+    <div class="settings-panel" id="settingsPanel">
+        <div class="param-group span-3">
+            <div class="param-label-row"><label>BPM</label></div>
+            <div class="param-row">
+                <input type="range" id="bpmSlider" min="30" max="600" value="90">
+                <input type="number" id="bpmInput" min="30" max="600" value="90">
+                <div class="steppers"><button class="step-btn" id="bpmDec">−</button><button class="step-btn" id="bpmInc">+</button></div>
+            </div>
+        </div>
+        <div class="param-group span-2 compact">
+            <div class="param-label-row"><label>节奏</label></div>
+            <select id="rhythmSelect">
+                <option value="4" selected>四分</option><option value="8">八分</option><option value="12">十二分</option><option value="16">十六分</option>
+            </select>
+        </div>
+        <div class="param-group span-5">
+            <div class="param-label-row"><label>流速</label><span class="param-meta" id="speedMsDisplay">到达判定边时间：10000 ms</span></div>
+            <div class="field-stack">
+                <div class="param-row">
+                    <input type="range" id="speedSlider" min="1" max="10" step="0.01" value="6.00">
+                    <input type="number" id="speedInput" min="1" max="10" step="0.01" value="6.00">
+                </div>
+                <div class="speed-steps">
+                    <button class="step-btn" data-step="-0.01">-0.01</button>
+                    <button class="step-btn" data-step="-0.1">-0.1</button>
+                    <button class="step-btn" data-step="-1">-1</button>
+                    <button class="step-btn" data-step="1">+1</button>
+                    <button class="step-btn" data-step="0.1">+0.1</button>
+                    <button class="step-btn" data-step="0.01">+0.01</button>
+                </div>
+            </div>
+        </div>
+        <div class="param-group span-2 compact">
+            <div class="param-label-row"><label>模式</label></div>
+            <div class="param-row"><span class="readonly-box">四面 × 4K</span></div>
+        </div>
+
+        <div class="param-group span-3">
+            <div class="param-label-row"><label>Perfect判定范围 ±ms</label></div>
+            <div class="param-row">
+                <input type="range" id="perfectSlider" min="10" max="200" value="80">
+                <input type="number" id="perfectInput" min="10" max="200" value="80">
+                <div class="steppers"><button class="step-btn" id="perfectDec">−</button><button class="step-btn" id="perfectInc">+</button></div>
+            </div>
+        </div>
+        <div class="param-group span-2 compact">
+            <div class="param-label-row"><label>Good判定范围 ±ms</label></div>
+            <div class="param-row"><span class="readonly-box" id="goodDisplay">160</span></div>
+        </div>
+        <div class="param-group span-2">
+            <div class="param-label-row"><label>最大音符大小</label><span class="param-meta">%</span></div>
+            <div class="param-row">
+                <input type="range" id="maxNoteScaleSlider" min="70" max="130" value="100">
+                <input type="number" id="maxNoteScaleInput" min="70" max="130" value="100">
+                <div class="steppers"><button class="step-btn" id="maxNoteScaleDec">−</button><button class="step-btn" id="maxNoteScaleInc">+</button></div>
+            </div>
+        </div>
+        <div class="param-group span-2">
+            <div class="param-label-row"><label>音符加速度</label></div>
+            <div class="param-row">
+                <input type="range" id="accelSlider" min="1.0" max="3.0" step="0.1" value="2">
+                <input type="number" id="accelInput" min="1.0" max="3.0" step="0.1" value="2">
+                <div class="steppers"><button class="step-btn" id="accelDec">−</button><button class="step-btn" id="accelInc">+</button></div>
+            </div>
+        </div>
+        <div class="param-group span-2">
+            <div class="param-label-row"><label>淡入比例</label><span class="param-meta">0-0.75</span></div>
+            <div class="param-row">
+                <input type="range" id="fadeSlider" min="0" max="0.75" step="0.01" value="0.20">
+                <input type="number" id="fadeInput" min="0" max="0.75" step="0.01" value="0.20">
+                <div class="steppers"><button class="step-btn" id="fadeDec">−</button><button class="step-btn" id="fadeInc">+</button></div>
+            </div>
+        </div>
+        <div class="param-group span-2 actions compact">
+            <div class="param-label-row"><label>操作</label></div>
+            <div class="param-row"><button class="btn btn-warning" id="resetBtn">重置</button></div>
+        </div>
+        <div class="param-group span-4 checkboxes">
+            <div class="param-label-row"><label>显示选项</label></div>
+            <div class="param-row" style="gap:16px; flex-wrap:wrap;">
+                <label class="checkbox-label"><input type="checkbox" id="hideHitZones" checked> 隐藏判定区域</label>
+                <label class="checkbox-label"><input type="checkbox" id="hideTrackLines" checked> 隐藏轨道分割线</label>
+            </div>
+        </div>
+    </div>
+
+    <div class="pattern-section">
+        <label style="color:#b7c9e2; font-weight:600;">键型</label>
+        <select id="patternCategory" style="min-width:130px;"></select>
+        <select id="patternSub" style="min-width:210px;"></select>
+        <div class="custom-row" id="customRow" style="display:none;">
+            <input type="text" id="customPatternInput" placeholder="例如：32 (11 22 0) 1* /1 //" style="width:320px;" class="custom-input">
+            <span id="patternError" class="error-message"></span>
+        </div>
+        <div id="syntaxHintBox" class="syntax-hint">
+            <span class="syntax-line"><strong>自定义语法：</strong>两个字符一个音符：第1位方向 1上/2右/3下/4左；第2位轨道 1-4。</span>
+            <span class="syntax-line"><strong>多押：</strong>括号内同一拍出现，例如 (11 22 33)，不允许嵌套；0 是空拍/占位符。</span>
+            <span class="syntax-line"><strong>通配：</strong>* 随机可重复，/ 随机且不同于上一个有效音符对应维度；例如 1*、*1、**、1/、/1、//。</span>
+            <span class="syntax-line"><strong>循环：</strong>[次数,内容] 循环内容指定次数，例如 [2,22 23]；次数可为0或1；允许嵌套。</span>
+        </div>
+    </div>
+
+    <div class="space-hint">点击/触摸四周判定区域击打</div>
+    <div class="start-row">
+        <button class="btn btn-primary btn-start-large" id="startStopBtn">开始</button>
+        <div class="start-row-actions">
+            <button class="btn btn-ghost" id="fullscreenBtn">全屏游玩</button>
+        </div>
+    </div>
+
+    <div class="stats-area">
+        <div class="counters">
+            <div class="counter-item"><span style="color:#b7c9e2;">Perfect:</span> <span class="counter-perfect" id="perfectCount">0</span></div>
+            <div class="counter-item"><span style="color:#b7c9e2;">Good:</span> <span class="counter-good" id="goodCount">0</span></div>
+            <div class="counter-item"><span style="color:#b7c9e2;">Miss:</span> <span class="counter-miss" id="missCount">0</span></div>
+        </div>
+        <div></div>
+    </div>
+
+    <div class="canvas-wrapper" id="canvasWrapper">
+        <canvas id="gameCanvas"></canvas>
+        <div id="countdownDisplay" class="countdown-overlay" style="display:none;"></div>
+        <div id="accDisplay" class="acc-display">Acc: 100.00%</div>
+        <div class="fullscreen-hud" id="fullscreenHud">
+            <div class="fullscreen-hud-left">
+                <span>P:<span class="counter-perfect" id="fsPerfectCount">0</span></span>
+                <span>G:<span class="counter-good" id="fsGoodCount">0</span></span>
+                <span>M:<span class="counter-miss" id="fsMissCount">0</span></span>
+            </div>
+            <div class="fullscreen-hud-right">
+                <span id="fsAccDisplay">Acc: 100.00%</span>
+                <button class="btn btn-ghost" id="exitFullscreenBtn">双击退出全屏</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    (function() {
+        "use strict";
+
+        const gameContainer = document.getElementById('gameContainer');
+        const canvasWrapper = document.getElementById('canvasWrapper');
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d', { alpha: false });
+
+        const perfectSpan = document.getElementById('perfectCount');
+        const goodSpan = document.getElementById('goodCount');
+        const missSpan = document.getElementById('missCount');
+        const fsPerfectSpan = document.getElementById('fsPerfectCount');
+        const fsGoodSpan = document.getElementById('fsGoodCount');
+        const fsMissSpan = document.getElementById('fsMissCount');
+
+        const countdownDiv = document.getElementById('countdownDisplay');
+        const accDisplay = document.getElementById('accDisplay');
+        const fsAccDisplay = document.getElementById('fsAccDisplay');
+
+        const bpmSlider = document.getElementById('bpmSlider');
+        const bpmInput = document.getElementById('bpmInput');
+        const bpmDec = document.getElementById('bpmDec');
+        const bpmInc = document.getElementById('bpmInc');
+        const rhythmSelect = document.getElementById('rhythmSelect');
+
+        const speedSlider = document.getElementById('speedSlider');
+        const speedInput = document.getElementById('speedInput');
+        const speedMsDisplay = document.getElementById('speedMsDisplay');
+        const speedStepBtns = Array.from(document.querySelectorAll('.speed-steps .step-btn'));
+
+        const perfectSlider = document.getElementById('perfectSlider');
+        const perfectInput = document.getElementById('perfectInput');
+        const perfectDec = document.getElementById('perfectDec');
+        const perfectInc = document.getElementById('perfectInc');
+        const goodDisplay = document.getElementById('goodDisplay');
+
+        const maxNoteScaleSlider = document.getElementById('maxNoteScaleSlider');
+        const maxNoteScaleInput = document.getElementById('maxNoteScaleInput');
+        const maxNoteScaleDec = document.getElementById('maxNoteScaleDec');
+        const maxNoteScaleInc = document.getElementById('maxNoteScaleInc');
+
+        const accelSlider = document.getElementById('accelSlider');
+        const accelInput = document.getElementById('accelInput');
+        const accelDec = document.getElementById('accelDec');
+        const accelInc = document.getElementById('accelInc');
+
+        const fadeSlider = document.getElementById('fadeSlider');
+        const fadeInput = document.getElementById('fadeInput');
+        const fadeDec = document.getElementById('fadeDec');
+        const fadeInc = document.getElementById('fadeInc');
+
+        const resetBtn = document.getElementById('resetBtn');
+        const startStopBtn = document.getElementById('startStopBtn');
+        const fullscreenBtn = document.getElementById('fullscreenBtn');
+        const exitFullscreenBtn = document.getElementById('exitFullscreenBtn');
+
+        const patternCategory = document.getElementById('patternCategory');
+        const patternSub = document.getElementById('patternSub');
+        const customPatternInput = document.getElementById('customPatternInput');
+        const patternError = document.getElementById('patternError');
+        const customRow = document.getElementById('customRow');
+
+        const hideHitZonesCheckbox = document.getElementById('hideHitZones');
+        const hideTrackLinesCheckbox = document.getElementById('hideTrackLines');
+
+        const STORAGE_KEY = 'paradigm_four_sides_practice_v3';
+        const LANES_PER_SIDE = 4;
+        const SPEED_MIN_U = 1;
+        const SPEED_MAX_U = 10;
+        const SPEED_DEFAULT_U = 6;
+        const EFFECT_DURATION = 190;
+        const HIT_INNER_RATIO = 0.60;
+        const HIT_OUTER_RATIO = 1.20;
+        const DISPLAY_SIZE_HARDCODED = 20;
+
+        let allControls = [];
+        let gameActive = false;
+        let acceptingInput = false;
+        let animFrame = null;
+
+        let notes = [];
+        let effects = [];
+        let perfectCount = 0;
+        let goodCount = 0;
+        let missCount = 0;
+
+        let nextNoteTime = 0;
+        let noteIntervalMs = 0;
+        let countdownBeatMs = 500;
+        let countdownState = { active: false };
+
+        let currentPattern = null;
+        let customValid = true;
+        let resetConfirmActive = false;
+        let resetConfirmTimer = null;
+        let chordSerial = 1;
+
+        let canvasCssWidth = 0;
+        let canvasCssHeight = 0;
+        let dpr = 1;
+        let layout = null;
+        let wedgeCache = null;
+        let targetCache = null;
+
+        let lastExitClickTime = 0;
+
+        const builtinPatterns = {
+            '单面4K': [
+                { name: '上面楼梯 11121314...', seq: [[{direction:1,lane:1}],[{direction:1,lane:2}],[{direction:1,lane:3}],[{direction:1,lane:4}]] },
+                { name: '右面楼梯 21222324...', seq: [[{direction:2,lane:1}],[{direction:2,lane:2}],[{direction:2,lane:3}],[{direction:2,lane:4}]] },
+                { name: '下面楼梯 31323334...', seq: [[{direction:3,lane:1}],[{direction:3,lane:2}],[{direction:3,lane:3}],[{direction:3,lane:4}]] },
+                { name: '左面楼梯 41424344...', seq: [[{direction:4,lane:1}],[{direction:4,lane:2}],[{direction:4,lane:3}],[{direction:4,lane:4}]] }
+            ],
+            '四面切换': [
+                { name: '同轨轮转 11213141...', seq: [[{direction:1,lane:1}],[{direction:2,lane:1}],[{direction:3,lane:1}],[{direction:4,lane:1}]] },
+                { name: '二轨轮转 12223242...', seq: [[{direction:1,lane:2}],[{direction:2,lane:2}],[{direction:3,lane:2}],[{direction:4,lane:2}]] },
+                { name: '四面楼梯 11223344...', seq: [[{direction:1,lane:1}],[{direction:2,lane:2}],[{direction:3,lane:3}],[{direction:4,lane:4}]] },
+                { name: '反向楼梯 14243341...', seq: [[{direction:1,lane:4}],[{direction:2,lane:4}],[{direction:3,lane:3}],[{direction:4,lane:1}]] }
+            ],
+            '对边训练': [
+                { name: '上下同轨 11311232...', seq: [[{direction:1,lane:1}],[{direction:3,lane:1}],[{direction:1,lane:2}],[{direction:3,lane:2}],[{direction:1,lane:3}],[{direction:3,lane:3}],[{direction:1,lane:4}],[{direction:3,lane:4}]] },
+                { name: '左右同轨 21412242...', seq: [[{direction:2,lane:1}],[{direction:4,lane:1}],[{direction:2,lane:2}],[{direction:4,lane:2}],[{direction:2,lane:3}],[{direction:4,lane:3}],[{direction:2,lane:4}],[{direction:4,lane:4}]] },
+                { name: '上右/下左交错', seq: [[{direction:1,lane:1}],[{direction:2,lane:1}],[{direction:3,lane:4}],[{direction:4,lane:4}],[{direction:1,lane:2}],[{direction:2,lane:2}],[{direction:3,lane:3}],[{direction:4,lane:3}]] }
+            ],
+            '多押示例': [
+                { name: '双押：上下 / 左右', seq: [[{direction:1,lane:1},{direction:3,lane:1}],[{direction:2,lane:2},{direction:4,lane:2}],[{direction:1,lane:3},{direction:3,lane:3}],[{direction:2,lane:4},{direction:4,lane:4}]] },
+                { name: '三押：三面定位', seq: [[{direction:1,lane:1},{direction:2,lane:2},{direction:3,lane:3}],[{direction:2,lane:1},{direction:3,lane:2},{direction:4,lane:3}],[{direction:3,lane:1},{direction:4,lane:2},{direction:1,lane:3}],[{direction:4,lane:1},{direction:1,lane:2},{direction:2,lane:3}]] }
+            ],
+            '散点': [
+                { name: '随机；无多押', random: true, doubleChance: 0 },
+                { name: '随机；20%双押', random: true, doubleChance: 0.2 },
+                { name: '随机；50%双押', random: true, doubleChance: 0.5 }
+            ]
+        };
+
+        function clamp(value, min, max) { return Math.min(max, Math.max(min, value)); }
+        function roundToStep(value, step, decimals) { return Number((Math.round(value / step) * step).toFixed(decimals)); }
+        function uToMs(u) { return 10000 * Math.exp(-0.5117 * (u - 1)); }
+        function normalizeSpeedU(v) { return roundToStep(clamp(Number(v) || SPEED_DEFAULT_U, SPEED_MIN_U, SPEED_MAX_U), 0.01, 2); }
+        function getSpeedMs() { return uToMs(Number(speedSlider.value)); }
+
+        function updateSpeedDisplay() {
+            const u = normalizeSpeedU(speedSlider.value);
+            speedSlider.value = u.toFixed(2);
+            speedInput.value = u.toFixed(2);
+            speedMsDisplay.textContent = `到达判定边时间：${Math.round(uToMs(u))} ms`;
+        }
+
+        function setSpeedU(value, skipSave) {
+            const u = normalizeSpeedU(value);
+            speedSlider.value = u.toFixed(2);
+            speedInput.value = u.toFixed(2);
+            updateSpeedDisplay();
+            if (!skipSave) saveSettings();
+        }
+
+        function adjustSpeedU(delta) { setSpeedU(Number(speedSlider.value) + delta); }
+        function updateGoodDisplay() { goodDisplay.textContent = Number(perfectSlider.value) * 2; }
+
+        function updateNoteInterval() {
+            const bpm = Number(bpmSlider.value);
+            const beatMs = 60000 / bpm;
+            const div = {4:1,8:2,12:3,16:4}[rhythmSelect.value] || 1;
+            noteIntervalMs = beatMs / div;
+            countdownBeatMs = beatMs;
+        }
+
+        function getMaxNoteScale() { return Number(maxNoteScaleSlider.value) / 100; }
+        function getAccelCurve() { return Number(accelSlider.value) + 1; }
+        function getFadeInRatio() { return Number(fadeSlider.value); }
+
+        function bindNumberControl(slider, input, dec, inc, onChange) {
+            const min = () => Number(slider.min);
+            const max = () => Number(slider.max);
+            const step = () => Number(slider.step || 1);
+            function applyValue(value) {
+                value = clamp(Number(value), min(), max());
+                slider.value = value;
+                input.value = value;
+                if (onChange) onChange(value);
+                updateGoodDisplay();
+                saveSettings();
+                requestStaticDraw();
+            }
+            slider.addEventListener('input', () => applyValue(slider.value));
+            input.addEventListener('change', () => {
+                let v = Number(input.value);
+                if (Number.isNaN(v)) v = min();
+                applyValue(v);
+            });
+            dec.addEventListener('click', () => applyValue(Number(slider.value) - step()));
+            inc.addEventListener('click', () => applyValue(Number(slider.value) + step()));
+        }
+
+        function saveSettings() {
+            const settings = {
+                bpm: bpmSlider.value,
+                rhythm: rhythmSelect.value,
+                speedU: Number(speedSlider.value).toFixed(2),
+                perfectWindow: perfectSlider.value,
+                maxNoteScale: maxNoteScaleSlider.value,
+                accelCurve: accelSlider.value,
+                fadeInRatio: fadeSlider.value,
+                patternCategory: patternCategory.value,
+                patternSub: patternSub.value,
+                customPattern: customPatternInput.value,
+                hideHitZones: hideHitZonesCheckbox.checked,
+                hideTrackLines: hideTrackLinesCheckbox.checked
+            };
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(settings));
+        }
+
+        function loadSettings() {
+            const saved = localStorage.getItem(STORAGE_KEY);
+            let savedSettings = null;
+            if (saved) {
+                try {
+                    const s = JSON.parse(saved);
+                    savedSettings = s;
+                    bpmSlider.value = s.bpm || 90;
+                    bpmInput.value = s.bpm || 90;
+                    rhythmSelect.value = s.rhythm || '4';
+                    setSpeedU(s.speedU !== undefined ? s.speedU : SPEED_DEFAULT_U, true);
+                    perfectSlider.value = s.perfectWindow || 80;
+                    perfectInput.value = s.perfectWindow || 80;
+                    maxNoteScaleSlider.value = s.maxNoteScale || 100;
+                    maxNoteScaleInput.value = s.maxNoteScale || 100;
+                    accelSlider.value = s.accelCurve || 2;
+                    accelInput.value = s.accelCurve || 2;
+                    fadeSlider.value = s.fadeInRatio || 0.2;
+                    fadeInput.value = s.fadeInRatio || 0.2;
+                    customPatternInput.value = s.customPattern || '';
+                    hideHitZonesCheckbox.checked = s.hideHitZones !== undefined ? s.hideHitZones : true;
+                    hideTrackLinesCheckbox.checked = s.hideTrackLines !== undefined ? s.hideTrackLines : true;
+                } catch (e) { savedSettings = null; }
+            } else {
+                setSpeedU(SPEED_DEFAULT_U, true);
+            }
+            rebuildPatternUI();
+            restorePatternSelection(savedSettings);
+            updateGoodDisplay();
+            updateNoteInterval();
+            updateSpeedDisplay();
+        }
+
+        function resetToDefaults() {
+            bpmSlider.value = 90; bpmInput.value = 90;
+            rhythmSelect.value = '4';
+            setSpeedU(SPEED_DEFAULT_U, true);
+            perfectSlider.value = 80; perfectInput.value = 80;
+            maxNoteScaleSlider.value = 100; maxNoteScaleInput.value = 100;
+            accelSlider.value = 2; accelInput.value = 2;
+            fadeSlider.value = 0.2; fadeInput.value = 0.2;
+            customPatternInput.value = '';
+            hideHitZonesCheckbox.checked = true;
+            hideTrackLinesCheckbox.checked = true;
+            rebuildPatternUI();
+            patternCategory.value = '散点';
+            updateSubOptions(1, true);
+            updateGoodDisplay();
+            updateNoteInterval();
+            saveSettings();
+        }
+
+        function clearResetConfirmState() {
+            resetConfirmActive = false;
+            if (resetConfirmTimer) { clearTimeout(resetConfirmTimer); resetConfirmTimer = null; }
+            resetBtn.textContent = '重置';
+            resetBtn.classList.remove('btn-danger');
+        }
+
+        function enterResetConfirmState() {
+            resetConfirmActive = true;
+            resetBtn.textContent = '确认重置';
+            resetBtn.classList.add('btn-danger');
+            if (resetConfirmTimer) clearTimeout(resetConfirmTimer);
+            resetConfirmTimer = setTimeout(clearResetConfirmState, 5000);
+        }
+
+        function rebuildPatternUI() {
+            patternCategory.innerHTML = '';
+            Object.keys(builtinPatterns).forEach(cat => {
+                const opt = document.createElement('option');
+                opt.value = cat;
+                opt.textContent = cat;
+                patternCategory.appendChild(opt);
+            });
+            const customOpt = document.createElement('option');
+            customOpt.value = '__custom__';
+            customOpt.textContent = '自定义';
+            patternCategory.appendChild(customOpt);
+            updateSubOptions(0, true);
+        }
+
+        function updateSubOptions(preferredSubIdx = 0, skipSave = true) {
+            const cat = patternCategory.value;
+            if (cat === '__custom__') {
+                patternSub.style.display = 'none';
+                customRow.style.display = 'flex';
+                customPatternInput.disabled = false;
+                parseAndApplyCustom(skipSave);
+                return;
+            }
+            patternSub.style.display = 'inline-block';
+            customRow.style.display = 'none';
+            customPatternInput.disabled = true;
+            patternSub.innerHTML = '';
+            const subs = builtinPatterns[cat] || [];
+            subs.forEach((item, idx) => {
+                const opt = document.createElement('option');
+                opt.value = idx;
+                opt.textContent = item.name;
+                patternSub.appendChild(opt);
+            });
+            if (subs.length) {
+                const idx = clamp(Number(preferredSubIdx) || 0, 0, subs.length-1);
+                patternSub.value = String(idx);
+                applyBuiltinPattern(cat, idx);
+            }
+            if (!skipSave) saveSettings();
+        }
+
+        function applyBuiltinPattern(cat, subIdx) {
+            const item = builtinPatterns[cat]?.[subIdx];
+            if (!item) return;
+            if (item.random) {
+                currentPattern = { type: 'random', prevCell: null, doubleChance: item.doubleChance || 0.2 };
+            } else {
+                currentPattern = {
+                    type: 'builtin',
+                    sequence: item.seq.map(beat => beat.map(cell => ({direction:cell.direction, lane:cell.lane}))),
+                    index: 0,
+                    prevCell: null
+                };
+            }
+            patternError.textContent = '';
+            customValid = true;
+        }
+
+        function optionExists(select, value) {
+            return Array.from(select.options).some(opt => opt.value === value);
+        }
+
+        function restorePatternSelection(savedSettings) {
+            if (!savedSettings || !savedSettings.patternCategory || !optionExists(patternCategory, savedSettings.patternCategory)) {
+                patternCategory.value = '散点';
+                updateSubOptions(1, true);
+                return;
+            }
+            patternCategory.value = savedSettings.patternCategory;
+            if (patternCategory.value === '__custom__') {
+                updateSubOptions(0, true);
+            } else {
+                let subIdx = savedSettings.patternSub;
+                const subs = builtinPatterns[patternCategory.value] || [];
+                if (subIdx === undefined || subIdx >= subs.length) subIdx = (patternCategory.value==='散点'?1:0);
+                updateSubOptions(subIdx, true);
+            }
+        }
+
+        function isTokenChar(ch) { return /^[1-4*/]$/.test(ch); }
+
+        function parseBeatContent(str, insideGroup) {
+            const items = [];
+            let i = 0;
+            while (i < str.length) {
+                const ch = str[i];
+                if (/\s|,|，|;|；|\|/.test(ch)) { i++; continue; }
+                if (ch === '0') { items.push({type:'placeholder'}); i++; continue; }
+                if (!isTokenChar(ch)) return {error:`非法字符 ${ch}`};
+                if (i+1 >= str.length) return {error:'音符必须两个字符一组'};
+                const ch2 = str[i+1];
+                if (!isTokenChar(ch2)) return {error:`音符 ${ch}${ch2||''} 不完整或含非法字符`};
+                items.push({type:'note', directionToken:ch, laneToken:ch2});
+                i += 2;
+            }
+            if (!insideGroup && items.length > 1) return {error:'内部错误：非括号内容不应含多个音符'};
+            return {items};
+        }
+
+        function parseCustomPatternRecursive(str) {
+            const raw = str.trim();
+            if (!raw) return {error:'输入为空'};
+            const beats = [];
+            let i = 0;
+            while (i < raw.length) {
+                const ch = raw[i];
+                if (/\s|,|，|;|；|\|/.test(ch)) { i++; continue; }
+                if (ch === '(') {
+                    let depth = 1, j = i+1, content = '';
+                    while (j < raw.length && depth > 0) {
+                        if (raw[j] === '(') return {error:'不允许嵌套括号'};
+                        if (raw[j] === ')') { depth--; if (depth===0) break; }
+                        else content += raw[j];
+                        j++;
+                    }
+                    if (depth !== 0) return {error:'括号没有闭合'};
+                    const parsed = parseBeatContent(content, true);
+                    if (parsed.error) return parsed;
+                    beats.push({type:'beat', specs: parsed.items.filter(it=>it.type==='note')});
+                    i = j+1;
+                    continue;
+                }
+                if (ch === ')') return {error:'多余的右括号'};
+                if (ch === '[') {
+                    let depth = 1, j = i+1, content = '';
+                    while (j < raw.length && depth > 0) {
+                        if (raw[j] === '[') depth++;
+                        else if (raw[j] === ']') { depth--; if (depth===0) break; }
+                        content += raw[j];
+                        j++;
+                    }
+                    if (depth !== 0) return {error:'方括号没有闭合'};
+                    const commaIdx = content.indexOf(',');
+                    if (commaIdx === -1) return {error:'循环语法需要逗号分隔次数和内容'};
+                    const countStr = content.substring(0, commaIdx).trim();
+                    const inner = content.substring(commaIdx+1);
+                    const count = Number(countStr);
+                    if (!Number.isInteger(count) || count < 0) return {error:`循环次数必须为非负整数，得到 ${countStr}`};
+                    const expanded = Array(count).fill(inner).join(' ');
+                    const rec = parseCustomPatternRecursive(expanded);
+                    if (rec.error) return rec;
+                    for (const b of rec.beats) beats.push(b);
+                    i = j+1;
+                    continue;
+                }
+                if (ch === ']') return {error:'多余的右方括号'};
+                if (ch === '0') { beats.push({type:'beat', specs:[]}); i++; continue; }
+                if (!isTokenChar(ch)) return {error:`非法字符 ${ch}`};
+                if (i+1 >= raw.length) return {error:'音符必须两个字符一组'};
+                const ch2 = raw[i+1];
+                if (!isTokenChar(ch2)) return {error:`音符 ${ch}${ch2||''} 不完整或含非法字符`};
+                beats.push({type:'beat', specs:[{type:'note', directionToken:ch, laneToken:ch2}]});
+                i += 2;
+            }
+            if (!beats.length) return {error:'没有有效拍'};
+            return {beats};
+        }
+
+        function parseAndApplyCustom(skipSave = false) {
+            const parsed = parseCustomPatternRecursive(customPatternInput.value);
+            if (parsed.error) {
+                patternError.textContent = parsed.error;
+                customValid = false;
+                return false;
+            }
+            patternError.textContent = '';
+            customValid = true;
+            currentPattern = {type:'custom', beats:parsed.beats, index:0, prevCell:null};
+            if (!skipSave) saveSettings();
+            return true;
+        }
+
+        function cellKey(cell) { return cell.direction+'-'+cell.lane; }
+        function randomInt1to4(exclude) { const cand = [1,2,3,4].filter(v=> !exclude || v!==exclude); return cand[Math.floor(Math.random()*cand.length)]; }
+
+        function getRandomCell(excludeKeys) {
+            const exclude = excludeKeys || new Set();
+            const cand = [];
+            for (let d=1; d<=4; d++) for (let l=1; l<=4; l++) {
+                const c = {direction:d, lane:l};
+                if (!exclude.has(cellKey(c))) cand.push(c);
+            }
+            return cand[Math.floor(Math.random()*cand.length)];
+        }
+
+        function resolveToken(token, dim, prev) {
+            if (token === '*') return randomInt1to4(null);
+            if (token === '/') return prev ? randomInt1to4(dim==='direction'?prev.direction:prev.lane) : randomInt1to4(null);
+            return Number(token);
+        }
+
+        function resolveSpec(spec, prev, used) {
+            const wild = spec.directionToken==='*'||spec.directionToken==='/'||spec.laneToken==='*'||spec.laneToken==='/';
+            for (let t=0; t<40; t++) {
+                const d = resolveToken(spec.directionToken,'direction',prev);
+                const l = resolveToken(spec.laneToken,'lane',prev);
+                const c = {direction:d, lane:l};
+                if (!used.has(cellKey(c))) return c;
+                if (!wild) return null;
+            }
+            for (let d=1; d<=4; d++) for (let l=1; l<=4; l++) {
+                const c = {direction:d, lane:l};
+                if (!used.has(cellKey(c))) return c;
+            }
+            return null;
+        }
+
+        function getNextCells() {
+            if (!currentPattern) return [getRandomCell()];
+            if (currentPattern.type === 'random') {
+                const first = getRandomCell();
+                const cells = [first];
+                const doubleChance = currentPattern.doubleChance || 0.2;
+                if (Math.random() < doubleChance) {
+                    const exclude = new Set([cellKey(first)]);
+                    cells.push(getRandomCell(exclude));
+                }
+                currentPattern.prevCell = cells[cells.length-1];
+                return cells;
+            }
+            if (currentPattern.type === 'builtin') {
+                const seq = currentPattern.sequence;
+                const beat = seq[currentPattern.index % seq.length] || [];
+                currentPattern.index = (currentPattern.index+1) % seq.length;
+                const used = new Set();
+                const cells = [];
+                for (const c of beat) {
+                    const key = cellKey(c);
+                    if (used.has(key)) continue;
+                    used.add(key);
+                    const copy = {direction:c.direction, lane:c.lane};
+                    cells.push(copy);
+                    currentPattern.prevCell = copy;
+                }
+                return cells;
+            }
+            if (currentPattern.type === 'custom') {
+                if (patternCategory.value==='__custom__' && !customValid) return [getRandomCell()];
+                const beat = currentPattern.beats[currentPattern.index % currentPattern.beats.length];
+                currentPattern.index = (currentPattern.index+1) % currentPattern.beats.length;
+                const used = new Set();
+                const cells = [];
+                for (const spec of beat.specs) {
+                    const cell = resolveSpec(spec, currentPattern.prevCell, used);
+                    if (!cell) continue;
+                    used.add(cellKey(cell));
+                    cells.push(cell);
+                    currentPattern.prevCell = cell;
+                }
+                return cells;
+            }
+            return [getRandomCell()];
+        }
+
+        function resetPatternIndex() {
+            if (currentPattern) {
+                if (typeof currentPattern.index === 'number') currentPattern.index = 0;
+                currentPattern.prevCell = null;
+            }
+        }
+
+        function updateStatsSpans() {
+            perfectSpan.textContent = String(perfectCount);
+            goodSpan.textContent = String(goodCount);
+            missSpan.textContent = String(missCount);
+            fsPerfectSpan.textContent = String(perfectCount);
+            fsGoodSpan.textContent = String(goodCount);
+            fsMissSpan.textContent = String(missCount);
+        }
+
+        function updateAccDisplay() {
+            const total = perfectCount + goodCount + missCount;
+            let acc = total ? (perfectCount + goodCount*0.7)/total*100 : 100;
+            const text = `Acc: ${acc.toFixed(2)}%`;
+            accDisplay.textContent = text;
+            fsAccDisplay.textContent = text;
+        }
+
+        function isFullscreenMode() { return Boolean(document.fullscreenElement) || document.body.classList.contains('fullscreen-mode'); }
+
+        function resizeCanvas() {
+            const full = isFullscreenMode();
+            canvasCssWidth = full ? window.innerWidth : canvasWrapper.clientWidth;
+            canvasCssHeight = full ? window.innerHeight : window.innerHeight * 0.75;
+            dpr = Math.max(1, Math.min(2, window.devicePixelRatio||1));
+            canvas.style.width = `${canvasCssWidth}px`;
+            canvas.style.height = `${canvasCssHeight}px`;
+            canvas.width = Math.round(canvasCssWidth * dpr);
+            canvas.height = Math.round(canvasCssHeight * dpr);
+            ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+            updateLayout();
+        }
+
+        function updateLayout() {
+            const l = {};
+            l.displaySize = DISPLAY_SIZE_HARDCODED;
+            const margin = l.displaySize * 1.65 + 28;
+            const maxW = Math.max(220, canvasCssWidth - margin*2);
+            const maxH = Math.max(220, canvasCssHeight - margin*2);
+            l.fieldW = Math.max(220, Math.min(maxW, isFullscreenMode()?900:660));
+            l.fieldH = Math.max(220, Math.min(maxH, isFullscreenMode()?900:660));
+            l.cx = canvasCssWidth/2;
+            l.cy = canvasCssHeight/2;
+            l.halfW = l.fieldW/2;
+            l.halfH = l.fieldH/2;
+            l.left = l.cx - l.halfW;
+            l.right = l.cx + l.halfW;
+            l.top = l.cy - l.halfH;
+            l.bottom = l.cy + l.halfH;
+            l.baseLaneLength = Math.min(l.fieldW, l.fieldH) / LANES_PER_SIDE;
+
+            const maxGapRatio = 0.3;
+            l.gapH = Math.max(2, Math.min((l.fieldW - 4*l.baseLaneLength)/3, l.baseLaneLength * maxGapRatio));
+            l.gapV = Math.max(2, Math.min((l.fieldH - 4*l.baseLaneLength)/3, l.baseLaneLength * maxGapRatio));
+
+            l.noteThickness = Math.max(10, l.displaySize * 0.30);
+            layout = l;
+            wedgeCache = {};
+            targetCache = {};
+            for (let d=1; d<=4; d++) {
+                wedgeCache[d] = {};
+                targetCache[d] = {};
+                for (let ln=1; ln<=4; ln++) {
+                    wedgeCache[d][ln] = computeWedge(d, ln);
+                    targetCache[d][ln] = computeTarget(d, ln);
+                }
+            }
+        }
+
+        function getSegmentEndpoints(direction, lane) {
+            const l = layout;
+            const i = lane-1;
+            if (direction === 1) {
+                const totalWidth = 4 * l.baseLaneLength + 3 * l.gapH;
+                const startX = l.left + (l.fieldW - totalWidth) / 2;
+                return [{x: startX + i*(l.baseLaneLength+l.gapH), y: l.top},
+                        {x: startX + i*(l.baseLaneLength+l.gapH) + l.baseLaneLength, y: l.top}];
+            }
+            if (direction === 3) {
+                const totalWidth = 4 * l.baseLaneLength + 3 * l.gapH;
+                const startX = l.left + (l.fieldW - totalWidth) / 2;
+                return [{x: startX + (3-i)*(l.baseLaneLength+l.gapH) + l.baseLaneLength, y: l.bottom},
+                        {x: startX + (3-i)*(l.baseLaneLength+l.gapH), y: l.bottom}];
+            }
+            if (direction === 2) {
+                const totalHeight = 4 * l.baseLaneLength + 3 * l.gapV;
+                const startY = l.top + (l.fieldH - totalHeight) / 2;
+                return [{x: l.right, y: startY + i*(l.baseLaneLength+l.gapV)},
+                        {x: l.right, y: startY + i*(l.baseLaneLength+l.gapV) + l.baseLaneLength}];
+            }
+            const totalHeight = 4 * l.baseLaneLength + 3 * l.gapV;
+            const startY = l.top + (l.fieldH - totalHeight) / 2;
+            return [{x: l.left, y: startY + (3-i)*(l.baseLaneLength+l.gapV) + l.baseLaneLength},
+                    {x: l.left, y: startY + (3-i)*(l.baseLaneLength+l.gapV)}];
+        }
+
+        function getInnerPoint(p) {
+            return { x: layout.cx + (p.x - layout.cx) / 5, y: layout.cy + (p.y - layout.cy) / 5 };
+        }
+
+        function scaleFromCenter(p, ratio) {
+            return { x: layout.cx + (p.x - layout.cx) * ratio, y: layout.cy + (p.y - layout.cy) * ratio };
+        }
+
+        function computeWedge(d, ln) {
+            const [a,b] = getSegmentEndpoints(d, ln);
+            return [scaleFromCenter(a, HIT_INNER_RATIO), scaleFromCenter(b, HIT_INNER_RATIO),
+                    scaleFromCenter(b, HIT_OUTER_RATIO), scaleFromCenter(a, HIT_OUTER_RATIO)];
+        }
+
+        function getWedgePolygon(d, ln) {
+            return wedgeCache?.[d]?.[ln] || computeWedge(d, ln);
+        }
+
+        function computeTarget(d, ln) {
+            const [a,b] = getSegmentEndpoints(d, ln);
+            return { x:(a.x+b.x)/2, y:(a.y+b.y)/2 };
+        }
+
+        function getTargetPosition(d, ln) {
+            return targetCache?.[d]?.[ln] || computeTarget(d, ln);
+        }
+
+        function pointInPolygon(point, poly) {
+            let inside = false;
+            for (let i=0,j=poly.length-1; i<poly.length; j=i++) {
+                const xi=poly[i].x, yi=poly[i].y, xj=poly[j].x, yj=poly[j].y;
+                if (((yi>point.y)!==(yj>point.y)) && (point.x < (xj-xi)*(point.y-yi)/((yj-yi)||0.000001)+xi)) inside = !inside;
+            }
+            return inside;
+        }
+
+        function getZoneFromPoint(x, y) {
+            if (!layout) return null;
+            const point = {x,y};
+            const cand = [];
+            for (let d=1; d<=4; d++) for (let ln=1; ln<=4; ln++) {
+                const poly = getWedgePolygon(d, ln);
+                if (pointInPolygon(point, poly)) cand.push({d, ln, dist: (x-getTargetPosition(d,ln).x)**2+(y-getTargetPosition(d,ln).y)**2});
+            }
+            if (!cand.length) return null;
+            cand.sort((a,b)=>a.dist-b.dist);
+            return {direction:cand[0].d, lane:cand[0].ln};
+        }
+
+        function bindEvents() {
+            bindNumberControl(bpmSlider, bpmInput, bpmDec, bpmInc, updateNoteInterval);
+            bindNumberControl(perfectSlider, perfectInput, perfectDec, perfectInc, updateGoodDisplay);
+            bindNumberControl(maxNoteScaleSlider, maxNoteScaleInput, maxNoteScaleDec, maxNoteScaleInc, ()=>updateLayout());
+            bindNumberControl(accelSlider, accelInput, accelDec, accelInc, ()=>{});
+            bindNumberControl(fadeSlider, fadeInput, fadeDec, fadeInc, ()=>{});
+
+            speedSlider.addEventListener('input', ()=> setSpeedU(speedSlider.value));
+            speedInput.addEventListener('change', ()=> setSpeedU(speedInput.value));
+            speedStepBtns.forEach(b=>b.addEventListener('click', ()=>adjustSpeedU(Number(b.dataset.step))));
+            rhythmSelect.addEventListener('change', ()=>{ updateNoteInterval(); saveSettings(); });
+            resetBtn.addEventListener('click', ()=>{
+                if (gameActive) return;
+                if (!resetConfirmActive) { enterResetConfirmState(); return; }
+                clearResetConfirmState();
+                resetToDefaults();
+                requestStaticDraw();
+            });
+            startStopBtn.addEventListener('click', ()=> gameActive ? stopGame() : startGame());
+            fullscreenBtn.addEventListener('click', enterFullscreenPlay);
+            exitFullscreenBtn.addEventListener('click', ()=>{
+                const now = Date.now();
+                if (now - lastExitClickTime < 500) {
+                    lastExitClickTime = 0;
+                    exitFullscreenPlay();
+                } else {
+                    lastExitClickTime = now;
+                }
+            });
+            document.addEventListener('fullscreenchange', ()=>{
+                document.body.classList.toggle('fullscreen-mode', Boolean(document.fullscreenElement));
+                resizeCanvas();
+                drawCanvas(performance.now());
+            });
+            patternCategory.addEventListener('change', ()=>{ updateSubOptions(0,false); saveSettings(); });
+            patternSub.addEventListener('change', ()=>{
+                if (patternCategory.value!=='__custom__') {
+                    applyBuiltinPattern(patternCategory.value, Number(patternSub.value));
+                    saveSettings();
+                }
+            });
+            customPatternInput.addEventListener('input', ()=>{
+                if (patternCategory.value==='__custom__') parseAndApplyCustom();
+            });
+            hideHitZonesCheckbox.addEventListener('change', ()=>{ saveSettings(); requestStaticDraw(); });
+            hideTrackLinesCheckbox.addEventListener('change', ()=>{ saveSettings(); requestStaticDraw(); });
+            canvas.addEventListener('pointerdown', e=>{
+                e.preventDefault();
+                if (!gameActive || !acceptingInput) return;
+                const rect = canvas.getBoundingClientRect();
+                const x = (e.clientX-rect.left)*(canvasCssWidth/rect.width);
+                const y = (e.clientY-rect.top)*(canvasCssHeight/rect.height);
+                const zone = getZoneFromPoint(x,y);
+                if (zone) handleHit(zone.direction, zone.lane);
+            }, {passive:false});
+            canvas.addEventListener('pointermove', e=>e.preventDefault(), {passive:false});
+            window.addEventListener('resize', ()=>{ resizeCanvas(); requestStaticDraw(); });
+        }
+
+        async function enterFullscreenPlay() {
+            clearResetConfirmState();
+            try { if (!document.fullscreenElement) await gameContainer.requestFullscreen(); }
+            catch(e) { document.body.classList.add('fullscreen-mode'); resizeCanvas(); }
+            if (!gameActive) startGame();
+            else { resizeCanvas(); drawCanvas(performance.now()); }
+        }
+
+        async function exitFullscreenPlay() {
+            if (document.fullscreenElement) try { await document.exitFullscreen(); } catch(e) {}
+            document.body.classList.remove('fullscreen-mode');
+            resizeCanvas();
+            drawCanvas(performance.now());
+        }
+
+        function resetGameStats() {
+            perfectCount=0; goodCount=0; missCount=0;
+            updateStatsSpans(); updateAccDisplay();
+            notes=[]; effects=[]; resetPatternIndex();
+        }
+
+        function startCountdown() {
+            const now = performance.now();
+            countdownState = {active:true, phase:'ready', nextBeatTime:now+850, beatsLeft:3};
+            countdownDiv.style.display='flex'; countdownDiv.textContent='准备';
+            acceptingInput=false; gameActive=true;
+        }
+
+        function updateCountdown(now) {
+            if (!countdownState.active) return;
+            const s = countdownState;
+            if (s.phase==='ready' && now>=s.nextBeatTime) {
+                s.phase='countdown'; s.nextBeatTime=now+countdownBeatMs; countdownDiv.textContent='3';
+            } else if (s.phase==='countdown' && now>=s.nextBeatTime) {
+                s.beatsLeft--;
+                if (s.beatsLeft>0) { countdownDiv.textContent=String(s.beatsLeft); s.nextBeatTime+=countdownBeatMs; }
+                else { countdownState.active=false; countdownDiv.style.display='none'; acceptingInput=true; nextNoteTime=now; }
+            }
+        }
+
+        function startGame() {
+            if (gameActive) return;
+            clearResetConfirmState();
+            if (patternCategory.value==='__custom__' && !parseAndApplyCustom(true)) return;
+            allControls.forEach(c=>c.disabled=true);
+            resetGameStats();
+            updateNoteInterval();
+            resizeCanvas();
+            startStopBtn.textContent='停止';
+            startCountdown();
+            animFrame = requestAnimationFrame(function loop(ts){
+                if (!gameActive) return;
+                updateAndDraw(ts);
+                animFrame = requestAnimationFrame(loop);
+            });
+        }
+
+        function stopGame() {
+            if (!gameActive) return;
+            gameActive=false; acceptingInput=false;
+            startStopBtn.textContent='开始';
+            allControls.forEach(c=>c.disabled=false);
+            if (animFrame) { cancelAnimationFrame(animFrame); animFrame=null; }
+            notes=[]; effects=[];
+            countdownState.active=false; countdownDiv.style.display='none';
+            requestStaticDraw();
+        }
+
+        function generateNotes(now) {
+            if (!gameActive || !acceptingInput) return;
+            let gen=0;
+            while (nextNoteTime<=now && gen<40) {
+                const cells = getNextCells();
+                const used = new Set();
+                const filtered = [];
+                for (const c of cells) {
+                    const key = cellKey(c);
+                    if (used.has(key)) continue;
+                    used.add(key); filtered.push(c);
+                }
+                const chordId = chordSerial++;
+                for (const c of filtered) {
+                    notes.push({
+                        direction:c.direction, lane:c.lane,
+                        birthTime:nextNoteTime, hitTime:nextNoteTime+getSpeedMs(),
+                        judged:false, chordId, chordSize:filtered.length,
+                        glow:filtered.length>1
+                    });
+                }
+                nextNoteTime += noteIntervalMs;
+                gen++;
+            }
+        }
+
+        function handleHit(direction, lane) {
+            if (!gameActive || !acceptingInput) return;
+            const now = performance.now();
+            const pw = Number(perfectSlider.value);
+            const gw = pw*2;
+            let bestIdx=-1, bestAbs=Infinity;
+            for (let i=0; i<notes.length; i++) {
+                const n = notes[i];
+                if (n.judged || n.direction!==direction || n.lane!==lane) continue;
+                const abs = Math.abs(now - n.hitTime);
+                if (abs<=gw && abs<bestAbs) { bestAbs=abs; bestIdx=i; }
+            }
+            if (bestIdx===-1) return;
+            const n = notes[bestIdx];
+            n.judged = true;
+            notes.splice(bestIdx,1);
+            const target = getTargetPosition(n.direction, n.lane);
+            if (bestAbs <= pw) {
+                perfectCount++;
+                effects.push({x:target.x, y:target.y, type:'perfect', startTime:now});
+            } else {
+                goodCount++;
+                effects.push({x:target.x, y:target.y, type:'good', startTime:now});
+            }
+            updateStatsSpans(); updateAccDisplay();
+        }
+
+        function updateAndDraw(ts) {
+            if (countdownState.active) updateCountdown(ts);
+            generateNotes(ts);
+            const gw = Number(perfectSlider.value)*2;
+            for (let i=notes.length-1; i>=0; i--) {
+                const n = notes[i];
+                if (!n.judged && ts > n.hitTime+gw) {
+                    notes.splice(i,1);
+                    missCount++;
+                    updateStatsSpans(); updateAccDisplay();
+                }
+            }
+            drawCanvas(ts);
+        }
+
+        function requestStaticDraw() {
+            if (!gameActive) { resizeCanvas(); drawCanvas(performance.now()); }
+        }
+
+        function fillRoundRect(x,y,w,h,r) {
+            const radius = Math.min(r, Math.abs(w)/2, Math.abs(h)/2);
+            ctx.beginPath();
+            ctx.moveTo(x+radius,y);
+            ctx.lineTo(x+w-radius,y);
+            ctx.quadraticCurveTo(x+w,y,x+w,y+radius);
+            ctx.lineTo(x+w,y+h-radius);
+            ctx.quadraticCurveTo(x+w,y+h,x+w-radius,y+h);
+            ctx.lineTo(x+radius,y+h);
+            ctx.quadraticCurveTo(x,y+h,x,y+h-radius);
+            ctx.lineTo(x,y+radius);
+            ctx.quadraticCurveTo(x,y,x+radius,y);
+            ctx.closePath();
+            ctx.fill();
+        }
+
+        function drawBackground() {
+            ctx.fillStyle='#0c0f15';
+            ctx.fillRect(0,0,canvasCssWidth,canvasCssHeight);
+        }
+
+        function drawHitWedges() {
+            if (hideHitZonesCheckbox.checked) return;
+            ctx.lineWidth=1;
+            for (let d=1; d<=4; d++) for (let ln=1; ln<=4; ln++) {
+                const poly = getWedgePolygon(d, ln);
+                ctx.beginPath(); ctx.moveTo(poly[0].x,poly[0].y);
+                for (let i=1; i<poly.length; i++) ctx.lineTo(poly[i].x,poly[i].y);
+                ctx.closePath();
+                ctx.fillStyle='rgba(63,110,240,0.055)'; ctx.fill();
+                ctx.strokeStyle='rgba(145,170,210,0.16)'; ctx.stroke();
+            }
+        }
+
+        function drawPlayField() {
+            const l = layout;
+            drawHitWedges();
+            ctx.lineWidth=2.5; ctx.strokeStyle='#dce9ff';
+            ctx.strokeRect(l.left, l.top, l.fieldW, l.fieldH);
+
+            if (!hideTrackLinesCheckbox.checked) {
+                ctx.strokeStyle='#40556f'; ctx.lineWidth=1.1;
+                for (let d=1; d<=4; d++) {
+                    for (let ln=1; ln<=LANES_PER_SIDE; ln++) {
+                        const [a,b] = getSegmentEndpoints(d, ln);
+                        const a0 = getInnerPoint(a);
+                        const b0 = getInnerPoint(b);
+                        ctx.beginPath(); ctx.moveTo(a0.x, a0.y); ctx.lineTo(a.x, a.y); ctx.stroke();
+                        ctx.beginPath(); ctx.moveTo(b0.x, b0.y); ctx.lineTo(b.x, b.y); ctx.stroke();
+                    }
+                }
+            }
+
+            const corners = [
+                {x:l.left, y:l.top}, {x:l.right, y:l.top},
+                {x:l.right, y:l.bottom}, {x:l.left, y:l.bottom}
+            ];
+            ctx.lineWidth = 2.5;
+            for (const c of corners) {
+                const inner = getInnerPoint(c);
+                const grad = ctx.createLinearGradient(c.x, c.y, inner.x, inner.y);
+                grad.addColorStop(0, 'rgba(160, 181, 208, 0.9)');
+                grad.addColorStop(1, 'rgba(160, 181, 208, 0.0)');
+                ctx.strokeStyle = grad;
+                ctx.beginPath();
+                ctx.moveTo(c.x, c.y);
+                ctx.lineTo(inner.x, inner.y);
+                ctx.stroke();
+            }
+        }
+
+        function drawDirectionLabels() {
+            const l = layout;
+            const off = Math.max(28, l.displaySize*0.88);
+            ctx.font='700 14px "Segoe UI", system-ui, sans-serif';
+            ctx.textAlign='center'; ctx.textBaseline='middle';
+            ctx.fillStyle='#b7c9e2';
+            ctx.fillText('1 上', l.cx, l.top-off);
+            ctx.fillText('3 下', l.cx, l.bottom+off);
+            ctx.save(); ctx.translate(l.right+off, l.cy); ctx.rotate(Math.PI/2); ctx.fillText('2 右',0,0); ctx.restore();
+            ctx.save(); ctx.translate(l.left-off, l.cy); ctx.rotate(-Math.PI/2); ctx.fillText('4 左',0,0); ctx.restore();
+
+            ctx.font='600 12px "Segoe UI", system-ui, sans-serif'; ctx.fillStyle='#7f95b5';
+            for (let i=0; i<LANES_PER_SIDE; i++) {
+                const ln = i+1;
+                const segTop = getSegmentEndpoints(1, ln);
+                const midX = (segTop[0].x + segTop[1].x) / 2;
+                ctx.fillText(String(ln), midX, l.top+14);
+                const segBottom = getSegmentEndpoints(3, ln);
+                const midXb = (segBottom[0].x + segBottom[1].x) / 2;
+                ctx.fillText(String(ln), midXb, l.bottom-14);
+                const segRight = getSegmentEndpoints(2, ln);
+                const midY = (segRight[0].y + segRight[1].y) / 2;
+                ctx.fillText(String(ln), l.right-14, midY);
+                const segLeft = getSegmentEndpoints(4, ln);
+                const midYl = (segLeft[0].y + segLeft[1].y) / 2;
+                ctx.fillText(String(ln), l.left+14, midYl);
+            }
+        }
+
+        function drawNote(note, now) {
+            const l = layout;
+            const target = getTargetPosition(note.direction, note.lane);
+            const startX = l.cx + (target.x - l.cx) / 5;
+            const startY = l.cy + (target.y - l.cy) / 5;
+            const raw = (now - note.birthTime) / getSpeedMs();
+            const t = clamp(raw, 0, 1.18);
+            const accelExp = getAccelCurve();
+            const eased = Math.pow(Math.max(0,t), accelExp);
+            const x = startX + (target.x - startX) * eased;
+            const y = startY + (target.y - startY) * eased;
+            const sizeT = clamp(raw,0,1);
+            const scale = (0.06 + 1.10 * Math.pow(sizeT, 2.0)) * getMaxNoteScale();
+            const baseLen = Math.max(26, l.baseLaneLength*0.68);
+            const thick = l.noteThickness * scale;
+            const len = baseLen * scale;
+            const fadeRatio = getFadeInRatio();
+            let alpha = 1;
+            if (fadeRatio > 0) {
+                if (raw < fadeRatio / 2) alpha = 0;
+                else if (raw < fadeRatio) alpha = (raw - fadeRatio/2) / (fadeRatio/2);
+            }
+            ctx.save();
+            ctx.globalAlpha = alpha;
+            if (note.glow) { ctx.shadowColor='#ffd966'; ctx.shadowBlur=22; ctx.fillStyle='#ffd966'; }
+            else { ctx.shadowColor='transparent'; ctx.shadowBlur=0; ctx.fillStyle='#3f8cff'; }
+            if (note.direction===1||note.direction===3) fillRoundRect(x-len/2, y-thick/2, len, thick, thick/2);
+            else fillRoundRect(x-thick/2, y-len/2, thick, len, thick/2);
+            ctx.restore();
+        }
+
+        function drawEffects(now) {
+            effects = effects.filter(e=>{
+                const age = now - e.startTime;
+                if (age > EFFECT_DURATION) return false;
+                const p = age/EFFECT_DURATION;
+                ctx.globalAlpha = 1-p;
+                ctx.strokeStyle = e.type==='perfect'?'#ffd966':'#6ea8fe';
+                ctx.lineWidth=2;
+                ctx.beginPath(); ctx.arc(e.x, e.y, 8+16*p, 0, Math.PI*2); ctx.stroke();
+                ctx.globalAlpha=1;
+                return true;
+            });
+        }
+
+        function drawCanvas(now) {
+            if (!layout) updateLayout();
+            drawBackground();
+            drawPlayField();
+            for (const n of notes) if (!n.judged) drawNote(n, now);
+            drawEffects(now);
+            drawDirectionLabels();
+        }
+
+        function init() {
+            resizeCanvas();
+            loadSettings();
+            bindEvents();
+            allControls = [
+                bpmSlider,bpmInput,bpmDec,bpmInc, rhythmSelect,
+                speedSlider,speedInput,...speedStepBtns,
+                perfectSlider,perfectInput,perfectDec,perfectInc,
+                maxNoteScaleSlider,maxNoteScaleInput,maxNoteScaleDec,maxNoteScaleInc,
+                accelSlider,accelInput,accelDec,accelInc,
+                fadeSlider,fadeInput,fadeDec,fadeInc,
+                resetBtn, patternCategory,patternSub,customPatternInput
+            ];
+            resizeCanvas();
+            drawCanvas(performance.now());
+            updateStatsSpans(); updateAccDisplay();
+        }
+
+        init();
+    })();
+</script>
+</body>
+</html>

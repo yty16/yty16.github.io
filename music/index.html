@@ -1,0 +1,1244 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>音游练习</title>
+    <style>
+        * { box-sizing: border-box; user-select: none; }
+        :root {
+            --bg: #0b0e14;
+            --panel: #11161f;
+            --panel-2: #0f151c;
+            --border: #2a3440;
+            --border-strong: #3a4a5e;
+            --text: #e7eef8;
+            --muted: #8ca1bf;
+            --muted-2: #b7c9e2;
+            --primary: #5b8cff;
+            --primary-2: #3f6ef0;
+            --shadow: rgba(7, 12, 20, 0.45);
+        }
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background:
+                radial-gradient(circle at top, rgba(91,140,255,0.12), transparent 32%),
+                var(--bg);
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            font-family: 'Segoe UI', 'Inter', sans-serif;
+            padding: 16px;
+            color: var(--text);
+        }
+        .game-container {
+            max-width: 1200px;
+            width: 100%;
+            padding: 16px 20px 20px;
+        }
+        .settings-panel {
+            display: grid;
+            grid-template-columns: repeat(12, minmax(0, 1fr));
+            gap: 14px;
+            margin-bottom: 20px;
+            background: linear-gradient(180deg, rgba(19,25,36,0.95), rgba(14,19,28,0.98));
+            padding: 16px;
+            border-radius: 28px;
+            border: 1px solid var(--border);
+            box-shadow: 0 18px 40px var(--shadow);
+        }
+        .param-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            min-width: 0;
+            padding: 14px;
+            background: linear-gradient(180deg, rgba(255,255,255,0.025), rgba(255,255,255,0.01));
+            border: 1px solid rgba(110, 140, 190, 0.18);
+            border-radius: 20px;
+            min-height: 100%;
+        }
+        .param-group.span-2 { grid-column: span 2; }
+        .param-group.span-3 { grid-column: span 3; }
+        .param-group.span-4 { grid-column: span 4; }
+        .param-group.span-5 { grid-column: span 5; }
+        .param-group.span-6 { grid-column: span 6; }
+        .param-group.span-12 { grid-column: 1 / -1; }
+        .param-group.compact { justify-content: center; }
+        .param-group.actions { justify-content: flex-end; }
+        .param-label-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .param-group label {
+            color: var(--muted-2);
+            font-size: 0.76rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+        .param-meta {
+            color: var(--muted);
+            font-size: 0.78rem;
+            font-weight: 600;
+        }
+        .param-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            min-width: 0;
+            flex-wrap: wrap;
+        }
+        .param-row input[type="range"] {
+            flex: 1 1 180px;
+            min-width: 120px;
+            height: 6px;
+            margin: 0;
+            border-radius: 999px;
+            background: linear-gradient(90deg, rgba(91,140,255,0.3), rgba(91,140,255,0.12));
+            -webkit-appearance: none;
+            appearance: none;
+        }
+        .param-row input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #dfe9ff;
+            border: 3px solid var(--primary);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.35);
+            cursor: pointer;
+        }
+        .param-row input[type="range"]::-moz-range-thumb {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #dfe9ff;
+            border: 3px solid var(--primary);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.35);
+            cursor: pointer;
+        }
+        .param-row input[type="number"],
+        select,
+        .custom-input {
+            background: var(--panel-2);
+            border: 1px solid var(--border-strong);
+            color: var(--text);
+            border-radius: 14px;
+            padding: 9px 12px;
+            font-weight: 600;
+            font-size: 0.94rem;
+        }
+        .param-row input[type="number"] {
+            width: 88px;
+            text-align: center;
+        }
+        .steppers,
+        .speed-steps {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+        .step-btn {
+            min-width: 40px;
+            height: 36px;
+            padding: 0 10px;
+            border-radius: 12px;
+            border: 1px solid #4a627a;
+            background: #243141;
+            color: white;
+            font-weight: 700;
+            cursor: pointer;
+        }
+        .speed-steps .step-btn {
+            min-width: 56px;
+            height: 34px;
+            padding: 0 8px;
+            font-size: 0.84rem;
+            border-radius: 10px;
+        }
+        .readonly-box {
+            display: inline-flex;
+            align-items: center;
+            min-height: 42px;
+            background: var(--panel-2);
+            border: 1px solid var(--border-strong);
+            border-radius: 14px;
+            padding: 8px 14px;
+            color: #b0d0ff;
+            font-weight: 700;
+            font-size: 1rem;
+        }
+        .field-stack {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .field-stack .param-row:first-of-type {
+            flex-wrap: nowrap;
+        }
+        .key-selector {
+            display: inline-flex;
+            gap: 8px;
+            background: #0f151c;
+            padding: 4px;
+            border-radius: 40px;
+            border: 1px solid var(--border-strong);
+            width: fit-content;
+        }
+        .key-btn {
+            background: transparent;
+            border: none;
+            color: #9aafc9;
+            font-weight: bold;
+            padding: 10px 18px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+        .key-btn.active {
+            background: var(--primary-2);
+            color: white;
+            box-shadow: 0 4px 8px rgba(29, 62, 158, 0.7);
+        }
+        .action-buttons {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 12px;
+            margin-top: auto;
+        }
+        .btn {
+            background: #29384a;
+            border: none;
+            color: white;
+            font-weight: bold;
+            padding: 10px 22px;
+            border-radius: 40px;
+            font-size: 1rem;
+            cursor: pointer;
+            border: 1px solid #5f7f9f;
+            box-shadow: 0 4px 0 #0f151c;
+            transition: 0.15s;
+        }
+        .btn-primary { background: var(--primary-2); border-color: #8aadff; box-shadow: 0 4px 0 #1e3a9e; }
+        .btn-warning { background: #4e3a5e; border-color: #b392d6; }
+        .btn-danger { background: #c0392b; border-color: #ff9a8a; box-shadow: 0 4px 0 #7a1f17; }
+        .btn:disabled,
+        .step-btn:disabled,
+        .key-btn:disabled,
+        select:disabled,
+        input:disabled {
+            opacity: 0.45;
+            box-shadow: none;
+            pointer-events: none;
+            filter: grayscale(0.5);
+        }
+        .space-hint {
+            text-align: center;
+            color: #7f95b5;
+            font-size: 0.9rem;
+            margin-bottom: 8px;
+        }
+        .start-row { display: flex; justify-content: center; margin: 0 0 8px; }
+        .btn-start-large { padding: 12px 60px; font-size: 1.4rem; min-width: 240px; border-radius: 60px; }
+        .stats-area {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin: 8px 10px 12px;
+            gap: 12px;
+        }
+        .counters {
+            display: flex;
+            gap: 24px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            flex-wrap: wrap;
+        }
+        .counter-item { display: flex; gap: 6px; }
+        .counter-perfect { color: #ffd966; text-shadow: 0 0 8px #ffb800; }
+        .counter-good { color: #6ea8fe; text-shadow: 0 0 8px #3f6ef0; }
+        .counter-miss { color: #f28b82; text-shadow: 0 0 6px #c03; }
+        .canvas-wrapper {
+            position: relative;
+            width: 100%;
+            border-radius: 24px;
+            overflow: hidden;
+            border: 2px solid #2e405b;
+            touch-action: none;
+            box-shadow: 0 20px 42px rgba(0,0,0,0.3);
+        }
+        #gameCanvas { display: block; width: 100%; height: auto; background: #0c0f15; touch-action: none; }
+        .countdown-overlay {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            display: flex; align-items: center; justify-content: center; pointer-events: none;
+            font-size: 8rem; font-weight: 900; color: rgba(255,255,255,0.9);
+            text-shadow: 0 0 40px #3f6ef0; z-index: 10;
+        }
+        .pattern-section {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 15px;
+            background: #11161f;
+            padding: 12px 20px;
+            border-radius: 22px;
+            border: 1px solid #2a3440;
+            margin: 10px 0;
+        }
+        .custom-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .error-message {
+            color: #f28b82;
+            font-size: 0.8rem;
+            margin-left: 8px;
+        }
+        .syntax-hint {
+            color: #7f95b5;
+            font-size: 0.75rem;
+            margin-left: 10px;
+            line-height: 1.5;
+        }
+        .syntax-line { display: block; }
+        .acc-display {
+            position: absolute;
+            top: 12px;
+            right: 16px;
+            color: #fff;
+            font-size: 1rem;
+            font-weight: 600;
+            text-shadow: 0 0 8px #3f6ef0;
+            z-index: 5;
+            background: rgba(0,0,0,0.4);
+            padding: 3px 12px;
+            border-radius: 30px;
+            pointer-events: none;
+        }
+        @media (max-width: 1080px) {
+            .param-group.span-2,
+            .param-group.span-3,
+            .param-group.span-4,
+            .param-group.span-5,
+            .param-group.span-6 {
+                grid-column: span 6;
+            }
+            .param-group.actions { grid-column: 1 / -1; }
+        }
+        @media (max-width: 720px) {
+            body { padding: 10px; }
+            .game-container { padding: 10px 0 18px; }
+            .settings-panel { grid-template-columns: 1fr; padding: 12px; gap: 12px; border-radius: 22px; }
+            .param-group,
+            .param-group.span-2,
+            .param-group.span-3,
+            .param-group.span-4,
+            .param-group.span-5,
+            .param-group.span-6,
+            .param-group.span-12 {
+                grid-column: 1 / -1;
+            }
+            .field-stack .param-row:first-of-type {
+                flex-wrap: wrap;
+            }
+            .param-row input[type="number"] { width: 100%; }
+            .param-row input[type="range"] { flex-basis: 100%; }
+            .speed-steps { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); width: 100%; }
+            .speed-steps .step-btn { width: 100%; min-width: 0; }
+            .action-buttons { justify-content: stretch; }
+            .action-buttons .btn { width: 100%; }
+            .pattern-section { padding: 12px; border-radius: 18px; }
+            .btn-start-large { padding: 12px 30px; font-size: 1.2rem; }
+            .counters { gap: 16px; font-size: 1rem; }
+            .stats-area { align-items: flex-start; }
+        }
+    </style>
+</head>
+<body>
+<div class="game-container">
+    <div class="settings-panel" id="settingsPanel">
+        <div class="param-group span-3">
+            <div class="param-label-row"><label>BPM</label></div>
+            <div class="param-row">
+                <input type="range" id="bpmSlider" min="30" max="600" value="90">
+                <input type="number" id="bpmInput" min="30" max="600" value="90">
+                <div class="steppers">
+                    <button class="step-btn" id="bpmDec">−</button>
+                    <button class="step-btn" id="bpmInc">+</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="param-group span-2 compact">
+            <div class="param-label-row"><label>节奏</label></div>
+            <select id="rhythmSelect">
+                <option value="4" selected>四分</option>
+                <option value="8">八分</option>
+                <option value="12">十二分</option>
+                <option value="16">十六分</option>
+            </select>
+        </div>
+
+        <div class="param-group span-5">
+            <div class="param-label-row">
+                <label>流速</label>
+                <span class="param-meta" id="speedMsDisplay">到达判定线时间：10000 ms</span>
+            </div>
+            <div class="field-stack">
+                <div class="param-row">
+                    <input type="range" id="speedSlider" min="1" max="10" step="0.01" value="6.00">
+                    <input type="number" id="speedInput" min="1" max="10" step="0.01" value="6.00">
+                </div>
+                <div class="speed-steps">
+                    <button class="step-btn" data-step="-0.01">-0.01</button>
+                    <button class="step-btn" data-step="-0.1">-0.1</button>
+                    <button class="step-btn" data-step="-1">-1</button>
+                    <button class="step-btn" data-step="1">+1</button>
+                    <button class="step-btn" data-step="0.1">+0.1</button>
+                    <button class="step-btn" data-step="0.01">+0.01</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="param-group span-2 compact">
+            <div class="param-label-row"><label>轨道</label></div>
+            <div class="key-selector">
+                <button class="key-btn active" data-keys="4">4K</button>
+                <button class="key-btn" data-keys="6">6K</button>
+            </div>
+        </div>
+
+        <div class="param-group span-3">
+            <div class="param-label-row"><label>Perfect判定范围 ±ms</label></div>
+            <div class="param-row">
+                <input type="range" id="perfectSlider" min="10" max="200" value="80">
+                <input type="number" id="perfectInput" min="10" max="200" value="80">
+                <div class="steppers">
+                    <button class="step-btn" id="perfectDec">−</button>
+                    <button class="step-btn" id="perfectInc">+</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="param-group span-2 compact">
+            <div class="param-label-row"><label>Good判定范围 ±ms</label></div>
+            <div class="param-row"><span class="readonly-box" id="goodDisplay">160</span></div>
+        </div>
+
+        <div class="param-group span-5">
+            <div class="param-label-row">
+                <label>轨道宽</label>
+                <span class="param-meta" id="trackWidthMeta">最大值随界面宽度实时变化</span>
+            </div>
+            <div class="param-row">
+                <input type="range" id="trackWidthSlider" min="30" max="300" value="100">
+                <input type="number" id="trackWidthInput" min="30" max="300" value="100">
+                <div class="steppers">
+                    <button class="step-btn" id="trackWidthDec">−</button>
+                    <button class="step-btn" id="trackWidthInc">+</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="param-group span-2 actions compact">
+            <div class="param-label-row"><label>操作</label></div>
+            <div class="action-buttons"><button class="btn btn-warning" id="resetBtn">重置</button></div>
+        </div>
+    </div>
+
+    <div class="pattern-section">
+        <label style="color:#b7c9e2; font-weight:600;">键型</label>
+        <select id="patternCategory" style="min-width:130px;"></select>
+        <select id="patternSub" style="min-width:180px;"></select>
+        <div class="custom-row" id="customRow" style="display: none;">
+            <input type="text" id="customPatternInput" placeholder="输入自定义键型，例如: /." style="width:200px;" class="custom-input">
+            <span id="patternError" class="error-message"></span>
+        </div>
+        <div id="syntaxHintBox" class="syntax-hint">
+            <span class="syntax-line"><strong>语法：</strong></span>
+            <span class="syntax-line">1-4/6 : 指定轨道</span>
+            <span class="syntax-line">. : 重复上一轨道 (可跟在*或/后，不能开头)</span>
+            <span class="syntax-line">* : 随机轨道</span>
+            <span class="syntax-line">/ : 随机且不与上一轨道重复</span>
+        </div>
+    </div>
+
+    <div class="space-hint">电脑版可以使用空格来开始和停止</div>
+    <div class="start-row"><button class="btn btn-primary btn-start-large" id="startStopBtn">开始</button></div>
+
+    <div class="stats-area">
+        <div class="counters">
+            <div class="counter-item"><span style="color:#b7c9e2;">Perfect:</span> <span class="counter-perfect" id="perfectCount">0</span></div>
+            <div class="counter-item"><span style="color:#b7c9e2;">Good:</span> <span class="counter-good" id="goodCount">0</span></div>
+            <div class="counter-item"><span style="color:#b7c9e2;">Miss:</span> <span class="counter-miss" id="missCount">0</span></div>
+        </div>
+        <div></div>
+    </div>
+
+    <div class="canvas-wrapper">
+        <canvas id="gameCanvas"></canvas>
+        <div id="countdownDisplay" class="countdown-overlay" style="display:none;"></div>
+        <div id="accDisplay" class="acc-display">Acc: 100.00%</div>
+    </div>
+</div>
+
+<script>
+    (function(){
+        "use strict";
+
+        const canvas = document.getElementById('gameCanvas'), ctx = canvas.getContext('2d');
+        const perfectSpan = document.getElementById('perfectCount'), goodSpan = document.getElementById('goodCount'), missSpan = document.getElementById('missCount');
+        const countdownDiv = document.getElementById('countdownDisplay');
+        const accDisplay = document.getElementById('accDisplay');
+        const bpmSlider = document.getElementById('bpmSlider'), bpmInput = document.getElementById('bpmInput'), bpmDec = document.getElementById('bpmDec'), bpmInc = document.getElementById('bpmInc');
+        const rhythmSelect = document.getElementById('rhythmSelect');
+        const speedSlider = document.getElementById('speedSlider'), speedInput = document.getElementById('speedInput');
+        const speedMsDisplay = document.getElementById('speedMsDisplay');
+        const speedStepBtns = Array.from(document.querySelectorAll('.speed-steps .step-btn'));
+        const perfectSlider = document.getElementById('perfectSlider'), perfectInput = document.getElementById('perfectInput'), perfectDec = document.getElementById('perfectDec'), perfectInc = document.getElementById('perfectInc');
+        const goodDisplay = document.getElementById('goodDisplay');
+        const trackWidthSlider = document.getElementById('trackWidthSlider'), trackWidthInput = document.getElementById('trackWidthInput'), trackWidthDec = document.getElementById('trackWidthDec'), trackWidthInc = document.getElementById('trackWidthInc');
+        const trackWidthMeta = document.getElementById('trackWidthMeta');
+        const keyBtns = document.querySelectorAll('.key-btn');
+        const resetBtn = document.getElementById('resetBtn');
+        const startStopBtn = document.getElementById('startStopBtn');
+        const patternCategory = document.getElementById('patternCategory');
+        const patternSub = document.getElementById('patternSub');
+        const customPatternInput = document.getElementById('customPatternInput');
+        const patternError = document.getElementById('patternError');
+        const customRow = document.getElementById('customRow');
+
+        let allControls = [];
+
+        let gameActive = false, acceptingInput = false, animFrame = null;
+        let notes = [], effects = [];
+        let perfectCount = 0, goodCount = 0, missCount = 0;
+        let nextNoteTime = 0, noteIntervalMs = 0;
+        let trackCount = 4, trackWidth = 100;
+        const JUDGE_LINE_RATIO = 0.8, EFFECT_DURATION = 300;
+        const STORAGE_KEY = 'musicsetting';
+        let countdownState = { active: false, phase: 'ready', startTime: 0, nextBeatTime: 0, beatsLeft: 3 };
+        let countdownBeatMs = 500;
+        let lastTouchInputTime = 0;
+        let resetConfirmActive = false;
+        let resetConfirmTimer = null;
+
+        const SPEED_MIN_U = 1;
+        const SPEED_MAX_U = 10;
+        const SPEED_DEFAULT_U = 6;
+
+        const keyMap4 = ['KeyD','KeyF','KeyH','KeyJ'], keyMap6 = ['KeyS','KeyD','KeyF','KeyH','KeyJ','KeyK'];
+        const keyLabels4 = ['D','F','H','J'], keyLabels6 = ['S','D','F','H','J','K'];
+
+        let currentPattern = null;
+        let patternIndex = 0;
+        let lastTrack = -1;
+        let customValid = true;
+
+        const builtin4 = {
+            '互交': [
+                { name:'232323...', seq: [2,3] },
+                { name:'12123434...', seq: [1,2,1,2,3,4,3,4] },
+                { name:'13241324...', seq: [1,3,2,4,1,3,2,4] }
+            ],
+            '纵连': [ { name:'111111...', seq: [1] } ],
+            '楼梯': [
+                { name:'12341234...', seq: [1,2,3,4] },
+                { name:'123432123432...', seq: [1,2,3,4,3,2,1,2,3,4,3,2] }
+            ],
+            '散点': [ { name:'随机', random: true } ]
+        };
+        const builtin6 = {
+            '互交': [
+                { name:'343434...', seq: [3,4] },
+                { name:'23234545...', seq: [2,3,2,3,4,5,4,5] },
+                { name:'25342534...', seq: [2,5,3,4] }
+            ],
+            '纵连': [ { name:'111111...', seq: [1] } ],
+            '楼梯': [
+                { name:'123456123456...', seq: [1,2,3,4,5,6] },
+                { name:'12345654321234565432...', seq: [1,2,3,4,5,6,5,4,3,2,1,2,3,4,5,6,5,4,3,2] }
+            ],
+            '散点': [ { name:'随机', random: true } ]
+        };
+
+        function clamp(value, min, max) {
+            return Math.min(max, Math.max(min, value));
+        }
+        function roundToStep(value, step, decimals) {
+            const rounded = Math.round(value / step) * step;
+            return Number(rounded.toFixed(decimals));
+        }
+        function uToMs(u) {
+            return 10000 * Math.exp(-0.5117 * (u - 1));
+        }
+        function normalizeSpeedU(v) {
+            return roundToStep(clamp(Number(v) || SPEED_DEFAULT_U, SPEED_MIN_U, SPEED_MAX_U), 0.01, 2);
+        }
+        function getSpeedMs() {
+            return uToMs(Number(speedSlider.value));
+        }
+        function updateSpeedDisplay() {
+            const u = normalizeSpeedU(speedSlider.value);
+            speedSlider.value = u.toFixed(2);
+            speedInput.value = u.toFixed(2);
+            speedMsDisplay.textContent = `到达判定线时间：${Math.round(uToMs(u))} ms`;
+        }
+        function setSpeedU(value, skipSave) {
+            const u = normalizeSpeedU(value);
+            speedSlider.value = u.toFixed(2);
+            speedInput.value = u.toFixed(2);
+            updateSpeedDisplay();
+            if(!skipSave) saveSettings();
+        }
+        function adjustSpeedU(delta) {
+            const current = Number(speedSlider.value);
+            setSpeedU(current + delta);
+        }
+
+        function bindNumberControl(slider, input, dec, inc, onChange) {
+            const min = () => Number(slider.min);
+            const max = () => Number(slider.max);
+            const step = () => Number(slider.step || 1);
+            const sync = () => {
+                const value = clamp(Number(slider.value), min(), max());
+                slider.value = value;
+                input.value = value;
+                if(onChange) onChange(value);
+                updateGoodDisplay();
+                saveSettings();
+            };
+            slider.addEventListener('input', sync);
+            input.addEventListener('change', ()=>{
+                let value = Number(input.value);
+                if(Number.isNaN(value)) value = min();
+                value = clamp(value, min(), max());
+                slider.value = value;
+                input.value = value;
+                if(onChange) onChange(value);
+                updateGoodDisplay();
+                saveSettings();
+            });
+            dec.addEventListener('click', ()=>{
+                const value = clamp(Number(slider.value) - step(), min(), max());
+                slider.value = value;
+                input.value = value;
+                if(onChange) onChange(value);
+                updateGoodDisplay();
+                saveSettings();
+            });
+            inc.addEventListener('click', ()=>{
+                const value = clamp(Number(slider.value) + step(), min(), max());
+                slider.value = value;
+                input.value = value;
+                if(onChange) onChange(value);
+                updateGoodDisplay();
+                saveSettings();
+            });
+        }
+        function updateGoodDisplay() { goodDisplay.textContent = Number(perfectSlider.value) * 2; }
+        function getTrackWidthMax() {
+            const availableWidth = canvas.parentElement ? canvas.parentElement.clientWidth : canvas.clientWidth || 0;
+            return Math.max(30, Math.floor(availableWidth / trackCount));
+        }
+        function updateTrackWidthBounds(preferredValue, skipSave) {
+            const maxWidth = getTrackWidthMax();
+            trackWidthSlider.max = String(maxWidth);
+            trackWidthInput.max = String(maxWidth);
+            const nextValue = clamp(Math.round(preferredValue ?? trackWidth ?? maxWidth), Number(trackWidthSlider.min), maxWidth);
+            trackWidthSlider.value = nextValue;
+            trackWidthInput.value = nextValue;
+            trackWidth = nextValue;
+            trackWidthMeta.textContent = `当前最大值：${maxWidth}px`;
+            if(!skipSave) saveSettings();
+        }
+        function resetTrackWidthToDefault(skipSave) {
+            updateTrackWidthBounds(getTrackWidthMax(), skipSave);
+        }
+        function setTrackCount(count) {
+            trackCount = count;
+            keyBtns.forEach(b=>b.classList.toggle('active', parseInt(b.dataset.keys, 10) === count));
+            resetTrackWidthToDefault(true);
+            rebuildPatternUI();
+            patternCategory.value = '散点';
+            updateSubOptions();
+            applyBuiltinPattern('散点', 0);
+        }
+        function updateNoteInterval() {
+            const bpm = Number(bpmSlider.value), rhythm = rhythmSelect.value;
+            const beatMs = 60000 / bpm, div = {4:1,8:2,12:3,16:4}[rhythm] || 1;
+            noteIntervalMs = beatMs / div;
+            countdownBeatMs = beatMs;
+        }
+
+        function saveSettings() {
+            const settings = {
+                bpm: bpmSlider.value,
+                rhythm: rhythmSelect.value,
+                speedU: Number(speedSlider.value).toFixed(2),
+                perfectWindow: perfectSlider.value,
+                trackCount,
+                trackWidth: trackWidthSlider.value,
+                patternCategory: patternCategory.value,
+                patternSub: patternSub.value,
+                customPattern: customPatternInput.value
+            };
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(settings));
+        }
+        function loadSettings() {
+            const saved = localStorage.getItem(STORAGE_KEY);
+            let savedSettings = null;
+
+            if(saved) {
+                try {
+                    const s = JSON.parse(saved);
+                    savedSettings = s;
+                    bpmSlider.value = s.bpm || 90;
+                    bpmInput.value = s.bpm || 90;
+                    rhythmSelect.value = s.rhythm || '4';
+                    const savedSpeedU = s.speedU !== undefined ? s.speedU : SPEED_DEFAULT_U;
+                    setSpeedU(savedSpeedU, true);
+                    perfectSlider.value = s.perfectWindow || 80;
+                    perfectInput.value = s.perfectWindow || 80;
+                    const tc = Number(s.trackCount) === 6 ? 6 : 4;
+                    trackCount = tc;
+                    keyBtns.forEach(b=>b.classList.toggle('active', parseInt(b.dataset.keys, 10) === tc));
+                    if(s.customPattern) customPatternInput.value = s.customPattern;
+                    updateTrackWidthBounds(s.trackWidth ? Number(s.trackWidth) : getTrackWidthMax(), true);
+                } catch (e) {
+                    savedSettings = null;
+                    setTrackCount(4);
+                    setSpeedU(SPEED_DEFAULT_U, true);
+                    resetTrackWidthToDefault(true);
+                }
+            } else {
+                setTrackCount(4);
+                setSpeedU(SPEED_DEFAULT_U, true);
+                resetTrackWidthToDefault(true);
+            }
+
+            updateGoodDisplay();
+            updateNoteInterval();
+            rebuildPatternUI();
+            restorePatternSelection(savedSettings);
+        }
+        function resetToDefaults() {
+            bpmSlider.value = 90;
+            bpmInput.value = 90;
+            rhythmSelect.value = '4';
+            setSpeedU(SPEED_DEFAULT_U, true);
+            perfectSlider.value = 80;
+            perfectInput.value = 80;
+            setTrackCount(4);
+            resetTrackWidthToDefault(true);
+            customPatternInput.value = '';
+            updateGoodDisplay();
+            updateNoteInterval();
+            rebuildPatternUI();
+            setDefaultPatternForTrackCount();
+            saveSettings();
+        }
+
+        function clearResetConfirmState() {
+            resetConfirmActive = false;
+            if(resetConfirmTimer) {
+                clearTimeout(resetConfirmTimer);
+                resetConfirmTimer = null;
+            }
+            resetBtn.textContent = '重置';
+            resetBtn.classList.remove('btn-danger');
+        }
+        function enterResetConfirmState() {
+            resetConfirmActive = true;
+            resetBtn.textContent = '确认重置';
+            resetBtn.classList.add('btn-danger');
+            if(resetConfirmTimer) clearTimeout(resetConfirmTimer);
+            resetConfirmTimer = setTimeout(clearResetConfirmState, 5000);
+        }
+
+        function rebuildPatternUI() {
+            const data = trackCount === 4 ? builtin4 : builtin6;
+            patternCategory.innerHTML = '';
+            Object.keys(data).forEach(cat => {
+                const opt = document.createElement('option');
+                opt.value = cat;
+                opt.textContent = cat;
+                patternCategory.appendChild(opt);
+            });
+            const customOpt = document.createElement('option');
+            customOpt.value = '__custom__';
+            customOpt.textContent = '自定义';
+            patternCategory.appendChild(customOpt);
+            updateSubOptions();
+        }
+        function updateSubOptions(preferredSubIdx = 0, skipSave = true) {
+            const cat = patternCategory.value;
+            if(cat === '__custom__') {
+                patternSub.style.display = 'none';
+                customRow.style.display = 'flex';
+                customPatternInput.disabled = false;
+                parseAndApplyCustom(skipSave);
+                return;
+            }
+            patternSub.style.display = 'inline-block';
+            customRow.style.display = 'none';
+            customPatternInput.disabled = true;
+            const data = trackCount === 4 ? builtin4 : builtin6;
+            const subs = data[cat] || [];
+            patternSub.innerHTML = '';
+            subs.forEach((item, idx) => {
+                const opt = document.createElement('option');
+                opt.value = idx;
+                opt.textContent = item.name;
+                patternSub.appendChild(opt);
+            });
+            if(subs.length) {
+                const subIdx = clamp(
+                    Number.isFinite(Number(preferredSubIdx)) ? Number(preferredSubIdx) : 0,
+                    0,
+                    subs.length - 1
+                );
+                patternSub.value = String(subIdx);
+                applyBuiltinPattern(cat, subIdx);
+            }
+        }
+        function applyBuiltinPattern(cat, subIdx) {
+            const data = trackCount === 4 ? builtin4 : builtin6;
+            const item = data[cat]?.[subIdx];
+            if(!item) return;
+            if(item.random) {
+                currentPattern = { type: 'random', mode: 'uniform' };
+            } else {
+                currentPattern = { type: 'builtin', sequence: item.seq.map(i => i - 1), index: 0 };
+            }
+            patternIndex = 0;
+            lastTrack = -1;
+            patternError.textContent = '';
+        }
+        function setDefaultPatternForTrackCount() {
+            patternCategory.value = '散点';
+            updateSubOptions(0, true);
+            applyBuiltinPattern('散点', 0);
+        }
+        function optionExists(select, value) {
+            return Array.from(select.options).some(opt => opt.value === value);
+        }
+        function restorePatternSelection(savedSettings) {
+            if(!savedSettings) {
+                setDefaultPatternForTrackCount();
+                return;
+            }
+
+            const savedCat = savedSettings.patternCategory;
+            const savedSub = savedSettings.patternSub ?? 0;
+
+            if(savedCat && optionExists(patternCategory, savedCat)) {
+                patternCategory.value = savedCat;
+                if(savedCat === '__custom__') {
+                    updateSubOptions(0, true);
+                } else {
+                    updateSubOptions(savedSub, true);
+                }
+                return;
+            }
+
+            // Compatibility with older saved data that only stored the custom text.
+            if(customPatternInput.value) {
+                patternCategory.value = '__custom__';
+                updateSubOptions(0, true);
+                return;
+            }
+
+            setDefaultPatternForTrackCount();
+        }
+        function parseCustomPattern(str, maxTrack) {
+            str = str.trim();
+            if(!str) return { error:'输入为空' };
+            if(str[0] === '.') return { error:'.不能出现在开头' };
+            const seq = [];
+            for(let i = 0; i < str.length; i++) {
+                const ch = str[i];
+                if(ch >= '1' && ch <= String(maxTrack)) {
+                    seq.push(parseInt(ch, 10) - 1);
+                } else if(ch === '.' || ch === '*' || ch === '/') {
+                    seq.push(ch);
+                } else {
+                    return { error:`非法字符 ${ch}` };
+                }
+            }
+            return { sequence: seq };
+        }
+        function parseAndApplyCustom(skipSave = false) {
+            const max = trackCount;
+            const parsed = parseCustomPattern(customPatternInput.value, max);
+            if(!parsed || parsed.error) {
+                patternError.textContent = parsed?.error || '输入无效';
+                customValid = false;
+                return false;
+            }
+            for(const s of parsed.sequence) {
+                if(typeof s === 'number' && (s < 0 || s >= max)) {
+                    patternError.textContent = `轨道超出1-${max}`;
+                    customValid = false;
+                    return false;
+                }
+            }
+            patternError.textContent = '';
+            customValid = true;
+            currentPattern = { type: 'custom', sequence: parsed.sequence, index: 0 };
+            patternIndex = 0;
+            lastTrack = -1;
+            if(!skipSave) saveSettings();
+            return true;
+        }
+
+        function getNextTrack() {
+            if(!currentPattern) return Math.floor(Math.random() * trackCount);
+            if(patternCategory.value === '__custom__' && !customValid) {
+                return Math.floor(Math.random() * trackCount);
+            }
+            const pat = currentPattern;
+            if(pat.type === 'random') {
+                return Math.floor(Math.random() * trackCount);
+            }
+            const seq = pat.sequence;
+            const raw = seq[pat.index % seq.length];
+            pat.index = (pat.index + 1) % seq.length;
+            if(typeof raw === 'number') {
+                lastTrack = raw;
+                return raw;
+            }
+            if(raw === '.') {
+                if(lastTrack === -1) return Math.floor(Math.random() * trackCount);
+                return lastTrack;
+            }
+            if(raw === '*') {
+                const t = Math.floor(Math.random() * trackCount);
+                lastTrack = t;
+                return t;
+            }
+            if(raw === '/') {
+                if(trackCount === 1) { lastTrack = 0; return 0; }
+                let candidates = [...Array(trackCount).keys()].filter(t => t !== lastTrack);
+                if(candidates.length === 0) candidates = [0];
+                const t = candidates[Math.floor(Math.random() * candidates.length)];
+                lastTrack = t;
+                return t;
+            }
+            return 0;
+        }
+        function resetPatternIndex() {
+            if(currentPattern && currentPattern.index !== undefined) currentPattern.index = 0;
+            patternIndex = 0;
+            lastTrack = -1;
+        }
+        function updateAccDisplay() {
+            const total = perfectCount + goodCount + missCount;
+            let accValue = 100.00;
+            if(total > 0) {
+                accValue = (perfectCount * 1.0 + goodCount * 0.7) / total * 100;
+            }
+            accDisplay.textContent = `Acc: ${accValue.toFixed(2)}%`;
+        }
+
+        function bindEvents() {
+            bindNumberControl(bpmSlider, bpmInput, bpmDec, bpmInc, updateNoteInterval);
+            bindNumberControl(perfectSlider, perfectInput, perfectDec, perfectInc, updateGoodDisplay);
+            bindNumberControl(trackWidthSlider, trackWidthInput, trackWidthDec, trackWidthInc, value => {
+                trackWidth = value;
+            });
+
+            speedSlider.addEventListener('input', () => setSpeedU(speedSlider.value));
+            speedInput.addEventListener('change', () => setSpeedU(speedInput.value));
+            speedStepBtns.forEach(btn => {
+                btn.addEventListener('click', () => adjustSpeedU(Number(btn.dataset.step)));
+            });
+
+            rhythmSelect.addEventListener('change', ()=>{ updateNoteInterval(); saveSettings(); });
+            keyBtns.forEach(b => b.addEventListener('click', () => {
+                const k = parseInt(b.dataset.keys, 10);
+                if(trackCount === k) return;
+                setTrackCount(k);
+                saveSettings();
+                if(!gameActive) drawCanvas(performance.now());
+            }));
+            resetBtn.addEventListener('click', ()=>{
+                if(gameActive) return;
+                if(!resetConfirmActive) {
+                    enterResetConfirmState();
+                    return;
+                }
+                clearResetConfirmState();
+                resetToDefaults();
+                drawCanvas(performance.now());
+            });
+            startStopBtn.addEventListener('click', ()=> gameActive ? stopGame() : startGame());
+            patternCategory.addEventListener('change', ()=>{
+                updateSubOptions(0, false);
+                saveSettings();
+            });
+            patternSub.addEventListener('change', ()=>{
+                if(patternCategory.value !== '__custom__') {
+                    applyBuiltinPattern(patternCategory.value, Number(patternSub.value));
+                    saveSettings();
+                }
+            });
+            customPatternInput.addEventListener('input', ()=>{
+                if(patternCategory.value === '__custom__') {
+                    parseAndApplyCustom();
+                }
+            });
+
+            window.addEventListener('keydown', e => {
+                if(e.code === 'Space' && !e.repeat) {
+                    e.preventDefault();
+                    if(gameActive) stopGame(); else startGame();
+                }
+                if(!gameActive || !acceptingInput) return;
+                if(e.repeat) return;
+                const map = trackCount === 4 ? keyMap4 : keyMap6;
+                const idx = map.indexOf(e.code);
+                if(idx !== -1) { e.preventDefault(); handleHit(idx); }
+            });
+
+            canvas.addEventListener('touchstart', e => {
+                e.preventDefault();
+                lastTouchInputTime = performance.now();
+                if(!gameActive || !acceptingInput) return;
+                const rect = canvas.getBoundingClientRect(), offsetX = (canvas.width - trackCount * trackWidth) / 2;
+                const touches = e.changedTouches || [];
+                for(let i = 0; i < touches.length; i++) {
+                    const x = touches[i].clientX - rect.left;
+                    const idx = Math.floor((x - offsetX) / trackWidth);
+                    if(idx >= 0 && idx < trackCount) handleHit(idx);
+                }
+            }, { passive:false });
+            canvas.addEventListener('mousedown', e => {
+                if(performance.now() - lastTouchInputTime < 700) return;
+                if(!gameActive || !acceptingInput) return;
+                const rect = canvas.getBoundingClientRect(), offsetX = (canvas.width - trackCount * trackWidth) / 2;
+                const idx = Math.floor((e.clientX - rect.left - offsetX) / trackWidth);
+                if(idx >= 0 && idx < trackCount) handleHit(idx);
+            });
+            canvas.addEventListener('touchmove', e => e.preventDefault(), { passive:false });
+            window.addEventListener('resize', () => {
+                if(trackWidth >= Number(trackWidthSlider.max) - 0.5 || trackWidth > getTrackWidthMax()) {
+                    resetTrackWidthToDefault(true);
+                } else {
+                    updateTrackWidthBounds(trackWidth, true);
+                }
+                drawCanvas(performance.now());
+            });
+        }
+
+        function resetGameStats() {
+            perfectCount = 0;
+            goodCount = 0;
+            missCount = 0;
+            perfectSpan.textContent = '0';
+            goodSpan.textContent = '0';
+            missSpan.textContent = '0';
+            updateAccDisplay();
+            notes = [];
+            effects = [];
+            resetPatternIndex();
+        }
+        function startCountdown() {
+            const now = performance.now();
+            countdownState = { active:true, phase:'ready', startTime:now, nextBeatTime:now + 1000, beatsLeft:3 };
+            countdownDiv.style.display = 'flex';
+            countdownDiv.textContent = '准备';
+            acceptingInput = false;
+            gameActive = true;
+        }
+        function updateCountdown(now) {
+            if(!countdownState.active) return;
+            const s = countdownState;
+            if(s.phase === 'ready' && now >= s.nextBeatTime) {
+                s.phase = 'countdown';
+                s.nextBeatTime = now + countdownBeatMs;
+                countdownDiv.textContent = '3';
+            } else if(s.phase === 'countdown' && now >= s.nextBeatTime) {
+                s.beatsLeft--;
+                if(s.beatsLeft > 0) {
+                    countdownDiv.textContent = s.beatsLeft.toString();
+                    s.nextBeatTime += countdownBeatMs;
+                } else {
+                    countdownState.active = false;
+                    countdownDiv.style.display = 'none';
+                    acceptingInput = true;
+                    nextNoteTime = now;
+                }
+            }
+        }
+        function startGame() {
+            if(gameActive) return;
+            clearResetConfirmState();
+            allControls.forEach(c => c.disabled = true);
+            resetGameStats();
+            updateNoteInterval();
+            startStopBtn.textContent = '停止';
+            startCountdown();
+            animFrame = requestAnimationFrame(function loop(ts){
+                if(!gameActive) return;
+                updateAndDraw(ts);
+                animFrame = requestAnimationFrame(loop);
+            });
+        }
+        function stopGame() {
+            if(!gameActive) return;
+            gameActive = false;
+            acceptingInput = false;
+            startStopBtn.textContent = '开始';
+            allControls.forEach(c => c.disabled = false);
+            if(animFrame) { cancelAnimationFrame(animFrame); animFrame = null; }
+            notes = [];
+            effects = [];
+            countdownState.active = false;
+            countdownDiv.style.display = 'none';
+            drawCanvas(performance.now());
+        }
+        function generateNotes(now) {
+            if(!gameActive || !acceptingInput) return;
+            let generated = 0;
+            while(nextNoteTime <= now && generated < 50) {
+                notes.push({
+                    trackIndex: getNextTrack(),
+                    birthTime: nextNoteTime,
+                    hitTime: nextNoteTime + getSpeedMs(),
+                    judged: false
+                });
+                nextNoteTime += noteIntervalMs;
+                generated++;
+            }
+        }
+        function handleHit(ti) {
+            if(!gameActive || !acceptingInput) return;
+            const now = performance.now(), pw = Number(perfectSlider.value), gw = pw * 2;
+            const idx = notes.findIndex(n => n.trackIndex === ti && !n.judged);
+            if(idx === -1) return;
+            const n = notes[idx], diff = now - n.hitTime, abs = Math.abs(diff);
+            let res = null;
+            if(abs <= pw) res = 'perfect'; else if(abs <= gw) res = 'good';
+            if(res) {
+                n.judged = true;
+                notes.splice(idx, 1);
+                const jy = canvas.height * JUDGE_LINE_RATIO, ox = (canvas.width - trackCount * trackWidth) / 2, xc = ox + ti * trackWidth + trackWidth / 2;
+                if(res === 'perfect') {
+                    perfectCount++;
+                    perfectSpan.textContent = perfectCount;
+                    effects.push({ x:xc, y:jy, color:'#FFD966', startTime:now, duration:EFFECT_DURATION });
+                } else {
+                    goodCount++;
+                    goodSpan.textContent = goodCount;
+                    effects.push({ x:xc, y:jy, color:'#6ea8fe', startTime:now, duration:EFFECT_DURATION });
+                }
+                updateAccDisplay();
+            }
+        }
+        function updateAndDraw(ts) {
+            if(countdownState.active) updateCountdown(ts);
+            generateNotes(ts);
+            const gw = Number(perfectSlider.value) * 2;
+            const toRemove = [];
+            notes.forEach((n, i) => { if(!n.judged && ts > n.hitTime + gw) toRemove.push(i); });
+            for(let i = toRemove.length - 1; i >= 0; i--) {
+                notes.splice(toRemove[i], 1);
+                missCount++;
+                missSpan.textContent = missCount;
+                updateAccDisplay();
+            }
+            drawCanvas(ts);
+        }
+        function drawCanvas(now) {
+            canvas.width = canvas.parentElement.clientWidth;
+            canvas.height = Math.max(window.innerHeight * 0.75, 300);
+            const jy = canvas.height * JUDGE_LINE_RATIO, speed = getSpeedMs();
+            const totalWidth = trackWidth * trackCount, ox = (canvas.width - totalWidth) / 2;
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.lineWidth = 1.5;
+            ctx.strokeStyle = '#3a4e66';
+            for(let i = 0; i <= trackCount; i++) {
+                const x = ox + i * trackWidth;
+                ctx.beginPath();
+                ctx.moveTo(x, 0);
+                ctx.lineTo(x, canvas.height);
+                ctx.stroke();
+            }
+            ctx.lineWidth = 2;
+            ctx.strokeStyle = '#4f6f8f';
+            ctx.beginPath(); ctx.moveTo(ox, 0); ctx.lineTo(ox, canvas.height); ctx.stroke();
+            ctx.beginPath(); ctx.moveTo(ox + totalWidth, 0); ctx.lineTo(ox + totalWidth, canvas.height); ctx.stroke();
+            ctx.beginPath(); ctx.moveTo(0, jy); ctx.lineTo(canvas.width, jy);
+            ctx.strokeStyle = '#fff'; ctx.lineWidth = 2.5; ctx.shadowColor = '#aaccff'; ctx.shadowBlur = 8; ctx.stroke(); ctx.shadowBlur = 0;
+            notes.forEach(n => {
+                if(n.judged) return;
+                const y = (now - n.birthTime) * (jy / speed);
+                const x = ox + n.trackIndex * trackWidth, w = Math.max(4, trackWidth - 2);
+                ctx.fillStyle = '#3f8cff'; ctx.shadowColor = '#3f8cff'; ctx.shadowBlur = 10;
+                ctx.beginPath(); ctx.roundRect(x + 1, y - 6, w, 12, 6); ctx.fill();
+            });
+            ctx.shadowBlur = 0;
+            ctx.font = 'bold 14px "Segoe UI"'; ctx.fillStyle = '#8aa1c0'; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+            const labels = trackCount === 4 ? keyLabels4 : keyLabels6;
+            for(let i = 0; i < trackCount; i++) ctx.fillText(labels[i], ox + i * trackWidth + trackWidth / 2, jy + 12);
+            effects = effects.filter(e => {
+                const age = now - e.startTime;
+                if(age > e.duration) return false;
+                const p = age / e.duration;
+                ctx.beginPath();
+                ctx.arc(e.x, e.y, 8 + 30 * p, 0, Math.PI * 2);
+                ctx.strokeStyle = e.color; ctx.lineWidth = 4; ctx.shadowColor = e.color; ctx.shadowBlur = 12; ctx.globalAlpha = 1 - p;
+                ctx.stroke();
+                return true;
+            });
+            ctx.globalAlpha = 1; ctx.shadowBlur = 0;
+        }
+        CanvasRenderingContext2D.prototype.roundRect = function(x, y, w, h, r) {
+            if(w < 2 * r) r = w / 2;
+            if(h < 2 * r) r = h / 2;
+            this.moveTo(x + r, y);
+            this.lineTo(x + w - r, y);
+            this.quadraticCurveTo(x + w, y, x + w, y + r);
+            this.lineTo(x + w, y + h - r);
+            this.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+            this.lineTo(x + r, y + h);
+            this.quadraticCurveTo(x, y + h, x, y + h - r);
+            this.lineTo(x, y + r);
+            this.quadraticCurveTo(x, y, x + r, y);
+            return this;
+        };
+
+        function init() {
+            loadSettings();
+            bindEvents();
+            allControls = [
+                bpmSlider, bpmInput, bpmDec, bpmInc,
+                rhythmSelect,
+                speedSlider, speedInput, ...speedStepBtns,
+                perfectSlider, perfectInput, perfectDec, perfectInc,
+                trackWidthSlider, trackWidthInput, trackWidthDec, trackWidthInc,
+                ...keyBtns,
+                resetBtn,
+                patternCategory, patternSub, customPatternInput
+            ];
+            trackWidth = Number(trackWidthSlider.value);
+            updateSpeedDisplay();
+            updateTrackWidthBounds(trackWidth, true);
+            drawCanvas(performance.now());
+            updateAccDisplay();
+        }
+        init();
+    })();
+</script>
+</body>
+</html>

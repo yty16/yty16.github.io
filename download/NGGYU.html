@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>你被骗了</title>
+    <style>
+        /* 使视频适应整个网页并保持比例 */
+        video {
+            width: 100%;
+            height: 100vh; /* 使用视口高度 */
+            object-fit: contain; /* 适应，不裁剪，保持比例 */
+        }
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            background-color: black; /* 空白区域显示黑色背景 */
+        }
+    </style>
+</head>
+<body>
+    <video id="myVideo" muted>
+        <source src="/download/NGGYU.mp4" type="video/mp4">
+        您的浏览器不支持视频播放。
+    </video>
+
+    <script>
+        // 页面加载完成后自动播放视频
+        window.onload = function() {
+            var video = document.getElementById('myVideo');
+            video.play(); // 播放视频
+        };
+    </script>
+</body>
+</html>

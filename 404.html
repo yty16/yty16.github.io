@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>404 页面未找到</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center; /* 确保内容垂直居中 */
+      height: 100vh;
+      text-align: center;
+    }
+
+    /* 404 页面样式 */
+    .container {
+      max-width: 600px;
+      padding: 20px;
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 100px;
+      font-weight: bold;
+      color: #e74c3c;
+      margin: 0;
+    }
+
+    p {
+      font-size: 20px;
+      color: #555;
+    }
+
+    .link {
+      font-size: 18px;
+      color: #3498db;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+  <!-- 404 页面内容 -->
+  <div class="container">
+    <h1>404</h1>
+    <p>抱歉，您访问的页面 <span id="current-url"></span> 不存在。</p>
+    <p>请检查链接或联系管理员。</p>
+  </div>
+
+  <script>
+    // 获取当前页面的 URL
+    const currentUrl = window.location.href;
+    document.getElementById('current-url').textContent = currentUrl;
+  </script>
+</body>
+</html>

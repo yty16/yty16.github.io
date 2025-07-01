@@ -1,0 +1,198 @@
+{
+    "navItems": [
+      { "text": "机房必备", "targetId": "section1" },
+      { "text": "网站内置功能", "targetId": "section2" },
+      { "text": "游戏", "targetId": "section3" },
+      { "text": "工具箱", "targetId": "section4" },
+      { "text": "网站分站", "targetId": "section5" },
+      { "text": "网站设置", "targetId": "section6" }
+    ],
+    "sections": [
+      {
+        "id": "section1",
+        "title": "机房必备",
+        "groups": [
+          {
+            "groupTitle": "脱控工具",
+            "buttons": [
+              { "link": "check/?link=dzjszjz", "line1": "电子教室终结者", "line2": "需要密码" },
+              { "link": "check/?link=jiyutrainer", "line1": "JiYuTrainer", "line2": "需要密码" },
+              { "link": "check/?link=super", "line1": "获取超级管理员权限", "line2": "别乱删文件，需要密码" },
+              { "link": "check/?link=ko", "line1": "KO.BAT", "line2": "循环结束除系统以外的进程" },
+              { "link": "check/?link=ksword", "line1": "KSword", "line2": "轻量Windows对抗程序" }
+            ]
+          },
+          {
+            "groupTitle": "游览器",
+            "buttons": [
+              { "link": "https://www.firefox.com.cn/", "line1": "FireFox", "line2": "推荐" },
+              { "link": "https://www.microsoft.com/zh-cn/edge/", "line1": "Edge", "line2": "推荐" },
+              { "link": "https://browser.360.cn/", "line1": "360", "line2": "不建议" }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "section2",
+        "title": "网站内置功能",
+        "groups": [
+          {
+            "groupTitle": null,
+            "buttons": [
+              { "link": "https://stats.uptimerobot.com/Lv1zcjMbXH", "line1": "网站状态检测", "line2": "检测网站状态" },
+              { "link": "https://fortunate-lively-hacksaw.glitch.me/", "line1": "聊天室", "line2": "炸了" },
+              { "link": "music/", "line1": "4k/6k音游练习", "line2": "没做多押" },
+              { "link": "music/fs.html", "line1": "范式类空间音游练习", "line2": "有多押" },
+              { "link": "robot/", "line1": "人机测试", "line2": "整蛊，一直往下划即可" },
+              { "link": "checkbox/", "line1": "10000个复选框", "line2": "无聊专用" },
+              { "link": "guessblock/", "line1": "MC猜方块", "line2": "未完工" },
+              { "link": "download/NGGYU.html", "line1": "神秘链接", "line2": "神秘链接" }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "section3",
+        "title": "游戏",
+        "groups": [
+          {
+            "groupTitle": "游戏合集",
+            "buttons": [
+              { "link": "https://fuun.fun/", "line1": "游戏合集fuun", "line2": "游戏比较多" },
+              { "link": "https://iogames.space/", "line1": "io游戏集合", "line2": ".io后缀很多游戏" },
+              { "link": "https://poki.com/zh", "line1": "poki", "line2": "大家都熟" },
+              { "link": "https://xingye.me/game/index.php", "line1": "星夜游戏合集", "line2": "还行" },
+              { "link": "https://www.luogu.com/paste/z2kdb1e3", "line1": "洛谷游戏合集", "line2": "还可以" },
+              { "link": "https://www.ccw.site/", "line1": "共创世界游戏集合", "line2": "还行" },
+              { "link": "https://www.crazygames.com/", "line1": "CrazyGame游戏合集", "line2": "行" },
+              { "link": "https://haiyong.site/moyu/", "line1": "摸鱼网站", "line2": "游戏很多" },
+              { "link": "https://www.4399.com/", "line1": "4399", "line2": "老熟人了" },
+              { "link": "https://neal.fun/", "line1": "neal.fun", "line2": "一般" }
+            ]
+          },
+          {
+            "groupTitle": "游戏",
+            "buttons": [
+              { "link": "https://ak-ioi.com/apps/oi-2048/", "line1": "2048 IOI 版", "line2": "里面还有其他版本" },
+              { "link": "https://cheeaun.github.io/chengyu-wordle/", "line1": "猜成语", "line2": "中国的wordle" },
+              { "link": "https://slay.one/", "line1": "slay.one", "line2": "联机2D枪战游戏" },
+              { "link": "https://www.arealme.com/cn", "line1": "A Real Me测试", "line2": "一些测试" },
+              { "link": "https://indienova.com/corp/adofai", "line1": "冰与火之舞", "line2": "在线免费试玩" },
+              { "link": "https://h5mota.com/play/", "line1": "魔塔", "line2": "经典游戏，里面有很多二创" },
+              { "link": "https://liferestart.syaro.io/public/index.html", "line1": "人生重开模拟器", "line2": "经典" },
+              { "link": "https://yorg.io/", "line1": "yorg.io", "line2": "一种塔防" },
+              { "link": "https://triep.io/", "line1": "坦克大战", "line2": "无聊专用" },
+              { "link": "https://enazo.cn/", "line1": "你画我猜", "line2": "很好，就是人少" },
+              { "link": "https://beta.sparebeat.com/", "line1": "sparebeat", "line2": "音游，无聊时玩" },
+              { "link": "https://s.u7u9.com/h5game/ylgy20221021/tHmVGQ_new.html?srcid=browserbox", "line1": "羊了个羊", "line2": "经典" }
+            ]
+          },
+          {
+            "groupTitle": "UnderTale/AU专区",
+            "buttons": [
+              { "link": "https://jcw87.github.io/c2-sans-fight/", "line1": "Sans", "line2": "原版" },
+              { "link": "https://meekuzo.github.io/Jotaro-Sans-Simulator/", "line1": "空条衫太郎", "line2": "还行" },
+              { "link": "https://hyzq.github.io/Bee-Sans-fight3/", "line1": "BeeSans", "line2": "简单" },
+              { "link": "https://caijiqaq.github.io/LAST-BREATH/", "line1": "ULB", "line2": "全阶段" },
+              { "link": "https://mario1d240.github.io/undertale-last-breath-remake-bad-time-simulator/", "line1": "ULB", "line2": "三阶段" },
+              { "link": "https://caijiqaq.github.io/UNDERSWAP-PAPYRUS-FIGHT/", "line1": "烟枪", "line2": "还行" },
+              { "link": "https://fuck-time.github.io/CJ-bad-time-simulator/", "line1": "HardmodeSans", "line2": "难" },
+              { "link": "https://1742137113.github.io/haogesans/", "line1": "HaogeSans", "line2": "极难" },
+              { "link": "https://caijiqaq.github.io/UNDERSWAP-SANS-FIGHT/", "line1": "SwapSans", "line2": "正常版" },
+              { "link": "https://caijiqaq.github.io/UNDERSWAP-SANS-FIGHT-EasyMode/", "line1": "SwapSans", "line2": "简单版" },
+              { "link": "https://caijiqaq.github.io/dusttale/", "line1": "尘埃", "line2": "正常版" },
+              { "link": "https://caijiqaq.github.io/dusttale-easymode/", "line1": "尘埃", "line2": "简单版" },
+              { "link": "https://caijiqaq.github.io/dusttale-debug/", "line1": "尘埃", "line2": "Degug版" },
+              { "link": "download/Ending Time Octet(弹幕未加强).zip", "line1": "八重终结-普通弹幕", "line2": "需要下载" },
+              { "link": "download/Ending Time Octet(弹幕加强).zip", "line1": "八重终结-弹幕加强", "line2": "需要下载" }
+            ]
+          },
+          {
+            "groupTitle": "C++小游戏",
+            "buttons": [
+              { "link": "download/人生之路.exe", "line1": "人生之路", "line2": "流程特别长" },
+              { "link": "download/规则怪谈.zip", "line1": "规则怪谈", "line2": "没完" },
+              { "link": "download/全民砸键盘.exe", "line1": "全民砸键盘", "line2": "解压(?)" },
+              { "link": "download/恶魔轮盘赌.exe", "line1": "恶魔轮盘赌", "line2": "简陋" },
+              { "link": "download/贪吃蛇.exe", "line1": "贪吃蛇", "line2": "简陋" },
+              { "link": "download/黑暗森林模拟.exe", "line1": "文明模拟器", "line2": "参考《三体》" }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "section4",
+        "title": "工具箱",
+        "groups": [
+          {
+            "groupTitle": "常规工具",
+            "buttons": [
+              { "link": "https://nav.qinight.com/", "line1": "柒夜网站导航", "line2": "非常全，推荐" },
+              { "link": "https://www.jyshare.com/front-end", "line1": "菜鸟工具", "line2": "比较全，推荐" },
+              { "link": "https://mathsolver.microsoft.com/zh", "line1": "数学计算器", "line2": "一般" },
+              { "link": "https://greasyfork.org/zh-CN/", "line1": "用户脚本网站", "line2": "给游览器添加篡改猴脚本" },
+              { "link": "http://www.bzgxdj.cn/", "line1": "摩斯电码翻译器", "line2": "还行" },
+              { "link": "https://base64.us/", "line1": "base64编码/解码", "line2": "推荐" },
+              { "link": "https://badges.toozhao.com/", "line1": "访问计数器", "line2": "统计一个页面的访问次数" },
+              { "link": "https://lab.magiconch.com/homo/", "line1": "数字114514化工具", "line2": "字面意思" },
+              { "link": "https://www.luogu.com/paste/b5jil6dj", "line1": "洛谷工具箱", "line2": "一些链接失效/国内不可用" },
+              { "link": "https://snapany.com/zh/bilibili", "line1": "B站视频解析下载", "line2": "告别不会下载" },
+              { "link": "https://www.jyshare.com/front-end/706/", "line1": "哈希算法", "line2": "挺方便的" },
+              { "link": "https://bdfy.azurewebsites.net/", "line1": "不会百度吗", "line2": "整蛊用" },
+              { "link": "https://www.swb.cc/", "line1": "免费域名", "line2": "挺好的，每人限3个" },
+              { "link": "https://luogu.codingoier.com/punch", "line1": "洛谷自动打卡", "line2": "不用每天打卡了" },
+              { "link": "https://s.u7u9.com/h5game/ylgy20221021/tHmVGQ_new.html?srcid=browserbox", "line1": "Phigros自制铺", "line2": "占个位置，链接没找到" },
+              { "link": "https://www.eteste.com/", "line1": "字数统计", "line2": "在线" },
+              { "link": "https://app.xunjieshipin.com/", "line1": "视频转换", "line2": "功能全" },
+              { "link": "http://www.mytju.com/classcode/tools/messycoderecover.asp", "line1": "乱码恢复", "line2": "跟编码错乱说再见" },
+              { "link": "https://beautifier.io/", "line1": "JavaScript美化", "line2": "可以做简单的反混淆" },
+              { "link": "https://www.virustotal.com/", "line1": "在线扫描文件", "line2": "有很多杀毒软件扫描" },
+              { "link": "https://bigjpg.com/", "line1": "图片修复、放大", "line2": "比较推荐" },
+              { "link": "https://cn.piliapp.com/cool-text/upside-down/", "line1": "颠倒文字生成", "line2": "好玩" },
+              { "link": "https://cli.im/", "line1": "二维码生成", "line2": "实用，还可以解码" }
+            ]
+          },
+          {
+            "groupTitle": "Wiki专区",
+            "buttons": [
+              { "link": "https://backrooms-wiki-cn.wikidot.com/", "line1": "后室", "line2": "Wiki" },
+              { "link": "https://backrooms.fandom.com/zh/wiki/", "line1": "后室", "line2": "Fandom" },
+              { "link": "https://florrio.fandom.com/zh/wiki/Florr.io_%E4%B8%AD%E6%96%87%E7%BB%B4%E5%9F%BA", "line1": "Florr.io", "line2": "中文Fandom" },
+              { "link": "https://official-florrio.fandom.com/wiki/Official_Florr.io_Wiki", "line1": "Florr.io", "line2": "英文Fandom" },
+              { "link": "https://scp-wiki-cn.wikidot.com/", "line1": "SCP基金会", "line2": "Wiki" },
+              { "link": "https://zh.minecraft.wiki/", "line1": "我的世界", "line2": "中文Wiki" }
+            ]
+          },
+          {
+            "groupTitle": "网盘",
+            "buttons": [
+              { "link": "https://upfile.live/zh-cn/", "line1": "及时传", "line2": "推荐，但文件3天有效期" },
+              { "link": "https://up.woozooo.com/", "line1": "蓝奏云", "line2": "推荐" },
+              { "link": "https://home.ctfile.com/", "line1": "城通", "line2": "推荐" },
+              { "link": "https://musetransfer.com/", "line1": "musetransfer", "line2": "一般，不登录对文件类型有限制" }
+            ]
+          },
+          {
+            "groupTitle": "florr.io相关",
+            "buttons": [
+              { "link": "/tool/florr-craft.html", "line1": "合卡计算器", "line2": "自制" },
+              { "link": "https://betterflorr.top/", "line1": "betterflorr", "line2": "更好的florr" }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "section5",
+        "title": "网站分站",
+        "groups": [
+          {
+            "groupTitle": null,
+            "buttons": [
+              { "link": "https://yty16.github.io/", "line1": "主站", "line2": "GitHub Pages" },
+              { "link": "https://yty16.pages.dev/", "line1": "分站", "line2": "CloudFlare站" }
+            ]
+          }
+        ]
+      }
+    ]
+  }

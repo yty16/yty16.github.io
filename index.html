@@ -1,0 +1,1862 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script>
+        // 主题跟随系统 - 页面渲染前执行避免闪烁
+        (function() {
+            var saved = localStorage.getItem('theme');
+            if (saved === 'light' || saved === 'dark') {
+                document.documentElement.setAttribute('data-theme', saved);
+            } else {
+                // 无手动偏好时跟随系统
+                var systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                document.documentElement.setAttribute('data-theme', systemDark ? 'dark' : 'light');
+            }
+        })();
+    </script>
+    <title>工具箱 Pro</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        /* ===== CSS Variables ===== */
+        :root {
+            --bg-primary: #f0f2f5;
+            --bg-secondary: #ffffff;
+            --bg-card: rgba(255, 255, 255, 0.85);
+            --bg-sidebar: rgba(255, 255, 255, 0.95);
+            --bg-header: rgba(255, 255, 255, 0.8);
+            --text-primary: #1a1a2e;
+            --text-secondary: #4a5568;
+            --text-muted: #a0aec0;
+            --accent: #6366f1;
+            --accent-hover: #4f46e5;
+            --accent-light: rgba(99, 102, 241, 0.1);
+            --border: rgba(0, 0, 0, 0.06);
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.08);
+            --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.1);
+            --shadow-card: 0 2px 8px rgba(0, 0, 0, 0.04);
+            --gradient-1: linear-gradient(135deg, #6366f1, #8b5cf6);
+            --gradient-2: linear-gradient(135deg, #f093fb, #f5576c);
+            --gradient-3: linear-gradient(135deg, #4facfe, #00f2fe);
+            --gradient-4: linear-gradient(135deg, #43e97b, #38f9d7);
+            --gradient-5: linear-gradient(135deg, #fa709a, #fee140);
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --radius-xl: 20px;
+            --sidebar-width: 240px;
+            --header-height: 64px;
+            --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        [data-theme="dark"] {
+            --bg-primary: #0f0f1a;
+            --bg-secondary: #1a1a2e;
+            --bg-card: rgba(30, 30, 50, 0.85);
+            --bg-sidebar: rgba(20, 20, 40, 0.95);
+            --bg-header: rgba(15, 15, 26, 0.85);
+            --text-primary: #e2e8f0;
+            --text-secondary: #a0aec0;
+            --text-muted: #4a5568;
+            --accent: #818cf8;
+            --accent-hover: #6366f1;
+            --accent-light: rgba(129, 140, 248, 0.15);
+            --border: rgba(255, 255, 255, 0.06);
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.2);
+            --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.3);
+            --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.4);
+            --shadow-card: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        /* ===== Reset ===== */
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+            transition: background var(--transition), color var(--transition);
+        }
+
+        /* ===== Particle Canvas ===== */
+        #particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* ===== Header ===== */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: var(--header-height);
+            background: var(--bg-header);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            padding: 0 24px;
+            transition: background var(--transition);
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .hamburger {
+            display: none;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: var(--radius-sm);
+            color: var(--text-primary);
+            transition: background var(--transition);
+        }
+
+        .hamburger:hover {
+            background: var(--accent-light);
+        }
+
+        .hamburger svg {
+            width: 24px;
+            height: 24px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 800;
+            font-size: 20px;
+            color: var(--text-primary);
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            width: 36px;
+            height: 36px;
+            background: var(--gradient-1);
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .header-center {
+            flex: 1;
+            max-width: 480px;
+            margin: 0 32px;
+        }
+
+        .search-box {
+            position: relative;
+            width: 100%;
+        }
+
+        .search-box input {
+            width: 100%;
+            height: 40px;
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 0 16px 0 42px;
+            font-size: 14px;
+            font-family: inherit;
+            background: var(--bg-card);
+            color: var(--text-primary);
+            backdrop-filter: blur(10px);
+            outline: none;
+            transition: border-color var(--transition), box-shadow var(--transition), background var(--transition);
+        }
+
+        .search-box input:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px var(--accent-light);
+        }
+
+        .search-box input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .search-box .search-icon {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            width: 18px;
+            height: 18px;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .theme-toggle {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 1px solid var(--border);
+            background: var(--bg-card);
+            color: var(--text-primary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all var(--transition);
+            backdrop-filter: blur(10px);
+        }
+
+        .theme-toggle:hover {
+            background: var(--accent-light);
+            border-color: var(--accent);
+            color: var(--accent);
+            transform: rotate(15deg);
+        }
+
+        /* ===== Sidebar ===== */
+        .sidebar {
+            position: fixed;
+            top: var(--header-height);
+            left: 0;
+            width: var(--sidebar-width);
+            height: calc(100vh - var(--header-height));
+            background: var(--bg-sidebar);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-right: 1px solid var(--border);
+            padding: 20px 12px;
+            overflow-y: auto;
+            z-index: 90;
+            transition: transform var(--transition), background var(--transition);
+        }
+
+        .sidebar::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .sidebar::-webkit-scrollbar-thumb {
+            background: var(--text-muted);
+            border-radius: 2px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 14px;
+            margin-bottom: 4px;
+            border-radius: var(--radius-md);
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 3px;
+            height: 100%;
+            background: var(--accent);
+            border-radius: 0 3px 3px 0;
+            transform: scaleY(0);
+            transition: transform var(--transition);
+        }
+
+        .nav-item:hover {
+            background: var(--accent-light);
+            color: var(--accent);
+        }
+
+        .nav-item.active {
+            background: var(--accent-light);
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        .nav-item.active::before {
+            transform: scaleY(1);
+        }
+
+        .nav-icon {
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+
+        .nav-hidden {
+            display: none;
+        }
+
+        .nav-divider {
+            height: 1px;
+            background: var(--border);
+            margin: 12px 14px;
+        }
+
+        /* ===== Main Content ===== */
+        .main {
+            margin-left: var(--sidebar-width);
+            margin-top: var(--header-height);
+            padding: 28px 32px 80px;
+            min-height: calc(100vh - var(--header-height));
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ===== Hero Banner ===== */
+        .hero {
+            background: var(--gradient-1);
+            border-radius: var(--radius-xl);
+            padding: 36px 40px;
+            margin-bottom: 32px;
+            position: relative;
+            overflow: hidden;
+            color: white;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 400px;
+            height: 400px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+        }
+
+        .hero::after {
+            content: '';
+            position: absolute;
+            bottom: -30%;
+            left: 10%;
+            width: 200px;
+            height: 200px;
+            background: rgba(255, 255, 255, 0.06);
+            border-radius: 50%;
+        }
+
+        .hero h1 {
+            font-size: 28px;
+            font-weight: 800;
+            margin-bottom: 8px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero p {
+            font-size: 15px;
+            opacity: 0.9;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-stats {
+            display: flex;
+            gap: 32px;
+            margin-top: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-stat {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .hero-stat-value {
+            font-size: 24px;
+            font-weight: 800;
+        }
+
+        .hero-stat-label {
+            font-size: 12px;
+            opacity: 0.75;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* ===== Section ===== */
+        .section {
+            margin-bottom: 36px;
+            animation: fadeInUp 0.5s ease forwards;
+            opacity: 0;
+        }
+
+        .section.visible {
+            opacity: 1;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .section-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            color: white;
+            flex-shrink: 0;
+        }
+
+        .section-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .section-subtitle {
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-top: 2px;
+        }
+
+        /* ===== Group ===== */
+        .group {
+            margin-bottom: 24px;
+        }
+
+        .group-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 12px;
+            padding-left: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        /* ===== Card Grid ===== */
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 14px;
+        }
+
+        /* ===== Card ===== */
+        .card {
+            display: flex;
+            flex-direction: column;
+            padding: 18px;
+            background: var(--bg-card);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            text-decoration: none;
+            color: var(--text-primary);
+            cursor: pointer;
+            transition: all var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--gradient-1);
+            opacity: 0;
+            transition: opacity var(--transition);
+        }
+
+        .card:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-md);
+            border-color: var(--accent);
+        }
+
+        .card:hover::before {
+            opacity: 1;
+        }
+
+        .card-title {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 4px;
+            color: var(--text-primary);
+        }
+
+        .card-desc {
+            font-size: 12px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+            flex: 1;
+        }
+
+        .card-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 2px 8px;
+            font-size: 11px;
+            font-weight: 600;
+            border-radius: 10px;
+            margin-top: 8px;
+            width: fit-content;
+        }
+
+        .badge-recommend {
+            background: rgba(99, 102, 241, 0.1);
+            color: #6366f1;
+        }
+
+        .badge-warn {
+            background: rgba(245, 87, 108, 0.1);
+            color: #f5576c;
+        }
+
+        .badge-new {
+            background: rgba(67, 233, 123, 0.1);
+            color: #2ecc71;
+        }
+
+        .badge-download {
+            background: rgba(79, 172, 254, 0.1);
+            color: #4facfe;
+        }
+
+        .badge-password {
+            background: rgba(245, 87, 108, 0.15);
+            color: #f5576c;
+        }
+
+        /* ===== Hidden Section ===== */
+        .section-hidden {
+            display: none;
+        }
+
+        /* ===== Site Settings ===== */
+        .settings-panel {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            backdrop-filter: blur(10px);
+        }
+
+        .settings-group {
+            margin-bottom: 20px;
+        }
+
+        .settings-group:last-child {
+            margin-bottom: 0;
+        }
+
+        .settings-label {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: var(--text-primary);
+        }
+
+        .settings-options {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .settings-btn {
+            padding: 8px 20px;
+            border: 2px solid var(--border);
+            border-radius: var(--radius-sm);
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            font-size: 13px;
+            font-family: inherit;
+            cursor: pointer;
+            transition: all var(--transition);
+        }
+
+        .settings-btn:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        .settings-btn.active {
+            background: var(--accent);
+            color: white;
+            border-color: var(--accent);
+        }
+
+        .toggle-switch {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+        }
+
+        .toggle-switch input[type="checkbox"] {
+            appearance: none;
+            width: 44px;
+            height: 24px;
+            background: var(--text-muted);
+            border-radius: 12px;
+            position: relative;
+            cursor: pointer;
+            transition: background var(--transition);
+        }
+
+        .toggle-switch input[type="checkbox"]::after {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 20px;
+            height: 20px;
+            background: white;
+            border-radius: 50%;
+            transition: transform var(--transition);
+        }
+
+        .toggle-switch input[type="checkbox"]:checked {
+            background: var(--accent);
+        }
+
+        .toggle-switch input[type="checkbox"]:checked::after {
+            transform: translateX(20px);
+        }
+
+        .toggle-label {
+            font-size: 14px;
+            color: var(--text-primary);
+        }
+
+        .toggle-hint {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-top: 2px;
+        }
+
+        /* ===== Footer ===== */
+        .footer {
+            margin-top: 48px;
+            padding: 24px 0;
+            border-top: 1px solid var(--border);
+            text-align: center;
+        }
+
+        .footer-text {
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        .footer-text a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        .footer-text a:hover {
+            text-decoration: underline;
+        }
+
+        /* ===== Toast ===== */
+        .toast-container {
+            position: fixed;
+            top: 80px;
+            right: 24px;
+            z-index: 200;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .toast {
+            background: var(--bg-card);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 12px 20px;
+            box-shadow: var(--shadow-lg);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+            color: var(--text-primary);
+            animation: slideInRight 0.3s ease, fadeOut 0.3s ease 2.7s forwards;
+            max-width: 320px;
+        }
+
+        .toast-icon {
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+
+        @keyframes slideInRight {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        @keyframes fadeOut {
+            to { opacity: 0; transform: translateX(30px); }
+        }
+
+        /* ===== Scroll to Top ===== */
+        .scroll-top {
+            position: fixed;
+            bottom: 32px;
+            right: 32px;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: var(--accent);
+            color: white;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: var(--shadow-md);
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all var(--transition);
+            z-index: 80;
+        }
+
+        .scroll-top.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .scroll-top:hover {
+            background: var(--accent-hover);
+            transform: translateY(-2px);
+        }
+
+        /* ===== Loading ===== */
+        .loading-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 80px 0;
+            gap: 16px;
+        }
+
+        .spinner {
+            width: 36px;
+            height: 36px;
+            border: 3px solid var(--border);
+            border-top-color: var(--accent);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+
+        /* ===== Search Highlight ===== */
+        .card.search-hidden {
+            display: none;
+        }
+
+        .search-highlight {
+            background: rgba(99, 102, 241, 0.2);
+            border-radius: 2px;
+            padding: 0 2px;
+        }
+
+        /* ===== Mobile Overlay ===== */
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 85;
+            backdrop-filter: blur(4px);
+        }
+
+        .sidebar-overlay.active {
+            display: block;
+        }
+
+        /* ===== Responsive ===== */
+        @media (max-width: 768px) {
+            .hamburger {
+                display: flex;
+            }
+
+            .sidebar {
+                transform: translateX(-100%);
+            }
+
+            .sidebar.open {
+                transform: translateX(0);
+                box-shadow: var(--shadow-lg);
+            }
+
+            .main {
+                margin-left: 0;
+                padding: 20px 16px 80px;
+            }
+
+            .header-center {
+                margin: 0 16px;
+            }
+
+            .hero {
+                padding: 24px;
+            }
+
+            .hero h1 {
+                font-size: 22px;
+            }
+
+            .hero-stats {
+                gap: 20px;
+            }
+
+            .card-grid {
+                grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+                gap: 10px;
+            }
+
+            .card {
+                padding: 14px;
+            }
+
+            .section-title {
+                font-size: 18px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header-center {
+                display: none;
+            }
+
+            .hero-stats {
+                flex-wrap: wrap;
+                gap: 16px;
+            }
+        }
+
+        /* ===== Days Counter ===== */
+        .days-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 14px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            font-size: 13px;
+            margin-top: 16px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ===== Keyboard hint ===== */
+        .kbd-hint {
+            position: fixed;
+            bottom: 32px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--bg-card);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 10px 20px;
+            font-size: 12px;
+            color: var(--text-muted);
+            z-index: 80;
+            opacity: 0;
+            transition: opacity 0.5s;
+            pointer-events: none;
+        }
+
+        .kbd-hint.visible {
+            opacity: 1;
+        }
+
+        kbd {
+            display: inline-block;
+            padding: 2px 6px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 11px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Particle Background -->
+    <canvas id="particles"></canvas>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="header-left">
+            <button class="hamburger" id="hamburgerBtn" aria-label="Toggle navigation">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                    <line x1="3" y1="6" x2="21" y2="6"/>
+                    <line x1="3" y1="12" x2="21" y2="12"/>
+                    <line x1="3" y1="18" x2="21" y2="18"/>
+                </svg>
+            </button>
+            <a href="#" class="logo">
+                <div class="logo-icon">P</div>
+                <span>工具箱 Pro</span>
+            </a>
+        </div>
+        <div class="header-center">
+            <div class="search-box">
+                <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                    <circle cx="11" cy="11" r="8"/>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                </svg>
+                <input type="text" id="searchInput" placeholder="搜索工具、游戏、功能..." autocomplete="off">
+            </div>
+        </div>
+        <div class="header-right">
+            <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+                <svg id="themeIcon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                    <circle cx="12" cy="12" r="5"/>
+                    <line x1="12" y1="1" x2="12" y2="3"/>
+                    <line x1="12" y1="21" x2="12" y2="23"/>
+                    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+                    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+                    <line x1="1" y1="12" x2="3" y2="12"/>
+                    <line x1="21" y1="12" x2="23" y2="12"/>
+                    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+                    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+                </svg>
+            </button>
+        </div>
+    </header>
+
+    <!-- Sidebar Overlay (Mobile) -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- Sidebar -->
+    <nav class="sidebar" id="sidebar">
+        <div id="navList"></div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main" id="mainContent">
+        <!-- Hero Banner -->
+        <div class="hero">
+            <h1>欢迎来到工具箱 Pro</h1>
+            <p>一站式工具导航，集成游戏、工具、实用网站</p>
+            <div class="hero-stats">
+                <div class="hero-stat">
+                    <span class="hero-stat-value" id="toolCount">--</span>
+                    <span class="hero-stat-label">收录工具</span>
+                </div>
+                <div class="hero-stat">
+                    <span class="hero-stat-value" id="categoryCount">--</span>
+                    <span class="hero-stat-label">分类</span>
+                </div>
+                <div class="hero-stat">
+                    <span class="hero-stat-value" id="daysCount">--</span>
+                    <span class="hero-stat-label">运营天数</span>
+                </div>
+            </div>
+            <div class="days-badge">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                <span id="daysBadge"></span>
+            </div>
+        </div>
+
+        <!-- Dynamic Sections -->
+        <div id="dynamicSections">
+            <div class="loading-container">
+                <div class="spinner"></div>
+                <div class="loading-text">正在加载资源...</div>
+            </div>
+        </div>
+
+        <!-- Section: Settings (Hidden by default) -->
+        <section class="section section-hidden" id="section-settings">
+            <div class="section-header">
+                <div class="section-icon" style="background: var(--gradient-5);">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+                </div>
+                <div>
+                    <div class="section-title">网站设置</div>
+                    <div class="section-subtitle">自定义你的浏览体验</div>
+                </div>
+            </div>
+            <div class="settings-panel">
+                <div class="settings-group">
+                    <div class="settings-label">页面标题</div>
+                    <div class="settings-options">
+                        <button class="settings-btn active" onclick="changeTitle('工具箱 Pro')">工具箱 Pro</button>
+                        <button class="settings-btn" onclick="changeTitle('百度一下，你就知道')">百度一下</button>
+                        <button class="settings-btn" onclick="changeTitle('New Tab')">New Tab</button>
+                    </div>
+                </div>
+                <div class="settings-group">
+                    <div class="settings-label">安全模式</div>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="securityMode">
+                        <div>
+                            <div class="toggle-label">极域安全模式</div>
+                            <div class="toggle-hint">启用后，离开网页时会自动变为该网页已被阻止</div>
+                        </div>
+                    </label>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p class="footer-text">
+                本网站已运营 <strong id="footerDays">--</strong> 天 &nbsp;|&nbsp;
+                Powered by <a href="https://pages.github.com" target="_blank">GitHub Pages</a> &nbsp;|&nbsp;
+                Made by yty7816
+            </p>
+        </footer>
+    </main>
+
+    <!-- Scroll to Top Button -->
+    <button class="scroll-top" id="scrollTopBtn" aria-label="Scroll to top">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+            <polyline points="18 15 12 9 6 15"/>
+        </svg>
+    </button>
+
+    <!-- Keyboard Hint (hidden) -->
+    <div class="kbd-hint" id="kbdHint" style="display:none;">
+        输入 <kbd>seeall</kbd> 解锁隐藏区域
+    </div>
+
+    <script>
+    // ===== Data Configuration =====
+    const SITE_DATA = {
+        navItems: [
+            { text: "机房必备", targetId: "section-lab", icon: "\uD83D\uDCBB", hidden: true },
+            { text: "网站内置功能", targetId: "section-builtin", icon: "\u2699\uFE0F" },
+            { text: "游戏", targetId: "section-games", icon: "\uD83C\uDFAE" },
+            { text: "工具箱", targetId: "section-tools", icon: "\uD83D\uDD27" },
+            { text: "网站分站", targetId: "section-subsites", icon: "\uD83C\uDF10" },
+            { text: "网站设置", targetId: "section-settings", icon: "\u2699\uFE0F", hidden: true }
+        ],
+        sections: [
+            {
+                id: "section-lab",
+                title: "机房必备",
+                subtitle: "机房实用工具合集",
+                icon: "\uD83D\uDCBB",
+                gradient: "var(--gradient-2)",
+                hidden: true,
+                groups: [
+                    {
+                        groupTitle: "脱控工具",
+                        buttons: [
+                            { link: "check/?link=dzjszjz", line1: "电子教室终结者", line2: "需要密码", badge: "password" },
+                            { link: "check/?link=jiyutrainer", line1: "JiYuTrainer", line2: "需要密码", badge: "password" },
+                            { link: "check/?link=super", line1: "获取超级管理员权限", line2: "别乱删文件，需要密码", badge: "password" },
+                            { link: "check/?link=ko", line1: "KO.BAT", line2: "循环结束除系统以外的进程", badge: "password" },
+                            { link: "check/?link=ksword", line1: "KSword", line2: "轻量Windows对抗程序", badge: "password" }
+                        ]
+                    },
+                    {
+                        groupTitle: "浏览器",
+                        buttons: [
+                            { link: "https://www.firefox.com.cn/", line1: "FireFox", line2: "推荐", badge: "recommend" },
+                            { link: "https://www.microsoft.com/zh-cn/edge/", line1: "Edge", line2: "推荐", badge: "recommend" },
+                            { link: "https://browser.360.cn/", line1: "360", line2: "不建议", badge: "warn" }
+                        ]
+                    }
+                ]
+            },
+            {
+                id: "section-builtin",
+                title: "网站内置功能",
+                subtitle: "本站自研趣味功能",
+                icon: "\u2699\uFE0F",
+                gradient: "var(--gradient-3)",
+                groups: [
+                    {
+                        groupTitle: null,
+                        buttons: [
+                            { link: "https://stats.uptimerobot.com/Lv1zcjMbXH", line1: "网站状态检测", line2: "检测网站状态" },
+                            { link: "https://fortunate-lively-hacksaw.glitch.me/", line1: "聊天室", line2: "实时聊天" },
+                            { link: "music/", line1: "4k/6k音游练习", line2: "没做多押" },
+                            { link: "music/fs.html", line1: "范式类空间音游练习", line2: "有多押", badge: "new" },
+                            { link: "robot/", line1: "人机测试", line2: "整蛊，一直往下划即可" },
+                            { link: "checkbox/", line1: "10000个复选框", line2: "无聊专用" },
+                            { link: "guessblock/", line1: "MC猜方块", line2: "未完工" },
+                            { link: "download/NGGYU.html", line1: "神秘链接", line2: "神秘链接" }
+                        ]
+                    }
+                ]
+            },
+            {
+                id: "section-games",
+                title: "游戏",
+                subtitle: "摸鱼游戏合集",
+                icon: "\uD83C\uDFAE",
+                gradient: "var(--gradient-4)",
+                groups: [
+                    {
+                        groupTitle: "游戏合集",
+                        buttons: [
+                            { link: "https://fuun.fun/", line1: "游戏合集 fuun", line2: "游戏比较多", badge: "recommend" },
+                            { link: "https://iogames.space/", line1: "io游戏集合", line2: ".io后缀很多游戏" },
+                            { link: "https://poki.com/zh", line1: "Poki", line2: "大家都熟", badge: "recommend" },
+                            { link: "https://xingye.me/game/index.php", line1: "星夜游戏合集", line2: "还行" },
+                            { link: "https://www.luogu.com/paste/z2kdb1e3", line1: "洛谷游戏合集", line2: "还可以" },
+                            { link: "https://www.ccw.site/", line1: "共创世界游戏集合", line2: "还行" },
+                            { link: "https://www.crazygames.com/", line1: "CrazyGame", line2: "游戏合集" },
+                            { link: "https://haiyong.site/moyu/", line1: "摸鱼网站", line2: "游戏很多" },
+                            { link: "https://www.4399.com/", line1: "4399", line2: "老熟人了" },
+                            { link: "https://neal.fun/", line1: "neal.fun", line2: "创意互动" }
+                        ]
+                    },
+                    {
+                        groupTitle: "单机游戏",
+                        buttons: [
+                            { link: "https://ak-ioi.com/apps/oi-2048/", line1: "2048 IOI 版", line2: "里面还有其他版本" },
+                            { link: "https://cheeaun.github.io/chengyu-wordle/", line1: "猜成语", line2: "中国的wordle" },
+                            { link: "https://slay.one/", line1: "slay.one", line2: "联机2D枪战游戏" },
+                            { link: "https://www.arealme.com/cn", line1: "A Real Me测试", line2: "一些测试" },
+                            { link: "https://indienova.com/corp/adofai", line1: "冰与火之舞", line2: "在线免费试玩" },
+                            { link: "https://h5mota.com/play/", line1: "魔塔", line2: "经典游戏，里面有很多二创" },
+                            { link: "https://liferestart.syaro.io/public/index.html", line1: "人生重开模拟器", line2: "经典", badge: "recommend" },
+                            { link: "https://yorg.io/", line1: "yorg.io", line2: "一种塔防" },
+                            { link: "https://triep.io/", line1: "坦克大战", line2: "无聊专用" },
+                            { link: "https://enazo.cn/", line1: "你画我猜", line2: "联机互动" },
+                            { link: "https://beta.sparebeat.com/", line1: "sparebeat", line2: "音游" },
+                            { link: "https://s.u7u9.com/h5game/ylgy20221021/tHmVGQ_new.html?srcid=browserbox", line1: "羊了个羊", line2: "经典" }
+                        ]
+                    },
+                    {
+                        groupTitle: "UnderTale / AU 专区",
+                        buttons: [
+                            { link: "https://jcw87.github.io/c2-sans-fight/", line1: "Sans", line2: "原版" },
+                            { link: "https://meekuzo.github.io/Jotaro-Sans-Simulator/", line1: "空条衫太郎", line2: "还行" },
+                            { link: "https://hyzq.github.io/Bee-Sans-fight3/", line1: "BeeSans", line2: "简单" },
+                            { link: "https://caijiqaq.github.io/LAST-BREATH/", line1: "ULB", line2: "全阶段" },
+                            { link: "https://mario1d240.github.io/undertale-last-breath-remake-bad-time-simulator/", line1: "ULB", line2: "三阶段" },
+                            { link: "https://caijiqaq.github.io/UNDERSWAP-PAPYRUS-FIGHT/", line1: "烟枪", line2: "还行" },
+                            { link: "https://fuck-time.github.io/CJ-bad-time-simulator/", line1: "HardmodeSans", line2: "难", badge: "warn" },
+                            { link: "https://1742137113.github.io/haogesans/", line1: "HaogeSans", line2: "极难", badge: "warn" },
+                            { link: "https://caijiqaq.github.io/UNDERSWAP-SANS-FIGHT/", line1: "SwapSans", line2: "正常版" },
+                            { link: "https://caijiqaq.github.io/UNDERSWAP-SANS-FIGHT-EasyMode/", line1: "SwapSans", line2: "简单版" },
+                            { link: "https://caijiqaq.github.io/dusttale/", line1: "尘埃", line2: "正常版" },
+                            { link: "https://caijiqaq.github.io/dusttale-easymode/", line1: "尘埃", line2: "简单版" },
+                            { link: "https://caijiqaq.github.io/dusttale-debug/", line1: "尘埃", line2: "Debug版", badge: "new" },
+                            { link: "download/Ending Time Octet(弹幕未加强).zip", line1: "八重终结-普通弹幕", line2: "需要下载", badge: "download" },
+                            { link: "download/Ending Time Octet(弹幕加强).zip", line1: "八重终结-弹幕加强", line2: "需要下载", badge: "download" }
+                        ]
+                    },
+                    {
+                        groupTitle: "C++ 小游戏",
+                        buttons: [
+                            { link: "download/人生之路.exe", line1: "人生之路", line2: "流程特别长", badge: "download" },
+                            { link: "download/规则怪谈.zip", line1: "规则怪谈", line2: "没完", badge: "download" },
+                            { link: "download/全民砸键盘.exe", line1: "全民砸键盘", line2: "解压(?)", badge: "download" },
+                            { link: "download/恶魔轮盘赌.exe", line1: "恶魔轮盘赌", line2: "简陋", badge: "download" },
+                            { link: "download/贪吃蛇.exe", line1: "贪吃蛇", line2: "简陋", badge: "download" },
+                            { link: "download/黑暗森林模拟.exe", line1: "文明模拟器", line2: "参考《三体》", badge: "download" }
+                        ]
+                    }
+                ]
+            },
+            {
+                id: "section-tools",
+                title: "工具箱",
+                subtitle: "实用工具与资源导航",
+                icon: "\uD83D\uDD27",
+                gradient: "var(--gradient-1)",
+                groups: [
+                    {
+                        groupTitle: "常规工具",
+                        buttons: [
+                            { link: "https://nav.qinight.com/", line1: "柒夜网站导航", line2: "非常全，推荐", badge: "recommend" },
+                            { link: "https://www.jyshare.com/front-end", line1: "菜鸟工具", line2: "比较全，推荐", badge: "recommend" },
+                            { link: "https://mathsolver.microsoft.com/zh", line1: "数学计算器", line2: "微软出品" },
+                            { link: "https://greasyfork.org/zh-CN/", line1: "用户脚本网站", line2: "给浏览器添加篡改猴脚本" },
+                            { link: "http://www.bzgxdj.cn/", line1: "摩斯电码翻译器", line2: "编码/解码" },
+                            { link: "https://base64.us/", line1: "Base64 编码/解码", line2: "推荐", badge: "recommend" },
+                            { link: "https://badges.toozhao.com/", line1: "访问计数器", line2: "统计页面访问次数" },
+                            { link: "https://lab.magiconch.com/homo/", line1: "数字114514化工具", line2: "字面意思" },
+                            { link: "https://snapany.com/zh/bilibili", line1: "B站视频解析下载", line2: "告别不会下载" },
+                            { link: "https://www.jyshare.com/front-end/706/", line1: "哈希算法", line2: "挺方便的" },
+                            { link: "https://bdfy.azurewebsites.net/", line1: "不会百度吗", line2: "整蛊用" },
+                            { link: "https://www.swb.cc/", line1: "免费域名", line2: "每人限3个" },
+                            { link: "https://luogu.codingoier.com/punch", line1: "洛谷自动打卡", line2: "不用每天打卡了" },
+                            { link: "https://www.eteste.com/", line1: "字数统计", line2: "在线" },
+                            { link: "https://app.xunjieshipin.com/", line1: "视频转换", line2: "功能全" },
+                            { link: "http://www.mytju.com/classcode/tools/messycoderecover.asp", line1: "乱码恢复", line2: "跟编码错乱说再见" },
+                            { link: "https://beautifier.io/", line1: "JavaScript美化", line2: "简单的反混淆" },
+                            { link: "https://www.virustotal.com/", line1: "在线扫描文件", line2: "多杀毒引擎扫描" },
+                            { link: "https://bigjpg.com/", line1: "图片修复放大", line2: "比较推荐", badge: "recommend" },
+                            { link: "https://cn.piliapp.com/cool-text/upside-down/", line1: "颠倒文字生成", line2: "好玩" },
+                            { link: "https://cli.im/", line1: "二维码生成", line2: "实用，还可以解码", badge: "recommend" }
+                        ]
+                    },
+                    {
+                        groupTitle: "Wiki 专区",
+                        buttons: [
+                            { link: "https://backrooms-wiki-cn.wikidot.com/", line1: "后室 Wiki", line2: "Wikidot" },
+                            { link: "https://backrooms.fandom.com/zh/wiki/", line1: "后室 Fandom", line2: "Fandom" },
+                            { link: "https://florrio.fandom.com/zh/wiki/Florr.io_%E4%B8%AD%E6%96%87%E7%BB%B4%E5%9F%BA", line1: "Florr.io 中文", line2: "中文Fandom" },
+                            { link: "https://official-florrio.fandom.com/wiki/Official_Florr.io_Wiki", line1: "Florr.io English", line2: "英文Fandom" },
+                            { link: "https://scp-wiki-cn.wikidot.com/", line1: "SCP基金会", line2: "Wiki" },
+                            { link: "https://zh.minecraft.wiki/", line1: "我的世界中文Wiki", line2: "中文Wiki" }
+                        ]
+                    },
+                    {
+                        groupTitle: "网盘",
+                        buttons: [
+                            { link: "https://upfile.live/zh-cn/", line1: "及时传", line2: "文件3天有效期", badge: "recommend" },
+                            { link: "https://up.woozooo.com/", line1: "蓝奏云", line2: "推荐", badge: "recommend" },
+                            { link: "https://home.ctfile.com/", line1: "城通", line2: "推荐", badge: "recommend" },
+                            { link: "https://musetransfer.com/", line1: "MuseTransfer", line2: "不登录对文件类型有限制" }
+                        ]
+                    },
+                    {
+                        groupTitle: "florr.io 相关",
+                        buttons: [
+                            { link: "tool/florr-craft.html", line1: "合卡计算器", line2: "自制", badge: "new" },
+                            { link: "https://betterflorr.top/", line1: "betterflorr", line2: "更好的florr" }
+                        ]
+                    }
+                ]
+            },
+            {
+                id: "section-subsites",
+                title: "网站分站",
+                subtitle: "多线访问保障",
+                icon: "\uD83C\uDF10",
+                gradient: "var(--gradient-5)",
+                groups: [
+                    {
+                        groupTitle: null,
+                        buttons: [
+                            { link: "https://yty16.github.io/", line1: "主站", line2: "GitHub Pages", badge: "recommend" },
+                            { link: "https://yty16.pages.dev/", line1: "分站", line2: "CloudFlare站" }
+                        ]
+                    }
+                ]
+            }
+        ]
+    };
+
+    // ===== Global State =====
+    let seeallUnlocked = false;
+    let inputBuffer = '';
+    const TARGET_PASSWORD = 'seeall';
+    const HIDDEN_SECTION_IDS = ['section-lab', 'section-settings'];
+    let currentActiveSection = null;
+
+    // ===== Theme =====
+    function initTheme() {
+        const saved = localStorage.getItem('theme');
+        if (saved === 'light' || saved === 'dark') {
+            document.documentElement.setAttribute('data-theme', saved);
+        } else {
+            // 无手动偏好时跟随系统
+            const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            document.documentElement.setAttribute('data-theme', systemDark ? 'dark' : 'light');
+        }
+        updateThemeIcon();
+
+        // 监听系统主题变化，实时跟随
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function(e) {
+            const saved = localStorage.getItem('theme');
+            // 仅在没有手动偏好时跟随系统变化
+            if (!saved) {
+                document.documentElement.setAttribute('data-theme', e.matches ? 'dark' : 'light');
+                updateThemeIcon();
+                // 更新粒子颜色
+                if (typeof updateParticleColors === 'function') updateParticleColors();
+            }
+        });
+    }
+
+    function toggleTheme() {
+        const saved = localStorage.getItem('theme');
+        const current = document.documentElement.getAttribute('data-theme');
+        const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+        // 三种模式循环：亮色 → 暗色 → 跟随系统
+        if (saved === 'light') {
+            // 当前手动亮色 → 切换到手动暗色
+            document.documentElement.setAttribute('data-theme', 'dark');
+            localStorage.setItem('theme', 'dark');
+            showToast('暗色模式');
+        } else if (saved === 'dark') {
+            // 当前手动暗色 → 切换到跟随系统
+            localStorage.removeItem('theme');
+            const sysTheme = systemDark ? 'dark' : 'light';
+            document.documentElement.setAttribute('data-theme', sysTheme);
+            showToast('跟随系统');
+        } else {
+            // 当前跟随系统 → 切换到手动亮色
+            document.documentElement.setAttribute('data-theme', 'light');
+            localStorage.setItem('theme', 'light');
+            showToast('亮色模式');
+        }
+        updateThemeIcon();
+    }
+
+    function updateThemeIcon() {
+        const icon = document.getElementById('themeIcon');
+        const saved = localStorage.getItem('theme');
+        const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+
+        if (!saved) {
+            // 跟随系统模式 - 显示半日半月图标
+            icon.innerHTML = '<path d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707"/><circle cx="12" cy="12" r="4" fill="currentColor" opacity="0.3"/><path d="M12 3a9 9 0 0 0 0 18" fill="currentColor" opacity="0.15"/>';
+        } else if (isDark) {
+            icon.innerHTML = '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>';
+        } else {
+            icon.innerHTML = '<circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>';
+        }
+    }
+
+    // ===== Toast =====
+    function showToast(message, icon = '✨') {
+        const container = document.getElementById('toastContainer');
+        const toast = document.createElement('div');
+        toast.className = 'toast';
+        toast.innerHTML = `<span class="toast-icon">${icon}</span><span>${message}</span>`;
+        container.appendChild(toast);
+        setTimeout(() => toast.remove(), 3000);
+    }
+
+    // ===== Days Counter =====
+    function calculateDays(startDate) {
+        const start = new Date(startDate);
+        const today = new Date();
+        return Math.floor((today - start) / (1000 * 60 * 60 * 24));
+    }
+
+    const days = calculateDays('2024-07-01');
+
+    // ===== Render Navbar =====
+    function renderNavbar() {
+        const navList = document.getElementById('navList');
+        navList.innerHTML = '';
+
+        SITE_DATA.navItems.forEach((item, index) => {
+            if (item.hidden && !seeallUnlocked) return;
+
+            const a = document.createElement('a');
+            a.className = 'nav-item';
+            a.href = `#${item.targetId}`;
+            a.setAttribute('data-target', item.targetId);
+            a.innerHTML = `<span class="nav-icon">${item.icon}</span><span>${item.text}</span>`;
+
+            if (item.hidden) {
+                a.classList.add('nav-hidden-item');
+            }
+
+            a.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.getElementById(item.targetId);
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+                // Close mobile sidebar
+                closeSidebar();
+            });
+
+            navList.appendChild(a);
+
+            // Add divider before hidden items
+            if (item.hidden && index > 0) {
+                const divider = document.createElement('div');
+                divider.className = 'nav-divider';
+                a.before(divider);
+            }
+        });
+    }
+
+    // ===== Render Sections =====
+    function renderSections() {
+        const container = document.getElementById('dynamicSections');
+        container.innerHTML = '';
+
+        let totalTools = 0;
+
+        SITE_DATA.sections.forEach((sectionData, sIndex) => {
+            const section = document.createElement('section');
+            section.className = 'section';
+            section.id = sectionData.id;
+            if (sectionData.hidden && !seeallUnlocked) {
+                section.classList.add('section-hidden');
+            }
+
+            // Section header
+            const header = document.createElement('div');
+            header.className = 'section-header';
+            header.innerHTML = `
+                <div class="section-icon" style="background: ${sectionData.gradient};">
+                    ${sectionData.icon}
+                </div>
+                <div>
+                    <div class="section-title">${sectionData.title}</div>
+                    ${sectionData.subtitle ? `<div class="section-subtitle">${sectionData.subtitle}</div>` : ''}
+                </div>
+            `;
+            section.appendChild(header);
+
+            // Groups
+            sectionData.groups.forEach(group => {
+                const groupDiv = document.createElement('div');
+                groupDiv.className = 'group';
+
+                if (group.groupTitle) {
+                    const title = document.createElement('div');
+                    title.className = 'group-title';
+                    title.textContent = group.groupTitle;
+                    groupDiv.appendChild(title);
+                }
+
+                const grid = document.createElement('div');
+                grid.className = 'card-grid';
+
+                group.buttons.forEach(btn => {
+                    totalTools++;
+                    const card = document.createElement('a');
+                    card.href = btn.link;
+                    card.className = 'card';
+                    card.target = btn.link.startsWith('http') ? '_blank' : '_self';
+                    card.rel = btn.link.startsWith('http') ? 'noopener noreferrer' : '';
+
+                    const title = document.createElement('div');
+                    title.className = 'card-title';
+                    title.textContent = btn.line1;
+
+                    const desc = document.createElement('div');
+                    desc.className = 'card-desc';
+                    desc.textContent = btn.line2;
+
+                    card.appendChild(title);
+                    card.appendChild(desc);
+
+                    if (btn.badge) {
+                        const badge = document.createElement('div');
+                        badge.className = `card-badge badge-${btn.badge}`;
+                        const badgeLabels = {
+                            recommend: '推荐',
+                            warn: '注意',
+                            new: 'NEW',
+                            download: '下载',
+                            password: '需要密码'
+                        };
+                        badge.textContent = badgeLabels[btn.badge] || btn.badge;
+                        card.appendChild(badge);
+                    }
+
+                    grid.appendChild(card);
+                });
+
+                groupDiv.appendChild(grid);
+                section.appendChild(groupDiv);
+            });
+
+            container.appendChild(section);
+
+            // Staggered animation
+            setTimeout(() => {
+                section.classList.add('visible');
+            }, 100 + sIndex * 80);
+        });
+
+        // Update stats
+        document.getElementById('toolCount').textContent = totalTools;
+        document.getElementById('categoryCount').textContent = SITE_DATA.sections.length;
+        document.getElementById('daysCount').textContent = days;
+        document.getElementById('daysBadge').textContent = `已运营 ${days} 天`;
+        document.getElementById('footerDays').textContent = days;
+    }
+
+    // ===== Search =====
+    function initSearch() {
+        const input = document.getElementById('searchInput');
+        let debounceTimer;
+
+        input.addEventListener('input', function() {
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(() => {
+                const query = this.value.trim().toLowerCase();
+                filterCards(query);
+            }, 200);
+        });
+    }
+
+    function filterCards(query) {
+        const cards = document.querySelectorAll('.card');
+        let visibleCount = 0;
+
+        cards.forEach(card => {
+            const title = card.querySelector('.card-title').textContent.toLowerCase();
+            const desc = card.querySelector('.card-desc').textContent.toLowerCase();
+
+            if (!query || title.includes(query) || desc.includes(query)) {
+                card.classList.remove('search-hidden');
+                visibleCount++;
+            } else {
+                card.classList.add('search-hidden');
+            }
+        });
+
+        // Show/hide empty groups
+        document.querySelectorAll('.group').forEach(group => {
+            const visibleCards = group.querySelectorAll('.card:not(.search-hidden)');
+            const grid = group.querySelector('.card-grid');
+            if (grid) {
+                grid.style.display = visibleCards.length === 0 ? 'none' : '';
+            }
+            if (group.querySelector('.group-title') && visibleCards.length === 0) {
+                group.querySelector('.group-title').style.display = 'none';
+            } else if (group.querySelector('.group-title')) {
+                group.querySelector('.group-title').style.display = '';
+            }
+        });
+    }
+
+    // ===== Keyboard Password =====
+    document.addEventListener('keydown', function(e) {
+        if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.isContentEditable) return;
+        if (e.key.length === 1) {
+            inputBuffer += e.key.toLowerCase();
+            if (inputBuffer.length > TARGET_PASSWORD.length) {
+                inputBuffer = inputBuffer.slice(-TARGET_PASSWORD.length);
+            }
+            if (inputBuffer === TARGET_PASSWORD && !seeallUnlocked) {
+                seeallUnlocked = true;
+                unlockHiddenSections();
+                inputBuffer = '';
+            }
+        }
+    });
+
+    function unlockHiddenSections() {
+        HIDDEN_SECTION_IDS.forEach(id => {
+            const section = document.getElementById(id);
+            if (section) {
+                section.classList.remove('section-hidden');
+                section.classList.add('visible');
+            }
+        });
+        renderNavbar();
+        showToast('隐藏区域已解锁!', '🔓');
+        document.getElementById('kbdHint').classList.remove('visible');
+    }
+
+    // ===== Scroll Tracking =====
+    function initScrollTracking() {
+        const mainContent = document.querySelector('.main');
+        window.addEventListener('scroll', () => {
+            // Scroll to top button
+            const scrollTopBtn = document.getElementById('scrollTopBtn');
+            if (window.scrollY > 300) {
+                scrollTopBtn.classList.add('visible');
+            } else {
+                scrollTopBtn.classList.remove('visible');
+            }
+
+            // Active nav tracking
+            const sections = document.querySelectorAll('section[id]');
+            let current = null;
+            sections.forEach(section => {
+                const rect = section.getBoundingClientRect();
+                if (rect.top <= 150 && rect.bottom > 150) {
+                    current = section.id;
+                }
+            });
+
+            if (current !== currentActiveSection) {
+                currentActiveSection = current;
+                document.querySelectorAll('.nav-item').forEach(item => {
+                    item.classList.toggle('active', item.getAttribute('data-target') === current);
+                });
+            }
+        });
+    }
+
+    // ===== Mobile Sidebar =====
+    function initMobileSidebar() {
+        const hamburger = document.getElementById('hamburgerBtn');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('sidebarOverlay');
+
+        hamburger.addEventListener('click', () => {
+            sidebar.classList.toggle('open');
+            overlay.classList.toggle('active');
+        });
+
+        overlay.addEventListener('click', closeSidebar);
+    }
+
+    function closeSidebar() {
+        document.getElementById('sidebar').classList.remove('open');
+        document.getElementById('sidebarOverlay').classList.remove('active');
+    }
+
+    // ===== Scroll to Top =====
+    function initScrollTop() {
+        document.getElementById('scrollTopBtn').addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+    }
+
+    // ===== Change Title =====
+    function changeTitle(title) {
+        document.title = title;
+        // Update active button
+        document.querySelectorAll('.settings-btn').forEach(btn => {
+            btn.classList.toggle('active', btn.textContent === title);
+        });
+        showToast(`标题已更改为「${title}」`, '📝');
+    }
+
+    // ===== Particles =====
+    function initParticles() {
+        const canvas = document.getElementById('particles');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+        let animationId;
+
+        function resize() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+
+        function createParticles() {
+            const count = Math.min(60, Math.floor(window.innerWidth / 20));
+            particles = [];
+            for (let i = 0; i < count; i++) {
+                particles.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    vx: (Math.random() - 0.5) * 0.5,
+                    vy: (Math.random() - 0.5) * 0.5,
+                    radius: Math.random() * 2 + 0.5,
+                    opacity: Math.random() * 0.3 + 0.1
+                });
+            }
+        }
+
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+            const color = isDark ? '129, 140, 248' : '99, 102, 241';
+
+            particles.forEach(p => {
+                p.x += p.vx;
+                p.y += p.vy;
+
+                if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
+                if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
+
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(${color}, ${p.opacity})`;
+                ctx.fill();
+            });
+
+            // Draw connections
+            for (let i = 0; i < particles.length; i++) {
+                for (let j = i + 1; j < particles.length; j++) {
+                    const dx = particles[i].x - particles[j].x;
+                    const dy = particles[i].y - particles[j].y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+                    if (dist < 120) {
+                        ctx.beginPath();
+                        ctx.moveTo(particles[i].x, particles[i].y);
+                        ctx.lineTo(particles[j].x, particles[j].y);
+                        ctx.strokeStyle = `rgba(${color}, ${0.08 * (1 - dist / 120)})`;
+                        ctx.lineWidth = 0.5;
+                        ctx.stroke();
+                    }
+                }
+            }
+
+            animationId = requestAnimationFrame(draw);
+        }
+
+        resize();
+        createParticles();
+        draw();
+
+        window.addEventListener('resize', () => {
+            resize();
+            createParticles();
+        });
+    }
+
+    // ===== Keyboard Hint =====
+    function showKeyboardHint() {
+        setTimeout(() => {
+            document.getElementById('kbdHint').classList.add('visible');
+            setTimeout(() => {
+                document.getElementById('kbdHint').classList.remove('visible');
+            }, 5000);
+        }, 3000);
+    }
+
+    // ===== Init =====
+    document.addEventListener('DOMContentLoaded', () => {
+        initTheme();
+        renderNavbar();
+        renderSections();
+        initSearch();
+        initScrollTracking();
+        initMobileSidebar();
+        initScrollTop();
+        initParticles();
+        showKeyboardHint();
+
+        // Theme toggle
+        document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+
+        // Security mode — visibilitychange伪装 + 长按恢复
+        let securityEnabled = false;
+        let originalBodyHTML = '';
+        let originalTitle = '';
+        let pressTimer = null;
+
+        document.getElementById('securityMode').addEventListener('change', function() {
+            securityEnabled = this.checked;
+            if (securityEnabled) {
+                originalBodyHTML = document.body.innerHTML;
+                originalTitle = document.title;
+                showToast('安全模式已启用，离开页面时将伪装为"该网页已被阻止"', '🛡️');
+            } else {
+                restoreContent();
+                showToast('安全模式已关闭', '🔓');
+            }
+        });
+
+        document.addEventListener('visibilitychange', function() {
+            if (securityEnabled && document.visibilityState === 'hidden') {
+                document.title = 'THIS SITE IS BLOCKED!';
+                document.body.style.cssText = 'text-align:center; background:#36648B; font-family:arial; color:#DEDEDE;';
+                document.body.innerHTML = '<div style="font-size:90px;margin-top:300px;">该网页已被阻止！</div>';
+            }
+        });
+
+        // Long-press restore (desktop + mobile)
+        document.addEventListener('mousedown', startPressTimer);
+        document.addEventListener('touchstart', startPressTimer);
+        document.addEventListener('mouseup', cancelPressTimer);
+        document.addEventListener('touchend', cancelPressTimer);
+        document.addEventListener('mouseleave', cancelPressTimer);
+
+        function startPressTimer() {
+            if (securityEnabled) {
+                pressTimer = setTimeout(restoreContent, 1000);
+            }
+        }
+        function cancelPressTimer() {
+            clearTimeout(pressTimer);
+        }
+        function restoreContent() {
+            if (originalBodyHTML) {
+                document.body.innerHTML = originalBodyHTML;
+                document.title = originalTitle;
+                document.body.style.cssText = '';
+                // Re-initialize event listeners after restoring DOM
+                reInitAfterRestore();
+            }
+        }
+        function reInitAfterRestore() {
+            // Re-bind critical listeners after DOM restore
+            document.getElementById('themeToggle')?.addEventListener('click', toggleTheme);
+            const secCheckbox = document.getElementById('securityMode');
+            if (secCheckbox) {
+                secCheckbox.checked = securityEnabled;
+                secCheckbox.addEventListener('change', function() {
+                    securityEnabled = this.checked;
+                    if (securityEnabled) {
+                        originalBodyHTML = document.body.innerHTML;
+                        originalTitle = document.title;
+                        showToast('安全模式已启用', '🛡️');
+                    } else {
+                        restoreContent();
+                        showToast('安全模式已关闭', '🔓');
+                    }
+                });
+            }
+            const scrollTopBtn = document.getElementById('scrollTopBtn');
+            if (scrollTopBtn) scrollTopBtn.addEventListener('click', () => window.scrollTo({top:0,behavior:'smooth'}));
+            const hamburger = document.getElementById('hamburger');
+            const sidebar = document.getElementById('sidebar');
+            if (hamburger && sidebar) {
+                hamburger.addEventListener('click', () => sidebar.classList.toggle('open'));
+            }
+        }
+    });
+    </script>
+</body>
+</html>

@@ -602,10 +602,13 @@
                 display = `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
             }
             
-            timeDisplay.textContent = display;
-            timeDisplay.classList.remove('flip');
-            void timeDisplay.offsetWidth; // Trigger reflow
-            timeDisplay.classList.add('flip');
+            // 只在秒数实际变化时才更新显示和触发动画
+            if (timeDisplay.textContent !== display) {
+                timeDisplay.textContent = display;
+                timeDisplay.classList.remove('flip');
+                void timeDisplay.offsetWidth;
+                timeDisplay.classList.add('flip');
+            }
         }
 
         function updateProgressRing() {

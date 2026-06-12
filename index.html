@@ -1757,6 +1757,255 @@
             background: rgba(0, 240, 255, 0.15) !important;
         }
 
+        /* ========== 主页科幻模式 ========== */
+        body.scifi-mode {
+            background: radial-gradient(ellipse at center, #0a0e1a 0%, #000005 100%) !important;
+            color: #c0e0ff !important;
+        }
+
+        body.scifi-mode::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: repeating-linear-gradient(
+                0deg,
+                transparent,
+                transparent 2px,
+                rgba(0, 240, 255, 0.012) 2px,
+                rgba(0, 240, 255, 0.012) 4px
+            );
+            pointer-events: none;
+            z-index: 9998;
+        }
+
+        body.scifi-mode .header {
+            background: rgba(5, 10, 25, 0.92) !important;
+            border-bottom: 1px solid rgba(0, 240, 255, 0.25) !important;
+            backdrop-filter: blur(20px) !important;
+        }
+
+        body.scifi-mode .logo {
+            color: #00f0ff !important;
+            font-family: 'Courier New', monospace !important;
+            text-shadow: 0 0 8px rgba(0, 240, 255, 0.4);
+        }
+
+        body.scifi-mode .logo-icon {
+            background: linear-gradient(135deg, #00f0ff, #00ff88) !important;
+            box-shadow: 0 0 12px rgba(0, 240, 255, 0.4);
+            animation: sci-fi-pulse 2s ease-in-out infinite;
+        }
+
+        body.scifi-mode .search-box input {
+            background: rgba(0, 240, 255, 0.06) !important;
+            border: 1px solid rgba(0, 240, 255, 0.25) !important;
+            color: #00f0ff !important;
+            font-family: 'Courier New', monospace !important;
+        }
+
+        body.scifi-mode .search-box input::placeholder {
+            color: rgba(0, 240, 255, 0.35) !important;
+        }
+
+        body.scifi-mode .search-box input:focus {
+            border-color: #00f0ff !important;
+            box-shadow: 0 0 0 3px rgba(0, 240, 255, 0.15), 0 0 12px rgba(0, 240, 255, 0.2) !important;
+        }
+
+        body.scifi-mode .sidebar {
+            background: rgba(5, 10, 25, 0.95) !important;
+            border-right: 1px solid rgba(0, 240, 255, 0.15) !important;
+        }
+
+        body.scifi-mode .nav-item {
+            color: rgba(0, 240, 255, 0.6) !important;
+            font-family: 'Courier New', monospace !important;
+        }
+
+        body.scifi-mode .nav-item:hover,
+        body.scifi-mode .nav-item.active {
+            background: rgba(0, 240, 255, 0.1) !important;
+            color: #00f0ff !important;
+        }
+
+        body.scifi-mode .nav-item::before {
+            background: #00f0ff !important;
+            box-shadow: 0 0 6px rgba(0, 240, 255, 0.5);
+        }
+
+        body.scifi-mode .nav-divider {
+            background: rgba(0, 240, 255, 0.1) !important;
+        }
+
+        body.scifi-mode .hero {
+            background: linear-gradient(135deg, rgba(0, 20, 40, 0.95), rgba(0, 10, 30, 0.98)) !important;
+            border: 1px solid rgba(0, 240, 255, 0.3) !important;
+            box-shadow: 0 0 30px rgba(0, 240, 255, 0.1), inset 0 0 40px rgba(0, 240, 255, 0.03) !important;
+            animation: sci-fi-glow 3s ease-in-out infinite;
+            position: relative;
+        }
+
+        body.scifi-mode .hero::before {
+            background: rgba(0, 240, 255, 0.08) !important;
+        }
+
+        body.scifi-mode .hero::after {
+            background: rgba(0, 255, 136, 0.06) !important;
+        }
+
+        body.scifi-mode .hero h1 {
+            color: #00f0ff !important;
+            font-family: 'Courier New', monospace !important;
+            text-shadow: 0 0 15px rgba(0, 240, 255, 0.5), 0 0 30px rgba(0, 240, 255, 0.2);
+            animation: sci-fi-text-flicker 5s linear infinite;
+        }
+
+        body.scifi-mode .hero p {
+            color: rgba(0, 240, 255, 0.65) !important;
+            font-family: 'Courier New', monospace !important;
+        }
+
+        body.scifi-mode .hero-stat-value {
+            color: #00ff88 !important;
+            font-family: 'Courier New', monospace !important;
+            text-shadow: 0 0 6px rgba(0, 255, 136, 0.4);
+        }
+
+        body.scifi-mode .hero-stat-label {
+            color: rgba(0, 240, 255, 0.45) !important;
+            font-family: 'Courier New', monospace !important;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 10px;
+        }
+
+        body.scifi-mode .section-title {
+            color: #00ff88 !important;
+            font-family: 'Courier New', monospace !important;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-shadow: 0 0 5px rgba(0, 255, 136, 0.3);
+        }
+
+        body.scifi-mode .section-subtitle {
+            color: rgba(0, 240, 255, 0.4) !important;
+            font-family: 'Courier New', monospace !important;
+        }
+
+        body.scifi-mode .section-icon {
+            box-shadow: 0 0 10px rgba(0, 240, 255, 0.3);
+        }
+
+        body.scifi-mode .group-title {
+            color: rgba(0, 240, 255, 0.45) !important;
+            font-family: 'Courier New', monospace !important;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        body.scifi-mode .card {
+            background: rgba(5, 10, 25, 0.9) !important;
+            border: 1px solid rgba(0, 240, 255, 0.2) !important;
+            box-shadow: 0 0 12px rgba(0, 240, 255, 0.06) !important;
+        }
+
+        body.scifi-mode .card::before {
+            background: linear-gradient(135deg, rgba(0, 240, 255, 0.15), rgba(0, 255, 136, 0.05)) !important;
+        }
+
+        body.scifi-mode .card:hover {
+            border-color: rgba(0, 240, 255, 0.5) !important;
+            box-shadow: 0 0 20px rgba(0, 240, 255, 0.15), 0 4px 20px rgba(0, 0, 0, 0.4) !important;
+            transform: translateY(-3px);
+        }
+
+        body.scifi-mode .card-title {
+            color: #00f0ff !important;
+            font-family: 'Courier New', monospace !important;
+        }
+
+        body.scifi-mode .card-desc {
+            color: rgba(0, 240, 255, 0.5) !important;
+        }
+
+        body.scifi-mode .card-badge {
+            background: rgba(0, 240, 255, 0.12) !important;
+            color: #00f0ff !important;
+            border: 1px solid rgba(0, 240, 255, 0.3);
+            font-family: 'Courier New', monospace !important;
+        }
+
+        body.scifi-mode .tool-card-btn {
+            background: rgba(5, 10, 25, 0.9) !important;
+            border: 1px solid rgba(0, 240, 255, 0.2) !important;
+            color: #00f0ff !important;
+            font-family: 'Courier New', monospace !important;
+        }
+
+        body.scifi-mode .tool-card-btn:hover {
+            background: rgba(0, 240, 255, 0.1) !important;
+            border-color: #00f0ff !important;
+            box-shadow: 0 0 15px rgba(0, 240, 255, 0.2);
+        }
+
+        body.scifi-mode .tool-card-btn .tool-emoji {
+            text-shadow: 0 0 8px rgba(0, 240, 255, 0.4);
+        }
+
+        body.scifi-mode .footer {
+            border-top: 1px solid rgba(0, 240, 255, 0.15) !important;
+        }
+
+        body.scifi-mode .footer-text {
+            color: rgba(0, 240, 255, 0.35) !important;
+            font-family: 'Courier New', monospace !important;
+        }
+
+        body.scifi-mode .footer-text a {
+            color: #00f0ff !important;
+        }
+
+        body.scifi-mode .scroll-top {
+            background: rgba(0, 240, 255, 0.2) !important;
+            border: 1px solid rgba(0, 240, 255, 0.4);
+            color: #00f0ff !important;
+            box-shadow: 0 0 12px rgba(0, 240, 255, 0.2);
+        }
+
+        body.scifi-mode .scroll-top:hover {
+            background: rgba(0, 240, 255, 0.35) !important;
+            box-shadow: 0 0 20px rgba(0, 240, 255, 0.35);
+        }
+
+        body.scifi-mode .toast {
+            background: rgba(5, 10, 25, 0.95) !important;
+            border: 1px solid rgba(0, 240, 255, 0.3) !important;
+            color: #00f0ff !important;
+            font-family: 'Courier New', monospace !important;
+        }
+
+        body.scifi-mode .hamburger {
+            color: #00f0ff !important;
+        }
+
+        body.scifi-mode .hamburger:hover {
+            background: rgba(0, 240, 255, 0.1) !important;
+        }
+
+        body.scifi-mode .header-right button,
+        body.scifi-mode .header-right a {
+            color: rgba(0, 240, 255, 0.7) !important;
+        }
+
+        body.scifi-mode .header-right button:hover,
+        body.scifi-mode .header-right a:hover {
+            color: #00f0ff !important;
+            background: rgba(0, 240, 255, 0.1) !important;
+        }
+
         /* 科幻模式标记 */
         .scifi-badge {
             display: inline-block;
@@ -3340,6 +3589,7 @@
         }
         var heroTitle = document.getElementById('heroTitle');
         if (_scifiOn) {
+            document.body.classList.add('scifi-mode');
             overlay.classList.add('scifi-mode');
             if (heroTitle) heroTitle.textContent = '欢迎您，超级管理员';
             // 添加科幻模式标记
@@ -3357,6 +3607,7 @@
             addLog('科幻模式', '已激活');
             showToast('科幻模式已激活 🌌', '🚀');
         } else {
+            document.body.classList.remove('scifi-mode');
             overlay.classList.remove('scifi-mode');
             if (heroTitle) heroTitle.textContent = '欢迎来到工具箱 Pro';
             var badge = document.getElementById('scifiBadge');
@@ -3392,6 +3643,7 @@
 
         // 恢复科幻模式
         if (_scifiOn) {
+            document.body.classList.add('scifi-mode');
             overlay.classList.add('scifi-mode');
             var badge = document.getElementById('scifiBadge');
             if (!badge) {
@@ -4604,6 +4856,7 @@
         
         initTheme();
         if (_scifiOn) {
+            document.body.classList.add('scifi-mode');
             var heroTitle = document.getElementById('heroTitle');
             if (heroTitle) heroTitle.textContent = '欢迎您，超级管理员';
         }

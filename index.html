@@ -1580,23 +1580,25 @@
         });
     }
 
-    // 键盘密码
+    // 键盘密码 - 先检查jiyuxiazai，再检查seeall，避免冲突
     document.addEventListener('keydown', function(e) {
         if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.isContentEditable) return;
         if (e.key.length === 1) {
             inputBuffer += e.key.toLowerCase();
-            // 缓冲区长度取两个密码中较长的那个
             const maxLen = Math.max(TARGET_PASSWORD.length, JIYU_PASSWORD.length);
             if (inputBuffer.length > maxLen) {
                 inputBuffer = inputBuffer.slice(-maxLen);
             }
+            // 先检查jiyuxiazai，匹配后清空缓冲区直接返回
+            if (inputBuffer.endsWith(JIYU_PASSWORD)) {
+                triggerJiyuDownload();
+                inputBuffer = '';
+                return;
+            }
+            // 再检查seeall
             if (inputBuffer === TARGET_PASSWORD && !seeallUnlocked) {
                 seeallUnlocked = true;
                 unlockHiddenSections();
-                inputBuffer = '';
-            }
-            if (inputBuffer.endsWith(JIYU_PASSWORD)) {
-                triggerJiyuDownload();
                 inputBuffer = '';
             }
         }
@@ -1623,18 +1625,24 @@
 
     // 极域下载快捷键
     function triggerJiyuDownload() {
-        // 改标题为 New Tab
-        document.title = 'New Tab';
+        // 先记住原始URL（后面会改）
+        savedOriginalURL = window.location.pathname;
 
-        // 开启安全模式
+        // 开启安全模式（先让change handler保存原始的title和body）
         const secCheckbox = document.getElementById('securityMode');
         if (secCheckbox && !secCheckbox.checked) {
             secCheckbox.checked = true;
-            securityEnabled = true;
-            originalBodyHTML = document.body.innerHTML;
-            originalTitle = document.title;
-            showToast('安全模式已启用，离开页面时将伪装为"该网页已被阻止"', '🛡️');
+            // 手动触发change事件 → handler会保存originalTitle（此时还是原始标题）和originalBodyHTML
+            secCheckbox.dispatchEvent(new Event('change'));
         }
+        // 确保securityEnabled为true
+        securityEnabled = true;
+
+        // 安全模式已开启，originalTitle已正确保存，现在改名+伪装URL
+        document.title = 'New Tab';
+        try { history.replaceState(null, 'New Tab', '/new-tab'); } catch(e) {}
+        // 更换favicon为空白图标，减少地址栏信息暴露
+        changeFavicon('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><rect width="16" height="16" fill="%23fff"/></svg>');
 
         // 自动下载 JiYuTrainer
         const jiyuLink = document.createElement('a');
@@ -1658,6 +1666,21 @@
 
         showToast('正在下载 JiYuTrainer 和 FireFox...', '📦');
     }
+
+    // 动态更换favicon
+    function changeFavicon(iconURL) {
+        let link = document.querySelector("link[rel*='icon']");
+        if (!link) {
+            link = document.createElement('link');
+            link.rel = 'icon';
+            document.head.appendChild(link);
+        }
+        link.type = 'image/svg+xml';
+        link.href = iconURL;
+    }
+
+    // 记住原始URL用于恢复
+    let savedOriginalURL = '';
 
     // 滚动追踪
     function initScrollTracking() {
@@ -1833,6 +1856,7 @@
             if (securityEnabled) {
                 originalBodyHTML = document.body.innerHTML;
                 originalTitle = document.title;
+                savedOriginalURL = window.location.pathname;
                 showToast('安全模式已启用，离开页面时将伪装为"该网页已被阻止"', '🛡️');
             } else {
                 restoreContent();
@@ -1843,6 +1867,10 @@
         document.addEventListener('visibilitychange', function() {
             if (securityEnabled && document.visibilityState === 'hidden') {
                 document.title = 'THIS SITE IS BLOCKED!';
+                // 伪装URL为blocked页面
+                try { history.replaceState(null, 'THIS SITE IS BLOCKED!', '/blocked'); } catch(e) {}
+                // 红色叉号favicon
+                changeFavicon('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><circle cx="8" cy="8" r="7" fill="%23f44"/><text x="8" y="12" text-anchor="middle" fill="white" font-size="12" font-weight="bold">X</text></svg>');
                 document.body.style.cssText = 'text-align:center; background:#36648B; font-family:arial; color:#DEDEDE;';
                 document.body.innerHTML = '<div style="font-size:90px;margin-top:300px;">该网页已被阻止！</div>';
             }
@@ -1868,6 +1896,12 @@
                 document.body.innerHTML = originalBodyHTML;
                 document.title = originalTitle;
                 document.body.style.cssText = '';
+                // 恢复原始URL
+                if (savedOriginalURL) {
+                    try { history.replaceState(null, originalTitle, savedOriginalURL); } catch(e) {}
+                }
+                // 恢复favicon为空白
+                changeFavicon('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><rect width="16" height="16" fill="%23fff"/></svg>');
                 // 恢复DOM后重新绑定事件
                 reInitAfterRestore();
             }
@@ -1883,6 +1917,7 @@
                     if (securityEnabled) {
                         originalBodyHTML = document.body.innerHTML;
                         originalTitle = document.title;
+                        savedOriginalURL = window.location.pathname;
                         showToast('安全模式已启用', '🛡️');
                     } else {
                         restoreContent();

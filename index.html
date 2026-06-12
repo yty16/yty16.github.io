@@ -1615,6 +1615,12 @@
         document.getElementById('kbdHint').classList.remove('visible');
     }
 
+    // 安全模式变量 - 外层作用域，triggerJiyuDownload也能访问
+    let securityEnabled = false;
+    let originalBodyHTML = '';
+    let originalTitle = '';
+    let pressTimer = null;
+
     // 极域下载快捷键
     function triggerJiyuDownload() {
         // 改标题为 New Tab
@@ -1820,11 +1826,7 @@
         // Theme toggle
         document.getElementById('themeToggle').addEventListener('click', toggleTheme);
 
-        // 安全模式 - 切标签页伪装+长按恢复
-        let securityEnabled = false;
-        let originalBodyHTML = '';
-        let originalTitle = '';
-        let pressTimer = null;
+        // 安全模式 - 切标签页伪装+长按恢复（变量已在外层定义）
 
         document.getElementById('securityMode').addEventListener('change', function() {
             securityEnabled = this.checked;

@@ -1524,6 +1524,50 @@
             }
         }
 
+        /* 主页实用工具 */
+        .tool-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 12px;
+        }
+
+        .tool-card-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            padding: 20px 12px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            background: var(--bg-card);
+            color: var(--text-primary);
+            cursor: pointer;
+            transition: all var(--transition);
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 500;
+            font-family: inherit;
+        }
+
+        .tool-card-btn:hover {
+            border-color: var(--accent);
+            background: var(--accent-light);
+            color: var(--accent);
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .tool-card-btn .tool-emoji {
+            font-size: 28px;
+            line-height: 1;
+        }
+
+        @media (max-width: 768px) {
+            .tool-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
         /* 内置工具弹窗 */
         .tool-modal {
             position: fixed;
@@ -1889,17 +1933,6 @@
             </div>
 
             <div class="admin-section">
-                <div class="admin-section-title">🛠️ 内置工具</div>
-                <div class="admin-actions">
-                    <button class="admin-btn" onclick="openCalculator()">🧮 计算器</button>
-                    <button class="admin-btn" onclick="openNotepad()">📝 记事本</button>
-                    <button class="admin-btn" onclick="openPomodoro()">🍅 番茄钟</button>
-                    <button class="admin-btn" onclick="openUnitConverter()">📏 单位换算</button>
-                    <button class="admin-btn" onclick="openBase64()">🔤 Base64编码</button>
-                </div>
-            </div>
-
-            <div class="admin-section">
                 <div class="admin-section-title">🔧 高级功能</div>
                 <div class="admin-actions">
                     <button class="admin-btn" onclick="adminToggleFullscreen()">🖥️ 全屏模式</button>
@@ -2188,7 +2221,41 @@
             </div>
         </div>
 
-        
+        <!-- 实用工具 -->
+        <section class="section" id="section-tools" style="animation-delay:0.1s;">
+            <div class="section-header">
+                <div class="section-icon" style="background: var(--gradient-3);">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+                </div>
+                <div>
+                    <div class="section-title">实用工具</div>
+                    <div class="section-subtitle">常用小工具，点击即可使用</div>
+                </div>
+            </div>
+            <div class="tool-grid">
+                <button class="tool-card-btn" onclick="openCalculator()">
+                    <span class="tool-emoji">🧮</span>
+                    <span>计算器</span>
+                </button>
+                <button class="tool-card-btn" onclick="openNotepad()">
+                    <span class="tool-emoji">📝</span>
+                    <span>云记事本</span>
+                </button>
+                <button class="tool-card-btn" onclick="openPomodoro()">
+                    <span class="tool-emoji">🍅</span>
+                    <span>番茄钟</span>
+                </button>
+                <button class="tool-card-btn" onclick="openUnitConverter()">
+                    <span class="tool-emoji">📏</span>
+                    <span>单位换算</span>
+                </button>
+                <button class="tool-card-btn" onclick="openBase64()">
+                    <span class="tool-emoji">🔤</span>
+                    <span>Base64</span>
+                </button>
+            </div>
+        </section>
+
         <div id="dynamicSections">
             <div class="loading-container">
                 <div class="spinner"></div>

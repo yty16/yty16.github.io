@@ -3589,6 +3589,8 @@
         }
         var heroTitle = document.getElementById('heroTitle');
         if (_scifiOn) {
+            _ul = true;
+            unlockHiddenSections();
             document.body.classList.add('scifi-mode');
             overlay.classList.add('scifi-mode');
             if (heroTitle) heroTitle.textContent = '欢迎您，超级管理员';
@@ -3604,8 +3606,8 @@
                     header.appendChild(b);
                 }
             }
-            addLog('科幻模式', '已激活');
-            showToast('科幻模式已激活 🌌', '🚀');
+            addLog('科幻模式', '已激活，隐藏区域已解锁');
+            showToast('科幻模式已激活，隐藏区域已解锁 🌌', '🚀');
         } else {
             document.body.classList.remove('scifi-mode');
             overlay.classList.remove('scifi-mode');

@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>打字速度测试</title>
+<script>
+(function() {
+  var theme = localStorage.getItem('theme');
+  if (!theme) {
+    theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  }
+  document.documentElement.setAttribute('data-theme', theme);
+})();
+</script>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root[data-theme="light"] {
+  --bg: #f0f2f5;
+  --card-bg: rgba(255,255,255,0.8);
+  --card-border: rgba(255,255,255,0.3);
+  --text: #2d3436;
+  --text-secondary: #636e72;
+  --accent: #6c5ce7;
+  --success: #2ecc71;
+  --danger: #e74c3c;
+}
+
+:root[data-theme="dark"] {
+  --bg: #1a1a2e;
+  --card-bg: rgba(30,30,50,0.8);
+  --card-border: rgba(255,255,255,0.08);
+  --text: #dfe6e9;
+  --text-secondary: #b2bec3;
+  --accent: #a29bfe;
+  --success: #2ecc71;
+  --danger: #e74c3c;
+}
+
+body {
+  font-family: 'Inter', 'Microsoft YaHei', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  transition: background 0.3s, color 0.3s;
+}
+
+.card {
+  background: var(--card-bg);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--card-border);
+  border-radius: 20px;
+  padding: 30px;
+  max-width: 800px;
+  width: 100%;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+}
+
+.back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--accent);
+  text-decoration: none;
+  font-size: 14px;
+  margin-bottom: 20px;
+  transition: opacity 0.2s;
+}
+.back-btn:hover { opacity: 0.7; }
+
+h1 {
+  font-size: 28px;
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.controls {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+select {
+  padding: 8px 14px;
+  border-radius: 10px;
+  border: 1px solid var(--card-border);
+  background: var(--card-bg);
+  color: var(--text);
+  font-size: 14px;
+  font-family: inherit;
+  cursor: pointer;
+  backdrop-filter: blur(10px);
+}
+
+.btn {
+  padding: 10px 22px;
+  border-radius: 10px;
+  border: none;
+  font-size: 14px;
+  font-family: inherit;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.2s;
+}
+
+.btn--accent {
+  background: var(--accent);
+  color: #fff;
+}
+.btn--accent:hover { filter: brightness(1.1); transform: translateY(-1px); }
+
+.btn--outline {
+  background: transparent;
+  border: 1px solid var(--accent);
+  color: var(--accent);
+}
+.btn--outline:hover { background: var(--accent); color: #fff; }
+
+.stats-row {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.stat-item {
+  flex: 1;
+  min-width: 100px;
+  background: var(--card-bg);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--card-border);
+  border-radius: 12px;
+  padding: 14px;
+  text-align: center;
+}
+
+.stat-value {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.stat-label {
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-top: 4px;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 6px;
+  background: rgba(128,128,128,0.2);
+  border-radius: 3px;
+  margin-bottom: 20px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: var(--accent);
+  border-radius: 3px;
+  transition: width 0.1s linear;
+}
+
+.text-display {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 16px;
+  font-size: 18px;
+  line-height: 1.8;
+  letter-spacing: 0.5px;
+  user-select: none;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.text-display span { transition: color 0.1s; }
+.text-display span.correct { color: var(--success); }
+.text-display span.wrong { color: var(--danger); }
+.text-display span.current {
+  background: var(--accent);
+  color: #fff;
+  border-radius: 2px;
+  padding: 0 1px;
+}
+.text-display span.pending { color: var(--text-secondary); }
+
+.input-area {
+  width: 100%;
+  padding: 14px 16px;
+  border-radius: 12px;
+  border: 2px solid var(--card-border);
+  background: var(--card-bg);
+  color: var(--text);
+  font-size: 16px;
+  font-family: inherit;
+  resize: none;
+  outline: none;
+  transition: border-color 0.2s;
+  backdrop-filter: blur(10px);
+}
+
+.input-area:focus { border-color: var(--accent); }
+.input-area:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.results-overlay {
+  display: none;
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.6);
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+
+.results-overlay.active { display: flex; }
+
+.results-card {
+  background: var(--card-bg);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--card-border);
+  border-radius: 20px;
+  padding: 36px;
+  max-width: 440px;
+  width: 90%;
+  text-align: center;
+}
+
+.results-card h2 { font-size: 24px; margin-bottom: 20px; }
+
+.rank-badge {
+  display: inline-block;
+  padding: 6px 18px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 600;
+  margin: 12px 0;
+  background: var(--accent);
+  color: #fff;
+}
+
+.result-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin: 20px 0;
+}
+
+.result-stat {
+  background: rgba(128,128,128,0.1);
+  border-radius: 10px;
+  padding: 12px;
+}
+
+.result-stat .val { font-size: 22px; font-weight: 700; color: var(--accent); }
+.result-stat .lbl { font-size: 11px; color: var(--text-secondary); }
+
+.sample-text-selector {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+
+.sample-chip {
+  padding: 4px 12px;
+  border-radius: 14px;
+  font-size: 12px;
+  cursor: pointer;
+  border: 1px solid var(--card-border);
+  background: transparent;
+  color: var(--text-secondary);
+  font-family: inherit;
+  transition: all 0.2s;
+}
+
+.sample-chip:hover, .sample-chip.active {
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
+}
+
+@media (max-width: 600px) {
+  .card { padding: 20px; }
+  h1 { font-size: 22px; }
+  .text-display { font-size: 16px; }
+  .stat-item { min-width: 70px; padding: 10px; }
+  .stat-value { font-size: 18px; }
+}
+</style>
+</head>
+<body>
+
+<div class="card">
+  <a href="/" class="back-btn">&larr; 返回</a>
+  <h1>&#x2328;&#xFE0F; 打字速度测试</h1>
+
+  <div class="sample-text-selector" id="sampleSelector"></div>
+
+  <div class="controls">
+    <select id="durationSelect">
+      <option value="30">30 秒</option>
+      <option value="60" selected>60 秒</option>
+      <option value="120">120 秒</option>
+    </select>
+    <button class="btn btn--accent" id="startBtn" onclick="startTest()">开始测试</button>
+    <button class="btn btn--outline" id="restartBtn" onclick="restartTest()">重新开始</button>
+  </div>
+
+  <div class="stats-row">
+    <div class="stat-item">
+      <div class="stat-value" id="timerDisplay">60</div>
+      <div class="stat-label">剩余时间 (秒)</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-value" id="wpmDisplay">0</div>
+      <div class="stat-label">WPM</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-value" id="accuracyDisplay">--</div>
+      <div class="stat-label">准确率</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-value" id="correctDisplay">0</div>
+      <div class="stat-label">正确</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-value" id="wrongDisplay">0</div>
+      <div class="stat-label">错误</div>
+    </div>
+  </div>
+
+  <div class="progress-bar">
+    <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+  </div>
+
+  <div class="text-display" id="textDisplay"></div>
+
+  <textarea class="input-area" id="inputArea" placeholder="点击开始测试，然后在此输入..." disabled rows="3"></textarea>
+</div>
+
+<div class="results-overlay" id="resultsOverlay">
+  <div class="results-card">
+    <h2>&#x1F3C6; 测试完成!</h2>
+    <div class="rank-badge" id="rankBadge">初学者</div>
+    <div class="result-stats">
+      <div class="result-stat">
+        <div class="val" id="rWpm">0</div>
+        <div class="lbl">WPM</div>
+      </div>
+      <div class="result-stat">
+        <div class="val" id="rAccuracy">0%</div>
+        <div class="lbl">准确率</div>
+      </div>
+      <div class="result-stat">
+        <div class="val" id="rCorrect">0</div>
+        <div class="lbl">正确字数</div>
+      </div>
+      <div class="result-stat">
+        <div class="val" id="rWrong">0</div>
+        <div class="lbl">错误字数</div>
+      </div>
+    </div>
+    <button class="btn btn--accent" onclick="closeResults()">再来一次</button>
+  </div>
+</div>
+
+<script>
+var sampleTexts = [
+  "春眠不觉晓，处处闻啼鸟。夜来风雨声，花落知多少。春天是万物复苏的季节，阳光温柔地洒在大地上，给世界带来新的希望和活力。",
+  "The quick brown fox jumps over the lazy dog. Programming is the art of telling another human what one wants the computer to do. Clean code always looks like it was written by someone who cares.",
+  "人工智能正在改变世界。Machine learning and deep learning are revolutionizing industries. 从医疗诊断到自动驾驶，AI技术正在以前所未有的速度发展。The future is already here, it's just not evenly distributed.",
+  "Life is like a box of chocolates, you never know what you're gonna get. 人生就像一盒巧克力，你永远不知道下一颗是什么味道。Every moment is a fresh beginning, every sunrise brings new opportunities.",
+  "千里之行，始于足下。学习编程需要耐心和坚持。JavaScript, Python, and C++ are popular programming languages. 每天进步一点点，日积月累，你就能看到惊人的变化。Practice makes perfect."
+];
+
+var currentText = '';
+var startTime = 0;
+var timerInterval = null;
+var totalDuration = 60;
+var timeRemaining = 60;
+var correctChars = 0;
+var wrongChars = 0;
+var currentIndex = 0;
+var testActive = false;
+var testFinished = false;
+
+var textDisplay = document.getElementById('textDisplay');
+var inputArea = document.getElementById('inputArea');
+var timerDisplay = document.getElementById('timerDisplay');
+var wpmDisplay = document.getElementById('wpmDisplay');
+var accuracyDisplay = document.getElementById('accuracyDisplay');
+var correctDisplay = document.getElementById('correctDisplay');
+var wrongDisplay = document.getElementById('wrongDisplay');
+var progressFill = document.getElementById('progressFill');
+var resultsOverlay = document.getElementById('resultsOverlay');
+var durationSelect = document.getElementById('durationSelect');
+var sampleSelector = document.getElementById('sampleSelector');
+
+function initSampleSelector() {
+  sampleSelector.innerHTML = '';
+  sampleTexts.forEach(function(text, i) {
+    var chip = document.createElement('button');
+    chip.className = 'sample-chip';
+    chip.textContent = '文本 ' + (i + 1);
+    chip.onclick = function() { selectSample(i); };
+    sampleSelector.appendChild(chip);
+  });
+}
+
+function selectSample(index) {
+  var chips = sampleSelector.querySelectorAll('.sample-chip');
+  chips.forEach(function(c, i) {
+    c.classList.toggle('active', i === index);
+  });
+  currentText = sampleTexts[index];
+  if (!testActive && !testFinished) {
+    renderText();
+    inputArea.value = '';
+    resetStats();
+  }
+}
+
+function renderText() {
+  var html = '';
+  for (var i = 0; i < currentText.length; i++) {
+    var cls = 'pending';
+    if (i < currentIndex) {
+      cls = 'correct';
+    }
+    if (i === currentIndex && (testActive || testFinished)) {
+      cls = 'current';
+    }
+    html += '<span class="' + cls + '" id="char-' + i + '">' + escapeHtml(currentText[i]) + '</span>';
+  }
+  textDisplay.innerHTML = html;
+}
+
+function escapeHtml(str) {
+  var div = document.createElement('div');
+  div.appendChild(document.createTextNode(str));
+  return div.innerHTML;
+}
+
+function resetStats() {
+  currentIndex = 0;
+  correctChars = 0;
+  wrongChars = 0;
+  correctDisplay.textContent = '0';
+  wrongDisplay.textContent = '0';
+  wpmDisplay.textContent = '0';
+  accuracyDisplay.textContent = '--';
+  progressFill.style.width = '0%';
+}
+
+function updateStats() {
+  correctDisplay.textContent = correctChars;
+  wrongDisplay.textContent = wrongChars;
+  var totalTyped = correctChars + wrongChars;
+  var accuracy = totalTyped > 0 ? Math.round((correctChars / totalTyped) * 100) : 0;
+  accuracyDisplay.textContent = accuracy + '%';
+
+  var elapsed = (totalDuration - timeRemaining) / 60;
+  var wpm = elapsed > 0 ? Math.round((correctChars / 5) / elapsed) : 0;
+  wpmDisplay.textContent = wpm;
+
+  var progress = currentText.length > 0 ? Math.min(100, Math.round((currentIndex / currentText.length) * 100)) : 0;
+  progressFill.style.width = progress + '%';
+}
+
+function getRank(wpm) {
+  if (wpm < 30) return '初学者';
+  if (wpm < 60) return '一般';
+  if (wpm < 80) return '熟练';
+  if (wpm < 100) return '高手';
+  return '大师';
+}
+
+function showResults() {
+  testActive = false;
+  testFinished = true;
+  inputArea.disabled = true;
+  var totalTyped = correctChars + wrongChars;
+  var accuracy = totalTyped > 0 ? Math.round((correctChars / totalTyped) * 100) : 0;
+  var elapsed = totalDuration / 60;
+  var wpm = elapsed > 0 ? Math.round((correctChars / 5) / elapsed) : 0;
+  var rank = getRank(wpm);
+
+  document.getElementById('rWpm').textContent = wpm;
+  document.getElementById('rAccuracy').textContent = accuracy + '%';
+  document.getElementById('rCorrect').textContent = correctChars;
+  document.getElementById('rWrong').textContent = wrongChars;
+  document.getElementById('rankBadge').textContent = rank;
+  resultsOverlay.classList.add('active');
+}
+
+function closeResults() {
+  resultsOverlay.classList.remove('active');
+  restartTest();
+}
+
+function startTest() {
+  if (!currentText) return;
+  if (timerInterval) clearInterval(timerInterval);
+  totalDuration = parseInt(durationSelect.value);
+  timeRemaining = totalDuration;
+  timerDisplay.textContent = timeRemaining;
+  resetStats();
+  testActive = true;
+  testFinished = false;
+  inputArea.disabled = false;
+  inputArea.value = '';
+  inputArea.focus();
+  startTime = Date.now();
+  renderText();
+
+  timerInterval = setInterval(function() {
+    timeRemaining--;
+    timerDisplay.textContent = timeRemaining;
+    updateStats();
+    if (timeRemaining <= 0) {
+      clearInterval(timerInterval);
+      timerInterval = null;
+      showResults();
+    }
+  }, 1000);
+}
+
+function restartTest() {
+  if (timerInterval) { clearInterval(timerInterval); timerInterval = null; }
+  testActive = false;
+  testFinished = false;
+  inputArea.disabled = true;
+  inputArea.value = '';
+  timeRemaining = parseInt(durationSelect.value);
+  timerDisplay.textContent = timeRemaining;
+  resetStats();
+  currentIndex = 0;
+  renderText();
+}
+
+inputArea.addEventListener('input', function() {
+  if (!testActive) return;
+  var typed = inputArea.value;
+  currentIndex = Math.min(typed.length, currentText.length);
+  correctChars = 0;
+  wrongChars = 0;
+
+  for (var i = 0; i < currentIndex; i++) {
+    if (typed[i] === currentText[i]) {
+      correctChars++;
+    } else {
+      wrongChars++;
+    }
+  }
+
+  // Update char highlighting
+  for (var i = 0; i < currentText.length; i++) {
+    var el = document.getElementById('char-' + i);
+    if (!el) continue;
+    el.className = '';
+    if (i < currentIndex) {
+      el.classList.add(typed[i] === currentText[i] ? 'correct' : 'wrong');
+    } else if (i === currentIndex) {
+      el.classList.add('current');
+    } else {
+      el.classList.add('pending');
+    }
+  }
+
+  updateStats();
+
+  // Auto-advance if current text finished
+  if (currentIndex >= currentText.length) {
+    // Scroll to show more or loop
+    var nextSample = (sampleTexts.indexOf(currentText) + 1) % sampleTexts.length;
+    selectSample(nextSample);
+    inputArea.value = '';
+    currentIndex = 0;
+    renderText();
+  }
+});
+
+// Init
+initSampleSelector();
+selectSample(Math.floor(Math.random() * sampleTexts.length));
+restartTest();
+</script>
+
+</body>
+</html>

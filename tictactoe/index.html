@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>❌⭕ 井字棋 AI对战</title>
+<script>
+(function(){var t=localStorage.getItem('theme');if(t==='dark'||(t!=='light'&&window.matchMedia('(prefers-color-scheme:dark)').matches))document.documentElement.setAttribute('data-theme','dark')})();
+</script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#f0f2f5;--card-bg:rgba(255,255,255,0.75);--card-border:rgba(255,255,255,0.4);--text:#2d3436;--text-secondary:#636e72;--accent:#6c5ce7;--success:#2ecc71;--danger:#e74c3c;--warning:#f39c12;--grid-bg:rgba(255,255,255,0.5);--cell-hover:rgba(108,92,231,0.08)}
+[data-theme="dark"]{--bg:#1a1a2e;--card-bg:rgba(40,40,70,0.75);--card-border:rgba(255,255,255,0.08);--text:#e0e0e0;--text-secondary:#a0a0b0;--accent:#a29bfe;--success:#00b894;--danger:#ff6b6b;--warning:#fdcb6e;--grid-bg:rgba(60,60,100,0.5);--cell-hover:rgba(162,155,254,0.12)}
+body{font-family:'Inter','Microsoft YaHei',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:20px;transition:background .3s,color .3s}
+.back-btn{align-self:flex-start;text-decoration:none;color:var(--text-secondary);font-size:15px;padding:6px 14px;border-radius:8px;background:var(--card-bg);backdrop-filter:blur(10px);border:1px solid var(--card-border);transition:all .2s;margin-bottom:16px}
+.back-btn:hover{color:var(--accent);transform:translateX(-3px)}
+.container{width:100%;max-width:440px}
+.title{text-align:center;font-size:28px;font-weight:700;margin-bottom:20px;letter-spacing:1px}
+.card{background:var(--card-bg);backdrop-filter:blur(16px);border:1px solid var(--card-border);border-radius:16px;padding:24px;margin-bottom:16px;box-shadow:0 8px 32px rgba(0,0,0,0.08);transition:background .3s}
+.difficulty-bar{display:flex;gap:8px;justify-content:center;margin-bottom:20px}
+.diff-btn{padding:8px 18px;border:2px solid var(--card-border);border-radius:10px;background:transparent;color:var(--text-secondary);font-size:14px;font-weight:600;cursor:pointer;transition:all .2s}
+.diff-btn:hover{border-color:var(--accent);color:var(--accent)}
+.diff-btn.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+.turn-indicator{text-align:center;font-size:16px;font-weight:600;color:var(--text-secondary);margin-bottom:16px;min-height:24px;transition:color .2s}
+.turn-indicator.player-turn{color:#3498db}
+.turn-indicator.ai-turn{color:var(--danger)}
+.board{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;max-width:320px;margin:0 auto 16px}
+.cell{aspect-ratio:1;background:var(--grid-bg);backdrop-filter:blur(8px);border:2px solid var(--card-border);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:42px;font-weight:800;cursor:pointer;transition:all .15s;user-select:none;position:relative}
+.cell:hover:not(.taken){background:var(--cell-hover);transform:scale(1.03)}
+.cell.taken{cursor:default}
+.cell .mark{opacity:0;transform:scale(0.3) rotate(-15deg);transition:all .25s cubic-bezier(0.34,1.56,0.64,1)}
+.cell .mark.show{opacity:1;transform:scale(1) rotate(0)}
+.cell.x-cell .mark{color:#3498db}
+.cell.o-cell .mark{color:var(--danger)}
+.cell.win-cell{animation:winPulse .6s ease infinite alternate;border-color:var(--success);background:rgba(46,204,113,0.1)}
+@keyframes winPulse{from{transform:scale(1)}to{transform:scale(1.05)}}
+.result{text-align:center;font-size:20px;font-weight:700;margin-bottom:16px;min-height:32px}
+.scores{display:flex;justify-content:space-around;text-align:center}
+.score-item{display:flex;flex-direction:column;gap:4px}
+.score-label{font-size:12px;color:var(--text-secondary);text-transform:uppercase;letter-spacing:1px}
+.score-value{font-size:28px;font-weight:800}
+.score-player{color:#3498db}
+.score-ai{color:var(--danger)}
+.score-draw{color:var(--warning)}
+.btn-row{display:flex;gap:10px;justify-content:center;margin-top:18px}
+.btn{padding:10px 22px;border:none;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;transition:all .2s}
+.btn-primary{background:var(--accent);color:#fff}
+.btn-primary:hover{opacity:.85;transform:translateY(-1px)}
+.btn-secondary{background:var(--grid-bg);color:var(--text-secondary);border:1px solid var(--card-border)}
+.btn-secondary:hover{color:var(--accent);border-color:var(--accent)}
+</style>
+</head>
+<body>
+<a href="/" class="back-btn">← 返回</a>
+<div class="container">
+  <h1 class="title">❌⭕ 井字棋 AI对战</h1>
+  <div class="card">
+    <div class="difficulty-bar">
+      <button class="diff-btn" data-diff="easy">简单</button>
+      <button class="diff-btn active" data-diff="medium">中等</button>
+      <button class="diff-btn" data-diff="hard">困难</button>
+    </div>
+    <div class="turn-indicator" id="turnInfo">轮到你了 (X)</div>
+    <div class="board" id="board"></div>
+    <div class="result" id="result"></div>
+    <div class="scores">
+      <div class="score-item"><span class="score-label">玩家胜</span><span class="score-value score-player" id="sPlayer">0</span></div>
+      <div class="score-item"><span class="score-label">平局</span><span class="score-value score-draw" id="sDraw">0</span></div>
+      <div class="score-item"><span class="score-label">AI胜</span><span class="score-value score-ai" id="sAI">0</span></div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-primary" id="btnReset">重新开始</button>
+      <button class="btn btn-secondary" id="btnClearScores">清除分数</button>
+    </div>
+  </div>
+</div>
+<script>
+(function(){
+const $=s=>document.querySelector(s);
+const $$=s=>document.querySelectorAll(s);
+let board,gameOver,currentPlayer,difficulty='medium';
+let scores={player:0,ai:0,draw:0};
+const winLines=[[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
+
+function init(){
+  board=Array(9).fill(null);
+  gameOver=false;
+  currentPlayer='X';
+  $('#turnInfo').textContent='轮到你了 (X)';
+  $('#turnInfo').className='turn-indicator player-turn';
+  $('#result').textContent='';
+  renderBoard();
+}
+
+function renderBoard(){
+  const el=$('#board');
+  el.innerHTML='';
+  for(let i=0;i<9;i++){
+    const cell=document.createElement('div');
+    cell.className='cell'+(board[i]?' taken':'');
+    cell.dataset.idx=i;
+    if(board[i]){
+      cell.classList.add(board[i]==='X'?'x-cell':'o-cell');
+      const m=document.createElement('span');
+      m.className='mark show';
+      m.textContent=board[i];
+      cell.appendChild(m);
+    }
+    cell.addEventListener('click',()=>playerMove(i));
+    el.appendChild(cell);
+  }
+}
+
+function playerMove(i){
+  if(gameOver||board[i]||currentPlayer!=='X')return;
+  place(i,'X');
+  if(checkEnd())return;
+  currentPlayer='O';
+  $('#turnInfo').textContent='AI 思考中...';
+  $('#turnInfo').className='turn-indicator ai-turn';
+  setTimeout(aiMove,300+Math.random()*300);
+}
+
+function place(i,mark){
+  board[i]=mark;
+  const cells=$$('.cell');
+  const cell=cells[i];
+  cell.classList.add('taken',mark==='X'?'x-cell':'o-cell');
+  const m=document.createElement('span');
+  m.className='mark';
+  m.textContent=mark;
+  cell.appendChild(m);
+  requestAnimationFrame(()=>requestAnimationFrame(()=>m.classList.add('show')));
+}
+
+function aiMove(){
+  if(gameOver)return;
+  let move;
+  if(difficulty==='easy')move=randomMove();
+  else if(difficulty==='medium')move=Math.random()<0.6?bestMove():randomMove();
+  else move=bestMove();
+  if(move===-1)return;
+  place(move,'O');
+  if(checkEnd())return;
+  currentPlayer='X';
+  $('#turnInfo').textContent='轮到你了 (X)';
+  $('#turnInfo').className='turn-indicator player-turn';
+}
+
+function randomMove(){
+  const empty=board.map((v,i)=>v===null?i:-1).filter(i=>i!==-1);
+  return empty.length?empty[Math.floor(Math.random()*empty.length)]:-1;
+}
+
+function bestMove(){
+  let best=-Infinity,move=-1;
+  for(let i=0;i<9;i++){
+    if(board[i]!==null)continue;
+    board[i]='O';
+    let s=minimax(board,0,false);
+    board[i]=null;
+    if(s>best){best=s;move=i}
+  }
+  return move;
+}
+
+function minimax(b,depth,isMax){
+  const w=winner(b);
+  if(w==='O')return 10-depth;
+  if(w==='X')return depth-10;
+  if(b.every(v=>v!==null))return 0;
+  if(isMax){
+    let best=-Infinity;
+    for(let i=0;i<9;i++){if(b[i]!==null)continue;b[i]='O';best=Math.max(best,minimax(b,depth+1,false));b[i]=null}
+    return best;
+  }else{
+    let best=Infinity;
+    for(let i=0;i<9;i++){if(b[i]!==null)continue;b[i]='X';best=Math.min(best,minimax(b,depth+1,true));b[i]=null}
+    return best;
+  }
+}
+
+function winner(b){
+  for(const[a,c,d]of winLines)if(b[a]&&b[a]===b[c]&&b[a]===b[d])return b[a];
+  return null;
+}
+
+function checkEnd(){
+  const w=winner(board);
+  if(w){
+    gameOver=true;
+    highlightWin(w);
+    if(w==='X'){scores.player++;$('#result').textContent='🎉 你赢了！';$('#result').style.color='var(--success)'}
+    else{scores.ai++;$('#result').textContent='😢 AI赢了！';$('#result').style.color='var(--danger)'}
+    updateScores();$('#turnInfo').textContent='';return true;
+  }
+  if(board.every(v=>v!==null)){
+    gameOver=true;scores.draw++;$('#result').textContent='🤝 平局！';$('#result').style.color='var(--warning)';
+    updateScores();$('#turnInfo').textContent='';return true;
+  }
+  return false;
+}
+
+function highlightWin(w){
+  for(const[a,c,d]of winLines){
+    if(board[a]===w&&board[c]===w&&board[d]===w){
+      [a,c,d].forEach(i=>$_.cell[i].classList.add('win-cell'));
+      return;
+    }
+  }
+}
+
+function updateScores(){
+  $('#sPlayer').textContent=scores.player;
+  $('#sAI').textContent=scores.ai;
+  $('#sDraw').textContent=scores.draw;
+}
+
+// difficulty buttons
+$$('.diff-btn').forEach(btn=>btn.addEventListener('click',()=>{
+  $$('.diff-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  difficulty=btn.dataset.diff;
+  init();
+}));
+
+$('#btnReset').addEventListener('click',init);
+$('#btnClearScores').addEventListener('click',()=>{scores={player:0,ai:0,draw:0};updateScores();init()});
+
+init();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,886 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>🎨 屏幕画板</title>
+<script>
+// 主题检测 - 页面渲染前执行，避免闪烁
+(function() {
+    var saved = localStorage.getItem('theme');
+    if (saved === 'light' || saved === 'dark') {
+        document.documentElement.setAttribute('data-theme', saved);
+    } else {
+        var systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        document.documentElement.setAttribute('data-theme', systemDark ? 'dark' : 'light');
+    }
+})();
+</script>
+<style>
+/* ========== CSS Variables ========== */
+:root {
+    --bg: #f0f2f5;
+    --card-bg: rgba(255, 255, 255, 0.85);
+    --card-border: rgba(0, 0, 0, 0.06);
+    --text: #1a1a2e;
+    --text-secondary: #4a5568;
+    --accent: #6c5ce7;
+    --accent-hover: #5a4bd1;
+    --accent-light: rgba(108, 92, 231, 0.1);
+    --shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+    --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.1);
+    --radius: 14px;
+    --radius-sm: 10px;
+    --canvas-bg: #ffffff;
+    --canvas-shadow: 0 4px 24px rgba(0,0,0,0.1);
+}
+
+[data-theme="dark"] {
+    --bg: #0f0f1a;
+    --card-bg: rgba(30, 30, 50, 0.85);
+    --card-border: rgba(255, 255, 255, 0.06);
+    --text: #e2e8f0;
+    --text-secondary: #a0aec0;
+    --accent: #a29bfe;
+    --accent-hover: #6c5ce7;
+    --accent-light: rgba(162, 155, 254, 0.15);
+    --shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+    --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.4);
+    --canvas-bg: #1a1a2e;
+    --canvas-shadow: 0 4px 24px rgba(0,0,0,0.4);
+}
+
+/* ========== Reset ========== */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+html, body {
+    height: 100%;
+    overflow: hidden;
+}
+
+body {
+    font-family: 'Inter', 'Microsoft YaHei', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    transition: background 0.3s, color 0.3s;
+    display: flex;
+    flex-direction: column;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+/* ========== Back Button ========== */
+.back-btn {
+    position: fixed;
+    top: 16px;
+    left: 16px;
+    z-index: 100;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 10px 18px;
+    background: var(--card-bg);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius-sm);
+    color: var(--text);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.25s;
+    box-shadow: var(--shadow);
+    white-space: nowrap;
+}
+
+.back-btn:hover {
+    transform: translateX(-3px);
+    background: var(--accent-light);
+    border-color: var(--accent);
+}
+
+/* ========== Toolbar ========== */
+.toolbar {
+    position: fixed;
+    top: 16px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 100;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    padding: 10px 16px;
+    background: var(--card-bg);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    max-width: calc(100vw - 140px);
+    justify-content: center;
+}
+
+.tool-group {
+    display: flex;
+    gap: 4px;
+    align-items: center;
+    padding: 0 8px;
+    border-right: 1px solid var(--card-border);
+}
+
+.tool-group:last-child { border-right: none; }
+
+.tool-btn {
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    border: none;
+    background: transparent;
+    color: var(--text);
+    font-size: 18px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s;
+    position: relative;
+}
+
+.tool-btn:hover { background: var(--accent-light); }
+
+.tool-btn.active {
+    background: var(--accent);
+    color: #fff;
+}
+
+.tool-btn[title]::after {
+    content: attr(title);
+    position: absolute;
+    bottom: -28px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--text);
+    color: var(--bg);
+    font-size: 11px;
+    padding: 3px 8px;
+    border-radius: 6px;
+    white-space: nowrap;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.2s;
+}
+
+.tool-btn:hover[title]::after {
+    opacity: 0.9;
+}
+
+/* Color Palette */
+.color-palette {
+    display: flex;
+    gap: 4px;
+    align-items: center;
+}
+
+.color-swatch {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    border: 2px solid transparent;
+    cursor: pointer;
+    transition: all 0.15s;
+    flex-shrink: 0;
+}
+
+.color-swatch:hover { transform: scale(1.15); }
+
+.color-swatch.active {
+    border-color: var(--text);
+    box-shadow: 0 0 0 3px var(--accent);
+}
+
+.color-swatch.is-white { border: 2px solid #ccc; }
+[data-theme="dark"] .color-swatch.is-white { border-color: #555; }
+
+.custom-color-input {
+    width: 26px;
+    height: 26px;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    background: none;
+    border-radius: 50%;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.custom-color-input::-webkit-color-swatch-wrapper { padding: 0; }
+.custom-color-input::-webkit-color-swatch { border-radius: 50%; border: 2px solid var(--card-border); }
+
+/* Size Slider */
+.brush-size-control {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.size-label {
+    font-size: 12px;
+    color: var(--text-secondary);
+    min-width: 22px;
+    text-align: center;
+    font-weight: 600;
+}
+
+.size-slider {
+    width: 70px;
+    accent-color: var(--accent);
+    height: 4px;
+}
+
+/* ========== Canvas Area ========== */
+.canvas-container {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 72px 16px 16px;
+    min-height: 0;
+}
+
+canvas {
+    background: var(--canvas-bg);
+    border-radius: 12px;
+    box-shadow: var(--canvas-shadow);
+    cursor: crosshair;
+    touch-action: none;
+    max-width: 100%;
+    max-height: 100%;
+}
+
+canvas.eraser-active {
+    cursor: cell;
+}
+
+/* ========== Side Actions ========== */
+.side-actions {
+    position: fixed;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 10px;
+    background: var(--card-bg);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+}
+
+.action-btn {
+    width: 42px;
+    height: 42px;
+    border-radius: 10px;
+    border: none;
+    background: transparent;
+    color: var(--text);
+    font-size: 20px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s;
+}
+
+.action-btn:hover { background: var(--accent-light); }
+
+/* ========== Status Bar ========== */
+.status-bar {
+    position: fixed;
+    bottom: 12px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 100;
+    display: flex;
+    gap: 10px;
+    padding: 8px 16px;
+    background: var(--card-bg);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--card-border);
+    border-radius: 12px;
+    box-shadow: var(--shadow);
+    font-size: 12px;
+    color: var(--text-secondary);
+    align-items: center;
+}
+
+.status-bar span { white-space: nowrap; }
+
+.status-separator { color: var(--card-border); }
+
+/* ========== Brush Preview ========== */
+.brush-preview {
+    position: fixed;
+    pointer-events: none;
+    z-index: 99;
+    border-radius: 50%;
+    border: 1px solid rgba(128,128,128,0.5);
+    transform: translate(-50%, -50%);
+    display: none;
+}
+
+/* ========== Toast ========== */
+.toast {
+    position: fixed;
+    top: 80px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 200;
+    background: var(--card-bg);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius-sm);
+    padding: 10px 24px;
+    box-shadow: var(--shadow-lg);
+    font-size: 14px;
+    color: var(--text);
+    animation: toastIn 0.3s ease, toastOut 0.3s ease 1.7s forwards;
+    pointer-events: none;
+}
+
+@keyframes toastIn {
+    from { opacity: 0; transform: translateX(-50%) translateY(-10px); }
+    to { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+
+@keyframes toastOut {
+    from { opacity: 1; }
+    to { opacity: 0; transform: translateX(-50%) translateY(-10px); }
+}
+
+/* ========== Responsive ========== */
+@media (max-width: 768px) {
+    .toolbar {
+        top: 8px;
+        padding: 8px 10px;
+        gap: 3px;
+        max-width: calc(100vw - 120px);
+        border-radius: 12px;
+    }
+
+    .tool-group {
+        padding: 0 4px;
+        gap: 2px;
+    }
+
+    .tool-btn {
+        width: 34px;
+        height: 34px;
+        border-radius: 8px;
+        font-size: 16px;
+    }
+
+    .color-swatch {
+        width: 22px;
+        height: 22px;
+    }
+
+    .custom-color-input {
+        width: 22px;
+        height: 22px;
+    }
+
+    .size-slider { width: 50px; }
+
+    .back-btn {
+        top: 10px;
+        left: 8px;
+        padding: 8px 12px;
+        font-size: 13px;
+    }
+
+    .side-actions {
+        right: 6px;
+        padding: 8px;
+        gap: 4px;
+    }
+
+    .action-btn {
+        width: 36px;
+        height: 36px;
+        font-size: 18px;
+    }
+
+    .canvas-container {
+        padding: 64px 8px 8px;
+    }
+
+    .status-bar {
+        display: none;
+    }
+}
+
+@media (max-width: 480px) {
+    .toolbar {
+        gap: 2px;
+        padding: 6px 8px;
+    }
+
+    .tool-btn {
+        width: 30px;
+        height: 30px;
+        font-size: 14px;
+        border-radius: 7px;
+    }
+
+    .color-swatch {
+        width: 20px;
+        height: 20px;
+    }
+
+    .custom-color-input {
+        width: 20px;
+        height: 20px;
+    }
+
+    .size-slider { width: 40px; }
+
+    .brush-size-control br { display: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- Back Button -->
+<a href="/" class="back-btn">&larr; 返回</a>
+
+<!-- Top Toolbar -->
+<div class="toolbar" id="toolbar">
+    <!-- Drawing tools -->
+    <div class="tool-group">
+        <button class="tool-btn active" id="btnPen" title="画笔" data-tool="pen">&#9998;</button>
+        <button class="tool-btn" id="btnEraser" title="橡皮擦" data-tool="eraser">&#129524;</button>
+    </div>
+
+    <!-- Color palette -->
+    <div class="tool-group">
+        <div class="color-palette" id="colorPalette"></div>
+    </div>
+
+    <!-- Brush size -->
+    <div class="tool-group">
+        <div class="brush-size-control">
+            <span class="size-label" id="sizeLabel">3</span>
+            <input type="range" class="size-slider" id="sizeSlider" min="1" max="30" value="3">
+        </div>
+    </div>
+
+    <!-- Undo -->
+    <div class="tool-group">
+        <button class="tool-btn" id="btnUndo" title="撤销 (Ctrl+Z)">&#8617;</button>
+    </div>
+</div>
+
+<!-- Canvas -->
+<div class="canvas-container" id="canvasContainer">
+    <canvas id="drawCanvas"></canvas>
+</div>
+
+<!-- Side Actions -->
+<div class="side-actions">
+    <button class="action-btn" id="btnClear" title="清空画布">&#128465;</button>
+    <button class="action-btn" id="btnSave" title="保存为 PNG">&#128190;</button>
+</div>
+
+<!-- Brush Preview -->
+<div class="brush-preview" id="brushPreview"></div>
+
+<!-- Status Bar -->
+<div class="status-bar" id="statusBar">
+    <span id="cursorPos">X: 0, Y: 0</span>
+    <span class="status-separator">|</span>
+    <span id="canvasSize">800 x 500</span>
+</div>
+
+<script>
+(function() {
+    'use strict';
+
+    // ======= DOM Elements =======
+    const canvas = document.getElementById('drawCanvas');
+    const ctx = canvas.getContext('2d');
+    const canvasContainer = document.getElementById('canvasContainer');
+    const colorPalette = document.getElementById('colorPalette');
+    const sizeSlider = document.getElementById('sizeSlider');
+    const sizeLabel = document.getElementById('sizeLabel');
+    const brushPreview = document.getElementById('brushPreview');
+    const cursorPos = document.getElementById('cursorPos');
+    const canvasSize = document.getElementById('canvasSize');
+    const btnPen = document.getElementById('btnPen');
+    const btnEraser = document.getElementById('btnEraser');
+    const btnUndo = document.getElementById('btnUndo');
+    const btnClear = document.getElementById('btnClear');
+    const btnSave = document.getElementById('btnSave');
+
+    // ======= State =======
+    let isDrawing = false;
+    let lastX = 0, lastY = 0;
+    let currentTool = 'pen';
+    let currentColor = '#1a1a2e';
+    let brushSize = 3;
+    let undoStack = [];
+    const MAX_UNDO = 10;
+
+    // ======= Color Palette =======
+    const presetColors = [
+        '#1a1a2e', '#000000', '#ef4444', '#f59e0b', '#22c55e',
+        '#3b82f6', '#8b5cf6', '#ec4899', '#ff6b35', '#ffffff'
+    ];
+
+    function buildColorPalette() {
+        presetColors.forEach(function(color) {
+            var swatch = document.createElement('button');
+            swatch.className = 'color-swatch';
+            if (color === currentColor) swatch.classList.add('active');
+            if (color === '#ffffff') swatch.classList.add('is-white');
+            swatch.style.backgroundColor = color;
+            swatch.addEventListener('click', function() {
+                selectColor(color);
+                setTool('pen');
+            });
+            colorPalette.appendChild(swatch);
+        });
+
+        // Custom color picker
+        var customInput = document.createElement('input');
+        customInput.type = 'color';
+        customInput.className = 'custom-color-input';
+        customInput.value = currentColor;
+        customInput.addEventListener('input', function() {
+            selectColor(customInput.value);
+            setTool('pen');
+        });
+        colorPalette.appendChild(customInput);
+    }
+
+    function selectColor(color) {
+        currentColor = color;
+        var swatches = colorPalette.querySelectorAll('.color-swatch');
+        swatches.forEach(function(s) { s.classList.remove('active'); });
+        // Find and highlight the matching swatch
+        swatches.forEach(function(s) {
+            if (s.style.backgroundColor === color) s.classList.add('active');
+        });
+    }
+
+    // ======= Canvas Resize =======
+    function resizeCanvas() {
+        var containerW = canvasContainer.clientWidth;
+        var containerH = canvasContainer.clientHeight;
+        var maxW = containerW - 32;
+        var maxH = containerH - 32;
+
+        // 4:3 aspect ratio
+        var w = maxW;
+        var h = w * 0.625;
+        if (h > maxH) { h = maxH; w = h / 0.625; }
+
+        // Save current drawing
+        var imageData = null;
+        if (canvas.width > 0 && canvas.height > 0) {
+            imageData = canvas.toDataURL();
+        }
+
+        canvas.width = Math.floor(w);
+        canvas.height = Math.floor(h);
+
+        // Drawing settings
+        ctx.lineCap = 'round';
+        ctx.lineJoin = 'round';
+
+        // Fill background
+        var isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+        ctx.fillStyle = isDark ? '#1a1a2e' : '#ffffff';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        // Restore previous drawing
+        if (imageData) {
+            var img = new Image();
+            img.onload = function() {
+                ctx.drawImage(img, 0, 0);
+            };
+            img.src = imageData;
+        }
+
+        // Update status bar
+        canvasSize.textContent = canvas.width + ' x ' + canvas.height;
+
+        // Save initial state
+        if (undoStack.length === 0) {
+            saveState();
+        }
+    }
+
+    // ======= Undo =======
+    function saveState() {
+        if (undoStack.length >= MAX_UNDO) {
+            undoStack.shift();
+        }
+        undoStack.push(canvas.toDataURL());
+    }
+
+    function undo() {
+        if (undoStack.length <= 1) {
+            showToast('没有可撤销的操作');
+            return;
+        }
+        undoStack.pop();
+        var prevState = undoStack[undoStack.length - 1];
+        var img = new Image();
+        img.onload = function() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.drawImage(img, 0, 0);
+        };
+        img.src = prevState;
+    }
+
+    // ======= Tools =======
+    function setTool(tool) {
+        currentTool = tool;
+        btnPen.classList.toggle('active', tool === 'pen');
+        btnEraser.classList.toggle('active', tool === 'eraser');
+        canvas.classList.toggle('eraser-active', tool === 'eraser');
+    }
+
+    // ======= Get Position =======
+    function getPos(e) {
+        var rect = canvas.getBoundingClientRect();
+        var scaleX = canvas.width / rect.width;
+        var scaleY = canvas.height / rect.height;
+        var clientX, clientY;
+
+        if (e.touches && e.touches.length > 0) {
+            clientX = e.touches[0].clientX;
+            clientY = e.touches[0].clientY;
+        } else if (e.changedTouches && e.changedTouches.length > 0) {
+            clientX = e.changedTouches[0].clientX;
+            clientY = e.changedTouches[0].clientY;
+        } else {
+            clientX = e.clientX;
+            clientY = e.clientY;
+        }
+
+        return {
+            x: (clientX - rect.left) * scaleX,
+            y: (clientY - rect.top) * scaleY
+        };
+    }
+
+    function getCanvasBg() {
+        var isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+        return isDark ? '#1a1a2e' : '#ffffff';
+    }
+
+    // ======= Drawing Handlers =======
+    function startDrawing(e) {
+        e.preventDefault();
+        isDrawing = true;
+        var pos = getPos(e);
+        lastX = pos.x;
+        lastY = pos.y;
+
+        // Draw a dot at the starting point
+        ctx.beginPath();
+        ctx.arc(lastX, lastY, brushSize / 2, 0, Math.PI * 2);
+        if (currentTool === 'eraser') {
+            ctx.fillStyle = getCanvasBg();
+            ctx.arc(lastX, lastY, brushSize * 1.5, 0, Math.PI * 2);
+        } else {
+            ctx.fillStyle = currentColor;
+        }
+        ctx.fill();
+    }
+
+    function draw(e) {
+        e.preventDefault();
+        var pos = getPos(e);
+
+        // Update cursor display
+        cursorPos.textContent = 'X: ' + Math.round(pos.x) + ', Y: ' + Math.round(pos.y);
+
+        // Update brush preview
+        var clientX = e.touches ? e.touches[0].clientX : e.clientX;
+        var clientY = e.touches ? e.touches[0].clientY : e.clientY;
+        updateBrushPreview(clientX, clientY, true);
+
+        if (!isDrawing) return;
+
+        ctx.beginPath();
+        ctx.moveTo(lastX, lastY);
+        ctx.lineTo(pos.x, pos.y);
+
+        if (currentTool === 'eraser') {
+            ctx.strokeStyle = getCanvasBg();
+            ctx.lineWidth = brushSize * 2.5;
+        } else {
+            ctx.strokeStyle = currentColor;
+            ctx.lineWidth = brushSize;
+        }
+        ctx.stroke();
+
+        lastX = pos.x;
+        lastY = pos.y;
+    }
+
+    function stopDrawing(e) {
+        if (isDrawing) {
+            isDrawing = false;
+            saveState();
+        }
+    }
+
+    function updateBrushPreview(x, y, show) {
+        if (currentTool === 'eraser') {
+            var previewSize = brushSize * 2.5 * (canvas.width / canvas.getBoundingClientRect().width);
+            brushPreview.style.backgroundColor = 'rgba(128,128,128,0.15)';
+        } else {
+            var previewSize = brushSize * (canvas.width / canvas.getBoundingClientRect().width);
+            brushPreview.style.backgroundColor = 'transparent';
+        }
+        brushPreview.style.width = previewSize + 'px';
+        brushPreview.style.height = previewSize + 'px';
+        brushPreview.style.left = x + 'px';
+        brushPreview.style.top = y + 'px';
+        brushPreview.style.display = show ? 'block' : 'none';
+    }
+
+    // ======= Mouse Events =======
+    canvas.addEventListener('mousedown', startDrawing);
+    canvas.addEventListener('mousemove', draw);
+    canvas.addEventListener('mouseup', stopDrawing);
+    canvas.addEventListener('mouseleave', function() {
+        stopDrawing();
+        brushPreview.style.display = 'none';
+    });
+    canvas.addEventListener('mouseenter', function(e) {
+        updateBrushPreview(e.clientX, e.clientY, true);
+    });
+
+    // ======= Touch Events =======
+    canvas.addEventListener('touchstart', startDrawing, { passive: false });
+    canvas.addEventListener('touchmove', draw, { passive: false });
+    canvas.addEventListener('touchend', stopDrawing);
+    canvas.addEventListener('touchcancel', function() {
+        isDrawing = false;
+        brushPreview.style.display = 'none';
+    });
+
+    // ======= Actions =======
+    function clearCanvas() {
+        ctx.fillStyle = getCanvasBg();
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        saveState();
+        showToast('画布已清空');
+    }
+
+    function saveAsPNG() {
+        var link = document.createElement('a');
+        link.download = '屏幕画板_' + new Date().toISOString().slice(0, 10) + '.png';
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+        showToast('图片已保存');
+    }
+
+    // ======= Toast =======
+    function showToast(message) {
+        var existing = document.querySelector('.toast');
+        if (existing) existing.remove();
+
+        var toast = document.createElement('div');
+        toast.className = 'toast';
+        toast.textContent = message;
+        document.body.appendChild(toast);
+
+        setTimeout(function() { toast.remove(); }, 2000);
+    }
+
+    // ======= Event Listeners =======
+    sizeSlider.addEventListener('input', function() {
+        brushSize = parseInt(sizeSlider.value);
+        sizeLabel.textContent = brushSize;
+    });
+
+    btnPen.addEventListener('click', function() { setTool('pen'); });
+    btnEraser.addEventListener('click', function() { setTool('eraser'); });
+    btnUndo.addEventListener('click', undo);
+    btnClear.addEventListener('click', clearCanvas);
+    btnSave.addEventListener('click', saveAsPNG);
+
+    // Keyboard shortcuts
+    document.addEventListener('keydown', function(e) {
+        if (e.ctrlKey && e.key === 'z') {
+            e.preventDefault();
+            undo();
+        }
+        if (e.key === 'e' && !e.ctrlKey && !e.metaKey && document.activeElement === document.body) {
+            setTool(currentTool === 'eraser' ? 'pen' : 'eraser');
+        }
+    });
+
+    // Window resize
+    var resizeTimer;
+    window.addEventListener('resize', function() {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(function() {
+            var data = canvas.toDataURL();
+            resizeCanvas();
+            var img = new Image();
+            img.onload = function() {
+                ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+            };
+            img.src = data;
+        }, 150);
+    });
+
+    // Theme change listener
+    var themeObserver = new MutationObserver(function() {
+        // Re-fill canvas background when theme changes
+        var data = canvas.toDataURL();
+        var isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+        ctx.fillStyle = isDark ? '#1a1a2e' : '#ffffff';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        var img = new Image();
+        img.onload = function() {
+            ctx.drawImage(img, 0, 0);
+            saveState();
+        };
+        img.src = data;
+    });
+    themeObserver.observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ['data-theme']
+    });
+
+    // ======= Init =======
+    function init() {
+        buildColorPalette();
+        resizeCanvas();
+        saveState();
+        sizeSlider.value = brushSize;
+        sizeLabel.textContent = brushSize;
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+    } else {
+        init();
+    }
+})();
+</script>
+</body>
+</html>

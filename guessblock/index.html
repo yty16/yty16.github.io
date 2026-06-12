@@ -206,6 +206,15 @@
             background: linear-gradient(to bottom, #e74c3c, #c0392b);
             color: white;
         }
+        .btn-skip {
+            background: linear-gradient(to bottom, var(--text-secondary), #555);
+            color: white;
+            font-size: 0.9rem;
+            padding: 8px 20px;
+        }
+        @media (max-width: 480px) {
+            .btn-skip { padding: 8px 14px; font-size: 0.85rem; }
+        }
         .btn-dk {
             background: linear-gradient(to bottom, #9b59b6, #8e44ad);
             color: white;
@@ -284,6 +293,7 @@
             <div class="btn-container" id="btnContainer">
                 <button id="yesButton" class="btn btn-yes" onclick="answerQuestion(1)">是</button>
                 <button id="noButton" class="btn btn-no" onclick="answerQuestion(0)">否</button>
+                <button id="skipButton" class="btn btn-skip" onclick="skipQuestion()">跳过</button>
             </div>
             <div id="result" class="hidden"></div>
         </div>
@@ -299,6 +309,7 @@
         var askedQuestions = [];   // 已问过的问题索引
         var totalCandidates = 191;
         var questionsAsked = 0;
+        var currentQuestionIdx = -1; // 当前问题索引
 
         // 特殊问题索引映射
         var FIRST_Q = 0;  // "是方块还是生物？"
@@ -354,6 +365,7 @@
             document.getElementById("result").classList.add("hidden");
             document.querySelector(".content-box").classList.remove("hidden");
             document.getElementById("btnContainer").classList.remove("hidden");
+            document.getElementById("skipButton").classList.add("hidden"); // 初始隐藏跳过按钮
             var rb = document.getElementById("restartButton");
             if (rb) rb.remove();
             updateProgress();
@@ -436,19 +448,20 @@
 
             if (qIdx === -1) {
                 // 所有问题都问完了或都无用，但还有多个候选
-                // 这些候选在所有可用属性上完全相同
-                // 直接出结果（显示最可能的第一个）
-                showResult(candidates[0]);
+                // 可能是因为跳过了太多问题导致无法区分
+                showResult(-2, candidates);
                 return;
             }
 
             // 显示问题
             var qText = questions[qIdx];
+            currentQuestionIdx = qIdx;
             document.getElementById("questionContainer").textContent = qText;
 
             // 根据问题类型设置按钮
             var yesBtn = document.getElementById("yesButton");
             var noBtn = document.getElementById("noButton");
+            var skipBtn = document.getElementById("skipButton");
 
             if (qIdx === FIRST_Q) {
                 yesBtn.className = 'btn btn-block';
@@ -457,6 +470,7 @@
                 noBtn.className = 'btn btn-mob';
                 noBtn.textContent = '🐷 生物';
                 noBtn.onclick = function() { answerQuestion(0, qIdx); };
+                skipBtn.classList.add('hidden'); // 第一个问题不允许跳过
             } else {
                 yesBtn.className = 'btn btn-yes';
                 yesBtn.textContent = '是';
@@ -464,6 +478,7 @@
                 noBtn.className = 'btn btn-no';
                 noBtn.textContent = '否';
                 noBtn.onclick = function() { answerQuestion(0, qIdx); };
+                skipBtn.classList.remove('hidden'); // 其他问题可以跳过
             }
         }
 
@@ -483,7 +498,19 @@
             askNextQuestion();
         }
 
-        function showResult(idx) {
+        function skipQuestion() {
+            // 跳过：不过滤候选集（保留所有），但标记该问题已问过
+            askedQuestions.push(currentQuestionIdx);
+            questionsAsked++;
+            updateProgress();
+            // 剩余候选不变，提示跳过
+            var info = document.getElementById('candidatesInfo');
+            info.textContent = '剩余候选: ' + candidates.length + ' 个 (已跳过)';
+            setTimeout(function() { updateCandidatesInfo(); }, 1500);
+            askNextQuestion();
+        }
+
+        function showResult(idx, multiCandidates) {
             var el = document.getElementById("result");
             el.innerHTML = '';
 
@@ -502,6 +529,13 @@
                 title.textContent = '🎯 你想的是：';
                 content.innerHTML = '<strong>' + items[idx] + '</strong>';
                 typeInfo.textContent = isBlock ? '（方块）' : '（生物）';
+            } else if (idx === -2 && multiCandidates && multiCandidates.length > 1) {
+                // 多个候选无法区分（可能因为跳过了太多问题）
+                emoji.textContent = '🤷';
+                title.textContent = '无法精确确定，可能是以下之一：';
+                var names = multiCandidates.map(function(c) { return items[c]; });
+                content.innerHTML = names.join('、');
+                typeInfo.textContent = '（跳过了太多问题，建议少跳过一些）';
             } else {
                 emoji.textContent = '🤔';
                 title.textContent = '数据库中没找到匹配';
@@ -510,7 +544,7 @@
 
             el.appendChild(emoji);
             el.appendChild(title);
-            if (idx >= 0) {
+            if (idx >= 0 || (idx === -2 && multiCandidates)) {
                 el.appendChild(content);
                 el.appendChild(typeInfo);
             }

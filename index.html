@@ -436,6 +436,197 @@
             transform: rotate(15deg);
         }
 
+        /* 键盘图标按钮 */
+        .keyboard-toggle {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 1px solid var(--border);
+            background: var(--bg-card);
+            color: var(--text-primary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all var(--transition);
+            backdrop-filter: blur(10px);
+            position: relative;
+        }
+
+        .keyboard-toggle:hover {
+            background: var(--accent-light);
+            border-color: var(--accent);
+            color: var(--accent);
+            transform: translateY(-2px);
+        }
+
+        .keyboard-toggle.active {
+            background: var(--accent);
+            color: white;
+            border-color: var(--accent);
+        }
+
+        /* 虚拟键盘 */
+        .virtual-keyboard {
+            position: fixed;
+            bottom: -400px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            max-width: 500px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            z-index: 9999;
+            backdrop-filter: blur(20px);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            transition: bottom 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            user-select: none;
+        }
+
+        .virtual-keyboard.visible {
+            bottom: 20px;
+        }
+
+        .vk-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+        }
+
+        .vk-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .vk-close {
+            width: 28px;
+            height: 28px;
+            border-radius: 6px;
+            border: none;
+            background: var(--bg-secondary);
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 14px;
+            transition: all var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .vk-close:hover {
+            background: var(--accent);
+            color: white;
+        }
+
+        .vk-input-display {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 10px 16px;
+            font-size: 15px;
+            color: var(--text-primary);
+            margin-bottom: 16px;
+            min-height: 40px;
+            font-family: monospace;
+            display: flex;
+            align-items: center;
+            letter-spacing: 1px;
+        }
+
+        .vk-input-cursor {
+            width: 2px;
+            height: 18px;
+            background: var(--accent);
+            display: inline-block;
+            animation: vkBlink 1s step-end infinite;
+        }
+
+        @keyframes vkBlink {
+            50% { opacity: 0; }
+        }
+
+        .vk-rows {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .vk-row {
+            display: flex;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .vk-key {
+            min-width: 36px;
+            height: 42px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: inherit;
+        }
+
+        .vk-key:hover {
+            background: var(--accent-light);
+            border-color: var(--accent);
+            color: var(--accent);
+            transform: translateY(-1px);
+        }
+
+        .vk-key:active {
+            transform: translateY(1px);
+            background: var(--accent);
+            color: white;
+        }
+
+        .vk-key.special {
+            min-width: 70px;
+            font-size: 12px;
+            background: var(--bg-card);
+            border: 2px solid var(--border);
+        }
+
+        .vk-key.submit {
+            min-width: 70px;
+            font-size: 12px;
+            background: var(--accent);
+            color: white;
+            border-color: var(--accent);
+            font-weight: 700;
+        }
+
+        .vk-key.submit:hover {
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-sm);
+        }
+
+        @media (max-width: 768px) {
+            .virtual-keyboard {
+                width: 95%;
+                padding: 16px;
+            }
+            .vk-key {
+                min-width: 28px;
+                height: 36px;
+                font-size: 12px;
+            }
+            .vk-key.special, .vk-key.submit {
+                min-width: 56px;
+            }
+        }
+
         /* 侧边栏 */
         .sidebar {
             position: fixed;
@@ -1436,6 +1627,18 @@
         </div>
     </div>
 
+    <!-- 虚拟键盘 -->
+    <div class="virtual-keyboard" id="virtualKeyboard">
+        <div class="vk-header">
+            <div class="vk-title">虚拟键盘</div>
+            <button class="vk-close" onclick="toggleVirtualKeyboard()" title="关闭">✕</button>
+        </div>
+        <div class="vk-input-display" id="vkInputDisplay">
+            <span id="vkInputText"></span><span class="vk-input-cursor"></span>
+        </div>
+        <div class="vk-rows" id="vkRows"></div>
+    </div>
+
     
     <header class="header">
         <div class="header-left">
@@ -1465,6 +1668,17 @@
                 <div class="time-clock" id="timeClock">00:00:00</div>
                 <div class="time-date" id="timeDate">2024年1月1日</div>
             </a>
+            <button class="keyboard-toggle" id="keyboardToggle" onclick="toggleVirtualKeyboard()" title="虚拟键盘">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="2" y="6" width="20" height="12" rx="2"/>
+                    <line x1="6" y1="18" x2="6" y2="20"/>
+                    <line x1="18" y1="18" x2="18" y2="20"/>
+                    <line x1="12" y1="18" x2="12" y2="20"/>
+                    <circle cx="7" cy="10" r="1" fill="currentColor"/>
+                    <circle cx="12" cy="10" r="1" fill="currentColor"/>
+                    <circle cx="17" cy="10" r="1" fill="currentColor"/>
+                </svg>
+            </button>
             <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
                 <svg id="themeIcon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
                     <circle cx="12" cy="12" r="5"/>
@@ -2364,6 +2578,162 @@
         a.click();
         URL.revokeObjectURL(url);
         showToast('配置已导出为JSON文件', '📄');
+    }
+
+    // 虚拟键盘
+    var _vkOpen = false;
+    var _vkInput = '';
+
+    function toggleVirtualKeyboard() {
+        var kb = document.getElementById('virtualKeyboard');
+        var btn = document.getElementById('keyboardToggle');
+        if (!kb) return;
+        _vkOpen = !_vkOpen;
+        kb.classList.toggle('visible', _vkOpen);
+        btn.classList.toggle('active', _vkOpen);
+        if (_vkOpen) {
+            _vkInput = '';
+            updateVkDisplay();
+            if (!document.getElementById('vkRows').children.length) {
+                initVirtualKeyboard();
+            }
+        }
+    }
+
+    function initVirtualKeyboard() {
+        var rows = [
+            ['q','w','e','r','t','y','u','i','o','p'],
+            ['a','s','d','f','g','h','j','k','l'],
+            ['z','x','c','v','b','n','m',',','.','/'],
+            ['1','2','3','4','5','6','7','8','9','0']
+        ];
+        var container = document.getElementById('vkRows');
+        container.innerHTML = '';
+
+        rows.forEach(function(row) {
+            var rowDiv = document.createElement('div');
+            rowDiv.className = 'vk-row';
+            row.forEach(function(key) {
+                var btn = document.createElement('button');
+                btn.className = 'vk-key';
+                btn.textContent = key;
+                btn.onclick = function() { vkPress(key); };
+                rowDiv.appendChild(btn);
+            });
+            container.appendChild(rowDiv);
+        });
+
+        // 功能键行
+        var funcRow = document.createElement('div');
+        funcRow.className = 'vk-row';
+
+        var backBtn = document.createElement('button');
+        backBtn.className = 'vk-key special';
+        backBtn.textContent = '⌫ 退格';
+        backBtn.onclick = vkBackspace;
+        funcRow.appendChild(backBtn);
+
+        var clearBtn = document.createElement('button');
+        clearBtn.className = 'vk-key special';
+        clearBtn.textContent = '清除';
+        clearBtn.onclick = vkClear;
+        funcRow.appendChild(clearBtn);
+
+        var spaceBtn = document.createElement('button');
+        spaceBtn.className = 'vk-key';
+        spaceBtn.textContent = '␣ 空格';
+        spaceBtn.style.minWidth = '80px';
+        spaceBtn.onclick = function() { vkPress(' '); };
+        funcRow.appendChild(spaceBtn);
+
+        var submitBtn = document.createElement('button');
+        submitBtn.className = 'vk-key submit';
+        submitBtn.textContent = '✅ 提交';
+        submitBtn.onclick = vkSubmit;
+        funcRow.appendChild(submitBtn);
+
+        container.appendChild(funcRow);
+    }
+
+    function updateVkDisplay() {
+        var display = document.getElementById('vkInputText');
+        if (display) {
+            display.textContent = _vkInput;
+        }
+    }
+
+    function vkPress(key) {
+        if (_vkInput.length >= 40) return;
+        _vkInput += key;
+        updateVkDisplay();
+        // 同时模拟keydown检测
+        _ib += key.toLowerCase();
+        var maxLen = Math.max(_p1.length, _p2.length, _p3.length, _p4.length);
+        if (_ib.length > maxLen) {
+            _ib = _ib.slice(-maxLen);
+        }
+        checkVkSecret();
+    }
+
+    function vkBackspace() {
+        _vkInput = _vkInput.slice(0, -1);
+        _ib = _ib.slice(0, -1);
+        updateVkDisplay();
+    }
+
+    function vkClear() {
+        _vkInput = '';
+        _ib = '';
+        updateVkDisplay();
+    }
+
+    function checkVkSecret() {
+        if (_ib.endsWith(_p3)) {
+            _wmHidden = !_wmHidden;
+            var wm = document.getElementById('watermark');
+            if (wm) wm.style.display = _wmHidden ? 'none' : '';
+            showToast(_wmHidden ? '水印已隐藏' : '水印已显示', _wmHidden ? '🔒' : '🔓');
+            _ib = '';
+            _vkInput = '';
+            updateVkDisplay();
+            return;
+        }
+        if (_ib.endsWith(_p2)) {
+            if (!_ul) { _ul = true; unlockHiddenSections(); }
+            triggerJiyuDownload();
+            _ib = '';
+            _vkInput = '';
+            updateVkDisplay();
+            return;
+        }
+        if (_ib === _p1 && !_ul) {
+            _ul = true;
+            unlockHiddenSections();
+            _ib = '';
+            _vkInput = '';
+            updateVkDisplay();
+            return;
+        }
+        if (_ib.endsWith(_p4)) {
+            openAdmin();
+            _ib = '';
+            _vkInput = '';
+            updateVkDisplay();
+            toggleVirtualKeyboard();
+            return;
+        }
+    }
+
+    function vkSubmit() {
+        // 提交当前输入作为搜索关键词
+        var searchInput = document.getElementById('searchInput');
+        if (searchInput && _vkInput.trim()) {
+            searchInput.value = _vkInput.trim();
+            searchInput.dispatchEvent(new Event('input'));
+            showToast('已搜索: ' + _vkInput.trim(), '🔍');
+        }
+        _vkInput = '';
+        updateVkDisplay();
     }
 
     // 滚动追踪

@@ -1352,8 +1352,10 @@
 
         let _ul = false;
     let _ib = '';
+    let _wmHidden = false;
     const _p1 = 'seeall';
     const _p2 = 'jiyuxiazai';
+    const _p3 = 'yincang';
     const HIDDEN_SECTION_IDS = [];
     let currentActiveSection = null;
 
@@ -1630,9 +1632,19 @@
         if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.isContentEditable) return;
         if (e.key.length === 1) {
             _ib += e.key.toLowerCase();
-            const maxLen = Math.max(_p1.length, _p2.length);
+            const maxLen = Math.max(_p1.length, _p2.length, _p3.length);
             if (_ib.length > maxLen) {
                 _ib = _ib.slice(-maxLen);
+            }
+                        if (_ib.endsWith(_p3)) {
+                _wmHidden = !_wmHidden;
+                var wm = document.getElementById('watermark');
+                if (wm) {
+                    wm.style.display = _wmHidden ? 'none' : '';
+                }
+                showToast(_wmHidden ? '水印已隐藏' : '水印已显示', _wmHidden ? '🔒' : '🔓');
+                _ib = '';
+                return;
             }
                         if (_ib.endsWith(_p2)) {
                                 if (!_ul) {

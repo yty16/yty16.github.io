@@ -1585,35 +1585,6 @@
         showToast('隐藏区域已解锁!', '🔓');
             }
 
-    function triggerJiyuDownload() {
-        // 先记住原始URL（后面会改）
-        savedOriginalURL = window.location.pathname;
-
-        // 开启安全模式（先让change handler保存原始的title和body）
-        const secCheckbox = document.getElementById('securityMode');
-        if (secCheckbox && !secCheckbox.checked) {
-            secCheckbox.checked = true;
-            // 手动触发change事件 → handler会保存originalTitle（此时还是原始标题）和originalBodyHTML
-            secCheckbox.dispatchEvent(new Event('change'));
-        }
-        // 确保securityEnabled为true
-        securityEnabled = true;
-
-        // 安全模式已开启，originalTitle已正确保存，现在改名+伪装URL
-        document.title = 'New Tab';
-        try { history.replaceState(null, 'New Tab', '/new-tab'); } catch(e) {}
-        // 更换favicon为空白图标，减少地址栏信息暴露
-        changeFavicon('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><rect width="16" height="16" fill="%23fff"/></svg>');
-
-        
-
-    link.type = 'image/svg+xml';
-        link.href = iconURL;
-    }
-
-    // 记住原始URL用于恢复
-    let savedOriginalURL = '';
-
     // 滚动追踪
     function initScrollTracking() {
         const mainContent = document.querySelector('.main');
@@ -1669,16 +1640,6 @@
         document.getElementById('scrollTopBtn').addEventListener('click', () => {
             window.scrollTo({ top: 0, behavior: 'smooth' });
         });
-    }
-
-    // 换标题
-    function changeTitle(title) {
-        document.title = title;
-        // Update active button
-        document.querySelectorAll('.settings-btn').forEach(btn => {
-            btn.classList.toggle('active', btn.textContent === title);
-        });
-        showToast(`标题已更改为「${title}」`, '📝');
     }
 
     // Particles

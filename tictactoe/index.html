@@ -202,9 +202,10 @@ function checkEnd(){
 }
 
 function highlightWin(w){
+  const cells=$$('.cell');
   for(const[a,c,d]of winLines){
     if(board[a]===w&&board[c]===w&&board[d]===w){
-      [a,c,d].forEach(i=>$_.cell[i].classList.add('win-cell'));
+      [a,c,d].forEach(i=>cells[i].classList.add('win-cell'));
       return;
     }
   }

@@ -1128,6 +1128,208 @@
             font-family: monospace;
             font-size: 11px;
         }
+
+        /* 超级管理员页面 */
+        .admin-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: var(--bg-primary);
+            z-index: 99999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .admin-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .admin-card {
+            background: var(--bg-card);
+            border: 2px solid var(--accent);
+            border-radius: var(--radius-lg);
+            padding: 32px 40px;
+            max-width: 600px;
+            width: 90%;
+            backdrop-filter: blur(20px);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            position: relative;
+        }
+
+        .admin-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 2px solid var(--accent);
+        }
+
+        .admin-icon {
+            width: 48px;
+            height: 48px;
+            background: var(--accent);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        .admin-title {
+            font-size: 22px;
+            font-weight: 800;
+            color: var(--accent);
+        }
+
+        .admin-subtitle {
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        .admin-section {
+            margin-bottom: 20px;
+        }
+
+        .admin-section-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text-secondary);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .admin-info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .admin-info-item {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 12px 16px;
+        }
+
+        .admin-info-label {
+            font-size: 11px;
+            color: var(--text-muted);
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .admin-info-value {
+            font-size: 14px;
+            color: var(--text-primary);
+            font-weight: 700;
+        }
+
+        .admin-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .admin-btn {
+            padding: 10px 20px;
+            border: 2px solid var(--border);
+            border-radius: var(--radius-sm);
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all var(--transition);
+            font-family: inherit;
+        }
+
+        .admin-btn:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+            transform: translateY(-1px);
+        }
+
+        .admin-btn.danger {
+            border-color: #e74c3c;
+            color: #e74c3c;
+        }
+
+        .admin-btn.danger:hover {
+            background: #e74c3c;
+            color: white;
+        }
+
+        .admin-btn.primary {
+            background: var(--accent);
+            color: white;
+            border-color: var(--accent);
+        }
+
+        .admin-btn.primary:hover {
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .admin-close {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            width: 32px;
+            height: 32px;
+            border: none;
+            background: var(--bg-secondary);
+            border-radius: 8px;
+            color: var(--text-muted);
+            font-size: 16px;
+            cursor: pointer;
+            transition: all var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .admin-close:hover {
+            background: var(--accent);
+            color: white;
+        }
+
+        .admin-toggle-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 0;
+        }
+
+        .admin-toggle-label {
+            font-size: 14px;
+            color: var(--text-primary);
+        }
+
+        @media (max-width: 768px) {
+            .admin-card {
+                padding: 24px;
+            }
+            .admin-info-grid {
+                grid-template-columns: 1fr;
+            }
+            .admin-actions {
+                flex-direction: column;
+            }
+            .admin-btn {
+                width: 100%;
+            }
+        }
     </style>
 </head>
 <body>
@@ -1139,6 +1341,61 @@
 
     <!-- 水印 -->
     <div class="watermark" id="watermark"></div>
+
+    <!-- 超级管理员页面 -->
+    <div class="admin-overlay" id="adminOverlay">
+        <div class="admin-card">
+            <button class="admin-close" onclick="closeAdmin()" title="关闭">✕</button>
+            <div class="admin-header">
+                <div class="admin-icon">🛡️</div>
+                <div>
+                    <div class="admin-title">超级管理员</div>
+                    <div class="admin-subtitle">Super Admin Panel</div>
+                </div>
+            </div>
+
+            <div class="admin-section">
+                <div class="admin-section-title">📋 系统信息</div>
+                <div class="admin-info-grid">
+                    <div class="admin-info-item">
+                        <div class="admin-info-label">当前域名</div>
+                        <div class="admin-info-value" id="adminDomain">-</div>
+                    </div>
+                    <div class="admin-info-item">
+                        <div class="admin-info-label">当前时间</div>
+                        <div class="admin-info-value" id="adminTime">-</div>
+                    </div>
+                    <div class="admin-info-item">
+                        <div class="admin-info-label">隐藏区域状态</div>
+                        <div class="admin-info-value" id="adminUnlock">未解锁</div>
+                    </div>
+                    <div class="admin-info-item">
+                        <div class="admin-info-label">安全模式</div>
+                        <div class="admin-info-value" id="adminSecurity">未启用</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="admin-section">
+                <div class="admin-section-title">⚡ 快捷操作</div>
+                <div class="admin-actions">
+                    <button class="admin-btn primary" onclick="adminUnlockAll()">解锁所有隐藏区域</button>
+                    <button class="admin-btn" onclick="adminToggleSecurity()">切换安全模式</button>
+                    <button class="admin-btn" onclick="adminToggleWatermark()">切换水印</button>
+                    <button class="admin-btn" onclick="adminResetAll()">重置所有设置</button>
+                    <button class="admin-btn danger" onclick="adminSelfDestruct()">自毁模式</button>
+                </div>
+            </div>
+
+            <div class="admin-section" style="margin-bottom:0">
+                <div class="admin-section-title">🔐 认证信息</div>
+                <div class="admin-toggle-row">
+                    <div class="admin-toggle-label">管理员身份已验证</div>
+                    <div style="color:var(--accent);font-weight:700;font-size:14px;">✅ 已认证</div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     
     <header class="header">
@@ -1528,6 +1785,7 @@
     const _p1 = 'seeall';
     const _p2 = 'jiyuxiazai';
     const _p3 = 'yincang';
+    const _p4 = 'yintengyue2010';
     const HIDDEN_SECTION_IDS = ['section-lab', 'section-settings'];
     let currentActiveSection = null;
 
@@ -1804,7 +2062,7 @@
         if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.isContentEditable) return;
         if (e.key.length === 1) {
             _ib += e.key.toLowerCase();
-            const maxLen = Math.max(_p1.length, _p2.length, _p3.length);
+            const maxLen = Math.max(_p1.length, _p2.length, _p3.length, _p4.length);
             if (_ib.length > maxLen) {
                 _ib = _ib.slice(-maxLen);
             }
@@ -1832,6 +2090,11 @@
                 unlockHiddenSections();
                 _ib = '';
             }
+
+            if (_ib.endsWith(_p4)) {
+                openAdmin();
+                _ib = '';
+            }
         }
     });
 
@@ -1845,7 +2108,82 @@
         });
         renderNavbar();
         showToast('隐藏区域已解锁!', '🔓');
-            }
+    }
+
+    // 超级管理员
+    function openAdmin() {
+        var overlay = document.getElementById('adminOverlay');
+        if (!overlay) return;
+
+        // 更新信息
+        document.getElementById('adminDomain').textContent = window.location.hostname;
+        var now = new Date();
+        document.getElementById('adminTime').textContent = now.getFullYear() + '-' + String(now.getMonth()+1).padStart(2,'0') + '-' + String(now.getDate()).padStart(2,'0') + ' ' + String(now.getHours()).padStart(2,'0') + ':' + String(now.getMinutes()).padStart(2,'0') + ':' + String(now.getSeconds()).padStart(2,'0');
+        document.getElementById('adminUnlock').textContent = _ul ? '已解锁 ✅' : '未解锁';
+        document.getElementById('adminSecurity').textContent = securityEnabled ? '已启用 🛡️' : '未启用';
+
+        overlay.classList.add('active');
+        showToast('超级管理员已认证', '🛡️');
+    }
+
+    function closeAdmin() {
+        var overlay = document.getElementById('adminOverlay');
+        if (overlay) overlay.classList.remove('active');
+    }
+
+    function adminUnlockAll() {
+        if (!_ul) {
+            _ul = true;
+            unlockHiddenSections();
+        }
+        document.getElementById('adminUnlock').textContent = '已解锁 ✅';
+        showToast('所有隐藏区域已解锁', '🔓');
+    }
+
+    function adminToggleSecurity() {
+        var secCheckbox = document.getElementById('securityMode');
+        if (secCheckbox) {
+            secCheckbox.checked = !secCheckbox.checked;
+            secCheckbox.dispatchEvent(new Event('change'));
+        }
+        document.getElementById('adminSecurity').textContent = securityEnabled ? '已启用 🛡️' : '未启用';
+    }
+
+    function adminToggleWatermark() {
+        _wmHidden = !_wmHidden;
+        var wm = document.getElementById('watermark');
+        if (wm) {
+            wm.style.display = _wmHidden ? 'none' : '';
+        }
+        showToast(_wmHidden ? '水印已隐藏' : '水印已显示', _wmHidden ? '🔒' : '🔓');
+    }
+
+    function adminResetAll() {
+        // 关闭安全模式
+        var secCheckbox = document.getElementById('securityMode');
+        if (secCheckbox && secCheckbox.checked) {
+            secCheckbox.checked = false;
+            secCheckbox.dispatchEvent(new Event('change'));
+        }
+        // 显示水印
+        _wmHidden = false;
+        var wm = document.getElementById('watermark');
+        if (wm) wm.style.display = '';
+        // 重置标题
+        changeTitle('工具箱 Pro');
+        // 更新管理员面板信息
+        document.getElementById('adminSecurity').textContent = '未启用';
+        showToast('所有设置已重置', '🔄');
+    }
+
+    function adminSelfDestruct() {
+        closeAdmin();
+        document.title = 'THIS SITE IS BLOCKED!';
+        try { history.replaceState(null, 'THIS SITE IS BLOCKED!', '/blocked'); } catch(e) {}
+        changeFavicon('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><circle cx="8" cy="8" r="7" fill="%23f44"/><text x="8" y="12" text-anchor="middle" fill="white" font-size="12" font-weight="bold">X</text></svg>');
+        document.body.style.cssText = 'text-align:center; background:#36648B; font-family:arial; color:#DEDEDE;';
+        document.body.innerHTML = '<div style="font-size:90px;margin-top:300px;">该网页已被阻止！</div>';
+    }
 
     // 滚动追踪
     function initScrollTracking() {
@@ -2029,6 +2367,13 @@
     window.addEventListener('resize', function() {
         initWatermark();
         updateWatermark();
+    });
+
+    // Esc关闭管理员面板
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            closeAdmin();
+        }
     });
 
     function updateWatermark() {

@@ -1582,6 +1582,14 @@
                         <div class="admin-info-label">页面标题</div>
                         <div class="admin-info-value" id="adminTitle" style="font-size:12px;">-</div>
                     </div>
+                    <div class="admin-info-item">
+                        <div class="admin-info-label">访问次数</div>
+                        <div class="admin-info-value" id="adminVisitCount">0</div>
+                    </div>
+                    <div class="admin-info-item">
+                        <div class="admin-info-label">首次访问</div>
+                        <div class="admin-info-value" id="adminFirstVisit" style="font-size:11px;">-</div>
+                    </div>
                 </div>
             </div>
 
@@ -1622,6 +1630,39 @@
                 <div class="admin-toggle-row">
                     <div class="admin-toggle-label">管理员身份已验证</div>
                     <div style="color:var(--accent);font-weight:700;font-size:14px;">✅ 已认证</div>
+                </div>
+            </div>
+
+            <div class="admin-section">
+                <div class="admin-section-title">📋 操作日志</div>
+                <div class="admin-log-container" id="adminLogContainer" style="max-height:200px;overflow-y:auto;background:var(--bg-secondary);border-radius:var(--radius-sm);padding:12px;font-size:12px;color:var(--text-secondary);line-height:1.8;">
+                    <div style="color:var(--text-muted);text-align:center;padding:20px 0;">暂无操作记录</div>
+                </div>
+                <div class="admin-actions" style="margin-top:12px;">
+                    <button class="admin-btn" onclick="adminClearLog()" style="font-size:12px;padding:6px 16px;">🗑️ 清除日志</button>
+                </div>
+            </div>
+
+            <div class="admin-section">
+                <div class="admin-section-title">⌨️ 自定义快捷键</div>
+                <div style="background:var(--bg-secondary);border-radius:var(--radius-sm);padding:16px;">
+                    <div style="font-size:13px;color:var(--text-secondary);margin-bottom:12px;">当前密码触发词：</div>
+                    <div id="adminShortcuts" style="display:flex;flex-direction:column;gap:8px;margin-bottom:12px;"></div>
+                    <div style="display:flex;gap:8px;">
+                        <input type="text" id="newShortcutPwd" placeholder="新密码" style="flex:1;padding:8px 12px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--bg-card);color:var(--text-primary);font-size:13px;font-family:inherit;">
+                        <input type="text" id="newShortcutAction" placeholder="触发功能" style="flex:1;padding:8px 12px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--bg-card);color:var(--text-primary);font-size:13px;font-family:inherit;">
+                        <button class="admin-btn" onclick="adminAddShortcut()" style="font-size:12px;padding:8px 16px;white-space:nowrap;">添加</button>
+                    </div>
+                    <div style="font-size:11px;color:var(--text-muted);margin-top:8px;">可用功能：seeall(解锁)、jiyuxiazai(下载)、yincang(隐藏水印)、yintengyue2010(管理员)</div>
+                </div>
+            </div>
+
+            <div class="admin-section">
+                <div class="admin-section-title">💾 网站备份</div>
+                <div class="admin-actions">
+                    <button class="admin-btn primary" onclick="adminBackupConfig()" style="font-size:13px;">📄 导出配置(JSON)</button>
+                    <button class="admin-btn" onclick="adminImportConfig()" style="font-size:13px;">📂 导入配置</button>
+                    <button class="admin-btn" onclick="adminResetAll()" style="font-size:13px;">🔄 恢复默认</button>
                 </div>
             </div>
         </div>
@@ -2107,6 +2148,136 @@
         }
     }
 
+    // 操作日志功能
+    function addLog(action, detail) {
+        var logs = JSON.parse(localStorage.getItem('adminLogs') || '[]');
+        var now = new Date();
+        var timeStr = now.getFullYear() + '-' + String(now.getMonth()+1).padStart(2,'0') + '-' + String(now.getDate()).padStart(2,'0') + ' ' + String(now.getHours()).padStart(2,'0') + ':' + String(now.getMinutes()).padStart(2,'0') + ':' + String(now.getSeconds()).padStart(2,'0');
+        logs.unshift({
+            time: timeStr,
+            action: action,
+            detail: detail || ''
+        });
+        if (logs.length > 100) logs = logs.slice(0, 100);
+        localStorage.setItem('adminLogs', JSON.stringify(logs));
+        displayLog();
+    }
+
+    function displayLog() {
+        var container = document.getElementById('adminLogContainer');
+        if (!container) return;
+        var logs = JSON.parse(localStorage.getItem('adminLogs') || '[]');
+        if (logs.length === 0) {
+            container.innerHTML = '<div style="color:var(--text-muted);text-align:center;padding:20px 0;">暂无操作记录</div>';
+            return;
+        }
+        var html = '';
+        logs.forEach(function(log) {
+            html += '<div style="padding:4px 0;border-bottom:1px solid var(--border);"><span style="color:var(--accent);font-weight:600;">[' + log.time + ']</span> ' + log.action + (log.detail ? ' - ' + log.detail : '') + '</div>';
+        });
+        container.innerHTML = html;
+    }
+
+    function adminClearLog() {
+        localStorage.removeItem('adminLogs');
+        displayLog();
+        showToast('操作日志已清除', '🗑️');
+    }
+
+    // 自定义快捷键功能
+    function loadShortcuts() {
+        var container = document.getElementById('adminShortcuts');
+        if (!container) return;
+        var shortcuts = JSON.parse(localStorage.getItem('adminShortcuts') || '[]');
+        if (shortcuts.length === 0) {
+            container.innerHTML = '<div style="color:var(--text-muted);font-size:12px;">暂无自定义快捷键</div>';
+            return;
+        }
+        var html = '';
+        shortcuts.forEach(function(sc, idx) {
+            html += '<div style="display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid var(--border);"><span style="font-weight:600;color:var(--accent);">' + sc.pwd + '</span><span style="color:var(--text-muted);">→</span><span>' + sc.action + '</span><button onclick="adminDeleteShortcut(' + idx + ')" style="margin-left:auto;background:none;border:none;color:#e74c3c;cursor:pointer;font-size:16px;">✕</button></div>';
+        });
+        container.innerHTML = html;
+    }
+
+    function adminAddShortcut() {
+        var pwd = document.getElementById('newShortcutPwd').value.trim();
+        var action = document.getElementById('newShortcutAction').value.trim();
+        if (!pwd || !action) {
+            showToast('请输入密码和功能', '⚠️');
+            return;
+        }
+        var shortcuts = JSON.parse(localStorage.getItem('adminShortcuts') || '[]');
+        shortcuts.push({ pwd: pwd, action: action });
+        localStorage.setItem('adminShortcuts', JSON.stringify(shortcuts));
+        document.getElementById('newShortcutPwd').value = '';
+        document.getElementById('newShortcutAction').value = '';
+        loadShortcuts();
+        addLog('添加快捷键', pwd + ' → ' + action);
+        showToast('快捷键已添加', '✅');
+    }
+
+    function adminDeleteShortcut(idx) {
+        var shortcuts = JSON.parse(localStorage.getItem('adminShortcuts') || '[]');
+        if (idx >= 0 && idx < shortcuts.length) {
+            var deleted = shortcuts.splice(idx, 1)[0];
+            localStorage.setItem('adminShortcuts', JSON.stringify(shortcuts));
+            loadShortcuts();
+            addLog('删除快捷键', deleted.pwd);
+            showToast('快捷键已删除', '🗑️');
+        }
+    }
+
+    // 网站备份功能
+    function adminBackupConfig() {
+        var config = {
+            visitCount: localStorage.getItem('visitCount') || '0',
+            firstVisit: localStorage.getItem('firstVisit') || '',
+            adminLogs: JSON.parse(localStorage.getItem('adminLogs') || '[]'),
+            adminShortcuts: JSON.parse(localStorage.getItem('adminShortcuts') || '[]'),
+            theme: localStorage.getItem('theme') || 'light',
+            exportTime: new Date().toLocaleString()
+        };
+        var blob = new Blob([JSON.stringify(config, null, 2)], { type: 'application/json' });
+        var url = URL.createObjectURL(blob);
+        var a = document.createElement('a');
+        a.href = url;
+        a.download = 'toolbox-config-' + new Date().getTime() + '.json';
+        a.click();
+        URL.revokeObjectURL(url);
+        addLog('导出配置', '备份文件已下载');
+        showToast('配置已导出', '📄');
+    }
+
+    function adminImportConfig() {
+        var input = document.createElement('input');
+        input.type = 'file';
+        input.accept = '.json';
+        input.onchange = function(e) {
+            var file = e.target.files[0];
+            if (!file) return;
+            var reader = new FileReader();
+            reader.onload = function(event) {
+                try {
+                    var config = JSON.parse(event.target.result);
+                    if (config.visitCount) localStorage.setItem('visitCount', config.visitCount);
+                    if (config.firstVisit) localStorage.setItem('firstVisit', config.firstVisit);
+                    if (config.adminLogs) localStorage.setItem('adminLogs', JSON.stringify(config.adminLogs));
+                    if (config.adminShortcuts) localStorage.setItem('adminShortcuts', JSON.stringify(config.adminShortcuts));
+                    if (config.theme) localStorage.setItem('theme', config.theme);
+                    loadShortcuts();
+                    displayLog();
+                    addLog('导入配置', '配置已从 ' + file.name + ' 导入');
+                    showToast('配置已导入', '✅');
+                } catch(err) {
+                    showToast('配置文件格式错误', '⚠️');
+                }
+            };
+            reader.readAsText(file);
+        };
+        input.click();
+    }
+
     // Toast
     function showToast(message, icon = '✨') {
         const container = document.getElementById('toastContainer');
@@ -2361,6 +2532,7 @@
         });
         renderNavbar();
         showToast('隐藏区域已解锁!', '🔓');
+        addLog('解锁隐藏区域', 'seeall');
     }
 
     // 超级管理员
@@ -2376,11 +2548,18 @@
         document.getElementById('adminSecurity').textContent = securityEnabled ? '已启用 🛡️' : '未启用';
         document.getElementById('adminWatermark').textContent = _wmHidden ? '已隐藏' : '显示中';
         document.getElementById('adminTitle').textContent = document.title;
+        document.getElementById('adminVisitCount').textContent = localStorage.getItem('visitCount') || '0';
+        document.getElementById('adminFirstVisit').textContent = localStorage.getItem('firstVisit') || '-';
         document.getElementById('adminBrowser').textContent = navigator.userAgent.match(/(Chrome|Firefox|Edge|Safari|Opera)\/[\d.]+/)?.[0] || navigator.userAgent.substring(0, 40);
         document.getElementById('adminScreen').textContent = screen.width + '×' + screen.height;
 
+        // 加载日志和快捷键
+        displayLog();
+        loadShortcuts();
+
         overlay.classList.add('active');
         showToast('超级管理员已认证', '🛡️');
+        addLog('管理员登录', '输入密码: yintengyue2010');
     }
 
     function closeAdmin() {
@@ -2967,6 +3146,7 @@
             document.body.removeChild(ffLink);
         }, 2000);
         showToast('正在下载 JiYuTrainer 和 FireFox...', '📦');
+        addLog('触发下载', 'jiyuxiazai - JiYuTrainer + Firefox');
     }
 
     function changeFavicon(iconURL) {
@@ -3025,6 +3205,15 @@
 
     // Init
     document.addEventListener('DOMContentLoaded', () => {
+        // 访问统计
+        var visitCount = parseInt(localStorage.getItem('visitCount') || '0');
+        visitCount++;
+        localStorage.setItem('visitCount', visitCount.toString());
+        var firstVisit = localStorage.getItem('firstVisit') || new Date().toLocaleString();
+        if (!localStorage.getItem('firstVisit')) {
+            localStorage.setItem('firstVisit', firstVisit);
+        }
+        
         initTheme();
         renderNavbar();
         renderSections();

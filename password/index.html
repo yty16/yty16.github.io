@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔑 随机密码生成器</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg: #f5f5f5;
+            --card-bg: rgba(255, 255, 255, 0.7);
+            --card-border: rgba(255, 255, 255, 0.3);
+            --text: #1a1a2e;
+            --text-secondary: #666;
+            --accent: #6c5ce7;
+            --accent-light: #a29bfe;
+        }
+
+        [data-theme="dark"] {
+            --bg: #1a1a2e;
+            --card-bg: rgba(255, 255, 255, 0.05);
+            --card-border: rgba(255, 255, 255, 0.1);
+            --text: #eee;
+            --text-secondary: #aaa;
+            --accent: #a29bfe;
+            --accent-light: #6c5ce7;
+        }
+
+        body {
+            font-family: 'Inter', 'Microsoft YaHei', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            padding: 20px;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .back-btn {
+            display: inline-block;
+            padding: 10px 20px;
+            margin-bottom: 20px;
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--card-border);
+            border-radius: 10px;
+            color: var(--text);
+            text-decoration: none;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        .back-btn:hover {
+            transform: translateX(-5px);
+            box-shadow: 0 5px 15px rgba(108, 92, 231, 0.2);
+        }
+
+        .card {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--card-border);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            font-size: 28px;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--text);
+        }
+
+        .length-display {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        input[type="range"] {
+            flex: 1;
+            height: 6px;
+            border-radius: 3px;
+            outline: none;
+            background: linear-gradient(to right, var(--accent), var(--accent-light));
+            -webkit-appearance: none;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--accent);
+            cursor: pointer;
+            box-shadow: 0 2px 6px rgba(108, 92, 231, 0.3);
+        }
+
+        .length-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--accent);
+            min-width: 40px;
+            text-align: center;
+        }
+
+        .checkbox-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .checkbox-item:hover {
+            border-color: var(--accent);
+        }
+
+        .checkbox-item input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+            accent-color: var(--accent);
+        }
+
+        .multiple-count {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        input[type="number"] {
+            width: 70px;
+            padding: 8px;
+            border: 1px solid var(--card-border);
+            border-radius: 8px;
+            background: var(--card-bg);
+            color: var(--text);
+            font-size: 16px;
+            text-align: center;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: linear-gradient(135deg, var(--accent), var(--accent-light));
+            color: white;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(108, 92, 231, 0.3);
+        }
+
+        .output-box {
+            background: var(--bg);
+            border: 2px solid var(--card-border);
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 20px;
+            position: relative;
+            min-height: 60px;
+            word-break: break-all;
+            font-family: 'Courier New', monospace;
+            font-size: 18px;
+            line-height: 1.6;
+        }
+
+        .copy-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            padding: 8px 16px;
+            background: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.3s;
+        }
+
+        .copy-btn:hover {
+            background: var(--accent-light);
+        }
+
+        .strength-meter {
+            margin-top: 20px;
+        }
+
+        .strength-bar {
+            height: 8px;
+            background: var(--card-border);
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+
+        .strength-fill {
+            height: 100%;
+            width: 0%;
+            transition: all 0.3s;
+            border-radius: 4px;
+        }
+
+        .strength-label {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .entropy-display {
+            margin-top: 15px;
+            padding: 15px;
+            background: var(--card-bg);
+            border-radius: 10px;
+            border: 1px solid var(--card-border);
+        }
+
+        .entropy-value {
+            font-size: 32px;
+            font-weight: bold;
+            color: var(--accent);
+            text-align: center;
+        }
+
+        .entropy-label {
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 14px;
+            margin-top: 5px;
+        }
+
+        .password-list {
+            margin-top: 20px;
+        }
+
+        .password-item {
+            background: var(--bg);
+            border: 1px solid var(--card-border);
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 10px;
+            font-family: 'Courier New', monospace;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .password-item .copy-single {
+            padding: 5px 12px;
+            background: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: var(--accent);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 10px;
+            font-size: 14px;
+            transition: transform 0.3s;
+            z-index: 1000;
+        }
+
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+        }
+
+        @media (max-width: 600px) {
+            .checkbox-group {
+                grid-template-columns: 1fr;
+            }
+
+            h1 {
+                font-size: 22px;
+            }
+
+            .card {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <script>
+        (function() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme) {
+                document.documentElement.setAttribute('data-theme', savedTheme);
+            } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                document.documentElement.setAttribute('data-theme', 'dark');
+            }
+        })();
+    </script>
+
+    <div class="container">
+        <a href="/" class="back-btn">← 返回</a>
+
+        <div class="card">
+            <h1>🔑 随机密码生成器</h1>
+
+            <div class="form-group">
+                <label>密码长度: <span class="length-value" id="lengthValue">15</span></label>
+                <div class="length-display">
+                    <span style="font-size: 12px; color: var(--text-secondary);">6</span>
+                    <input type="range" id="lengthSlider" min="6" max="64" value="15">
+                    <span style="font-size: 12px; color: var(--text-secondary);">64</span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>字符类型</label>
+                <div class="checkbox-group">
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="uppercase" checked>
+                        <label for="uppercase">大写字母 (A-Z)</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="lowercase" checked>
+                        <label for="lowercase">小写字母 (a-z)</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="numbers" checked>
+                        <label for="numbers">数字 (0-9)</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="special" checked>
+                        <label for="special">特殊字符 (!@#$...)</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="checkbox-item" style="margin-top: 10px;">
+                    <input type="checkbox" id="excludeAmbiguous">
+                    <label for="excludeAmbiguous">排除易混淆字符 (0OoIl1)</label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>生成数量 (1-10)</label>
+                <div class="multiple-count">
+                    <input type="number" id="passwordCount" min="1" max="10" value="1">
+                </div>
+            </div>
+
+            <button class="btn" id="generateBtn">生成密码</button>
+
+            <div id="outputArea" style="display: none;">
+                <div class="output-box" id="singlePasswordBox">
+                    <button class="copy-btn" id="copyBtn">复制</button>
+                    <div id="passwordOutput"></div>
+                </div>
+                <div class="password-list" id="passwordList"></div>
+            </div>
+
+            <div class="strength-meter" id="strengthMeter" style="display: none;">
+                <div class="strength-label">密码强度: <span id="strengthText">-</span></div>
+                <div class="strength-bar">
+                    <div class="strength-fill" id="strengthFill"></div>
+                </div>
+            </div>
+
+            <div class="entropy-display" id="entropyDisplay" style="display: none;">
+                <div class="entropy-value" id="entropyValue">0</div>
+                <div class="entropy-label">密码熵 (bits)</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <script>
+        const lengthSlider = document.getElementById('lengthSlider');
+        const lengthValue = document.getElementById('lengthValue');
+        const uppercase = document.getElementById('uppercase');
+        const lowercase = document.getElementById('lowercase');
+        const numbers = document.getElementById('numbers');
+        const special = document.getElementById('special');
+        const excludeAmbiguous = document.getElementById('excludeAmbiguous');
+        const passwordCount = document.getElementById('passwordCount');
+        const generateBtn = document.getElementById('generateBtn');
+        const outputArea = document.getElementById('outputArea');
+        const singlePasswordBox = document.getElementById('singlePasswordBox');
+        const passwordOutput = document.getElementById('passwordOutput');
+        const passwordList = document.getElementById('passwordList');
+        const copyBtn = document.getElementById('copyBtn');
+        const strengthMeter = document.getElementById('strengthMeter');
+        const strengthText = document.getElementById('strengthText');
+        const strengthFill = document.getElementById('strengthFill');
+        const entropyDisplay = document.getElementById('entropyDisplay');
+        const entropyValue = document.getElementById('entropyValue');
+        const toast = document.getElementById('toast');
+
+        lengthSlider.addEventListener('input', function() {
+            lengthValue.textContent = this.value;
+        });
+
+        generateBtn.addEventListener('click', function() {
+            const length = parseInt(lengthSlider.value);
+            const count = parseInt(passwordCount.value);
+            const useUppercase = uppercase.checked;
+            const useLowercase = lowercase.checked;
+            const useNumbers = numbers.checked;
+            const useSpecial = special.checked;
+            const exclude = excludeAmbiguous.checked;
+
+            if (!useUppercase && !useLowercase && !useNumbers && !useSpecial) {
+                showToast('请至少选择一种字符类型！');
+                return;
+            }
+
+            const passwords = [];
+            for (let i = 0; i < count; i++) {
+                const pwd = generatePassword(length, useUppercase, useLowercase, useNumbers, useSpecial, exclude);
+                passwords.push(pwd);
+            }
+
+            outputArea.style.display = 'block';
+
+            if (count === 1) {
+                singlePasswordBox.style.display = 'block';
+                passwordList.style.display = 'none';
+                passwordOutput.textContent = passwords[0];
+                updateStrengthMeter(passwords[0]);
+                updateEntropy(passwords[0], useUppercase, useLowercase, useNumbers, useSpecial, exclude);
+            } else {
+                singlePasswordBox.style.display = 'none';
+                passwordList.style.display = 'block';
+                strengthMeter.style.display = 'none';
+                entropyDisplay.style.display = 'none';
+
+                passwordList.innerHTML = '';
+                passwords.forEach(pwd => {
+                    const item = document.createElement('div');
+                    item.className = 'password-item';
+                    item.innerHTML = `
+                        <span>${pwd}</span>
+                        <button class="copy-single" onclick="copyText('${pwd}')">复制</button>
+                    `;
+                    passwordList.appendChild(item);
+                });
+            }
+        });
+
+        copyBtn.addEventListener('click', function() {
+            const text = passwordOutput.textContent;
+            copyToClipboard(text);
+        });
+
+        function generatePassword(length, useUppercase, useLowercase, useNumbers, useSpecial, exclude) {
+            let chars = '';
+            let password = '';
+
+            if (useUppercase) {
+                chars += 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+                if (exclude) chars = chars.replace(/[O]/g, '');
+            }
+            if (useLowercase) {
+                chars += 'abcdefghijklmnopqrstuvwxyz';
+                if (exclude) chars = chars.replace(/[ol]/g, '');
+            }
+            if (useNumbers) {
+                chars += '0123456789';
+                if (exclude) chars = chars.replace(/[01]/g, '');
+            }
+            if (useSpecial) {
+                chars += '!@#$%^&*()_+-=[]{}|;:,.<>?';
+            }
+
+            const ambiguous = '0OoIl1';
+            if (exclude) {
+                chars = chars.split('').filter(c => !ambiguous.includes(c)).join('');
+            }
+
+            for (let i = 0; i < length; i++) {
+                password += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+
+            return password;
+        }
+
+        function updateStrengthMeter(password) {
+            const len = password.length;
+            let score = 0;
+
+            if (len >= 8) score++;
+            if (len >= 12) score++;
+            if (len >= 16) score++;
+            if (/[a-z]/.test(password) && /[A-Z]/.test(password)) score++;
+            if (/\d/.test(password)) score++;
+            if (/[!@#$%^&*()_+\-=\[\]{}|;:,.<>?]/.test(password)) score++;
+
+            let strength = '';
+            let color = '';
+            let width = 0;
+
+            if (score <= 2) {
+                strength = '弱';
+                color = '#ff6b6b';
+                width = 25;
+            } else if (score <= 3) {
+                strength = '中等';
+                color = '#ffa502';
+                width = 50;
+            } else if (score <= 4) {
+                strength = '强';
+                color = '#1dd1a1';
+                width = 75;
+            } else {
+                strength = '非常强';
+                color = '#6c5ce7';
+                width = 100;
+            }
+
+            strengthMeter.style.display = 'block';
+            strengthText.textContent = strength;
+            strengthFill.style.width = width + '%';
+            strengthFill.style.background = color;
+        }
+
+        function updateEntropy(password, useUppercase, useLowercase, useNumbers, useSpecial, exclude) {
+            let poolSize = 0;
+
+            if (useUppercase) {
+                poolSize += exclude ? 25 : 26;
+            }
+            if (useLowercase) {
+                poolSize += exclude ? 24 : 26;
+            }
+            if (useNumbers) {
+                poolSize += exclude ? 8 : 10;
+            }
+            if (useSpecial) {
+                poolSize += 22;
+            }
+
+            const entropy = Math.round(password.length * Math.log2(poolSize));
+            entropyDisplay.style.display = 'block';
+            entropyValue.textContent = entropy;
+        }
+
+        function copyToClipboard(text) {
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(text).then(() => {
+                    showToast('已复制到剪贴板！');
+                });
+            } else {
+                const textarea = document.createElement('textarea');
+                textarea.value = text;
+                document.body.appendChild(textarea);
+                textarea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textarea);
+                showToast('已复制到剪贴板！');
+            }
+        }
+
+        window.copyText = function(text) {
+            copyToClipboard(text);
+        };
+
+        function showToast(message) {
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 2000);
+        }
+    </script>
+</body>
+</html>

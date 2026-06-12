@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>在线倒计时</title>
+    <style>
+        /* CSS Variables for theming */
+        :root {
+            --bg-primary: #f5f7fa;
+            --bg-secondary: #e4e8f1;
+            --card-bg: rgba(255, 255, 255, 0.7);
+            --card-border: rgba(255, 255, 255, 0.5);
+            --text-primary: #2d3436;
+            --text-secondary: #636e72;
+            --accent: #6c5ce7;
+            --success: #2ecc71;
+            --danger: #e74c3c;
+            --warning: #f39c12;
+            --shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        [data-theme="dark"] {
+            --bg-primary: #1a1a2e;
+            --bg-secondary: #16213e;
+            --card-bg: rgba(30, 30, 60, 0.7);
+            --card-border: rgba(100, 100, 200, 0.2);
+            --text-primary: #e0e0e0;
+            --text-secondary: #a0a0b0;
+            --accent: #a29bfe;
+            --shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', 'Microsoft YaHei', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        /* Back button */
+        .back-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--card-border);
+            color: var(--text-primary);
+            padding: 10px 20px;
+            border-radius: 12px;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s;
+            box-shadow: var(--shadow);
+            z-index: 100;
+        }
+
+        .back-btn:hover {
+            transform: translateX(-5px);
+            box-shadow: 0 4px 20px rgba(108, 92, 231, 0.3);
+        }
+
+        /* Header */
+        .header {
+            margin-top: 60px;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent), #fd79a8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+        }
+
+        /* Glass card */
+        .glass-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--card-border);
+            border-radius: 24px;
+            padding: 40px;
+            box-shadow: var(--shadow);
+            width: 100%;
+            max-width: 600px;
+            margin-bottom: 20px;
+        }
+
+        /* Input section */
+        .input-section {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .time-inputs {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .input-group label {
+            font-size: 14px;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .input-group input {
+            width: 80px;
+            height: 60px;
+            border: 2px solid var(--card-border);
+            border-radius: 12px;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-size: 24px;
+            font-weight: 700;
+            text-align: center;
+            transition: all 0.3s;
+            font-family: 'Inter', monospace;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(108, 92, 231, 0.2);
+        }
+
+        /* Hide spinner buttons */
+        .input-group input::-webkit-outer-spin-button,
+        .input-group input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        .input-group input[type=number] {
+            -moz-appearance: textfield;
+        }
+
+        /* Preset buttons */
+        .preset-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .preset-btn {
+            padding: 10px 20px;
+            border: 2px solid var(--accent);
+            background: transparent;
+            color: var(--accent);
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .preset-btn:hover {
+            background: var(--accent);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(108, 92, 231, 0.4);
+        }
+
+        .preset-btn.active {
+            background: var(--accent);
+            color: white;
+        }
+
+        /* Progress ring */
+        .countdown-display {
+            position: relative;
+            width: 300px;
+            height: 300px;
+            margin: 30px auto;
+        }
+
+        .progress-ring {
+            transform: rotate(-90deg);
+            width: 300px;
+            height: 300px;
+        }
+
+        .progress-ring-bg {
+            fill: none;
+            stroke: var(--bg-secondary);
+            stroke-width: 8;
+        }
+
+        .progress-ring-fill {
+            fill: none;
+            stroke: var(--accent);
+            stroke-width: 8;
+            stroke-linecap: round;
+            transition: stroke-dashoffset 1s linear;
+            filter: drop-shadow(0 0 10px rgba(108, 92, 231, 0.5));
+        }
+
+        .time-display {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+        }
+
+        .time-text {
+            font-size: 3.5rem;
+            font-weight: 800;
+            font-family: 'Inter', monospace;
+            color: var(--text-primary);
+            letter-spacing: 2px;
+            transition: all 0.3s;
+        }
+
+        .time-text.flip {
+            animation: flipIn 0.6s ease;
+        }
+
+        @keyframes flipIn {
+            0% { transform: scaleY(0); opacity: 0; }
+            50% { transform: scaleY(1.1); }
+            100% { transform: scaleY(1); opacity: 1; }
+        }
+
+        .time-label {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-top: 5px;
+        }
+
+        /* Control buttons */
+        .controls {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 30px;
+        }
+
+        .control-btn {
+            padding: 15px 40px;
+            border: none;
+            border-radius: 16px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Inter', 'Microsoft YaHei', sans-serif;
+            min-width: 140px;
+        }
+
+        .btn-start {
+            background: linear-gradient(135deg, var(--accent), #a29bfe);
+            color: white;
+            box-shadow: 0 4px 20px rgba(108, 92, 231, 0.4);
+        }
+
+        .btn-start:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 25px rgba(108, 92, 231, 0.6);
+        }
+
+        .btn-pause {
+            background: linear-gradient(135deg, var(--warning), #fdcb6e);
+            color: white;
+            box-shadow: 0 4px 20px rgba(243, 156, 18, 0.4);
+        }
+
+        .btn-pause:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 25px rgba(243, 156, 18, 0.6);
+        }
+
+        .btn-reset {
+            background: linear-gradient(135deg, var(--danger), #fd79a8);
+            color: white;
+            box-shadow: 0 4px 20px rgba(231, 76, 60, 0.4);
+        }
+
+        .btn-reset:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 25px rgba(231, 76, 60, 0.6);
+        }
+
+        .control-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        /* Status text */
+        .status {
+            text-align: center;
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-top: 20px;
+            min-height: 30px;
+        }
+
+        .status.running {
+            color: var(--accent);
+        }
+
+        .status.paused {
+            color: var(--warning);
+        }
+
+        .status.finished {
+            color: var(--success);
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* Flash effect */
+        .flash-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--accent);
+            opacity: 0;
+            pointer-events: none;
+            z-index: 1000;
+        }
+
+        .flash-overlay.active {
+            animation: flash 0.5s ease;
+        }
+
+        @keyframes flash {
+            0%, 100% { opacity: 0; }
+            50% { opacity: 0.3; }
+        }
+
+        /* Toast notification */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 20px 30px;
+            box-shadow: var(--shadow);
+            z-index: 2000;
+            transition: transform 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+        }
+
+        .toast-icon {
+            font-size: 24px;
+        }
+
+        .toast-message {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        /* Responsive */
+        @media (max-width: 640px) {
+            .header h1 {
+                font-size: 1.8rem;
+            }
+
+            .glass-card {
+                padding: 25px;
+            }
+
+            .countdown-display {
+                width: 250px;
+                height: 250px;
+            }
+
+            .progress-ring {
+                width: 250px;
+                height: 250px;
+            }
+
+            .time-text {
+                font-size: 2.5rem;
+            }
+
+            .controls {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .control-btn {
+                width: 100%;
+                max-width: 250px;
+            }
+
+            .input-group input {
+                width: 70px;
+                height: 50px;
+                font-size: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Theme detection script - runs before render -->
+    <script>
+        (function() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme) {
+                document.documentElement.setAttribute('data-theme', savedTheme);
+            } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                document.documentElement.setAttribute('data-theme', 'dark');
+            } else {
+                document.documentElement.setAttribute('data-theme', 'light');
+            }
+        })();
+    </script>
+
+    <a href="/" class="back-btn">← 返回</a>
+
+    <div class="header">
+        <h1>⏰ 在线倒计时</h1>
+    </div>
+
+    <div class="glass-card input-section">
+        <div class="time-inputs">
+            <div class="input-group">
+                <label>时</label>
+                <input type="number" id="hours" min="0" max="99" value="0" placeholder="0">
+            </div>
+            <div class="input-group">
+                <label>分</label>
+                <input type="number" id="minutes" min="0" max="59" value="5" placeholder="0">
+            </div>
+            <div class="input-group">
+                <label>秒</label>
+                <input type="number" id="seconds" min="0" max="59" value="0" placeholder="0">
+            </div>
+        </div>
+
+        <div class="preset-buttons">
+            <button class="preset-btn" data-seconds="60">1分钟</button>
+            <button class="preset-btn" data-seconds="300">5分钟</button>
+            <button class="preset-btn" data-seconds="600">10分钟</button>
+            <button class="preset-btn" data-seconds="1500">25分钟</button>
+            <button class="preset-btn" data-seconds="1800">30分钟</button>
+            <button class="preset-btn" data-seconds="3600">1小时</button>
+        </div>
+    </div>
+
+    <div class="glass-card">
+        <div class="countdown-display">
+            <svg class="progress-ring" viewBox="0 0 300 300">
+                <circle class="progress-ring-bg" cx="150" cy="150" r="130"></circle>
+                <circle class="progress-ring-fill" id="progressCircle" cx="150" cy="150" r="130" 
+                        stroke-dasharray="816.8" stroke-dashoffset="0"></circle>
+            </svg>
+            <div class="time-display">
+                <div class="time-text" id="timeDisplay">05:00</div>
+                <div class="time-label">时 : 分 : 秒</div>
+            </div>
+        </div>
+
+        <div class="status" id="status">准备开始</div>
+
+        <div class="controls">
+            <button class="control-btn btn-start" id="startBtn">开始</button>
+            <button class="control-btn btn-reset" id="resetBtn">重置</button>
+        </div>
+    </div>
+
+    <div class="flash-overlay" id="flashOverlay"></div>
+
+    <div class="toast" id="toast">
+        <span class="toast-icon">⏰</span>
+        <span class="toast-message" id="toastMessage">时间到！</span>
+    </div>
+
+    <script>
+        // DOM elements
+        const hoursInput = document.getElementById('hours');
+        const minutesInput = document.getElementById('minutes');
+        const secondsInput = document.getElementById('seconds');
+        const timeDisplay = document.getElementById('timeDisplay');
+        const statusEl = document.getElementById('status');
+        const startBtn = document.getElementById('startBtn');
+        const resetBtn = document.getElementById('resetBtn');
+        const progressCircle = document.getElementById('progressCircle');
+        const flashOverlay = document.getElementById('flashOverlay');
+        const toast = document.getElementById('toast');
+        const toastMessage = document.getElementById('toastMessage');
+        const presetButtons = document.querySelectorAll('.preset-btn');
+
+        // Timer state
+        let totalSeconds = 0;
+        let remainingSeconds = 0;
+        let endTime = null;
+        let timerInterval = null;
+        let isRunning = false;
+        let isPaused = false;
+        let audioContext = null;
+
+        // Progress ring setup
+        const circumference = 2 * Math.PI * 130; // r=130
+        progressCircle.style.strokeDasharray = circumference;
+        progressCircle.style.strokeDashoffset = 0;
+
+        // Initialize display
+        updateDisplayFromInputs();
+
+        // Event listeners
+        hoursInput.addEventListener('input', () => {
+            if (!isRunning) updateDisplayFromInputs();
+        });
+        minutesInput.addEventListener('input', () => {
+            if (!isRunning) updateDisplayFromInputs();
+        });
+        secondsInput.addEventListener('input', () => {
+            if (!isRunning) updateDisplayFromInputs();
+        });
+
+        startBtn.addEventListener('click', toggleTimer);
+        resetBtn.addEventListener('click', resetTimer);
+
+        // Preset buttons
+        presetButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                if (isRunning) return;
+                const seconds = parseInt(btn.dataset.seconds);
+                setTimeFromSeconds(seconds);
+                presetButtons.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+            });
+        });
+
+        function updateDisplayFromInputs() {
+            const h = parseInt(hoursInput.value) || 0;
+            const m = parseInt(minutesInput.value) || 0;
+            const s = parseInt(secondsInput.value) || 0;
+            totalSeconds = h * 3600 + m * 60 + s;
+            remainingSeconds = totalSeconds;
+            updateTimeDisplay();
+            updateProgressRing();
+        }
+
+        function setTimeFromSeconds(seconds) {
+            totalSeconds = seconds;
+            remainingSeconds = seconds;
+            hoursInput.value = Math.floor(seconds / 3600);
+            minutesInput.value = Math.floor((seconds % 3600) / 60);
+            secondsInput.value = seconds % 60;
+            updateTimeDisplay();
+            updateProgressRing();
+        }
+
+        function updateTimeDisplay() {
+            const h = Math.floor(remainingSeconds / 3600);
+            const m = Math.floor((remainingSeconds % 3600) / 60);
+            const s = remainingSeconds % 60;
+            
+            let display;
+            if (h > 0) {
+                display = `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+            } else {
+                display = `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+            }
+            
+            timeDisplay.textContent = display;
+            timeDisplay.classList.remove('flip');
+            void timeDisplay.offsetWidth; // Trigger reflow
+            timeDisplay.classList.add('flip');
+        }
+
+        function updateProgressRing() {
+            if (totalSeconds === 0) {
+                progressCircle.style.strokeDashoffset = 0;
+                return;
+            }
+            const progress = remainingSeconds / totalSeconds;
+            const offset = circumference * (1 - progress);
+            progressCircle.style.strokeDashoffset = offset;
+        }
+
+        function toggleTimer() {
+            if (isRunning) {
+                pauseTimer();
+            } else {
+                startTimer();
+            }
+        }
+
+        function startTimer() {
+            if (isPaused) {
+                // Resume from pause
+                isPaused = false;
+            } else {
+                // Start fresh
+                updateDisplayFromInputs();
+                if (totalSeconds === 0) return;
+                endTime = Date.now() + remainingSeconds * 1000;
+            }
+
+            isRunning = true;
+            startBtn.textContent = '暂停';
+            startBtn.className = 'control-btn btn-pause';
+            statusEl.textContent = '倒计时进行中...';
+            statusEl.className = 'status running';
+            
+            // Disable inputs
+            hoursInput.disabled = true;
+            minutesInput.disabled = true;
+            secondsInput.disabled = true;
+            presetButtons.forEach(b => b.disabled = true);
+
+            timerInterval = setInterval(updateTimer, 100);
+        }
+
+        function pauseTimer() {
+            isRunning = false;
+            isPaused = true;
+            clearInterval(timerInterval);
+            
+            startBtn.textContent = '继续';
+            startBtn.className = 'control-btn btn-start';
+            statusEl.textContent = '已暂停';
+            statusEl.className = 'status paused';
+        }
+
+        function updateTimer() {
+            if (!isRunning) return;
+
+            const now = Date.now();
+            remainingSeconds = Math.max(0, Math.ceil((endTime - now) / 1000));
+            
+            updateTimeDisplay();
+            updateProgressRing();
+
+            if (remainingSeconds <= 0) {
+                finishTimer();
+            }
+        }
+
+        function finishTimer() {
+            isRunning = false;
+            clearInterval(timerInterval);
+            
+            statusEl.textContent = '时间到！';
+            statusEl.className = 'status finished';
+            
+            startBtn.textContent = '开始';
+            startBtn.className = 'control-btn btn-start';
+            startBtn.disabled = true;
+            
+            // Re-enable inputs
+            hoursInput.disabled = false;
+            minutesInput.disabled = false;
+            secondsInput.disabled = false;
+            presetButtons.forEach(b => b.disabled = false);
+
+            // Play sound
+            playAlertSound();
+            
+            // Flash effect
+            triggerFlash();
+            
+            // Show toast
+            showToast('⏰ 时间到！倒计时结束');
+        }
+
+        function resetTimer() {
+            isRunning = false;
+            isPaused = false;
+            clearInterval(timerInterval);
+            
+            startBtn.textContent = '开始';
+            startBtn.className = 'control-btn btn-start';
+            startBtn.disabled = false;
+            
+            statusEl.textContent = '准备开始';
+            statusEl.className = 'status';
+            
+            // Re-enable inputs
+            hoursInput.disabled = false;
+            minutesInput.disabled = false;
+            secondsInput.disabled = false;
+            presetButtons.forEach(b => {
+                b.disabled = false;
+                b.classList.remove('active');
+            });
+
+            updateDisplayFromInputs();
+        }
+
+        function playAlertSound() {
+            try {
+                const ctx = new (window.AudioContext || window.webkitAudioContext)();
+                
+                // Play a sequence of beeps
+                const beepPattern = [800, 600, 800, 600, 800];
+                let time = ctx.currentTime;
+                
+                beepPattern.forEach((freq, i) => {
+                    const oscillator = ctx.createOscillator();
+                    const gainNode = ctx.createGain();
+                    
+                    oscillator.connect(gainNode);
+                    gainNode.connect(ctx.destination);
+                    
+                    oscillator.frequency.value = freq;
+                    oscillator.type = 'sine';
+                    
+                    gainNode.gain.setValueAtTime(0.3, time);
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, time + 0.2);
+                    
+                    oscillator.start(time);
+                    oscillator.stop(time + 0.2);
+                    
+                    time += 0.3;
+                });
+            } catch (e) {
+                console.log('Audio playback failed:', e);
+            }
+        }
+
+        function triggerFlash() {
+            flashOverlay.classList.remove('active');
+            void flashOverlay.offsetWidth; // Trigger reflow
+            flashOverlay.classList.add('active');
+            
+            setTimeout(() => {
+                flashOverlay.classList.remove('active');
+            }, 2000);
+        }
+
+        function showToast(message) {
+            toastMessage.textContent = message;
+            toast.classList.add('show');
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 4000);
+        }
+
+        // Handle page visibility changes to keep timer accurate
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden) {
+                // Page is hidden, timer continues via endTime
+            } else {
+                // Page is visible again, update display immediately
+                if (isRunning) {
+                    updateTimer();
+                }
+            }
+        });
+    </script>
+</body>
+</html>

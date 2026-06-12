@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>每日一言</title>
+<script>
+(function(){
+  var t = localStorage.getItem('theme');
+  var m = window.matchMedia('(prefers-color-scheme: dark)');
+  if (t === 'dark' || (!t && m.matches)) {
+    document.documentElement.setAttribute('data-theme', 'dark');
+  }
+})();
+</script>
+<style>
+:root {
+  --bg: #f0f2f5;
+  --card-bg: rgba(255,255,255,0.72);
+  --card-border: rgba(255,255,255,0.55);
+  --text: #1a1a2e;
+  --text-secondary: #555;
+  --accent: #6c5ce7;
+  --accent-hover: #5a4bd1;
+  --shadow: 0 8px 32px rgba(0,0,0,0.08);
+  --btn-bg: rgba(0,0,0,0.04);
+  --btn-hover: rgba(0,0,0,0.08);
+  --toast-bg: #1a1a2e;
+  --toast-text: #fff;
+  --divider: rgba(0,0,0,0.08);
+  --tag-bg: rgba(108,92,231,0.1);
+  --gradient-1: rgba(108,92,231,0.06);
+  --gradient-2: rgba(253,121,168,0.05);
+  --gradient-3: rgba(0,206,201,0.04);
+  --deco-opacity: 0.4;
+}
+[data-theme="dark"] {
+  --bg: #0d1117;
+  --card-bg: rgba(22,27,34,0.78);
+  --card-border: rgba(255,255,255,0.1);
+  --text: #e6edf3;
+  --text-secondary: #8b949e;
+  --accent: #a29bfe;
+  --accent-hover: #b8b2ff;
+  --shadow: 0 8px 32px rgba(0,0,0,0.3);
+  --btn-bg: rgba(255,255,255,0.06);
+  --btn-hover: rgba(255,255,255,0.12);
+  --toast-bg: #e6edf3;
+  --toast-text: #0d1117;
+  --divider: rgba(255,255,255,0.08);
+  --tag-bg: rgba(162,155,254,0.15);
+  --gradient-1: rgba(162,155,254,0.08);
+  --gradient-2: rgba(253,121,168,0.06);
+  --gradient-3: rgba(0,206,201,0.05);
+  --deco-opacity: 0.15;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  font-family: 'Inter', 'Microsoft YaHei', 'PingFang SC', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow-x: hidden;
+  position: relative;
+  transition: background 0.4s, color 0.4s;
+}
+
+/* Background decorative elements */
+.bg-deco {
+  position: fixed;
+  border-radius: 50%;
+  filter: blur(120px);
+  pointer-events: none;
+  z-index: 0;
+  opacity: var(--deco-opacity);
+  transition: opacity 0.4s;
+}
+.bg-deco-1 {
+  width: 500px; height: 500px;
+  background: var(--gradient-1);
+  top: -150px; right: -150px;
+}
+.bg-deco-2 {
+  width: 400px; height: 400px;
+  background: var(--gradient-2);
+  bottom: -100px; left: -100px;
+}
+.bg-deco-3 {
+  width: 300px; height: 300px;
+  background: var(--gradient-3);
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* Header */
+.header {
+  width: 100%;
+  max-width: 720px;
+  padding: 20px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+  z-index: 10;
+}
+.back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--text-secondary);
+  text-decoration: none;
+  font-size: 14px;
+  padding: 8px 14px;
+  border-radius: 10px;
+  background: var(--btn-bg);
+  transition: all 0.25s;
+  font-family: inherit;
+}
+.back-btn:hover {
+  background: var(--btn-hover);
+  color: var(--text);
+}
+.back-btn svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+.theme-toggle {
+  width: 40px; height: 40px;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  background: var(--btn-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-secondary);
+  transition: all 0.25s;
+  font-size: 18px;
+}
+.theme-toggle:hover { background: var(--btn-hover); color: var(--text); }
+
+/* Main */
+.main {
+  flex: 1;
+  width: 100%;
+  max-width: 720px;
+  padding: 0 24px 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  z-index: 10;
+}
+
+.title {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 6px;
+  text-align: center;
+  letter-spacing: 0.02em;
+}
+.date-text {
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin-bottom: 32px;
+  text-align: center;
+}
+
+/* Quote Card */
+.quote-card {
+  width: 100%;
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 20px;
+  padding: 36px 32px;
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  position: relative;
+  overflow: hidden;
+  transition: all 0.5s;
+  min-height: 180px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.quote-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 4px; height: 60px;
+  background: var(--accent);
+  border-radius: 0 4px 4px 0;
+  margin: 32px 0;
+  opacity: 0.6;
+}
+.quote-inner {
+  position: relative;
+  z-index: 2;
+  transition: opacity 0.35s, transform 0.35s;
+}
+.quote-inner.fade-out {
+  opacity: 0;
+  transform: translateY(12px);
+}
+.quote-inner.fade-in {
+  opacity: 1;
+  transform: translateY(0);
+}
+.quote-text {
+  font-size: 22px;
+  line-height: 1.7;
+  font-weight: 500;
+  padding-left: 20px;
+  margin-bottom: 16px;
+  letter-spacing: 0.03em;
+}
+.quote-attribution {
+  font-size: 14px;
+  color: var(--text-secondary);
+  padding-left: 20px;
+  font-style: normal;
+}
+.quote-category {
+  display: inline-block;
+  font-size: 12px;
+  padding: 4px 10px;
+  border-radius: 20px;
+  margin-left: 12px;
+  background: var(--tag-bg);
+  color: var(--accent);
+  font-weight: 500;
+}
+.quote-mark {
+  position: absolute;
+  font-size: 120px;
+  color: var(--accent);
+  opacity: 0.06;
+  top: -20px;
+  right: 10px;
+  line-height: 1;
+  pointer-events: none;
+  user-select: none;
+  font-family: Georgia, serif;
+}
+
+/* Actions */
+.actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 24px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 18px;
+  border: none;
+  border-radius: 12px;
+  font-size: 14px;
+  font-family: inherit;
+  cursor: pointer;
+  background: var(--btn-bg);
+  color: var(--text);
+  transition: all 0.25s;
+  font-weight: 500;
+}
+.btn:hover { background: var(--btn-hover); transform: translateY(-1px); }
+.btn:active { transform: translateY(0); }
+.btn-accent {
+  background: var(--accent);
+  color: #fff;
+}
+.btn-accent:hover { background: var(--accent-hover); color: #fff; }
+.btn svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+/* Favorites section */
+.fav-section {
+  width: 100%;
+  margin-top: 32px;
+}
+.fav-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+.fav-title {
+  font-size: 16px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.fav-count {
+  font-size: 12px;
+  color: var(--text-secondary);
+  font-weight: 400;
+}
+.fav-toggle {
+  background: none;
+  border: none;
+  color: var(--accent);
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 13px;
+  transition: opacity 0.25s;
+  padding: 4px 8px;
+  border-radius: 6px;
+}
+.fav-toggle:hover { opacity: 0.7; background: var(--btn-bg); }
+
+.fav-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 400px;
+  overflow-y: auto;
+}
+.fav-list::-webkit-scrollbar { width: 4px; }
+.fav-list::-webkit-scrollbar-thumb { background: var(--divider); border-radius: 4px; }
+.fav-item {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 12px;
+  padding: 14px 16px;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  transition: all 0.3s;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+.fav-item:hover { border-color: var(--accent); }
+.fav-item-text {
+  flex: 1;
+  font-size: 14px;
+  line-height: 1.6;
+}
+.fav-item-meta {
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-top: 4px;
+}
+.fav-remove {
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  font-size: 16px;
+  padding: 4px;
+  border-radius: 4px;
+  transition: all 0.2s;
+  flex-shrink: 0;
+  line-height: 1;
+}
+.fav-remove:hover { color: #e74c3c; background: rgba(231,76,60,0.1); }
+.fav-empty {
+  text-align: center;
+  color: var(--text-secondary);
+  padding: 32px;
+  font-size: 14px;
+}
+
+/* Toast */
+.toast {
+  position: fixed;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%) translateY(100px);
+  background: var(--toast-bg);
+  color: var(--toast-text);
+  padding: 12px 24px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 500;
+  z-index: 1000;
+  transition: transform 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  pointer-events: none;
+  font-family: inherit;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+}
+.toast.show { transform: translateX(-50%) translateY(0); }
+
+/* Responsive */
+@media (max-width: 480px) {
+  .quote-card { padding: 24px 20px; }
+  .quote-card::before { margin: 20px 0; height: 44px; }
+  .quote-text { font-size: 18px; padding-left: 14px; }
+  .quote-attribution { padding-left: 14px; font-size: 13px; }
+  .quote-mark { font-size: 80px; top: -10px; right: 4px; }
+  .actions { gap: 8px; }
+  .btn { padding: 8px 14px; font-size: 13px; }
+  .title { font-size: 24px; }
+}
+</style>
+</head>
+<body>
+
+<div class="bg-deco bg-deco-1"></div>
+<div class="bg-deco bg-deco-2"></div>
+<div class="bg-deco bg-deco-3"></div>
+
+<header class="header">
+  <a href="/" class="back-btn">
+    <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+    返回
+  </a>
+  <button class="theme-toggle" id="themeToggle" aria-label="切换主题">🌙</button>
+</header>
+
+<main class="main">
+  <h1 class="title">📖 每日一言</h1>
+  <p class="date-text" id="dateDisplay"></p>
+
+  <div class="quote-card" id="quoteCard">
+    <div class="quote-mark">"</div>
+    <div class="quote-inner fade-in" id="quoteInner">
+      <p class="quote-text" id="quoteText"></p>
+      <p class="quote-attribution" id="quoteAttr"></p>
+    </div>
+  </div>
+
+  <div class="actions">
+    <button class="btn btn-accent" id="btnRefresh">🔄 换一条</button>
+    <button class="btn" id="btnFav">⭐ 收藏</button>
+    <button class="btn" id="btnCopy">📋 复制</button>
+    <button class="btn" id="btnShare">📤 分享</button>
+  </div>
+
+  <section class="fav-section" id="favSection">
+    <div class="fav-header">
+      <div class="fav-title">
+        ⭐ 我的收藏 <span class="fav-count" id="favCount"></span>
+      </div>
+      <button class="fav-toggle" id="favToggle">展开</button>
+    </div>
+    <div class="fav-list" id="favList" style="display:none"></div>
+    <div class="fav-empty" id="favEmpty" style="display:none">还没有收藏，点击⭐收藏喜欢的句子吧</div>
+  </section>
+</main>
+
+<div class="toast" id="toast"></div>
+
+<script>
+(function(){
+  // ===== QUOTES COLLECTION =====
+  var quotes = [
+    // 古典文学
+    { text: '天行健，君子以自强不息。', author: '《周易》', category: '古典' },
+    { text: '路漫漫其修远兮，吾将上下而求索。', author: '屈原《离骚》', category: '古典' },
+    { text: '己所不欲，勿施于人。', author: '孔子《论语》', category: '古典' },
+    { text: '三人行，必有我师焉。', author: '孔子《论语》', category: '古典' },
+    { text: '学而不思则罔，思而不学则殆。', author: '孔子《论语》', category: '古典' },
+    { text: '知之者不如好之者，好之者不如乐之者。', author: '孔子《论语》', category: '古典' },
+    { text: '老吾老以及人之老，幼吾幼以及人之幼。', author: '孟子', category: '古典' },
+    { text: '生于忧患，死于安乐。', author: '孟子', category: '古典' },
+    { text: '穷则独善其身，达则兼济天下。', author: '孟子', category: '古典' },
+    { text: '不积跬步，无以至千里；不积小流，无以成江海。', author: '荀子《劝学》', category: '古典' },
+    { text: '锲而不舍，金石可镂。', author: '荀子《劝学》', category: '古典' },
+    { text: '海内存知己，天涯若比邻。', author: '王勃《送杜少府之任蜀州》', category: '古典' },
+    { text: '长风破浪会有时，直挂云帆济沧海。', author: '李白《行路难》', category: '古典' },
+    { text: '天生我材必有用，千金散尽还复来。', author: '李白《将进酒》', category: '古典' },
+
+    // 现代励志
+    { text: '世界上只有一种真正的英雄主义，那就是认清生活真相之后依然热爱生活。', author: '罗曼·罗兰', category: '励志' },
+    { text: '人生就像一盒巧克力，你永远不知道下一颗是什么味道。', author: '《阿甘正传》', category: '电影' },
+    { text: '星星之火，可以燎原。', author: '毛泽东', category: '励志' },
+    { text: '世界以痛吻我，要我报之以歌。', author: '泰戈尔', category: '励志' },
+    { text: '生活不止眼前的苟且，还有诗和远方的田野。', author: '高晓松', category: '励志' },
+    { text: '你的问题主要在于读书不多而想得太多。', author: '杨绛', category: '励志' },
+    { text: '走自己的路，让别人说去吧。', author: '但丁', category: '励志' },
+    { text: '每一个不曾起舞的日子，都是对生命的辜负。', author: '尼采', category: '哲学' },
+    { text: '你若爱，生活哪里都可爱。', author: '丰子恺', category: '励志' },
+    { text: '要有最朴素的生活和最遥远的梦想，即使明天天寒地冻，路远马亡。', author: '七堇年', category: '励志' },
+    { text: '心之所向，素履以往；生如逆旅，一苇以航。', author: '七堇年《尘曲》', category: '励志' },
+
+    // 趣味/幽默
+    { text: '在哪里跌倒，就在哪里烧烤。', author: '佚名', category: '趣味' },
+    { text: '没心没肺，才能活着不累。', author: '佚名', category: '趣味' },
+    { text: '今天解决不了的事情，也别着急，因为明天可能还是解决不了。', author: '佚名', category: '趣味' },
+    { text: '人生就像愤怒的小鸟，当你失败的时候总有几只猪在笑。', author: '佚名', category: '趣味' },
+    { text: '如果努力就能成功，那世界上就没有搬砖的了。', author: '佚名', category: '趣味' },
+    { text: '世上无难事，只要肯放弃。', author: '佚名', category: '趣味' },
+    { text: '人生最大的遗憾，是人无法同时拥有青春和对青春的感受。', author: '佚名', category: '趣味' },
+
+    // 电影台词
+    { text: '念念不忘，必有回响。', author: '《一代宗师》', category: '电影' },
+    { text: '你保护世界，我保护你。', author: '《少年的你》', category: '电影' },
+    { text: '做人如果没有梦想，跟咸鱼有什么分别？', author: '《少林足球》', category: '电影' },
+    { text: '说好的一辈子，少一年，一个月，一天，一个时辰，都不算一辈子。', author: '《霸王别姬》', category: '电影' },
+    { text: '有些鸟是关不住的，它们的羽毛太鲜亮了。', author: '《肖申克的救赎》', category: '电影' },
+    { text: '人生总是那么痛苦吗？还是只有小时候是这样？——总是如此。', author: '《这个杀手不太冷》', category: '电影' },
+    { text: '希望是美好的，也许是人间至善，而美好的事物永不消逝。', author: '《肖申克的救赎》', category: '电影' },
+
+    // 哲学
+    { text: '存在即合理。', author: '黑格尔', category: '哲学' },
+    { text: '我思故我在。', author: '笛卡尔', category: '哲学' },
+    { text: '认识你自己。', author: '苏格拉底', category: '哲学' },
+    { text: '人的本质是一切社会关系的总和。', author: '马克思', category: '哲学' },
+    { text: '唯大英雄能本色，是真名士自风流。', author: '《菜根谭》', category: '哲学' },
+    { text: '菩提本无树，明镜亦非台。本来无一物，何处惹尘埃。', author: '惠能', category: '哲学' },
+    { text: '万物皆有裂痕，那是光照进来的地方。', author: '莱昂纳德·科恩', category: '哲学' },
+    { text: '人生如逆旅，我亦是行人。', author: '苏轼', category: '哲学' },
+
+    // 更多经典
+    { text: '山重水复疑无路，柳暗花明又一村。', author: '陆游', category: '古典' },
+    { text: '不以物喜，不以己悲。', author: '范仲淹《岳阳楼记》', category: '古典' },
+    { text: '宝剑锋从磨砺出，梅花香自苦寒来。', author: '《警世贤文》', category: '古典' },
+    { text: '人生得意须尽欢，莫使金樽空对月。', author: '李白', category: '古典' },
+    { text: '人生若只如初见，何事秋风悲画扇。', author: '纳兰性德', category: '古典' },
+    { text: '宠辱不惊，看庭前花开花落；去留无意，望天上云卷云舒。', author: '《菜根谭》', category: '古典' },
+    { text: '行到水穷处，坐看云起时。', author: '王维', category: '古典' },
+    { text: '此情可待成追忆，只是当时已惘然。', author: '李商隐', category: '古典' },
+    { text: '落霞与孤鹜齐飞，秋水共长天一色。', author: '王勃', category: '古典' },
+    { text: '但愿人长久，千里共婵娟。', author: '苏轼', category: '古典' },
+  ];
+
+  // ===== SEEDED RANDOM =====
+  function seededRandom(seed) {
+    var x = Math.sin(seed) * 10000;
+    return x - Math.floor(x);
+  }
+
+  function getDateSeed() {
+    var d = new Date();
+    return d.getFullYear() * 10000 + (d.getMonth()+1) * 100 + d.getDate();
+  }
+
+  function getDailyQuote() {
+    var seed = getDateSeed();
+    var idx = Math.floor(seededRandom(seed) * quotes.length);
+    return quotes[idx];
+  }
+
+  function getRandomQuote() {
+    return quotes[Math.floor(Math.random() * quotes.length)];
+  }
+
+  // ===== DOM REFS =====
+  var elQuoteText = document.getElementById('quoteText');
+  var elQuoteAttr = document.getElementById('quoteAttr');
+  var elQuoteInner = document.getElementById('quoteInner');
+  var elDateDisplay = document.getElementById('dateDisplay');
+  var elFavList = document.getElementById('favList');
+  var elFavCount = document.getElementById('favCount');
+  var elFavToggle = document.getElementById('favToggle');
+  var elFavEmpty = document.getElementById('favEmpty');
+  var elToast = document.getElementById('toast');
+  var elThemeToggle = document.getElementById('themeToggle');
+
+  var currentQuote = null;
+  var favsShown = false;
+  var toastTimer = null;
+
+  // ===== DATE DISPLAY =====
+  function updateDate() {
+    var d = new Date();
+    var days = ['星期日','星期一','星期二','星期三','星期四','星期五','星期六'];
+    var str = d.getFullYear() + '年' + (d.getMonth()+1) + '月' + d.getDate() + '日 ' + days[d.getDay()];
+    elDateDisplay.textContent = str;
+  }
+
+  // ===== DISPLAY QUOTE =====
+  function displayQuote(q, animate) {
+    currentQuote = q;
+    if (animate) {
+      elQuoteInner.classList.add('fade-out');
+      elQuoteInner.classList.remove('fade-in');
+      setTimeout(function(){
+        elQuoteText.textContent = q.text;
+        elQuoteAttr.innerHTML = '—— ' + q.author + ' <span class="quote-category">' + q.category + '</span>';
+        elQuoteInner.classList.remove('fade-out');
+        elQuoteInner.classList.add('fade-in');
+      }, 350);
+    } else {
+      elQuoteText.textContent = q.text;
+      elQuoteAttr.innerHTML = '—— ' + q.author + ' <span class="quote-category">' + q.category + '</span>';
+    }
+    updateFavBtn();
+  }
+
+  // ===== FAVORITES =====
+  function getFavs() {
+    try {
+      var raw = localStorage.getItem('dailyquote_favs');
+      return raw ? JSON.parse(raw) : [];
+    } catch(e) { return []; }
+  }
+
+  function saveFavs(favs) {
+    localStorage.setItem('dailyquote_favs', JSON.stringify(favs));
+  }
+
+  function isFaved(q) {
+    var favs = getFavs();
+    return favs.some(function(f){ return f.text === q.text; });
+  }
+
+  function toggleFav() {
+    if (!currentQuote) return;
+    var favs = getFavs();
+    var idx = -1;
+    for (var i = 0; i < favs.length; i++) {
+      if (favs[i].text === currentQuote.text) { idx = i; break; }
+    }
+    if (idx >= 0) {
+      favs.splice(idx, 1);
+      showToast('已取消收藏');
+    } else {
+      favs.unshift({ text: currentQuote.text, author: currentQuote.author, category: currentQuote.category, time: Date.now() });
+      showToast('已收藏 ⭐');
+    }
+    saveFavs(favs);
+    updateFavBtn();
+    renderFavs();
+  }
+
+  function removeFav(idx) {
+    var favs = getFavs();
+    favs.splice(idx, 1);
+    saveFavs(favs);
+    renderFavs();
+    updateFavBtn();
+    showToast('已移除');
+  }
+
+  function updateFavBtn() {
+    var btn = document.getElementById('btnFav');
+    if (currentQuote && isFaved(currentQuote)) {
+      btn.innerHTML = '⭐ 已收藏';
+    } else {
+      btn.innerHTML = '⭐ 收藏';
+    }
+  }
+
+  function renderFavs() {
+    var favs = getFavs();
+    elFavCount.textContent = favs.length > 0 ? '(' + favs.length + '条)' : '';
+    if (favs.length === 0) {
+      elFavList.style.display = 'none';
+      elFavEmpty.style.display = 'block';
+      elFavToggle.textContent = '展开';
+      favsShown = false;
+      return;
+    }
+    elFavEmpty.style.display = 'none';
+    var html = '';
+    for (var i = 0; i < favs.length; i++) {
+      html += '<div class="fav-item">' +
+        '<div class="fav-item-text">' +
+          '<div>' + escHtml(favs[i].text) + '</div>' +
+          '<div class="fav-item-meta">—— ' + escHtml(favs[i].author) + ' · ' + escHtml(favs[i].category) + '</div>' +
+        '</div>' +
+        '<button class="fav-remove" data-idx="' + i + '" title="移除">✕</button>' +
+      '</div>';
+    }
+    elFavList.innerHTML = html;
+    if (favsShown) {
+      elFavList.style.display = 'flex';
+    }
+  }
+
+  function escHtml(s) {
+    return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  // ===== TOAST =====
+  function showToast(msg) {
+    if (toastTimer) clearTimeout(toastTimer);
+    elToast.textContent = msg;
+    elToast.classList.add('show');
+    toastTimer = setTimeout(function(){
+      elToast.classList.remove('show');
+    }, 2000);
+  }
+
+  // ===== COPY =====
+  function copyQuote() {
+    if (!currentQuote) return;
+    var txt = '「' + currentQuote.text + '」—— ' + currentQuote.author;
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(txt).then(function(){
+        showToast('已复制到剪贴板 📋');
+      });
+    } else {
+      // Fallback
+      var ta = document.createElement('textarea');
+      ta.value = txt;
+      ta.style.position = 'fixed';
+      ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+      showToast('已复制到剪贴板 📋');
+    }
+  }
+
+  // ===== SHARE =====
+  function shareQuote() {
+    if (!currentQuote) return;
+    var txt = '📖 每日一言\n\n「' + currentQuote.text + '」\n—— ' + currentQuote.author + '\n\n' + elDateDisplay.textContent + '\n来自 每日一言';
+    if (navigator.share) {
+      navigator.share({ title: '每日一言', text: txt });
+    } else if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(txt).then(function(){
+        showToast('分享文本已复制到剪贴板 📤');
+      });
+    } else {
+      var ta = document.createElement('textarea');
+      ta.value = txt;
+      ta.style.position = 'fixed';
+      ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+      showToast('分享文本已复制到剪贴板 📤');
+    }
+  }
+
+  // ===== FAV TOGGLE =====
+  function toggleFavList() {
+    if (favsShown) {
+      elFavList.style.display = 'none';
+      elFavToggle.textContent = '展开';
+      favsShown = false;
+    } else {
+      renderFavs();
+      elFavList.style.display = 'flex';
+      elFavToggle.textContent = '收起';
+      favsShown = true;
+    }
+  }
+
+  // ===== THEME =====
+  function setTheme(t) {
+    document.documentElement.setAttribute('data-theme', t);
+    localStorage.setItem('theme', t);
+    updateThemeIcon();
+  }
+
+  function updateThemeIcon() {
+    var t = document.documentElement.getAttribute('data-theme');
+    elThemeToggle.textContent = t === 'dark' ? '☀️' : '🌙';
+  }
+
+  function toggleTheme() {
+    var cur = document.documentElement.getAttribute('data-theme');
+    setTheme(cur === 'dark' ? 'light' : 'dark');
+  }
+
+  // ===== EVENT BINDINGS =====
+  document.getElementById('btnRefresh').addEventListener('click', function(){
+    var q = getRandomQuote();
+    while (q.text === currentQuote.text && quotes.length > 1) {
+      q = getRandomQuote();
+    }
+    displayQuote(q, true);
+  });
+
+  document.getElementById('btnFav').addEventListener('click', toggleFav);
+  document.getElementById('btnCopy').addEventListener('click', copyQuote);
+  document.getElementById('btnShare').addEventListener('click', shareQuote);
+  elFavToggle.addEventListener('click', toggleFavList);
+  elThemeToggle.addEventListener('click', toggleTheme);
+
+  // Fav remove delegation
+  elFavList.addEventListener('click', function(e){
+    var btn = e.target.closest('.fav-remove');
+    if (btn) {
+      var idx = parseInt(btn.getAttribute('data-idx'), 10);
+      if (!isNaN(idx)) removeFav(idx);
+    }
+  });
+
+  // ===== INIT =====
+  updateDate();
+  updateThemeIcon();
+  displayQuote(getDailyQuote(), false);
+  renderFavs();
+})();
+</script>
+
+</body>
+</html>

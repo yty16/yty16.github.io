@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>&#127817; 合成大西瓜</title>
+<script>
+(function() {
+  var theme = localStorage.getItem('theme');
+  if (!theme) {
+    theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  }
+  document.documentElement.setAttribute('data-theme', theme);
+})();
+</script>
+<style>
+:root {
+  --bg: #f0f0f5;
+  --card-bg: rgba(255,255,255,0.85);
+  --card-border: rgba(255,255,255,0.3);
+  --text: #2d2d2d;
+  --text-secondary: #666;
+  --accent: #6c5ce7;
+  --success: #2ecc71;
+  --danger: #e74c3c;
+}
+[data-theme="dark"] {
+  --bg: #1a1a2e;
+  --card-bg: rgba(30,30,50,0.85);
+  --card-border: rgba(255,255,255,0.08);
+  --text: #e0e0e0;
+  --text-secondary: #a0a0a0;
+  --accent: #a29bfe;
+  --success: #2ecc71;
+  --danger: #e74c3c;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  font-family: 'Inter', 'Microsoft YaHei', sans-serif;
+  background: var(--bg);
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: var(--text);
+  transition: background 0.3s, color 0.3s;
+  overflow: hidden;
+}
+.container {
+  background: var(--card-bg);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--card-border);
+  border-radius: 24px;
+  padding: 20px 24px;
+  box-shadow: 0 8px 40px rgba(0,0,0,0.1);
+  text-align: center;
+  max-width: 440px;
+  width: 95%;
+}
+.back-btn {
+  display: inline-block;
+  text-decoration: none;
+  color: var(--accent);
+  font-size: 14px;
+  margin-bottom: 6px;
+  padding: 6px 16px;
+  border-radius: 8px;
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  transition: all 0.2s;
+}
+.back-btn:hover { opacity: 0.8; }
+h1 { font-size: 26px; margin-bottom: 2px; font-weight: 700; }
+.top-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 6px 0 4px;
+  font-size: 15px;
+  color: var(--text-secondary);
+}
+.top-bar span { font-weight: 600; color: var(--accent); }
+.next-preview {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+}
+.next-preview canvas {
+  border-radius: 8px;
+  border: 1px solid var(--card-border);
+}
+canvas#gameCanvas {
+  border-radius: 12px;
+  display: block;
+  margin: 0 auto;
+  cursor: pointer;
+}
+.overlay {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%,-50%);
+  text-align: center;
+  pointer-events: none;
+  background: var(--card-bg);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--card-border);
+  border-radius: 16px;
+  padding: 24px 32px;
+}
+.overlay h2 { font-size: 28px; margin-bottom: 8px; color: var(--text); }
+.overlay p { font-size: 15px; color: var(--text-secondary); margin-bottom: 12px; }
+.overlay button {
+  pointer-events: auto;
+  padding: 10px 28px;
+  font-size: 16px;
+  border: none;
+  border-radius: 10px;
+  background: var(--accent);
+  color: #fff;
+  cursor: pointer;
+  font-family: inherit;
+  transition: transform 0.15s;
+}
+.overlay button:hover { transform: scale(1.05); }
+.canvas-wrapper {
+  position: relative;
+  display: inline-block;
+}
+.hint {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin-top: 6px;
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <a href="/" class="back-btn">&larr; 返回</a>
+  <h1>&#127817; 合成大西瓜</h1>
+  <div class="top-bar">
+    <div>得分: <span id="score">0</span></div>
+    <div class="next-preview">下一个: <canvas id="previewCanvas" width="36" height="36"></canvas></div>
+    <div>最高分: <span id="highScore">0</span></div>
+  </div>
+  <div class="canvas-wrapper">
+    <canvas id="gameCanvas"></canvas>
+    <div class="overlay" id="overlay">
+      <h2 id="overlayTitle">&#127817; 合成大西瓜</h2>
+      <p id="overlayMsg">点击画布投放水果</p>
+      <button id="overlayBtn" onclick="startGame()">开始游戏</button>
+    </div>
+  </div>
+  <div class="hint">点击画布释放水果 &#8226; 相同水果合成更高等级</div>
+</div>
+<script>
+(function() {
+  var gameCanvas = document.getElementById('gameCanvas');
+  var gctx = gameCanvas.getContext('2d');
+  var previewCanvas = document.getElementById('previewCanvas');
+  var pctx = previewCanvas.getContext('2d');
+  var scoreEl = document.getElementById('score');
+  var highScoreEl = document.getElementById('highScore');
+  var overlay = document.getElementById('overlay');
+  var overlayTitle = document.getElementById('overlayTitle');
+  var overlayMsg = document.getElementById('overlayMsg');
+  var overlayBtn = document.getElementById('overlayBtn');
+
+  var fruits = [
+    { name:'葡萄', emoji:'&#127815;', color:'#9b59b6', radius:12 },
+    { name:'樱桃', emoji:'&#127826;', color:'#e74c3c', radius:15 },
+    { name:'橘子', emoji:'&#127818;', color:'#f39c12', radius:18 },
+    { name:'柠檬', emoji:'&#127819;', color:'#f1c40f', radius:21 },
+    { name:'橙子', emoji:'&#127820;', color:'#e67e22', radius:24 },
+    { name:'苹果', emoji:'&#127822;', color:'#e74c3c', radius:27 },
+    { name:'梨子', emoji:'&#127824;', color:'#c8d6a0', radius:30 },
+    { name:'桃子', emoji:'&#127825;', color:'#f8b9a0', radius:33 },
+    { name:'菠萝', emoji:'&#127821;', color:'#f3c623', radius:37 },
+    { name:'哈密瓜', emoji:'&#127816;', color:'#a0d878', radius:41 },
+    { name:'西瓜', emoji:'&#127817;', color:'#2ecc71', radius:46 }
+  ];
+
+  var GRAVITY = 800;
+  var DAMPING = 0.5;
+  var DROP_LINE = 30;
+  var GAME_OVER_Y = 40;
+  var CANVAS_W = 380, CANVAS_H = 480;
+  var FRAME_RATE = 16;
+
+  var balls = [];
+  var currentFruitLevel = -1;
+  var fallingBall = null;
+  var gameState = 'waiting';
+  var score = 0, highScore = 0;
+  var lastFrame = 0, animId;
+  var ctxW, ctxH;
+
+  highScore = parseInt(localStorage.getItem('watermelonHighScore')) || 0;
+  highScoreEl.textContent = highScore;
+
+  function resize() {
+    var maxW = Math.min(380, window.innerWidth - 60);
+    var ratio = CANVAS_H / CANVAS_W;
+    gameCanvas.width = maxW;
+    gameCanvas.height = maxW * ratio;
+    ctxW = gameCanvas.width;
+    ctxH = gameCanvas.height;
+    drawPreview();
+  }
+
+  function randomSmallFruit() {
+    var levels = [0, 1, 2]; // grape, cherry, orange
+    return levels[Math.floor(Math.random()*levels.length)];
+  }
+
+  function getBallRadius(level) {
+    var base = 12;
+    var ratio = ctxW / CANVAS_W;
+    for (var i=0; i<=level; i++) {
+      base = fruits[i].radius;
+    }
+    return base * ratio;
+  }
+
+  function createBall(level, x, y, vx, vy) {
+    var r = getBallRadius(level);
+    return {
+      level: level,
+      x: x, y: y,
+      vx: vx || 0, vy: vy || 0,
+      radius: r,
+      color: fruits[level].color,
+      emoji: fruits[level].emoji,
+      name: fruits[level].name,
+      merged: false // flag to prevent double-merge in one frame
+    };
+  }
+
+  function resetMergedFlags() {
+    for (var i=0; i<balls.length; i++) balls[i].merged = false;
+    if (fallingBall) fallingBall.merged = false;
+  }
+
+  function startGame() {
+    balls = [];
+    fallingBall = null;
+    currentFruitLevel = -1;
+    score = 0;
+    gameState = 'playing';
+    scoreEl.textContent = '0';
+    overlay.style.display = 'none';
+    lastFrame = 0;
+    if (animId) cancelAnimationFrame(animId);
+    spawnNext();
+    requestAnimationFrame(loop);
+  }
+
+  function spawnNext() {
+    if (currentFruitLevel === -1) {
+      currentFruitLevel = randomSmallFruit();
+    }
+    var r = getBallRadius(currentFruitLevel);
+    fallingBall = createBall(currentFruitLevel, ctxW/2, DROP_LINE + r, 0, 0);
+    currentFruitLevel = randomSmallFruit();
+    drawPreview();
+  }
+
+  function drawPreview() {
+    pctx.clearRect(0, 0, 36, 36);
+    if (currentFruitLevel >= 0) {
+      var f = fruits[currentFruitLevel];
+      pctx.fillStyle = f.color;
+      pctx.beginPath();
+      pctx.arc(18, 18, 14, 0, Math.PI*2);
+      pctx.fill();
+      pctx.fillStyle = '#fff';
+      pctx.font = '16px sans-serif';
+      pctx.textAlign = 'center';
+      pctx.textBaseline = 'middle';
+      pctx.fillText(String.fromCodePoint(parseInt(f.emoji.slice(3,-1), 16) || 127817), 18, 18);
+    }
+  }
+
+  function dropFruitAt(x) {
+    if (gameState !== 'playing' || !fallingBall) return;
+    var clampedX = Math.max(fallingBall.radius, Math.min(ctxW - fallingBall.radius, x));
+    fallingBall.x = clampedX;
+    fallingBall.isDropped = true;
+    fallingBall.vy = 0;
+  }
+
+  function mergeBalls(a, b) {
+    var newLevel = a.level + 1;
+    if (newLevel >= fruits.length) {
+      // two watermelons disappear
+      score += 100;
+      scoreEl.textContent = score;
+      return null;
+    }
+    var newX = (a.x * a.radius + b.x * b.radius) / (a.radius + b.radius);
+    var newY = (a.y * a.radius + b.y * b.radius) / (a.radius + b.radius);
+    var newBall = createBall(newLevel, newX, newY, (a.vx+b.vx)*0.5, (a.vy+b.vy)*0.5);
+    score += (newLevel + 1) * 10;
+    scoreEl.textContent = score;
+    return newBall;
+  }
+
+  function checkMerge() {
+    var i=0, j;
+    var allBalls = [];
+    if (fallingBall && fallingBall.isDropped && !fallingBall.merged) allBalls.push(fallingBall);
+    for (i=0; i<balls.length; i++) allBalls.push(balls[i]);
+
+    var merged = false;
+    var toRemove = {};
+    var newBalls = [];
+
+    for (i=0; i<allBalls.length; i++) {
+      for (j=i+1; j<allBalls.length; j++) {
+        if (toRemove[i] || toRemove[j]) continue;
+        var a=allBalls[i], b=allBalls[j];
+        if (a.level === b.level) {
+          var dx=a.x-b.x, dy=a.y-b.y;
+          var dist = Math.sqrt(dx*dx+dy*dy);
+          if (dist < (a.radius + b.radius) * 0.9) {
+            toRemove[i] = true;
+            toRemove[j] = true;
+            var nb = mergeBalls(a, b);
+            if (nb) {
+              nb.merged = true;
+              newBalls.push(nb);
+            }
+            merged = true;
+          }
+        }
+      }
+    }
+
+    if (merged) {
+      var kept = [];
+      for (i=0; i<balls.length; i++) { if (!toRemove[i]) kept.push(balls[i]); }
+      balls = kept;
+      for (i=0; i<newBalls.length; i++) balls.push(newBalls[i]);
+      if (fallingBall && toRemove[0]) {
+        fallingBall = null;
+        // adjust indices for remaining fallingBall
+        // return true so caller knows to re-check
+        return true;
+      }
+      return true;
+    }
+    return false;
+  }
+
+  function checkGameOver() {
+    if (!fallingBall && balls.length > 5) {
+      var lowestY = 999999;
+      for (var i=0; i<balls.length; i++) {
+        if (balls[i].y - balls[i].radius < lowestY) {
+          lowestY = balls[i].y - balls[i].radius;
+        }
+      }
+      if (lowestY < GAME_OVER_Y * (ctxH/CANVAS_H) && !fallingBall) {
+        endGame();
+      }
+    }
+  }
+
+  function endGame() {
+    gameState = 'gameover';
+    if (score > highScore) {
+      highScore = score;
+      localStorage.setItem('watermelonHighScore', highScore);
+      highScoreEl.textContent = highScore;
+    }
+    overlayTitle.textContent = '游戏结束';
+    overlayMsg.innerHTML = '得分: ' + score + '<br>最高分: ' + highScore;
+    overlayBtn.textContent = '再来一局';
+    overlay.style.display = 'block';
+    draw();
+  }
+
+  function loop(timestamp) {
+    if (gameState !== 'playing') {
+      animId = requestAnimationFrame(loop);
+      return;
+    }
+    animId = requestAnimationFrame(loop);
+
+    if (!lastFrame) lastFrame = timestamp;
+    var dt = (timestamp - lastFrame) / 1000;
+    if (dt > 0.1) dt = 0.1;
+    lastFrame = timestamp;
+
+    // Physics
+    var scale = ctxW / CANVAS_W;
+    var gravity = GRAVITY * scale;
+
+    // update falling ball
+    if (fallingBall) {
+      if (fallingBall.isDropped) {
+        fallingBall.vy += gravity * dt;
+        fallingBall.y += fallingBall.vy * dt;
+        fallingBall.x += fallingBall.vx * dt;
+
+        // wall collisions
+        if (fallingBall.x - fallingBall.radius < 0) {
+          fallingBall.x = fallingBall.radius;
+          fallingBall.vx *= -DAMPING;
+        }
+        if (fallingBall.x + fallingBall.radius > ctxW) {
+          fallingBall.x = ctxW - fallingBall.radius;
+          fallingBall.vx *= -DAMPING;
+        }
+        // floor
+        if (fallingBall.y + fallingBall.radius > ctxH) {
+          fallingBall.y = ctxH - fallingBall.radius;
+          fallingBall.vy *= -DAMPING * 0.6;
+          if (Math.abs(fallingBall.vy) < 10) fallingBall.vy = 0;
+        }
+
+        // collision with other balls
+        for (var i=0; i<balls.length; i++) {
+          var b = balls[i];
+          var dx = fallingBall.x - b.x, dy = fallingBall.y - b.y;
+          var dist = Math.sqrt(dx*dx+dy*dy);
+          var minDist = fallingBall.radius + b.radius;
+          if (dist < minDist && dist > 0.001) {
+            var nx = dx/dist, ny = dy/dist;
+            var overlap = minDist - dist;
+            fallingBall.x += nx * overlap * 0.5;
+            fallingBall.y += ny * overlap * 0.5;
+            b.x -= nx * overlap * 0.5;
+            b.y -= ny * overlap * 0.5;
+            var relVx = fallingBall.vx - b.vx;
+            var relVy = fallingBall.vy - b.vy;
+            var relVn = relVx*nx + relVy*ny;
+            if (relVn > 0) {
+              var imp = relVn * DAMPING;
+              fallingBall.vx -= imp * nx;
+              fallingBall.vy -= imp * ny;
+              b.vx += imp * nx;
+              b.vy += imp * ny;
+            }
+          }
+        }
+      } else {
+        // follow mouse horizontal
+        fallingBall.y = DROP_LINE * (ctxH/CANVAS_H);
+      }
+
+      // check if falling ball has settled
+      if (fallingBall.isDropped) {
+        var settled = false;
+        if (fallingBall.y + fallingBall.radius >= ctxH - 2 && Math.abs(fallingBall.vy) < 5) settled = true;
+        if (settled) {
+          // finalize position
+          balls.push(fallingBall);
+          fallingBall = null;
+        }
+      }
+    }
+
+    // update settled balls (minor movement)
+    for (var i=0; i<balls.length; i++) {
+      var b = balls[i];
+      if (b.vy !== 0 || b.vx !== 0) {
+        b.vy += gravity * dt * 0.3;
+        b.y += b.vy * dt;
+        b.x += b.vx * dt;
+        // floor
+        if (b.y + b.radius > ctxH) {
+          b.y = ctxH - b.radius;
+          b.vy *= -DAMPING * 0.5;
+          if (Math.abs(b.vy) < 5) b.vy = 0;
+        }
+        // walls
+        if (b.x - b.radius < 0) { b.x = b.radius; b.vx *= -DAMPING; }
+        if (b.x + b.radius > ctxW) { b.x = ctxW - b.radius; b.vx *= -DAMPING; }
+        // inter-ball collisions
+        for (var j=i+1; j<balls.length; j++) {
+          var b2 = balls[j];
+          var dx = b.x - b2.x, dy = b.y - b2.y;
+          var dist = Math.sqrt(dx*dx+dy*dy);
+          var minDist = b.radius + b2.radius;
+          if (dist < minDist && dist > 0.001) {
+            var nx = dx/dist, ny = dy/dist;
+            var overlap = minDist - dist;
+            b.x += nx * overlap * 0.5;
+            b.y += ny * overlap * 0.5;
+            b2.x -= nx * overlap * 0.5;
+            b2.y -= ny * overlap * 0.5;
+            var relVx = b.vx - b2.vx, relVy = b.vy - b2.vy;
+            var relVn = relVx*nx + relVy*ny;
+            if (relVn > 0) {
+              var imp = relVn * DAMPING;
+              b.vx -= imp * nx;
+              b.vy -= imp * ny;
+              b2.vx += imp * nx;
+              b2.vy += imp * ny;
+            }
+          }
+        }
+      }
+      // friction
+      b.vx *= 0.98;
+      b.vy *= 0.98;
+    }
+
+    // merge check (run multiple times for chain merges)
+    for (var iter=0; iter<5; iter++) {
+      if (!checkMerge()) break;
+    }
+
+    // game over check
+    if (!fallingBall) {
+      checkGameOver();
+      if (gameState === 'playing') {
+        spawnNext();
+      }
+    }
+
+    draw();
+  }
+
+  function draw() {
+    gctx.clearRect(0, 0, ctxW, ctxH);
+
+    // background
+    gctx.fillStyle = window.matchMedia('(prefers-color-scheme: dark)').matches ? '#1a1a2e' : '#f8f8fc';
+    gctx.fillRect(0, 0, ctxW, ctxH);
+
+    // game-over line
+    var lineY = GAME_OVER_Y * (ctxH / CANVAS_H);
+    gctx.strokeStyle = getComputedStyle(document.documentElement).getPropertyValue('--danger').trim();
+    gctx.setLineDash([5, 5]);
+    gctx.lineWidth = 2;
+    gctx.beginPath();
+    gctx.moveTo(0, lineY);
+    gctx.lineTo(ctxW, lineY);
+    gctx.stroke();
+    gctx.setLineDash([]);
+    gctx.lineWidth = 1;
+
+    // drop guide line
+    if (fallingBall && !fallingBall.isDropped) {
+      gctx.strokeStyle = 'rgba(128,128,128,0.3)';
+      gctx.beginPath();
+      gctx.moveTo(fallingBall.x, fallingBall.radius);
+      gctx.lineTo(fallingBall.x, ctxH);
+      gctx.stroke();
+    }
+
+    // draw settled balls
+    for (var i=0; i<balls.length; i++) {
+      drawBall(balls[i]);
+    }
+
+    // draw falling ball (on top)
+    if (fallingBall) {
+      gctx.globalAlpha = fallingBall.isDropped ? 1 : 0.85;
+      drawBall(fallingBall);
+      gctx.globalAlpha = 1;
+    }
+  }
+
+  function drawBall(ball) {
+    var r = ball.radius;
+    var x = ball.x, y = ball.y;
+
+    // shadow
+    gctx.beginPath();
+    gctx.arc(x, y+2, r, 0, Math.PI*2);
+    gctx.fillStyle = 'rgba(0,0,0,0.15)';
+    gctx.fill();
+
+    // main body
+    var grad = gctx.createRadialGradient(x-r*0.3, y-r*0.4, r*0.1, x, y, r);
+    grad.addColorStop(0, 'rgba(255,255,255,0.4)');
+    grad.addColorStop(0.5, ball.color);
+    grad.addColorStop(1, 'rgba(0,0,0,0.2)');
+    gctx.beginPath();
+    gctx.arc(x, y, r, 0, Math.PI*2);
+    gctx.fillStyle = grad;
+    gctx.fill();
+
+    // border
+    gctx.strokeStyle = 'rgba(0,0,0,0.2)';
+    gctx.lineWidth = 1.5;
+    gctx.stroke();
+
+    // emoji
+    var fontSize = r * 1.1;
+    gctx.fillStyle = '#000';
+    gctx.font = fontSize + 'px sans-serif';
+    gctx.textAlign = 'center';
+    gctx.textBaseline = 'middle';
+    var codePoint = parseInt(ball.emoji.slice(3,-1), 16) || 127817;
+    gctx.fillText(String.fromCodePoint(codePoint), x, y + 1);
+  }
+
+  // mouse / touch
+  gameCanvas.addEventListener('mousemove', function(e) {
+    if (!fallingBall || fallingBall.isDropped) return;
+    var rect = gameCanvas.getBoundingClientRect();
+    var x = (e.clientX - rect.left) * (ctxW / rect.width);
+    x = Math.max(fallingBall.radius, Math.min(ctxW - fallingBall.radius, x));
+    fallingBall.x = x;
+  });
+
+  gameCanvas.addEventListener('click', function(e) {
+    if (gameState !== 'playing') return;
+    if (!fallingBall) return;
+    if (fallingBall.isDropped) return;
+    var rect = gameCanvas.getBoundingClientRect();
+    var x = (e.clientX - rect.left) * (ctxW / rect.width);
+    dropFruitAt(x);
+  });
+
+  gameCanvas.addEventListener('touchmove', function(e) {
+    if (!fallingBall || fallingBall.isDropped) return;
+    e.preventDefault();
+    var rect = gameCanvas.getBoundingClientRect();
+    var x = (e.touches[0].clientX - rect.left) * (ctxW / rect.width);
+    x = Math.max(fallingBall.radius, Math.min(ctxW - fallingBall.radius, x));
+    fallingBall.x = x;
+  }, {passive: false});
+
+  gameCanvas.addEventListener('touchend', function(e) {
+    if (gameState !== 'playing' || !fallingBall || fallingBall.isDropped) return;
+    e.preventDefault();
+    var rect = gameCanvas.getBoundingClientRect();
+    var x = (e.changedTouches[0].clientX - rect.left) * (ctxW / rect.width);
+    dropFruitAt(x);
+  }, {passive: false});
+
+  window.startGame = startGame;
+  resize();
+  draw();
+  drawPreview();
+  lastFrame = performance.now();
+  requestAnimationFrame(function(t) { lastFrame=t; draw(); });
+  window.addEventListener('resize', function() { resize(); draw(); });
+})();
+</script>
+</body>
+</html>

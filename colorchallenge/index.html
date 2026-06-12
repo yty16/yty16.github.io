@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>色觉挑战</title>
+<script>
+(function() {
+  var theme = localStorage.getItem('theme');
+  if (!theme) {
+    theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  }
+  document.documentElement.setAttribute('data-theme', theme);
+})();
+</script>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root[data-theme="light"] {
+  --bg: #f0f2f5;
+  --card-bg: rgba(255,255,255,0.8);
+  --card-border: rgba(255,255,255,0.3);
+  --text: #2d3436;
+  --text-secondary: #636e72;
+  --accent: #6c5ce7;
+  --success: #2ecc71;
+  --danger: #e74c3c;
+}
+
+:root[data-theme="dark"] {
+  --bg: #1a1a2e;
+  --card-bg: rgba(30,30,50,0.8);
+  --card-border: rgba(255,255,255,0.08);
+  --text: #dfe6e9;
+  --text-secondary: #b2bec3;
+  --accent: #a29bfe;
+  --success: #2ecc71;
+  --danger: #e74c3c;
+}
+
+body {
+  font-family: 'Inter', 'Microsoft YaHei', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  transition: background 0.3s, color 0.3s;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+
+.card {
+  background: var(--card-bg);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--card-border);
+  border-radius: 20px;
+  padding: 30px;
+  max-width: 650px;
+  width: 100%;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+}
+
+.back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--accent);
+  text-decoration: none;
+  font-size: 14px;
+  margin-bottom: 20px;
+  transition: opacity 0.2s;
+}
+.back-btn:hover { opacity: 0.7; }
+
+h1 {
+  font-size: 28px;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.subtitle {
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin-bottom: 20px;
+}
+
+.stats-row {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.stat-item {
+  flex: 1;
+  min-width: 80px;
+  background: var(--card-bg);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--card-border);
+  border-radius: 12px;
+  padding: 12px;
+  text-align: center;
+}
+
+.stat-value {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.stat-label {
+  font-size: 11px;
+  color: var(--text-secondary);
+  margin-top: 4px;
+}
+
+.lives-container {
+  display: flex;
+  gap: 6px;
+  justify-content: center;
+  margin-top: 4px;
+}
+
+.heart {
+  font-size: 18px;
+  transition: all 0.3s;
+}
+
+.heart.lost { opacity: 0.25; transform: scale(0.8); }
+
+.timer-bar-container {
+  width: 100%;
+  height: 8px;
+  background: rgba(128,128,128,0.2);
+  border-radius: 4px;
+  margin-bottom: 24px;
+  overflow: hidden;
+}
+
+.timer-bar-fill {
+  height: 100%;
+  background: var(--accent);
+  border-radius: 4px;
+  transition: width 0.1s linear, background 0.3s;
+}
+
+.timer-bar-fill.warning { background: #f39c12; }
+.timer-bar-fill.danger { background: var(--danger); }
+
+.grid-container {
+  display: grid;
+  gap: 4px;
+  margin: 0 auto;
+  width: fit-content;
+}
+
+.grid-tile {
+  border-radius: 8px;
+  cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.15s;
+  position: relative;
+}
+
+.grid-tile:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.25);
+}
+
+.grid-tile:active { transform: scale(0.95); }
+
+.grid-tile.wrong-click {
+  animation: shake 0.5s ease;
+}
+
+.grid-tile.correct-click {
+  animation: pulse 0.4s ease;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-6px); }
+  40% { transform: translateX(6px); }
+  60% { transform: translateX(-4px); }
+  80% { transform: translateX(4px); }
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); box-shadow: 0 0 0 0 var(--success); }
+  50% { transform: scale(1.08); box-shadow: 0 0 20px 4px var(--success); }
+  100% { transform: scale(1); box-shadow: 0 0 0 0 transparent; }
+}
+
+.controls {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.btn {
+  padding: 10px 22px;
+  border-radius: 10px;
+  border: none;
+  font-size: 14px;
+  font-family: inherit;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.2s;
+}
+
+.btn--accent {
+  background: var(--accent);
+  color: #fff;
+}
+.btn--accent:hover { filter: brightness(1.1); transform: translateY(-1px); }
+
+.btn--outline {
+  background: transparent;
+  border: 1px solid var(--accent);
+  color: var(--accent);
+}
+.btn--outline:hover { background: var(--accent); color: #fff; }
+
+.btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none !important; }
+
+.game-overlay {
+  display: none;
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.6);
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+
+.game-overlay.active { display: flex; }
+
+.results-card {
+  background: var(--card-bg);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--card-border);
+  border-radius: 20px;
+  padding: 36px;
+  max-width: 400px;
+  width: 90%;
+  text-align: center;
+}
+
+.results-card h2 { font-size: 24px; margin-bottom: 8px; }
+
+.level-display {
+  font-size: 48px;
+  font-weight: 700;
+  color: var(--accent);
+  margin: 12px 0;
+}
+
+.result-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin: 20px 0;
+}
+
+.result-stat {
+  background: rgba(128,128,128,0.1);
+  border-radius: 10px;
+  padding: 12px;
+}
+
+.result-stat .val { font-size: 20px; font-weight: 700; color: var(--accent); }
+.result-stat .lbl { font-size: 11px; color: var(--text-secondary); }
+
+.feedback-msg {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 48px;
+  pointer-events: none;
+  z-index: 50;
+  animation: feedbackPop 0.8s ease forwards;
+}
+
+@keyframes feedbackPop {
+  0% { opacity: 0; transform: translate(-50%, -50%) scale(0.5); }
+  30% { opacity: 1; transform: translate(-50%, -50%) scale(1.2); }
+  100% { opacity: 0; transform: translate(-50%, -50%) scale(1); }
+}
+
+.wrong-flash {
+  animation: flashRed 0.4s ease;
+}
+
+@keyframes flashRed {
+  0%, 100% { background: var(--card-bg); }
+  50% { background: rgba(231, 76, 60, 0.15); }
+}
+
+@media (max-width: 600px) {
+  .card { padding: 20px; }
+  h1 { font-size: 22px; }
+  .stat-item { min-width: 60px; padding: 8px; }
+  .stat-value { font-size: 18px; }
+  .grid-tile { border-radius: 6px; }
+  .grid-container { gap: 3px; }
+}
+</style>
+</head>
+<body>
+
+<div class="card" id="mainCard">
+  <a href="/" class="back-btn">&larr; 返回</a>
+  <h1>&#x1F3A8; 色觉挑战</h1>
+  <p class="subtitle" id="levelLabel">找出颜色不同的方块并点击它</p>
+
+  <div class="stats-row">
+    <div class="stat-item">
+      <div class="stat-value" id="levelDisplay">1</div>
+      <div class="stat-label">关卡</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-value" id="scoreDisplay">0</div>
+      <div class="stat-label">分数</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-value">
+        <div class="lives-container" id="livesContainer">
+          <span class="heart">&#x2764;&#xFE0F;</span>
+          <span class="heart">&#x2764;&#xFE0F;</span>
+          <span class="heart">&#x2764;&#xFE0F;</span>
+        </div>
+      </div>
+      <div class="stat-label">生命</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-value" id="timerDisplay">10</div>
+      <div class="stat-label">时间</div>
+    </div>
+  </div>
+
+  <div class="timer-bar-container">
+    <div class="timer-bar-fill" id="timerBarFill" style="width: 100%"></div>
+  </div>
+
+  <div class="grid-container" id="gridContainer"></div>
+
+  <div class="controls">
+    <button class="btn btn--accent" id="startBtn" onclick="startGame()">开始游戏</button>
+    <button class="btn btn--outline" id="restartBtn" onclick="restartGame()">重新开始</button>
+  </div>
+</div>
+
+<div class="game-overlay" id="gameOverlay">
+  <div class="results-card">
+    <h2 id="resultTitle">&#x1F3AE; 游戏结束</h2>
+    <div class="level-display" id="resultLevel">1</div>
+    <p style="color: var(--text-secondary)" id="resultCause">时间耗尽</p>
+    <div class="result-stats">
+      <div class="result-stat">
+        <div class="val" id="rLevel">1</div>
+        <div class="lbl">到达关卡</div>
+      </div>
+      <div class="result-stat">
+        <div class="val" id="rScore">0</div>
+        <div class="lbl">最终分数</div>
+      </div>
+      <div class="result-stat">
+        <div class="val" id="rMaxCombo">0</div>
+        <div class="lbl">最大连击</div>
+      </div>
+      <div class="result-stat">
+        <div class="val" id="rTotalCorrect">0</div>
+        <div class="lbl">总正确数</div>
+      </div>
+    </div>
+    <button class="btn btn--accent" onclick="closeOverlay()">再来一次</button>
+  </div>
+</div>
+
+<script>
+var gridLevels = [3, 4, 5, 6, 7, 8, 9, 10];
+
+var currentLevel = 0;
+var score = 0;
+var lives = 3;
+var combo = 0;
+var maxCombo = 0;
+var totalCorrect = 0;
+var roundTime = 10;
+var timeLeft = 10;
+var timerInterval = null;
+var gameActive = false;
+var oddIndex = -1;
+var baseColor = null;
+var diffColor = null;
+var gridSize = 3;
+
+var gridContainer = document.getElementById('gridContainer');
+var timerDisplayEl = document.getElementById('timerDisplay');
+var timerBarFill = document.getElementById('timerBarFill');
+var levelDisplay = document.getElementById('levelDisplay');
+var scoreDisplay = document.getElementById('scoreDisplay');
+var livesContainer = document.getElementById('livesContainer');
+var gameOverlay = document.getElementById('gameOverlay');
+var mainCard = document.getElementById('mainCard');
+var levelLabel = document.getElementById('levelLabel');
+
+function hslToHex(h, s, l) {
+  h = ((h % 360) + 360) % 360;
+  s = Math.max(0, Math.min(100, s));
+  l = Math.max(0, Math.min(100, l));
+  l /= 100;
+  var a = s * Math.min(l, 1 - l) / 100;
+  var f = function(n) {
+    var k = (n + h / 30) % 12;
+    var color = l - a * Math.max(Math.min(k - 3, 9 - k, 1), -1);
+    return Math.round(255 * color).toString(16).padStart(2, '0');
+  };
+  return '#' + f(0) + f(8) + f(4);
+}
+
+function generateColors() {
+  var h = Math.floor(Math.random() * 360);
+  var s = 45 + Math.floor(Math.random() * 25);
+  var l = 45 + Math.floor(Math.random() * 25);
+  baseColor = hslToHex(h, s, l);
+
+  var levelProgress = currentLevel / (gridLevels.length - 1);
+  var diff;
+  if (levelProgress < 0.25) {
+    diff = 18 - Math.floor(levelProgress * 60);
+  } else if (levelProgress < 0.5) {
+    diff = 12 - Math.floor((levelProgress - 0.25) * 40);
+  } else if (levelProgress < 0.75) {
+    diff = 7 - Math.floor((levelProgress - 0.5) * 24);
+  } else {
+    diff = 4 - Math.floor((levelProgress - 0.75) * 12);
+  }
+  diff = Math.max(2, diff);
+
+  var direction = Math.random() < 0.5 ? 1 : -1;
+  var dH = (Math.random() * diff * 0.3) * direction;
+  var dS = (Math.random() * diff * 0.4) * direction;
+  var dL = (Math.random() * diff * 0.5) * direction;
+
+  diffColor = hslToHex(
+    h + dH,
+    Math.max(0, Math.min(100, s + dS)),
+    Math.max(0, Math.min(100, l + dL))
+  );
+
+  if (diffColor === baseColor) {
+    diffColor = hslToHex(h, s, Math.max(0, Math.min(100, l + diff * direction)));
+  }
+}
+
+function renderGrid() {
+  gridSize = gridLevels[currentLevel];
+  generateColors();
+  oddIndex = Math.floor(Math.random() * (gridSize * gridSize));
+
+  var tileSize = gridSize <= 4 ? 80 : gridSize <= 6 ? 65 : gridSize <= 8 ? 50 : 40;
+
+  gridContainer.style.gridTemplateColumns = 'repeat(' + gridSize + ', ' + tileSize + 'px)';
+  gridContainer.style.gridTemplateRows = 'repeat(' + gridSize + ', ' + tileSize + 'px)';
+
+  var html = '';
+  for (var i = 0; i < gridSize * gridSize; i++) {
+    var color = i === oddIndex ? diffColor : baseColor;
+    html += '<div class="grid-tile" data-index="' + i + '" style="background:' + color + ';width:' + tileSize + 'px;height:' + tileSize + 'px;"></div>';
+  }
+  gridContainer.innerHTML = html;
+}
+
+function showFeedback(emoji) {
+  var el = document.createElement('div');
+  el.className = 'feedback-msg';
+  el.textContent = emoji;
+  document.body.appendChild(el);
+  setTimeout(function() { if (el.parentNode) el.parentNode.removeChild(el); }, 800);
+}
+
+function handleTileClick(e) {
+  if (!gameActive) return;
+  var tile = e.target;
+  if (!tile.classList.contains('grid-tile')) return;
+  var index = parseInt(tile.getAttribute('data-index'));
+
+  if (index === oddIndex) {
+    // Correct!
+    tile.classList.add('correct-click');
+    combo++;
+    maxCombo = Math.max(maxCombo, combo);
+    totalCorrect++;
+    var timeBonus = Math.ceil(timeLeft / roundTime * 100);
+    var comboBonus = combo > 1 ? combo * 10 : 0;
+    var levelBonus = (currentLevel + 1) * 15;
+    score += 100 + timeBonus + comboBonus + levelBonus;
+    scoreDisplay.textContent = score;
+    showFeedback('&#x2705;');
+
+    gameActive = false;
+    clearInterval(timerInterval);
+    advanceLevel();
+  } else {
+    // Wrong!
+    tile.classList.add('wrong-click');
+    lives--;
+    combo = 0;
+    showFeedback('&#x274C;');
+    mainCard.classList.add('wrong-flash');
+    setTimeout(function() { mainCard.classList.remove('wrong-flash'); }, 400);
+    updateLives();
+
+    if (lives <= 0) {
+      gameActive = false;
+      clearInterval(timerInterval);
+      showGameOver('生命耗尽');
+    } else {
+      // Re-render same level
+      setTimeout(function() {
+        renderGrid();
+        startRoundTimer();
+        gameActive = true;
+      }, 400);
+    }
+  }
+
+  setTimeout(function() {
+    tile.classList.remove('wrong-click', 'correct-click');
+  }, 500);
+}
+
+function startRoundTimer() {
+  timeLeft = roundTime;
+  timerDisplayEl.textContent = timeLeft;
+  timerBarFill.style.width = '100%';
+  timerBarFill.classList.remove('warning', 'danger');
+
+  if (timerInterval) clearInterval(timerInterval);
+  timerInterval = setInterval(function() {
+    timeLeft--;
+    timerDisplayEl.textContent = timeLeft;
+    var pct = (timeLeft / roundTime) * 100;
+    timerBarFill.style.width = pct + '%';
+
+    if (pct <= 25) {
+      timerBarFill.classList.add('danger');
+      timerBarFill.classList.remove('warning');
+    } else if (pct <= 50) {
+      timerBarFill.classList.add('warning');
+      timerBarFill.classList.remove('danger');
+    } else {
+      timerBarFill.classList.remove('warning', 'danger');
+    }
+
+    if (timeLeft <= 0) {
+      clearInterval(timerInterval);
+      timerInterval = null;
+      gameActive = false;
+      combo = 0;
+      lives--;
+      updateLives();
+      showFeedback('&#x23F0;');
+      if (lives <= 0) {
+        showGameOver('时间耗尽');
+      } else {
+        setTimeout(function() {
+          renderGrid();
+          startRoundTimer();
+          gameActive = true;
+        }, 500);
+      }
+    }
+  }, 1000);
+}
+
+function advanceLevel() {
+  currentLevel++;
+  if (currentLevel >= gridLevels.length) {
+    // Win!
+    showGameOver('全部通关!');
+    return;
+  }
+  roundTime = Math.max(4, 11 - currentLevel);
+  levelDisplay.textContent = (currentLevel + 1);
+  levelLabel.textContent = '第 ' + (currentLevel + 1) + ' 关 - ' + gridLevels[currentLevel] + 'x' + gridLevels[currentLevel] + ' 网格';
+
+  setTimeout(function() {
+    renderGrid();
+    startRoundTimer();
+    gameActive = true;
+  }, 600);
+}
+
+function updateLives() {
+  var html = '';
+  for (var i = 0; i < 3; i++) {
+    html += '<span class="heart' + (i >= lives ? ' lost' : '') + '">&#x2764;&#xFE0F;</span>';
+  }
+  livesContainer.innerHTML = html;
+}
+
+function showGameOver(cause) {
+  gameActive = false;
+  if (timerInterval) { clearInterval(timerInterval); timerInterval = null; }
+  document.getElementById('resultTitle').textContent = currentLevel >= gridLevels.length ? '&#x1F3C6; 恭喜通关!' : '&#x1F3AE; 游戏结束';
+  document.getElementById('resultCause').textContent = cause;
+  document.getElementById('resultLevel').textContent = currentLevel >= gridLevels.length ? '全部' : (currentLevel + 1);
+  document.getElementById('rLevel').textContent = currentLevel >= gridLevels.length ? '全部 (' + gridLevels.length + ')' : (currentLevel + 1);
+  document.getElementById('rScore').textContent = score;
+  document.getElementById('rMaxCombo').textContent = maxCombo;
+  document.getElementById('rTotalCorrect').textContent = totalCorrect;
+  gameOverlay.classList.add('active');
+}
+
+function closeOverlay() {
+  gameOverlay.classList.remove('active');
+  restartGame();
+}
+
+function startGame() {
+  if (gameActive) return;
+  restartGame();
+  gameActive = true;
+  document.getElementById('startBtn').disabled = true;
+  renderGrid();
+  startRoundTimer();
+}
+
+function restartGame() {
+  if (timerInterval) { clearInterval(timerInterval); timerInterval = null; }
+  gameActive = false;
+  currentLevel = 0;
+  score = 0;
+  lives = 3;
+  combo = 0;
+  maxCombo = 0;
+  totalCorrect = 0;
+  roundTime = 10;
+  timeLeft = 10;
+  gridSize = gridLevels[0];
+  scoreDisplay.textContent = '0';
+  levelDisplay.textContent = '1';
+  timerDisplayEl.textContent = '10';
+  timerBarFill.style.width = '100%';
+  timerBarFill.classList.remove('warning', 'danger');
+  levelLabel.textContent = '找出颜色不同的方块并点击它';
+  updateLives();
+  document.getElementById('startBtn').disabled = false;
+  gridContainer.innerHTML = '';
+  gameOverlay.classList.remove('active');
+}
+
+// Event delegation for grid clicks
+gridContainer.addEventListener('click', handleTileClick);
+
+// Init
+restartGame();
+</script>
+
+</body>
+</html>

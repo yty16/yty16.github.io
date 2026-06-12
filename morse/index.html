@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📡 摩斯电码转换器</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg: #f5f5f5;
+            --card-bg: rgba(255, 255, 255, 0.7);
+            --card-border: rgba(255, 255, 255, 0.3);
+            --text: #1a1a2e;
+            --text-secondary: #666;
+            --accent: #6c5ce7;
+            --accent-light: #a29bfe;
+        }
+
+        [data-theme="dark"] {
+            --bg: #1a1a2e;
+            --card-bg: rgba(255, 255, 255, 0.05);
+            --card-border: rgba(255, 255, 255, 0.1);
+            --text: #eee;
+            --text-secondary: #aaa;
+            --accent: #a29bfe;
+            --accent-light: #6c5ce7;
+        }
+
+        body {
+            font-family: 'Inter', 'Microsoft YaHei', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            padding: 20px;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        .container {
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .back-btn {
+            display: inline-block;
+            padding: 10px 20px;
+            margin-bottom: 20px;
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--card-border);
+            border-radius: 10px;
+            color: var(--text);
+            text-decoration: none;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        .back-btn:hover {
+            transform: translateX(-5px);
+            box-shadow: 0 5px 15px rgba(108, 92, 231, 0.2);
+        }
+
+        .card {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--card-border);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            font-size: 28px;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+
+        .mode-toggle {
+            display: flex;
+            background: var(--bg);
+            border-radius: 12px;
+            padding: 5px;
+            margin-bottom: 25px;
+        }
+
+        .mode-btn {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            background: transparent;
+            color: var(--text-secondary);
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+            border-radius: 10px;
+            transition: all 0.3s;
+        }
+
+        .mode-btn.active {
+            background: var(--accent);
+            color: white;
+            box-shadow: 0 4px 12px rgba(108, 92, 231, 0.3);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 500;
+            color: var(--text);
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 120px;
+            padding: 15px;
+            border: 2px solid var(--card-border);
+            border-radius: 12px;
+            background: var(--bg);
+            color: var(--text);
+            font-size: 16px;
+            font-family: 'Courier New', monospace;
+            resize: vertical;
+            transition: border-color 0.3s;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: linear-gradient(135deg, var(--accent), var(--accent-light));
+            color: white;
+            margin-bottom: 15px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(108, 92, 231, 0.3);
+        }
+
+        .btn-secondary {
+            background: var(--card-bg);
+            color: var(--text);
+            border: 1px solid var(--card-border);
+        }
+
+        .output-box {
+            background: var(--bg);
+            border: 2px solid var(--card-border);
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 20px;
+            position: relative;
+            min-height: 60px;
+            word-break: break-all;
+            font-family: 'Courier New', monospace;
+            font-size: 16px;
+            line-height: 1.8;
+        }
+
+        .copy-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            padding: 8px 16px;
+            background: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.3s;
+        }
+
+        .copy-btn:hover {
+            background: var(--accent-light);
+        }
+
+        .visual-morse {
+            margin-top: 20px;
+            padding: 20px;
+            background: var(--bg);
+            border-radius: 12px;
+            border: 1px solid var(--card-border);
+        }
+
+        .morse-char {
+            display: inline-flex;
+            align-items: center;
+            margin: 5px;
+            padding: 8px 12px;
+            background: var(--card-bg);
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+        }
+
+        .dot {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            background: var(--accent);
+            border-radius: 50%;
+            margin: 0 3px;
+        }
+
+        .dash {
+            display: inline-block;
+            width: 30px;
+            height: 12px;
+            background: var(--accent);
+            border-radius: 6px;
+            margin: 0 3px;
+        }
+
+        .space {
+            display: inline-block;
+            width: 15px;
+        }
+
+        .word-space {
+            display: inline-block;
+            width: 30px;
+        }
+
+        .audio-controls {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            margin-top: 20px;
+            padding: 15px;
+            background: var(--bg);
+            border-radius: 12px;
+            border: 1px solid var(--card-border);
+        }
+
+        .play-btn {
+            padding: 10px 25px;
+            background: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .play-btn:hover {
+            background: var(--accent-light);
+        }
+
+        .play-btn.playing {
+            background: #ff6b6b;
+        }
+
+        .speed-control {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex: 1;
+        }
+
+        input[type="range"] {
+            flex: 1;
+            height: 6px;
+            border-radius: 3px;
+            outline: none;
+            background: linear-gradient(to right, var(--accent), var(--accent-light));
+            -webkit-appearance: none;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: var(--accent);
+            cursor: pointer;
+            box-shadow: 0 2px 6px rgba(108, 92, 231, 0.3);
+        }
+
+        .speed-value {
+            font-size: 14px;
+            color: var(--text-secondary);
+            min-width: 60px;
+        }
+
+        .reference-table {
+            margin-top: 20px;
+        }
+
+        .ref-toggle {
+            width: 100%;
+            padding: 15px;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            color: var(--text);
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s;
+        }
+
+        .ref-toggle:hover {
+            border-color: var(--accent);
+        }
+
+        .ref-content {
+            display: none;
+            padding: 20px;
+            margin-top: 10px;
+            background: var(--bg);
+            border-radius: 12px;
+            border: 1px solid var(--card-border);
+        }
+
+        .ref-content.show {
+            display: block;
+        }
+
+        .ref-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 10px;
+        }
+
+        .ref-item {
+            padding: 10px;
+            background: var(--card-bg);
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            text-align: center;
+        }
+
+        .ref-char {
+            font-weight: bold;
+            color: var(--accent);
+            font-size: 18px;
+        }
+
+        .ref-code {
+            color: var(--text-secondary);
+            margin-top: 5px;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: var(--accent);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 10px;
+            font-size: 14px;
+            transition: transform 0.3s;
+            z-index: 1000;
+        }
+
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+        }
+
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 22px;
+            }
+
+            .card {
+                padding: 20px;
+            }
+
+            .ref-grid {
+                grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            }
+
+            .audio-controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+        }
+    </style>
+</head>
+<body>
+    <script>
+        (function() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme) {
+                document.documentElement.setAttribute('data-theme', savedTheme);
+            } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                document.documentElement.setAttribute('data-theme', 'dark');
+            }
+        })();
+    </script>
+
+    <div class="container">
+        <a href="/" class="back-btn">← 返回</a>
+
+        <div class="card">
+            <h1>📡 摩斯电码转换器</h1>
+
+            <div class="mode-toggle">
+                <button class="mode-btn active" id="textToMorseBtn">文本 → 摩斯电码</button>
+                <button class="mode-btn" id="morseToTextBtn">摩斯电码 → 文本</button>
+            </div>
+
+            <div class="form-group">
+                <label id="inputLabel">输入文本</label>
+                <textarea id="inputText" placeholder="请输入要转换的文本..."></textarea>
+            </div>
+
+            <button class="btn" id="convertBtn">转换</button>
+
+            <div id="outputArea" style="display: none;">
+                <div class="form-group">
+                    <label>转换结果</label>
+                    <div class="output-box">
+                        <button class="copy-btn" id="copyBtn">复制</button>
+                        <div id="outputText"></div>
+                    </div>
+                </div>
+
+                <div class="visual-morse" id="visualMorse" style="display: none;">
+                    <label style="margin-bottom: 15px;">可视化显示</label>
+                    <div id="visualContent"></div>
+                </div>
+
+                <div class="audio-controls" id="audioControls" style="display: none;">
+                    <button class="play-btn" id="playBtn">▶ 播放</button>
+                    <div class="speed-control">
+                        <span style="font-size: 14px; color: var(--text-secondary);">速度:</span>
+                        <input type="range" id="speedSlider" min="1" max="10" value="5">
+                        <span class="speed-value" id="speedValue">中速</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card reference-table">
+            <button class="ref-toggle" id="refToggle">
+                <span>📖 摩斯电码对照表</span>
+                <span id="refArrow">▼</span>
+            </button>
+            <div class="ref-content" id="refContent">
+                <div class="ref-grid" id="refGrid"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <script>
+        const morseCode = {
+            'A': '·—', 'B': '—···', 'C': '—·—·', 'D': '—··', 'E': '·',
+            'F': '··—·', 'G': '——·', 'H': '····', 'I': '··', 'J': '·———',
+            'K': '—·—', 'L': '·—··', 'M': '——', 'N': '—·', 'O': '———',
+            'P': '·——·', 'Q': '——·—', 'R': '·—·', 'S': '···', 'T': '—',
+            'U': '··—', 'V': '···—', 'W': '·——', 'X': '—··—', 'Y': '—·——',
+            'Z': '——··',
+            '0': '—————', '1': '·————', '2': '··———', '3': '···——', '4': '····—',
+            '5': '·····', '6': '—····', '7': '——···', '8': '———··', '9': '————·',
+            '.': '·—·—·—', ',': '——··——', '?': '··——··', "'": '·————·',
+            '!': '—·—·——', '/': '—··—·', '(': '—·——·', ')': '—·——·—',
+            '&': '·—···', ':': '———···', ';': '—·—·—·', '=': '—···—',
+            '+': '·—·—·', '-': '—····—', '_': '··——·—', '"': '·—··—·',
+            '$': '···—··—', '@': '·——·—·'
+        };
+
+        const textToMorseBtn = document.getElementById('textToMorseBtn');
+        const morseToTextBtn = document.getElementById('morseToTextBtn');
+        const inputLabel = document.getElementById('inputLabel');
+        const inputText = document.getElementById('inputText');
+        const convertBtn = document.getElementById('convertBtn');
+        const outputArea = document.getElementById('outputArea');
+        const outputText = document.getElementById('outputText');
+        const copyBtn = document.getElementById('copyBtn');
+        const visualMorse = document.getElementById('visualMorse');
+        const visualContent = document.getElementById('visualContent');
+        const audioControls = document.getElementById('audioControls');
+        const playBtn = document.getElementById('playBtn');
+        const speedSlider = document.getElementById('speedSlider');
+        const speedValue = document.getElementById('speedValue');
+        const refToggle = document.getElementById('refToggle');
+        const refContent = document.getElementById('refContent');
+        const refArrow = document.getElementById('refArrow');
+        const refGrid = document.getElementById('refGrid');
+        const toast = document.getElementById('toast');
+
+        let currentMode = 'textToMorse';
+        let currentMorse = '';
+        let audioContext = null;
+        let isPlaying = false;
+
+        textToMorseBtn.addEventListener('click', function() {
+            currentMode = 'textToMorse';
+            textToMorseBtn.classList.add('active');
+            morseToTextBtn.classList.remove('active');
+            inputLabel.textContent = '输入文本';
+            inputText.placeholder = '请输入要转换的文本...';
+        });
+
+        morseToTextBtn.addEventListener('click', function() {
+            currentMode = 'morseToText';
+            morseToTextBtn.classList.add('active');
+            textToMorseBtn.classList.remove('active');
+            inputLabel.textContent = '输入摩斯电码';
+            inputText.placeholder = '请输入摩斯电码 (使用 · 和 —，空格分隔字母，/ 分隔单词)...';
+        });
+
+        convertBtn.addEventListener('click', function() {
+            const input = inputText.value.trim();
+
+            if (!input) {
+                showToast('请输入内容！');
+                return;
+            }
+
+            if (currentMode === 'textToMorse') {
+                convertTextToMorse(input);
+            } else {
+                convertMorseToText(input);
+            }
+        });
+
+        copyBtn.addEventListener('click', function() {
+            const text = outputText.textContent;
+            copyToClipboard(text);
+        });
+
+        playBtn.addEventListener('click', function() {
+            if (isPlaying) {
+                stopAudio();
+            } else {
+                playMorseAudio();
+            }
+        });
+
+        speedSlider.addEventListener('input', function() {
+            const val = parseInt(this.value);
+            const labels = ['很慢', '慢', '较慢', '稍慢', '稍慢', '中速', '稍快', '较快', '快', '很快', '极快'];
+            speedValue.textContent = labels[val] || '中速';
+        });
+
+        refToggle.addEventListener('click', function() {
+            refContent.classList.toggle('show');
+            refArrow.textContent = refContent.classList.contains('show') ? '▲' : '▼';
+        });
+
+        function convertTextToMorse(text) {
+            const upperText = text.toUpperCase();
+            const words = upperText.split(' ');
+            const morseWords = [];
+
+            for (let word of words) {
+                const morseChars = [];
+                for (let char of word) {
+                    if (morseCode[char]) {
+                        morseChars.push(morseCode[char]);
+                    } else {
+                        morseChars.push('?');
+                    }
+                }
+                morseWords.push(morseChars.join(' '));
+            }
+
+            currentMorse = morseWords.join(' / ');
+            outputText.textContent = currentMorse;
+            outputArea.style.display = 'block';
+            visualMorse.style.display = 'block';
+            audioControls.style.display = 'flex';
+
+            displayVisualMorse(currentMorse);
+        }
+
+        function convertMorseToText(morse) {
+            const words = morse.split(' / ');
+            const textWords = [];
+
+            for (let word of words) {
+                const chars = word.trim().split(' ');
+                let textWord = '';
+
+                for (let char of chars) {
+                    const found = Object.keys(morseCode).find(key => morseCode[key] === char);
+                    textWord += found || '?';
+                }
+
+                textWords.push(textWord);
+            }
+
+            const result = textWords.join(' ');
+            outputText.textContent = result;
+            outputArea.style.display = 'block';
+            visualMorse.style.display = 'none';
+            audioControls.style.display = 'none';
+        }
+
+        function displayVisualMorse(morse) {
+            visualContent.innerHTML = '';
+
+            for (let char of morse) {
+                if (char === '·') {
+                    const dot = document.createElement('span');
+                    dot.className = 'dot';
+                    visualContent.appendChild(dot);
+                } else if (char === '—') {
+                    const dash = document.createElement('span');
+                    dash.className = 'dash';
+                    visualContent.appendChild(dash);
+                } else if (char === ' ') {
+                    const space = document.createElement('span');
+                    space.className = 'space';
+                    visualContent.appendChild(space);
+                } else if (char === '/') {
+                    const wordSpace = document.createElement('span');
+                    wordSpace.className = 'word-space';
+                    visualContent.appendChild(wordSpace);
+                }
+            }
+        }
+
+        function playMorseAudio() {
+            if (!currentMorse) return;
+
+            isPlaying = true;
+            playBtn.textContent = '⏹ 停止';
+            playBtn.classList.add('playing');
+
+            audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            const speed = parseInt(speedSlider.value);
+            const dotDuration = 0.15 / (speed / 5);
+
+            const morseChars = currentMorse.split('');
+            let time = audioContext.currentTime;
+
+            for (let char of morseChars) {
+                if (char === '·') {
+                    playBeep(time, dotDuration);
+                    time += dotDuration * 2;
+                } else if (char === '—') {
+                    playBeep(time, dotDuration * 3);
+                    time += dotDuration * 4;
+                } else if (char === ' ') {
+                    time += dotDuration * 3;
+                } else if (char === '/') {
+                    time += dotDuration * 7;
+                }
+            }
+
+            const totalDuration = time - audioContext.currentTime;
+            setTimeout(() => {
+                stopAudio();
+            }, totalDuration * 1000);
+        }
+
+        function playBeep(startTime, duration) {
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+
+            oscillator.frequency.value = 600;
+            oscillator.type = 'sine';
+
+            gainNode.gain.setValueAtTime(0.5, startTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, startTime + duration);
+
+            oscillator.start(startTime);
+            oscillator.stop(startTime + duration);
+        }
+
+        function stopAudio() {
+            isPlaying = false;
+            playBtn.textContent = '▶ 播放';
+            playBtn.classList.remove('playing');
+
+            if (audioContext) {
+                audioContext.close();
+                audioContext = null;
+            }
+        }
+
+        function copyToClipboard(text) {
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(text).then(() => {
+                    showToast('已复制到剪贴板！');
+                });
+            } else {
+                const textarea = document.createElement('textarea');
+                textarea.value = text;
+                document.body.appendChild(textarea);
+                textarea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textarea);
+                showToast('已复制到剪贴板！');
+            }
+        }
+
+        function showToast(message) {
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 2000);
+        }
+
+        function initReferenceTable() {
+            for (let char in morseCode) {
+                const item = document.createElement('div');
+                item.className = 'ref-item';
+                item.innerHTML = `
+                    <div class="ref-char">${char}</div>
+                    <div class="ref-code">${morseCode[char]}</div>
+                `;
+                refGrid.appendChild(item);
+            }
+        }
+
+        initReferenceTable();
+    </script>
+</body>
+</html>

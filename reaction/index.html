@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>反应速度测试</title>
+    <style>
+        :root {
+            --bg: #f0f2f5;
+            --card-bg: rgba(255, 255, 255, 0.7);
+            --card-border: rgba(255, 255, 255, 0.3);
+            --text: #1a1a2e;
+            --text-secondary: #666;
+            --accent: #6c5ce7;
+            --accent-light: #a29bfe;
+            --red: #ff4757;
+            --green: #2ed573;
+            --yellow: #ffa502;
+        }
+        [data-theme="dark"] {
+            --bg: #1a1a2e;
+            --card-bg: rgba(255, 255, 255, 0.05);
+            --card-border: rgba(255, 255, 255, 0.1);
+            --text: #eee;
+            --text-secondary: #aaa;
+            --accent: #a29bfe;
+            --accent-light: #6c5ce7;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', 'Microsoft YaHei', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            padding: 20px;
+            transition: background 0.3s, color 0.3s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .container { max-width: 600px; width: 100%; }
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--accent);
+            text-decoration: none;
+            font-size: 14px;
+            margin-bottom: 20px;
+            padding: 8px 16px;
+            border-radius: 8px;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            backdrop-filter: blur(10px);
+            transition: all 0.2s;
+            align-self: flex-start;
+        }
+        .back-btn:hover { background: var(--accent); color: white; }
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 20px;
+            backdrop-filter: blur(20px);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            width: 100%;
+        }
+        h1 { font-size: 28px; margin-bottom: 20px; text-align: center; }
+
+        /* Game Area */
+        .game-area {
+            width: 100%;
+            height: 300px;
+            border-radius: 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-bottom: 20px;
+            user-select: none;
+            position: relative;
+            overflow: hidden;
+        }
+        .game-area.waiting {
+            background: var(--red);
+            color: white;
+        }
+        .game-area.ready {
+            background: var(--green);
+            color: white;
+            animation: pulse 1s infinite;
+        }
+        .game-area.result {
+            background: var(--card-bg);
+            border: 2px solid var(--accent);
+            color: var(--text);
+        }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+        }
+        .game-text { font-size: 24px; font-weight: 700; text-align: center; padding: 20px; }
+        .game-subtext { font-size: 16px; opacity: 0.8; margin-top: 10px; }
+
+        /* Stats */
+        .stats { display: flex; justify-content: space-around; margin-bottom: 20px; text-align: center; }
+        .stat { flex: 1; }
+        .stat-value { font-size: 32px; font-weight: 700; color: var(--accent); }
+        .stat-label { font-size: 12px; color: var(--text-secondary); }
+
+        /* Progress */
+        .progress-bar { display: flex; gap: 8px; margin-bottom: 20px; justify-content: center; }
+        .progress-dot {
+            width: 12px; height: 12px;
+            border-radius: 50%;
+            background: var(--card-border);
+            transition: all 0.3s;
+        }
+        .progress-dot.done { background: var(--accent); }
+        .progress-dot.current { background: var(--accent-light); animation: pulse 0.5s infinite; }
+
+        /* Ranking */
+        .ranking {
+            text-align: center;
+            font-size: 20px;
+            font-weight: 700;
+            margin: 16px 0;
+            min-height: 30px;
+        }
+        .rank-super { color: #ffd700; }
+        .rank-great { color: var(--green); }
+        .rank-good { color: var(--accent); }
+        .rank-ok { color: var(--yellow); }
+        .rank-slow { color: var(--red); }
+
+        /* Chart */
+        .chart {
+            display: flex;
+            align-items: flex-end;
+            gap: 8px;
+            height: 150px;
+            padding: 16px;
+            border-radius: 10px;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            margin-bottom: 20px;
+        }
+        .chart-bar {
+            flex: 1;
+            background: var(--accent);
+            border-radius: 6px 6px 0 0;
+            min-height: 10px;
+            transition: height 0.5s ease;
+            position: relative;
+        }
+        .chart-bar-label {
+            position: absolute;
+            bottom: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 10px;
+            color: var(--text-secondary);
+        }
+        .chart-bar-value {
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 10px;
+            color: var(--text);
+            white-space: nowrap;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 14px 32px;
+            background: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: 600;
+            transition: all 0.2s;
+            width: 100%;
+        }
+        .btn:hover { background: var(--accent-light); transform: translateY(-2px); box-shadow: 0 4px 12px rgba(108,92,231,0.4); }
+
+        /* Summary */
+        .summary { text-align: center; }
+        .summary h2 { margin-bottom: 16px; }
+        .summary-item { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--card-border); }
+    </style>
+</head>
+<body>
+    <script>
+        (function() {
+            const theme = localStorage.getItem('theme');
+            if (theme) {
+                document.documentElement.setAttribute('data-theme', theme);
+            } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                document.documentElement.setAttribute('data-theme', 'dark');
+            }
+        })();
+    </script>
+    <div class="container">
+        <a href="/" class="back-btn">← 返回</a>
+        <div class="card">
+            <h1>⚡ 反应速度测试</h1>
+
+            <div class="stats">
+                <div class="stat">
+                    <div class="stat-value" id="currentRound">1</div>
+                    <div class="stat-label">当前轮次</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value" id="bestTime">-</div>
+                    <div class="stat-label">最佳时间</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value" id="avgTime">-</div>
+                    <div class="stat-label">平均时间</div>
+                </div>
+            </div>
+
+            <div class="progress-bar" id="progressBar"></div>
+
+            <div class="game-area waiting" id="gameArea" onclick="handleClick()">
+                <div class="game-text" id="gameText">点击「开始」进行测试</div>
+                <div class="game-subtext" id="gameSubtext">共 5 轮，测试你的反应速度</div>
+            </div>
+
+            <div class="ranking" id="ranking"></div>
+
+            <button class="btn" id="startBtn" onclick="startGame()">开始</button>
+
+            <div class="card" id="chartCard" style="display:none; margin-top:20px;">
+                <h3 style="text-align:center; margin-bottom:12px;">反应时间图表</h3>
+                <div class="chart" id="chart"></div>
+            </div>
+
+            <div class="card summary" id="summaryCard" style="display:none;">
+                <h2>测试完成！</h2>
+                <div class="summary-item"><span>最佳时间</span><span id="summaryBest">-</span></div>
+                <div class="summary-item"><span>平均时间</span><span id="summaryAvg">-</span></div>
+                <div class="summary-item"><span>评级</span><span id="summaryRank">-</span></div>
+                <button class="btn" style="margin-top:16px;" onclick="resetGame()">再来一次</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const TOTAL_ROUNDS = 5;
+        let state = 'idle'; // idle, waiting, ready, done
+        let round = 0;
+        let times = [];
+        let bestTime = null;
+        let timeoutId = null;
+        let startTime = null;
+
+        function initProgressBar() {
+            const bar = document.getElementById('progressBar');
+            bar.innerHTML = '';
+            for (let i = 0; i < TOTAL_ROUNDS; i++) {
+                const dot = document.createElement('div');
+                dot.className = 'progress-dot';
+                dot.id = 'dot-' + i;
+                bar.appendChild(dot);
+            }
+        }
+
+        function startGame() {
+            round = 0;
+            times = [];
+            bestTime = null;
+            document.getElementById('summaryCard').style.display = 'none';
+            document.getElementById('chartCard').style.display = 'none';
+            document.getElementById('ranking').textContent = '';
+            initProgressBar();
+            nextRound();
+        }
+
+        function nextRound() {
+            if (round >= TOTAL_ROUNDS) {
+                showSummary();
+                return;
+            }
+            state = 'waiting';
+            document.getElementById('currentRound').textContent = round + 1;
+            updateProgressDots();
+            const area = document.getElementById('gameArea');
+            area.className = 'game-area waiting';
+            document.getElementById('gameText').textContent = '等待...';
+            document.getElementById('gameSubtext').textContent = '不要点击！等屏幕变绿';
+            document.getElementById('startBtn').style.display = 'none';
+
+            const delay = 1000 + Math.random() * 4000;
+            timeoutId = setTimeout(() => {
+                state = 'ready';
+                area.className = 'game-area ready';
+                document.getElementById('gameText').textContent = '快点击！';
+                document.getElementById('gameSubtext').textContent = '现在！';
+                startTime = performance.now();
+            }, delay);
+        }
+
+        function handleClick() {
+            if (state === 'idle') return;
+            if (state === 'waiting') {
+                // Clicked too early
+                clearTimeout(timeoutId);
+                state = 'done';
+                document.getElementById('gameArea').className = 'game-area result';
+                document.getElementById('gameText').textContent = '太早了！';
+                document.getElementById('gameSubtext').textContent = '点击重试这一轮';
+                document.getElementById('gameArea').onclick = () => { document.getElementById('gameArea').onclick = handleClick; nextRound(); };
+                return;
+            }
+            if (state === 'ready') {
+                const reactionTime = Math.round(performance.now() - startTime);
+                times.push(reactionTime);
+                if (bestTime === null || reactionTime < bestTime) bestTime = reactionTime;
+                state = 'done';
+                round++;
+                showResult(reactionTime);
+            }
+        }
+
+        function showResult(time) {
+            const area = document.getElementById('gameArea');
+            area.className = 'game-area result';
+            document.getElementById('gameText').textContent = time + ' ms';
+            document.getElementById('gameSubtext').textContent = getRankText(time);
+            document.getElementById('bestTime').textContent = bestTime + 'ms';
+            const avg = Math.round(times.reduce((a, b) => a + b, 0) / times.length);
+            document.getElementById('avgTime').textContent = avg + 'ms';
+            document.getElementById('ranking').innerHTML = getRankHTML(time);
+
+            updateProgressDots();
+
+            setTimeout(() => {
+                if (round < TOTAL_ROUNDS) {
+                    nextRound();
+                } else {
+                    showSummary();
+                }
+            }, 1500);
+        }
+
+        function updateProgressDots() {
+            for (let i = 0; i < TOTAL_ROUNDS; i++) {
+                const dot = document.getElementById('dot-' + i);
+                dot.className = 'progress-dot';
+                if (i < times.length) dot.classList.add('done');
+                else if (i === times.length) dot.classList.add('current');
+            }
+        }
+
+        function getRankText(time) {
+            if (time < 200) return '超人！';
+            if (time < 300) return '优秀！';
+            if (time < 400) return '不错！';
+            if (time < 500) return '普通';
+            return '慢了...';
+        }
+
+        function getRankHTML(time) {
+            let cls = '';
+            if (time < 200) cls = 'rank-super';
+            else if (time < 300) cls = 'rank-great';
+            else if (time < 400) cls = 'rank-good';
+            else if (time < 500) cls = 'rank-ok';
+            else cls = 'rank-slow';
+            return `<span class="${cls}">${getRankText(time)}</span>`;
+        }
+
+        function showSummary() {
+            document.getElementById('gameArea').className = 'game-area result';
+            document.getElementById('gameText').textContent = '完成！';
+            document.getElementById('gameSubtext').textContent = `平均: ${Math.round(times.reduce((a,b)=>a+b,0)/times.length)}ms`;
+            document.getElementById('startBtn').style.display = 'block';
+            document.getElementById('startBtn').textContent = '再来一次';
+
+            const avg = Math.round(times.reduce((a, b) => a + b, 0) / times.length);
+            document.getElementById('summaryBest').textContent = bestTime + ' ms';
+            document.getElementById('summaryAvg').textContent = avg + ' ms';
+            document.getElementById('summaryRank').innerHTML = getRankHTML(avg);
+            document.getElementById('summaryCard').style.display = 'block';
+
+            renderChart();
+        }
+
+        function renderChart() {
+            const chart = document.getElementById('chart');
+            chart.innerHTML = '';
+            const maxTime = Math.max(...times, 500);
+            times.forEach((t, i) => {
+                const bar = document.createElement('div');
+                bar.className = 'chart-bar';
+                const height = Math.max((t / maxTime) * 100, 5);
+                bar.style.height = height + '%';
+                bar.innerHTML = `<div class="chart-bar-value">${t}ms</div><div class="chart-bar-label">#${i+1}</div>`;
+                chart.appendChild(bar);
+            });
+            document.getElementById('chartCard').style.display = 'block';
+        }
+
+        function resetGame() {
+            state = 'idle';
+            document.getElementById('gameArea').className = 'game-area waiting';
+            document.getElementById('gameText').textContent = '点击「开始」进行测试';
+            document.getElementById('gameSubtext').textContent = '共 5 轮，测试你的反应速度';
+            document.getElementById('startBtn').style.display = 'block';
+            document.getElementById('startBtn').textContent = '开始';
+            document.getElementById('summaryCard').style.display = 'none';
+            document.getElementById('chartCard').style.display = 'none';
+            document.getElementById('ranking').textContent = '';
+        }
+
+        initProgressBar();
+    </script>
+</body>
+</html>

@@ -20,7 +20,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        /* ===== CSS Variables ===== */
+        /* 颜色变量 */
         :root {
             --bg-primary: #f0f2f5;
             --bg-secondary: #ffffff;
@@ -71,7 +71,7 @@
             --shadow-card: 0 2px 8px rgba(0, 0, 0, 0.2);
         }
 
-        /* ===== Reset ===== */
+        /* 重置 */
         *, *::before, *::after {
             margin: 0;
             padding: 0;
@@ -91,7 +91,7 @@
             transition: background var(--transition), color var(--transition);
         }
 
-        /* ===== Particle Canvas ===== */
+        /* 粒子背景 */
         #particles {
             position: fixed;
             top: 0;
@@ -102,7 +102,7 @@
             pointer-events: none;
         }
 
-        /* ===== Header ===== */
+        /* 顶栏 */
         .header {
             position: fixed;
             top: 0;
@@ -242,7 +242,7 @@
             transform: rotate(15deg);
         }
 
-        /* ===== Sidebar ===== */
+        /* 侧边栏 */
         .sidebar {
             position: fixed;
             top: var(--header-height);
@@ -333,7 +333,7 @@
             margin: 12px 14px;
         }
 
-        /* ===== Main Content ===== */
+        /* 主内容区 */
         .main {
             margin-left: var(--sidebar-width);
             margin-top: var(--header-height);
@@ -343,7 +343,7 @@
             z-index: 1;
         }
 
-        /* ===== Hero Banner ===== */
+        /* 横幅 */
         .hero {
             background: var(--gradient-1);
             border-radius: var(--radius-xl);
@@ -416,7 +416,7 @@
             letter-spacing: 0.5px;
         }
 
-        /* ===== Section ===== */
+        /* 分区 */
         .section {
             margin-bottom: 36px;
             animation: fadeInUp 0.5s ease forwards;
@@ -469,7 +469,7 @@
             margin-top: 2px;
         }
 
-        /* ===== Group ===== */
+        /* 分组 */
         .group {
             margin-bottom: 24px;
         }
@@ -484,14 +484,14 @@
             letter-spacing: 0.3px;
         }
 
-        /* ===== Card Grid ===== */
+        /* 卡片网格 */
         .card-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
             gap: 14px;
         }
 
-        /* ===== Card ===== */
+        /* 卡片 */
         .card {
             display: flex;
             flex-direction: column;
@@ -581,12 +581,12 @@
             color: #f5576c;
         }
 
-        /* ===== Hidden Section ===== */
+        /* 隐藏区域 */
         .section-hidden {
             display: none;
         }
 
-        /* ===== Site Settings ===== */
+        /* 网站设置 */
         .settings-panel {
             background: var(--bg-card);
             border: 1px solid var(--border);
@@ -688,7 +688,7 @@
             margin-top: 2px;
         }
 
-        /* ===== Footer ===== */
+        /* 底栏 */
         .footer {
             margin-top: 48px;
             padding: 24px 0;
@@ -710,7 +710,7 @@
             text-decoration: underline;
         }
 
-        /* ===== Toast ===== */
+        /* 提示框 */
         .toast-container {
             position: fixed;
             top: 80px;
@@ -751,7 +751,7 @@
             to { opacity: 0; transform: translateX(30px); }
         }
 
-        /* ===== Scroll to Top ===== */
+        /* 回顶按钮 */
         .scroll-top {
             position: fixed;
             bottom: 32px;
@@ -783,7 +783,7 @@
             transform: translateY(-2px);
         }
 
-        /* ===== Loading ===== */
+        /* 加载 */
         .loading-container {
             display: flex;
             flex-direction: column;
@@ -811,7 +811,7 @@
             color: var(--text-muted);
         }
 
-        /* ===== Search Highlight ===== */
+        /* 搜索高亮 */
         .card.search-hidden {
             display: none;
         }
@@ -822,7 +822,7 @@
             padding: 0 2px;
         }
 
-        /* ===== Mobile Overlay ===== */
+        /* 移动端遮罩 */
         .sidebar-overlay {
             display: none;
             position: fixed;
@@ -839,7 +839,7 @@
             display: block;
         }
 
-        /* ===== Responsive ===== */
+        /* 响应式 */
         @media (max-width: 768px) {
             .hamburger {
                 display: flex;
@@ -900,7 +900,7 @@
             }
         }
 
-        /* ===== Days Counter ===== */
+        /* 运营天数 */
         .days-badge {
             display: inline-flex;
             align-items: center;
@@ -914,7 +914,7 @@
             z-index: 1;
         }
 
-        /* ===== Keyboard hint ===== */
+        /* 快捷键提示 */
         .kbd-hint {
             position: fixed;
             bottom: 32px;
@@ -1094,7 +1094,7 @@
     </div>
 
     <script>
-    // ===== Data Configuration =====
+    // 网站数据
     const SITE_DATA = {
         navItems: [
             { text: "机房必备", targetId: "section-lab", icon: "\uD83D\uDCBB", hidden: true },
@@ -1308,14 +1308,14 @@
         ]
     };
 
-    // ===== Global State =====
+    // 全局变量
     let seeallUnlocked = false;
     let inputBuffer = '';
     const TARGET_PASSWORD = 'seeall';
     const HIDDEN_SECTION_IDS = ['section-lab', 'section-settings'];
     let currentActiveSection = null;
 
-    // ===== Theme =====
+    // Theme
     function initTheme() {
         const saved = localStorage.getItem('theme');
         if (saved === 'light' || saved === 'dark') {
@@ -1381,7 +1381,7 @@
         }
     }
 
-    // ===== Toast =====
+    // Toast
     function showToast(message, icon = '✨') {
         const container = document.getElementById('toastContainer');
         const toast = document.createElement('div');
@@ -1391,7 +1391,7 @@
         setTimeout(() => toast.remove(), 3000);
     }
 
-    // ===== Days Counter =====
+    // 运营天数
     function calculateDays(startDate) {
         const start = new Date(startDate);
         const today = new Date();
@@ -1400,7 +1400,7 @@
 
     const days = calculateDays('2024-07-01');
 
-    // ===== Render Navbar =====
+    // 渲染导航
     function renderNavbar() {
         const navList = document.getElementById('navList');
         navList.innerHTML = '';
@@ -1439,7 +1439,7 @@
         });
     }
 
-    // ===== Render Sections =====
+    // 渲染分区
     function renderSections() {
         const container = document.getElementById('dynamicSections');
         container.innerHTML = '';
@@ -1539,7 +1539,7 @@
         document.getElementById('footerDays').textContent = days;
     }
 
-    // ===== Search =====
+    // Search
     function initSearch() {
         const input = document.getElementById('searchInput');
         let debounceTimer;
@@ -1584,7 +1584,7 @@
         });
     }
 
-    // ===== Keyboard Password =====
+    // 键盘密码
     document.addEventListener('keydown', function(e) {
         if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.isContentEditable) return;
         if (e.key.length === 1) {
@@ -1613,7 +1613,7 @@
         document.getElementById('kbdHint').classList.remove('visible');
     }
 
-    // ===== Scroll Tracking =====
+    // 滚动追踪
     function initScrollTracking() {
         const mainContent = document.querySelector('.main');
         window.addEventListener('scroll', () => {
@@ -1644,7 +1644,7 @@
         });
     }
 
-    // ===== Mobile Sidebar =====
+    // 移动端侧栏
     function initMobileSidebar() {
         const hamburger = document.getElementById('hamburgerBtn');
         const sidebar = document.getElementById('sidebar');
@@ -1663,14 +1663,14 @@
         document.getElementById('sidebarOverlay').classList.remove('active');
     }
 
-    // ===== Scroll to Top =====
+    // 回顶
     function initScrollTop() {
         document.getElementById('scrollTopBtn').addEventListener('click', () => {
             window.scrollTo({ top: 0, behavior: 'smooth' });
         });
     }
 
-    // ===== Change Title =====
+    // 换标题
     function changeTitle(title) {
         document.title = title;
         // Update active button
@@ -1680,7 +1680,7 @@
         showToast(`标题已更改为「${title}」`, '📝');
     }
 
-    // ===== Particles =====
+    // Particles
     function initParticles() {
         const canvas = document.getElementById('particles');
         const ctx = canvas.getContext('2d');
@@ -1755,7 +1755,7 @@
         });
     }
 
-    // ===== Keyboard Hint =====
+    // 快捷键提示
     function showKeyboardHint() {
         setTimeout(() => {
             document.getElementById('kbdHint').classList.add('visible');
@@ -1765,7 +1765,7 @@
         }, 3000);
     }
 
-    // ===== Init =====
+    // Init
     document.addEventListener('DOMContentLoaded', () => {
         initTheme();
         renderNavbar();
@@ -1780,7 +1780,7 @@
         // Theme toggle
         document.getElementById('themeToggle').addEventListener('click', toggleTheme);
 
-        // Security mode — visibilitychange伪装 + 长按恢复
+        // 安全模式 - 切标签页伪装+长按恢复
         let securityEnabled = false;
         let originalBodyHTML = '';
         let originalTitle = '';
@@ -1826,12 +1826,12 @@
                 document.body.innerHTML = originalBodyHTML;
                 document.title = originalTitle;
                 document.body.style.cssText = '';
-                // Re-initialize event listeners after restoring DOM
+                // 恢复DOM后重新绑定事件
                 reInitAfterRestore();
             }
         }
         function reInitAfterRestore() {
-            // Re-bind critical listeners after DOM restore
+            // DOM恢复后重新绑定
             document.getElementById('themeToggle')?.addEventListener('click', toggleTheme);
             const secCheckbox = document.getElementById('securityMode');
             if (secCheckbox) {

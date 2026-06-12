@@ -21,7 +21,7 @@ try {
         throw new Error('访问控制未启用');
     }
 } catch (e) {
-    console.warn(e.message); // Log the error or handle it accordingly
+    console.warn(e.message);
 }
 const patternToRegExp = pattern => new RegExp(`^${pattern.replace(/\./g, '\\.').replace(/\*/g, '.*').replace(/\?/g, '.')}$`);
 const getIP = () => Promise.any([

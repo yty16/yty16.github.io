@@ -1523,6 +1523,280 @@
                 width: 100%;
             }
         }
+
+        /* 内置工具弹窗 */
+        .tool-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(8px);
+            z-index: 300;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .tool-modal.active {
+            display: flex;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .tool-card {
+            background: var(--bg-card);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: var(--shadow-lg);
+            position: relative;
+            animation: slideUp 0.3s ease;
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .tool-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .tool-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: var(--radius-sm);
+            background: var(--gradient-1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        .tool-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .tool-close {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            width: 32px;
+            height: 32px;
+            border: none;
+            background: var(--bg-secondary);
+            border-radius: 8px;
+            color: var(--text-muted);
+            font-size: 16px;
+            cursor: pointer;
+            transition: all var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .tool-close:hover {
+            background: var(--accent);
+            color: white;
+        }
+
+        /* 计算器 */
+        .calc-display {
+            width: 100%;
+            padding: 16px;
+            font-size: 24px;
+            font-weight: 700;
+            text-align: right;
+            border: 2px solid var(--border);
+            border-radius: var(--radius-sm);
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            margin-bottom: 12px;
+            font-family: 'Courier New', monospace;
+        }
+
+        .calc-buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+        }
+
+        .calc-btn {
+            padding: 16px;
+            font-size: 18px;
+            font-weight: 600;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            cursor: pointer;
+            transition: all var(--transition);
+            font-family: inherit;
+        }
+
+        .calc-btn:hover {
+            background: var(--accent);
+            color: white;
+            border-color: var(--accent);
+        }
+
+        .calc-btn.operator {
+            background: var(--accent-light);
+            color: var(--accent);
+        }
+
+        .calc-btn.equals {
+            background: var(--accent);
+            color: white;
+            grid-column: span 2;
+        }
+
+        /* 记事本 */
+        .notepad-area {
+            width: 100%;
+            height: 300px;
+            padding: 16px;
+            font-size: 14px;
+            border: 2px solid var(--border);
+            border-radius: var(--radius-sm);
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            resize: vertical;
+            font-family: 'Consolas', 'Microsoft YaHei', monospace;
+            line-height: 1.6;
+        }
+
+        .notepad-toolbar {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        /* 番茄钟 */
+        .pomodoro-display {
+            text-align: center;
+            padding: 40px 0;
+        }
+
+        .pomodoro-timer {
+            font-size: 72px;
+            font-weight: 800;
+            color: var(--accent);
+            font-family: 'Courier New', monospace;
+            margin-bottom: 20px;
+        }
+
+        .pomodoro-status {
+            font-size: 18px;
+            color: var(--text-secondary);
+            margin-bottom: 24px;
+        }
+
+        .pomodoro-controls {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+        }
+
+        .pomodoro-btn {
+            padding: 12px 32px;
+            font-size: 16px;
+            font-weight: 600;
+            border: none;
+            border-radius: var(--radius-sm);
+            background: var(--accent);
+            color: white;
+            cursor: pointer;
+            transition: all var(--transition);
+            font-family: inherit;
+        }
+
+        .pomodoro-btn:hover {
+            background: var(--accent-hover);
+            transform: translateY(-2px);
+        }
+
+        .pomodoro-btn.secondary {
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+        }
+
+        /* 单位换算 */
+        .converter-row {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 16px;
+            align-items: center;
+        }
+
+        .converter-input {
+            flex: 1;
+            padding: 12px;
+            font-size: 16px;
+            border: 2px solid var(--border);
+            border-radius: var(--radius-sm);
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            font-family: inherit;
+        }
+
+        .converter-select {
+            padding: 12px;
+            font-size: 14px;
+            border: 2px solid var(--border);
+            border-radius: var(--radius-sm);
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            font-family: inherit;
+        }
+
+        /* Base64工具 */
+        .base64-textarea {
+            width: 100%;
+            height: 120px;
+            padding: 12px;
+            font-size: 14px;
+            border: 2px solid var(--border);
+            border-radius: var(--radius-sm);
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            resize: vertical;
+            font-family: 'Consolas', monospace;
+            margin-bottom: 12px;
+        }
+
+        .base64-result {
+            width: 100%;
+            height: 120px;
+            padding: 12px;
+            font-size: 14px;
+            border: 2px solid var(--border);
+            border-radius: var(--radius-sm);
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            resize: vertical;
+            font-family: 'Consolas', monospace;
+            margin-top: 12px;
+        }
     </style>
 </head>
 <body>
@@ -1615,6 +1889,17 @@
             </div>
 
             <div class="admin-section">
+                <div class="admin-section-title">🛠️ 内置工具</div>
+                <div class="admin-actions">
+                    <button class="admin-btn" onclick="openCalculator()">🧮 计算器</button>
+                    <button class="admin-btn" onclick="openNotepad()">📝 记事本</button>
+                    <button class="admin-btn" onclick="openPomodoro()">🍅 番茄钟</button>
+                    <button class="admin-btn" onclick="openUnitConverter()">📏 单位换算</button>
+                    <button class="admin-btn" onclick="openBase64()">🔤 Base64编码</button>
+                </div>
+            </div>
+
+            <div class="admin-section">
                 <div class="admin-section-title">🔧 高级功能</div>
                 <div class="admin-actions">
                     <button class="admin-btn" onclick="adminToggleFullscreen()">🖥️ 全屏模式</button>
@@ -1664,6 +1949,137 @@
                     <button class="admin-btn" onclick="adminImportConfig()" style="font-size:13px;">📂 导入配置</button>
                     <button class="admin-btn" onclick="adminResetAll()" style="font-size:13px;">🔄 恢复默认</button>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 计算器 -->
+    <div class="tool-modal" id="calculatorModal">
+        <div class="tool-card">
+            <button class="tool-close" onclick="closeTool('calculatorModal')" title="关闭">✕</button>
+            <div class="tool-header">
+                <div class="tool-icon">🧮</div>
+                <div class="tool-title">计算器</div>
+            </div>
+            <input class="calc-display" id="calcDisplay" type="text" value="0" readonly>
+            <div class="calc-buttons">
+                <button class="calc-btn" onclick="calcInput('C')">C</button>
+                <button class="calc-btn" onclick="calcInput('±')">±</button>
+                <button class="calc-btn operator" onclick="calcInput('%')">%</button>
+                <button class="calc-btn operator" onclick="calcInput('÷')">÷</button>
+                <button class="calc-btn" onclick="calcInput('7')">7</button>
+                <button class="calc-btn" onclick="calcInput('8')">8</button>
+                <button class="calc-btn" onclick="calcInput('9')">9</button>
+                <button class="calc-btn operator" onclick="calcInput('×')">×</button>
+                <button class="calc-btn" onclick="calcInput('4')">4</button>
+                <button class="calc-btn" onclick="calcInput('5')">5</button>
+                <button class="calc-btn" onclick="calcInput('6')">6</button>
+                <button class="calc-btn operator" onclick="calcInput('-')">-</button>
+                <button class="calc-btn" onclick="calcInput('1')">1</button>
+                <button class="calc-btn" onclick="calcInput('2')">2</button>
+                <button class="calc-btn" onclick="calcInput('3')">3</button>
+                <button class="calc-btn operator" onclick="calcInput('+')">+</button>
+                <button class="calc-btn" onclick="calcInput('0')" style="grid-column:span 2;">0</button>
+                <button class="calc-btn equals" onclick="calcInput('=')">=</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 记事本 -->
+    <div class="tool-modal" id="notepadModal">
+        <div class="tool-card">
+            <button class="tool-close" onclick="closeTool('notepadModal')" title="关闭">✕</button>
+            <div class="tool-header">
+                <div class="tool-icon">📝</div>
+                <div class="tool-title">记事本</div>
+            </div>
+            <textarea class="notepad-area" id="notepadContent" placeholder="在这里记录你的笔记..."></textarea>
+            <div class="notepad-toolbar">
+                <button class="admin-btn" onclick="saveNotepad()">💾 保存</button>
+                <button class="admin-btn" onclick="exportNotepad()">📄 导出</button>
+                <button class="admin-btn" onclick="clearNotepad()">🗑️ 清空</button>
+                <div style="margin-left:auto;font-size:12px;color:var(--text-muted);" id="notepadStatus"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 番茄钟 -->
+    <div class="tool-modal" id="pomodoroModal">
+        <div class="tool-card">
+            <button class="tool-close" onclick="closeTool('pomodoroModal')" title="关闭">✕</button>
+            <div class="tool-header">
+                <div class="tool-icon">🍅</div>
+                <div class="tool-title">番茄钟</div>
+            </div>
+            <div class="pomodoro-display">
+                <div class="pomodoro-timer" id="pomodoroTimer">25:00</div>
+                <div class="pomodoro-status" id="pomodoroStatus">准备开始</div>
+                <div class="pomodoro-controls">
+                    <button class="pomodoro-btn" id="pomodoroStartBtn" onclick="pomodoroStart()">▶ 开始</button>
+                    <button class="pomodoro-btn secondary" onclick="pomodoroReset()">↻ 重置</button>
+                </div>
+                <div style="margin-top:20px;display:flex;gap:8px;justify-content:center;">
+                    <button class="admin-btn" onclick="pomodoroSetTime(25)" id="pom25" style="font-size:12px;padding:6px 16px;border-color:var(--accent);">25分钟</button>
+                    <button class="admin-btn" onclick="pomodoroSetTime(15)" id="pom15" style="font-size:12px;padding:6px 16px;">15分钟</button>
+                    <button class="admin-btn" onclick="pomodoroSetTime(5)" id="pom5" style="font-size:12px;padding:6px 16px;">5分钟</button>
+                </div>
+                <div style="margin-top:16px;font-size:13px;color:var(--text-muted);">
+                    已完成番茄：<span id="pomodoroCount">0</span> 个
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 单位换算 -->
+    <div class="tool-modal" id="unitModal">
+        <div class="tool-card">
+            <button class="tool-close" onclick="closeTool('unitModal')" title="关闭">✕</button>
+            <div class="tool-header">
+                <div class="tool-icon">📏</div>
+                <div class="tool-title">单位换算</div>
+            </div>
+            <div style="margin-bottom:12px;">
+                <select class="converter-select" id="unitType" onchange="updateUnitOptions()" style="width:100%;padding:12px;">
+                    <option value="length">长度</option>
+                    <option value="weight">重量</option>
+                    <option value="temperature">温度</option>
+                    <option value="area">面积</option>
+                    <option value="volume">体积</option>
+                    <option value="speed">速度</option>
+                    <option value="data">数据存储</option>
+                    <option value="time">时间</option>
+                </select>
+            </div>
+            <div class="converter-row">
+                <input class="converter-input" id="unitFrom" type="number" value="1" oninput="convertUnit()">
+                <select class="converter-select" id="unitFromType" onchange="convertUnit()"></select>
+            </div>
+            <div style="text-align:center;font-size:24px;color:var(--accent);margin:8px 0;">⇅</div>
+            <div class="converter-row">
+                <input class="converter-input" id="unitTo" type="text" readonly>
+                <select class="converter-select" id="unitToType" onchange="convertUnit()"></select>
+            </div>
+        </div>
+    </div>
+
+    <!-- Base64编码 -->
+    <div class="tool-modal" id="base64Modal">
+        <div class="tool-card">
+            <button class="tool-close" onclick="closeTool('base64Modal')" title="关闭">✕</button>
+            <div class="tool-header">
+                <div class="tool-icon">🔤</div>
+                <div class="tool-title">Base64 编解码</div>
+            </div>
+            <div style="font-size:13px;color:var(--text-secondary);margin-bottom:8px;">输入文本：</div>
+            <textarea class="base64-textarea" id="base64Input" placeholder="输入要编码或解码的文本..."></textarea>
+            <div style="display:flex;gap:8px;">
+                <button class="admin-btn primary" onclick="base64Encode()" style="flex:1;">编码 →</button>
+                <button class="admin-btn" onclick="base64Decode()" style="flex:1;">← 解码</button>
+            </div>
+            <div style="font-size:13px;color:var(--text-secondary);margin-top:16px;margin-bottom:8px;">结果：</div>
+            <textarea class="base64-result" id="base64Output" readonly placeholder="结果将显示在这里..."></textarea>
+            <div style="margin-top:8px;text-align:right;">
+                <button class="admin-btn" onclick="copyBase64Result()" style="font-size:12px;padding:6px 16px;">📋 复制结果</button>
             </div>
         </div>
     </div>
@@ -2759,6 +3175,362 @@
         showToast('配置已导出为JSON文件', '📄');
     }
 
+    // 内置工具
+    function openTool(id) {
+        var modal = document.getElementById(id);
+        if (modal) modal.classList.add('active');
+    }
+
+    function closeTool(id) {
+        var modal = document.getElementById(id);
+        if (modal) modal.classList.remove('active');
+    }
+
+    // 计算器
+    var calcExpression = '';
+    var calcNewNumber = true;
+
+    function openCalculator() {
+        openTool('calculatorModal');
+        calcExpression = '';
+        calcNewNumber = true;
+        document.getElementById('calcDisplay').value = '0';
+        addLog('打开工具', '计算器');
+    }
+
+    function calcInput(val) {
+        var display = document.getElementById('calcDisplay');
+        if (val === 'C') {
+            calcExpression = '';
+            calcNewNumber = true;
+            display.value = '0';
+            return;
+        }
+        if (val === '±') {
+            if (display.value !== '0') {
+                display.value = display.value.startsWith('-') ? display.value.slice(1) : '-' + display.value;
+            }
+            return;
+        }
+        if ('0123456789'.indexOf(val) >= 0) {
+            if (calcNewNumber) {
+                display.value = val;
+                calcNewNumber = false;
+            } else {
+                display.value = display.value === '0' ? val : display.value + val;
+            }
+            return;
+        }
+        if (val === '=') {
+            try {
+                var expr = calcExpression + display.value;
+                expr = expr.replace(/×/g, '*').replace(/÷/g, '/').replace(/%/g, '/100*');
+                var result = Function('"use strict"; return (' + expr + ')')();
+                if (!isFinite(result)) {
+                    display.value = '错误';
+                } else {
+                    display.value = parseFloat(result.toPrecision(12));
+                }
+                calcExpression = '';
+                calcNewNumber = true;
+            } catch(e) {
+                display.value = '错误';
+                calcExpression = '';
+                calcNewNumber = true;
+            }
+            return;
+        }
+        // 操作符
+        calcExpression += display.value + val;
+        calcNewNumber = true;
+    }
+
+    // 记事本
+    function openNotepad() {
+        openTool('notepadModal');
+        var saved = localStorage.getItem('notepadContent') || '';
+        document.getElementById('notepadContent').value = saved;
+        updateNotepadStatus();
+        addLog('打开工具', '记事本');
+    }
+
+    function saveNotepad() {
+        var content = document.getElementById('notepadContent').value;
+        localStorage.setItem('notepadContent', content);
+        updateNotepadStatus();
+        showToast('笔记已保存', '💾');
+    }
+
+    function exportNotepad() {
+        var content = document.getElementById('notepadContent').value;
+        if (!content.trim()) {
+            showToast('记事本内容为空', '⚠️');
+            return;
+        }
+        var blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+        var url = URL.createObjectURL(blob);
+        var a = document.createElement('a');
+        a.href = url;
+        a.download = 'notepad-' + new Date().getTime() + '.txt';
+        a.click();
+        URL.revokeObjectURL(url);
+        showToast('笔记已导出', '📄');
+    }
+
+    function clearNotepad() {
+        if (confirm('确定要清空记事本吗？')) {
+            document.getElementById('notepadContent').value = '';
+            localStorage.removeItem('notepadContent');
+            updateNotepadStatus();
+            showToast('记事本已清空', '🗑️');
+        }
+    }
+
+    function updateNotepadStatus() {
+        var content = document.getElementById('notepadContent').value;
+        var charCount = content.length;
+        var lineCount = content ? content.split('\n').length : 0;
+        var status = document.getElementById('notepadStatus');
+        if (status) status.textContent = charCount + ' 字符 | ' + lineCount + ' 行';
+    }
+
+    // 番茄钟
+    var pomTimer = null;
+    var pomRemaining = 25 * 60;
+    var pomTotal = 25 * 60;
+    var pomRunning = false;
+    var pomCount = parseInt(localStorage.getItem('pomodoroCount') || '0');
+
+    function openPomodoro() {
+        openTool('pomodoroModal');
+        document.getElementById('pomodoroCount').textContent = pomCount;
+        pomodoroSetTime(25);
+        addLog('打开工具', '番茄钟');
+    }
+
+    function pomodoroStart() {
+        if (pomRunning) {
+            clearInterval(pomTimer);
+            pomRunning = false;
+            document.getElementById('pomodoroStartBtn').textContent = '▶ 继续';
+            document.getElementById('pomodoroStatus').textContent = '已暂停';
+            return;
+        }
+        pomRunning = true;
+        document.getElementById('pomodoroStartBtn').textContent = '⏸ 暂停';
+        document.getElementById('pomodoroStatus').textContent = '专注中...';
+        pomTimer = setInterval(function() {
+            pomRemaining--;
+            if (pomRemaining <= 0) {
+                clearInterval(pomTimer);
+                pomRunning = false;
+                pomCount++;
+                localStorage.setItem('pomodoroCount', pomCount.toString());
+                document.getElementById('pomodoroCount').textContent = pomCount;
+                document.getElementById('pomodoroStartBtn').textContent = '▶ 开始';
+                document.getElementById('pomodoroStatus').textContent = '🎉 番茄完成！休息一下吧';
+                document.getElementById('pomodoroTimer').textContent = '00:00';
+                addLog('番茄钟', '完成第' + pomCount + '个番茄');
+                showToast('番茄完成！休息一下吧 🍅', '🎉');
+                return;
+            }
+            var min = Math.floor(pomRemaining / 60);
+            var sec = pomRemaining % 60;
+            document.getElementById('pomodoroTimer').textContent = String(min).padStart(2, '0') + ':' + String(sec).padStart(2, '0');
+        }, 1000);
+    }
+
+    function pomodoroReset() {
+        clearInterval(pomTimer);
+        pomRunning = false;
+        pomRemaining = pomTotal;
+        var min = Math.floor(pomRemaining / 60);
+        var sec = pomRemaining % 60;
+        document.getElementById('pomodoroTimer').textContent = String(min).padStart(2, '0') + ':' + String(sec).padStart(2, '0');
+        document.getElementById('pomodoroStartBtn').textContent = '▶ 开始';
+        document.getElementById('pomodoroStatus').textContent = '准备开始';
+    }
+
+    function pomodoroSetTime(minutes) {
+        clearInterval(pomTimer);
+        pomRunning = false;
+        pomTotal = minutes * 60;
+        pomRemaining = pomTotal;
+        document.getElementById('pomodoroTimer').textContent = String(minutes).padStart(2, '0') + ':00';
+        document.getElementById('pomodoroStartBtn').textContent = '▶ 开始';
+        document.getElementById('pomodoroStatus').textContent = '准备开始';
+        // 更新按钮状态
+        ['pom25','pom15','pom5'].forEach(function(id) {
+            var btn = document.getElementById(id);
+            if (btn) btn.style.borderColor = 'var(--border)';
+        });
+        var activeId = minutes === 25 ? 'pom25' : minutes === 15 ? 'pom15' : 'pom5';
+        var activeBtn = document.getElementById(activeId);
+        if (activeBtn) activeBtn.style.borderColor = 'var(--accent)';
+    }
+
+    // 单位换算
+    var unitData = {
+        length: {
+            name: '长度',
+            units: { 'mm': '毫米', 'cm': '厘米', 'm': '米', 'km': '千米', 'in': '英寸', 'ft': '英尺', 'mi': '英里' },
+            base: 'm',
+            toBase: { 'mm': 0.001, 'cm': 0.01, 'm': 1, 'km': 1000, 'in': 0.0254, 'ft': 0.3048, 'mi': 1609.344 }
+        },
+        weight: {
+            name: '重量',
+            units: { 'mg': '毫克', 'g': '克', 'kg': '千克', 't': '吨', 'lb': '磅', 'oz': '盎司' },
+            base: 'kg',
+            toBase: { 'mg': 0.000001, 'g': 0.001, 'kg': 1, 't': 1000, 'lb': 0.453592, 'oz': 0.0283495 }
+        },
+        temperature: {
+            name: '温度',
+            units: { 'c': '摄氏度', 'f': '华氏度', 'k': '开尔文' },
+            base: 'c',
+            special: true
+        },
+        area: {
+            name: '面积',
+            units: { 'mm2': '平方毫米', 'cm2': '平方厘米', 'm2': '平方米', 'km2': '平方千米', 'acre': '英亩', 'ha': '公顷' },
+            base: 'm2',
+            toBase: { 'mm2': 0.000001, 'cm2': 0.0001, 'm2': 1, 'km2': 1000000, 'acre': 4046.86, 'ha': 10000 }
+        },
+        volume: {
+            name: '体积',
+            units: { 'ml': '毫升', 'l': '升', 'm3': '立方米', 'gal': '加仑(美)', 'cup': '杯' },
+            base: 'l',
+            toBase: { 'ml': 0.001, 'l': 1, 'm3': 1000, 'gal': 3.78541, 'cup': 0.236588 }
+        },
+        speed: {
+            name: '速度',
+            units: { 'ms': '米/秒', 'kmh': '千米/时', 'mph': '英里/时', 'kn': '节' },
+            base: 'ms',
+            toBase: { 'ms': 1, 'kmh': 0.277778, 'mph': 0.44704, 'kn': 0.514444 }
+        },
+        data: {
+            name: '数据存储',
+            units: { 'b': '字节(B)', 'kb': 'KB', 'mb': 'MB', 'gb': 'GB', 'tb': 'TB', 'pb': 'PB' },
+            base: 'b',
+            toBase: { 'b': 1, 'kb': 1024, 'mb': 1048576, 'gb': 1073741824, 'tb': 1099511627776, 'pb': 1125899906842624 }
+        },
+        time: {
+            name: '时间',
+            units: { 's': '秒', 'min': '分钟', 'h': '小时', 'd': '天', 'w': '周', 'y': '年' },
+            base: 's',
+            toBase: { 's': 1, 'min': 60, 'h': 3600, 'd': 86400, 'w': 604800, 'y': 31536000 }
+        }
+    };
+
+    function openUnitConverter() {
+        openTool('unitModal');
+        updateUnitOptions();
+        convertUnit();
+        addLog('打开工具', '单位换算');
+    }
+
+    function updateUnitOptions() {
+        var type = document.getElementById('unitType').value;
+        var data = unitData[type];
+        var fromSelect = document.getElementById('unitFromType');
+        var toSelect = document.getElementById('unitToType');
+        fromSelect.innerHTML = '';
+        toSelect.innerHTML = '';
+        var keys = Object.keys(data.units);
+        keys.forEach(function(key) {
+            var opt1 = document.createElement('option');
+            opt1.value = key;
+            opt1.textContent = data.units[key];
+            fromSelect.appendChild(opt1);
+            var opt2 = document.createElement('option');
+            opt2.value = key;
+            opt2.textContent = data.units[key];
+            toSelect.appendChild(opt2);
+        });
+        if (keys.length > 1) toSelect.value = keys[1];
+    }
+
+    function convertUnit() {
+        var type = document.getElementById('unitType').value;
+        var fromVal = parseFloat(document.getElementById('unitFrom').value) || 0;
+        var fromUnit = document.getElementById('unitFromType').value;
+        var toUnit = document.getElementById('unitToType').value;
+        var data = unitData[type];
+        var result;
+
+        if (type === 'temperature') {
+            // 温度特殊处理
+            var celsius;
+            if (fromUnit === 'c') celsius = fromVal;
+            else if (fromUnit === 'f') celsius = (fromVal - 32) * 5 / 9;
+            else celsius = fromVal - 273.15;
+
+            if (toUnit === 'c') result = celsius;
+            else if (toUnit === 'f') result = celsius * 9 / 5 + 32;
+            else result = celsius + 273.15;
+        } else {
+            var baseVal = fromVal * data.toBase[fromUnit];
+            result = baseVal / data.toBase[toUnit];
+        }
+
+        // 智能格式化结果
+        if (Math.abs(result) >= 1e10 || (Math.abs(result) < 0.0001 && result !== 0)) {
+            document.getElementById('unitTo').value = result.toExponential(6);
+        } else {
+            document.getElementById('unitTo').value = parseFloat(result.toPrecision(10));
+        }
+    }
+
+    // Base64编码
+    function openBase64() {
+        openTool('base64Modal');
+        document.getElementById('base64Input').value = '';
+        document.getElementById('base64Output').value = '';
+        addLog('打开工具', 'Base64编解码');
+    }
+
+    function base64Encode() {
+        var input = document.getElementById('base64Input').value;
+        if (!input) {
+            showToast('请输入要编码的文本', '⚠️');
+            return;
+        }
+        try {
+            var encoded = btoa(unescape(encodeURIComponent(input)));
+            document.getElementById('base64Output').value = encoded;
+            showToast('编码成功', '✅');
+        } catch(e) {
+            document.getElementById('base64Output').value = '编码错误：' + e.message;
+        }
+    }
+
+    function base64Decode() {
+        var input = document.getElementById('base64Input').value;
+        if (!input) {
+            showToast('请输入要解码的文本', '⚠️');
+            return;
+        }
+        try {
+            var decoded = decodeURIComponent(escape(atob(input)));
+            document.getElementById('base64Output').value = decoded;
+            showToast('解码成功', '✅');
+        } catch(e) {
+            document.getElementById('base64Output').value = '解码错误：输入不是有效的Base64字符串';
+        }
+    }
+
+    function copyBase64Result() {
+        var result = document.getElementById('base64Output').value;
+        if (!result) {
+            showToast('没有可复制的内容', '⚠️');
+            return;
+        }
+        navigator.clipboard.writeText(result).then(function() {
+            showToast('已复制到剪贴板', '📋');
+        }).catch(function() {
+            showToast('复制失败', '⚠️');
+        });
+    }
+
     // 虚拟键盘
     var _vkOpen = false;
     var _vkInput = '';
@@ -3099,10 +3871,13 @@
         updateWatermark();
     });
 
-    // Esc关闭管理员面板
+    // Esc关闭管理员面板和工具弹窗
     document.addEventListener('keydown', function(e) {
         if (e.key === 'Escape') {
             closeAdmin();
+            document.querySelectorAll('.tool-modal.active').forEach(function(modal) {
+                modal.classList.remove('active');
+            });
         }
     });
 

@@ -1024,41 +1024,6 @@
                 <div class="loading-text">正在加载资源...</div>
             </div>
         </div>
-
-        
-        <section class="section section-hidden" id="section-settings">
-            <div class="section-header">
-                <div class="section-icon" style="background: var(--gradient-5);">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-                </div>
-                <div>
-                    <div class="section-title">网站设置</div>
-                    <div class="section-subtitle">自定义你的浏览体验</div>
-                </div>
-            </div>
-            <div class="settings-panel">
-                <div class="settings-group">
-                    <div class="settings-label">页面标题</div>
-                    <div class="settings-options">
-                        <button class="settings-btn active" onclick="changeTitle('工具箱 Pro')">工具箱 Pro</button>
-                        <button class="settings-btn" onclick="changeTitle('百度一下，你就知道')">百度一下</button>
-                        <button class="settings-btn" onclick="changeTitle('New Tab')">New Tab</button>
-                    </div>
-                </div>
-                <div class="settings-group">
-                    <div class="settings-label">安全模式</div>
-                    <label class="toggle-switch">
-                        <input type="checkbox" id="securityMode">
-                        <div>
-                            <div class="toggle-label">极域安全模式</div>
-                            <div class="toggle-hint">启用后，离开网页时会自动变为该网页已被阻止</div>
-                        </div>
-                    </label>
-                </div>
-            </div>
-        </section>
-
-        
         <footer class="footer">
             <p class="footer-text">
                 本网站已运营 <strong id="footerDays">--</strong> 天 &nbsp;|&nbsp;
@@ -1079,48 +1044,18 @@
     <script>
         const SITE_DATA = {
         navItems: [
-            { text: "机房必备", targetId: "section-lab", icon: "\uD83D\uDCBB", hidden: true },
-            { text: "网站内置功能", targetId: "section-builtin", icon: "\u2699\uFE0F" },
-            { text: "游戏", targetId: "section-games", icon: "\uD83C\uDFAE" },
-            { text: "工具箱", targetId: "section-tools", icon: "\uD83D\uDD27" },
-            { text: "网站分站", targetId: "section-subsites", icon: "\uD83C\uDF10" },
-            { text: "网站设置", targetId: "section-settings", icon: "\u2699\uFE0F", hidden: true }
+            { text: "内置功能", targetId: "section-builtin", icon: "\uD83D\uDEE0" },
+            { text: "在线游戏", targetId: "section-games", icon: "\uD83C\uDFAE" },
+            { text: "实用工具", targetId: "section-tools", icon: "\uD83D\uDD27" },
+            { text: "资源下载", targetId: "section-downloads", icon: "\uD83D\uDCBE" },
+            { text: "分站导航", targetId: "section-subsites", icon: "\uD83C\uDF10" }
         ],
         sections: [
             {
-                id: "section-lab",
-                title: "机房必备",
-                subtitle: "机房实用工具合集",
-                icon: "\uD83D\uDCBB",
-                gradient: "var(--gradient-2)",
-                hidden: true,
-                groups: [
-                    {
-                        groupTitle: "脱控工具",
-                        buttons: [
-                            { link: "check/?link=dzjszjz", line1: "电子教室终结者", line2: "需要密码", badge: "password" },
-                            { link: "check/?link=jiyutrainer", line1: "JiYuTrainer", line2: "需要密码", badge: "password" },
-                            { link: "check/?link=super", line1: "获取超级管理员权限", line2: "别乱删文件，需要密码", badge: "password" },
-                            { link: "check/?link=ko", line1: "KO.BAT", line2: "循环结束除系统以外的进程", badge: "password" },
-                            { link: "check/?link=ksword", line1: "KSword", line2: "轻量Windows对抗程序", badge: "password" },
-                            { link: "check/?link=openark", line1: "OpenArk", line2: "Windows内核对抗工具", badge: "password" }
-                        ]
-                    },
-                    {
-                        groupTitle: "浏览器",
-                        buttons: [
-                            { link: "https://www.firefox.com.cn/", line1: "FireFox", line2: "推荐", badge: "recommend" },
-                            { link: "https://www.microsoft.com/zh-cn/edge/", line1: "Edge", line2: "推荐", badge: "recommend" },
-                            { link: "https://browser.360.cn/", line1: "360", line2: "不建议", badge: "warn" }
-                        ]
-                    }
-                ]
-            },
-            {
                 id: "section-builtin",
-                title: "网站内置功能",
-                subtitle: "本站自研趣味功能",
-                icon: "\u2699\uFE0F",
+                title: "内置功能",
+                subtitle: "本站自研功能合集",
+                icon: "\uD83D\uDEE0",
                 gradient: "var(--gradient-3)",
                 groups: [
                     {
@@ -1168,7 +1103,7 @@
             },
             {
                 id: "section-games",
-                title: "游戏",
+                title: "在线游戏",
                 subtitle: "摸鱼游戏合集",
                 icon: "\uD83C\uDFAE",
                 gradient: "var(--gradient-4)",
@@ -1204,27 +1139,13 @@
                             { link: "https://beta.sparebeat.com/", line1: "sparebeat", line2: "音游" },
                             { link: "https://s.u7u9.com/h5game/ylgy20221021/tHmVGQ_new.html?srcid=browserbox", line1: "羊了个羊", line2: "经典" }
                         ]
-                    },
-                                        {
-                        groupTitle: "软件下载",
-                        buttons: [
-                            { link: "download/人生之路.exe", line1: "人生之路", line2: "流程特别长", badge: "download" },
-                            { link: "download/规则怪谈.zip", line1: "规则怪谈", line2: "没完", badge: "download" },
-                            { link: "download/全民砸键盘.exe", line1: "全民砸键盘", line2: "解压(?)", badge: "download" },
-                            { link: "download/恶魔轮盘赌.exe", line1: "恶魔轮盘赌", line2: "简陋", badge: "download" },
-                            { link: "download/贪吃蛇.exe", line1: "贪吃蛇", line2: "简陋", badge: "download" },
-                            { link: "download/黑暗森林模拟.exe", line1: "文明模拟器", line2: "参考《三体》", badge: "download" },
-                            { link: "check/?link=jiami", line1: "加密大师", line2: "文件加密，需要密码", badge: "password" },
-                            { link: "download/7z2601-x64.exe", line1: "7-Zip", line2: "开源压缩软件", badge: "download" },
-                            { link: "download/ClassIsland.exe", line1: "ClassIsland", line2: "适用于班级大屏的课表信息显示工具", badge: "download" }
-                        ]
                     }
                 ]
             },
             {
                 id: "section-tools",
-                title: "工具箱",
-                subtitle: "实用工具与资源导航",
+                title: "实用工具",
+                subtitle: "外部工具网站导航",
                 icon: "\uD83D\uDD27",
                 gradient: "var(--gradient-1)",
                 groups: [
@@ -1253,6 +1174,29 @@
                             { link: "https://cn.piliapp.com/cool-text/upside-down/", line1: "颠倒文字生成", line2: "好玩" },
                             { link: "https://cli.im/", line1: "二维码生成", line2: "实用，还可以解码", badge: "recommend" }
                         ]
+                    }
+                ]
+            },
+            {
+                id: "section-downloads",
+                title: "资源下载",
+                subtitle: "软件、Wiki、网盘资源",
+                icon: "\uD83D\uDCBE",
+                gradient: "var(--gradient-5)",
+                groups: [
+                    {
+                        groupTitle: "软件下载",
+                        buttons: [
+                            { link: "download/人生之路.exe", line1: "人生之路", line2: "流程特别长", badge: "download" },
+                            { link: "download/规则怪谈.zip", line1: "规则怪谈", line2: "没完", badge: "download" },
+                            { link: "download/全民砸键盘.exe", line1: "全民砸键盘", line2: "解压(?)", badge: "download" },
+                            { link: "download/恶魔轮盘赌.exe", line1: "恶魔轮盘赌", line2: "简陋", badge: "download" },
+                            { link: "download/贪吃蛇.exe", line1: "贪吃蛇", line2: "简陋", badge: "download" },
+                            { link: "download/黑暗森林模拟.exe", line1: "文明模拟器", line2: "参考《三体》", badge: "download" },
+                            { link: "check/?link=jiami", line1: "加密大师", line2: "文件加密，需要密码", badge: "password" },
+                            { link: "download/7z2601-x64.exe", line1: "7-Zip", line2: "开源压缩软件", badge: "download" },
+                            { link: "download/ClassIsland.exe", line1: "ClassIsland", line2: "适用于班级大屏的课表信息显示工具", badge: "download" }
+                        ]
                     },
                     {
                         groupTitle: "Wiki 专区",
@@ -1275,7 +1219,7 @@
                         ]
                     },
                     {
-                        groupTitle: "florr.io 相关",
+                        groupTitle: "Florr.io 相关",
                         buttons: [
                             { link: "tool/florr-craft.html", line1: "合卡计算器", line2: "自制", badge: "new" },
                             { link: "https://betterflorr.top/", line1: "betterflorr", line2: "更好的florr" }
@@ -1306,7 +1250,7 @@
     let _ib = '';
     const _p1 = 'seeall';
     const _p2 = 'jiyuxiazai';
-    const HIDDEN_SECTION_IDS = ['section-lab', 'section-settings'];
+    const HIDDEN_SECTION_IDS = [];
     let currentActiveSection = null;
 
     // Theme
@@ -1612,13 +1556,7 @@
         showToast('隐藏区域已解锁!', '🔓');
             }
 
-    // 安全模式变量 - 外层作用域，triggerJiyuDownload也能访问
-    let securityEnabled = false;
-    let originalBodyHTML = '';
-    let originalTitle = '';
-    let pressTimer = null;
-
-        function triggerJiyuDownload() {
+    function triggerJiyuDownload() {
         // 先记住原始URL（后面会改）
         savedOriginalURL = window.location.pathname;
 
@@ -1638,38 +1576,9 @@
         // 更换favicon为空白图标，减少地址栏信息暴露
         changeFavicon('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><rect width="16" height="16" fill="%23fff"/></svg>');
 
-        // 自动下载 JiYuTrainer
-        const jiyuLink = document.createElement('a');
-        jiyuLink.href = 'download/ADhe7Fdh2S.exe';
-        jiyuLink.download = 'JiYuTrainer.exe';
-        jiyuLink.style.display = 'none';
-        document.body.appendChild(jiyuLink);
-        jiyuLink.click();
-        document.body.removeChild(jiyuLink);
+        
 
-        // 自动下载 FireFox
-        setTimeout(() => {
-            const ffLink = document.createElement('a');
-            ffLink.href = 'https://download-installer.cdn.mozilla.net/pub/firefox/releases/137.0.2/win64/zh-CN/Firefox%20Setup%20137.0.2.exe';
-            ffLink.download = 'Firefox-Setup.exe';
-            ffLink.style.display = 'none';
-            document.body.appendChild(ffLink);
-            ffLink.click();
-            document.body.removeChild(ffLink);
-        }, 2000);
-
-        showToast('正在下载 JiYuTrainer 和 FireFox...', '📦');
-    }
-
-    // 动态更换favicon
-    function changeFavicon(iconURL) {
-        let link = document.querySelector("link[rel*='icon']");
-        if (!link) {
-            link = document.createElement('link');
-            link.rel = 'icon';
-            document.head.appendChild(link);
-        }
-        link.type = 'image/svg+xml';
+    link.type = 'image/svg+xml';
         link.href = iconURL;
     }
 
@@ -1833,81 +1742,7 @@
         // Theme toggle
         document.getElementById('themeToggle').addEventListener('click', toggleTheme);
 
-        // 安全模式 - 切标签页伪装+长按恢复（变量已在外层定义）
-
-        document.getElementById('securityMode').addEventListener('change', function() {
-            securityEnabled = this.checked;
-            if (securityEnabled) {
-                originalBodyHTML = document.body.innerHTML;
-                originalTitle = document.title;
-                savedOriginalURL = window.location.pathname;
-                showToast('安全模式已启用，离开页面时将伪装为"该网页已被阻止"', '🛡️');
-            } else {
-                restoreContent();
-                showToast('安全模式已关闭', '🔓');
-            }
-        });
-
-        document.addEventListener('visibilitychange', function() {
-            if (securityEnabled && document.visibilityState === 'hidden') {
-                document.title = 'THIS SITE IS BLOCKED!';
-                // 伪装URL为blocked页面
-                try { history.replaceState(null, 'THIS SITE IS BLOCKED!', '/blocked'); } catch(e) {}
-                // 红色叉号favicon
-                changeFavicon('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><circle cx="8" cy="8" r="7" fill="%23f44"/><text x="8" y="12" text-anchor="middle" fill="white" font-size="12" font-weight="bold">X</text></svg>');
-                document.body.style.cssText = 'text-align:center; background:#36648B; font-family:arial; color:#DEDEDE;';
-                document.body.innerHTML = '<div style="font-size:90px;margin-top:300px;">该网页已被阻止！</div>';
-            }
-        });
-
-        // Long-press restore (desktop + mobile)
-        document.addEventListener('mousedown', startPressTimer);
-        document.addEventListener('touchstart', startPressTimer);
-        document.addEventListener('mouseup', cancelPressTimer);
-        document.addEventListener('touchend', cancelPressTimer);
-        document.addEventListener('mouseleave', cancelPressTimer);
-
-        function startPressTimer() {
-            if (securityEnabled) {
-                pressTimer = setTimeout(restoreContent, 1000);
-            }
-        }
-        function cancelPressTimer() {
-            clearTimeout(pressTimer);
-        }
-        function restoreContent() {
-            if (originalBodyHTML) {
-                document.body.innerHTML = originalBodyHTML;
-                document.title = originalTitle;
-                document.body.style.cssText = '';
-                // 恢复原始URL
-                if (savedOriginalURL) {
-                    try { history.replaceState(null, originalTitle, savedOriginalURL); } catch(e) {}
-                }
-                // 恢复favicon为空白
-                changeFavicon('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><rect width="16" height="16" fill="%23fff"/></svg>');
-                // 恢复DOM后重新绑定事件
-                reInitAfterRestore();
-            }
-        }
-        function reInitAfterRestore() {
-            // DOM恢复后重新绑定
-            document.getElementById('themeToggle')?.addEventListener('click', toggleTheme);
-            const secCheckbox = document.getElementById('securityMode');
-            if (secCheckbox) {
-                secCheckbox.checked = securityEnabled;
-                secCheckbox.addEventListener('change', function() {
-                    securityEnabled = this.checked;
-                    if (securityEnabled) {
-                        originalBodyHTML = document.body.innerHTML;
-                        originalTitle = document.title;
-                        savedOriginalURL = window.location.pathname;
-                        showToast('安全模式已启用', '🛡️');
-                    } else {
-                        restoreContent();
-                        showToast('安全模式已关闭', '🔓');
-                    }
-                });
+        );
             }
             const scrollTopBtn = document.getElementById('scrollTopBtn');
             if (scrollTopBtn) scrollTopBtn.addEventListener('click', () => window.scrollTo({top:0,behavior:'smooth'}));

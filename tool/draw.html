@@ -58,7 +58,7 @@ canvas { background: white; border-radius: 12px; box-shadow: 0 4px 24px rgba(0,0
 
 <a href="/" class="back-btn">← 返回</a>
 
-<!-- 顶部工具栏 -->
+
 <div class="toolbar">
   <div class="tool-group">
     <button class="tool-btn active" id="toolPen" onclick="setTool('pen')" title="画笔">✏️</button>
@@ -77,29 +77,29 @@ canvas { background: white; border-radius: 12px; box-shadow: 0 4px 24px rgba(0,0
   </div>
 </div>
 
-<!-- 画布 -->
+
 <div class="canvas-wrapper">
   <canvas id="drawCanvas"></canvas>
 </div>
 
-<!-- 右侧面板 -->
+
 <div class="side-panel">
   <button class="panel-btn" onclick="clearCanvas()" title="清空">🗑️</button>
   <button class="panel-btn" onclick="saveImage()" title="保存">💾</button>
   <button class="panel-btn" onclick="toggleFullscreen()" title="全屏">⛶</button>
 </div>
 
-<!-- 底部信息 -->
+
 <div class="bottom-bar">
   <span id="coordInfo">X: 0, Y: 0</span>
   <span>|</span>
   <span id="zoomInfo">100%</span>
 </div>
 
-<!-- 画笔预览 -->
+
 <div class="brush-preview" id="brushPreview"></div>
 
-<!-- 保存弹窗 -->
+
 <div class="overlay" id="saveOverlay">
   <div class="modal">
     <h3>保存图片</h3>

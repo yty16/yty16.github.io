@@ -215,19 +215,19 @@ h1 {
 </head>
 <body>
 
-<!-- 主题检测脚本 -->
+
 <script>
 (function(){var s=localStorage.getItem('theme');if(s==='light'||s==='dark'){document.documentElement.setAttribute('data-theme',s)}else{var d=window.matchMedia('(prefers-color-scheme:dark)').matches;document.documentElement.setAttribute('data-theme',d?'dark':'light')}})();
 </script>
 
-<!-- 返回按钮 -->
+
 <a href="../" class="back-btn">← 返回</a>
 
-<!-- 主界面 -->
+
 <div class="card" id="mainCard">
   <h1>⏱ 在线倒计时</h1>
 
-  <!-- 时间输入 -->
+  
   <div class="input-row">
     <div class="input-group">
       <label>分钟</label>
@@ -239,7 +239,7 @@ h1 {
     </div>
   </div>
 
-  <!-- 快捷预设 -->
+  
   <div class="presets">
     <button class="preset-btn" onclick="setPreset(1,0)">1 分钟</button>
     <button class="preset-btn" onclick="setPreset(5,0)">5 分钟</button>
@@ -247,10 +247,10 @@ h1 {
     <button class="preset-btn" onclick="setPreset(25,0)">25 分钟</button>
   </div>
 
-  <!-- 倒计时显示 -->
+  
   <div class="timer-display" id="timerDisplay">01:00</div>
 
-  <!-- 控制按钮 -->
+  
   <div class="controls">
     <button class="btn btn-primary" id="btnStart" onclick="startTimer()">开始</button>
     <button class="btn btn-secondary" id="btnPause" onclick="pauseTimer()" style="display:none">暂停</button>
@@ -258,7 +258,7 @@ h1 {
   </div>
 </div>
 
-<!-- 全屏倒计时覆盖层 -->
+
 <div class="fullscreen-overlay" id="fsOverlay">
   <div class="timer-display" id="fsTimerDisplay">01:00</div>
   <div class="fs-controls">
@@ -412,9 +412,7 @@ function playBeep() {
       osc.start(ctx.currentTime + delay);
       osc.stop(ctx.currentTime + delay + 0.25);
     });
-  } catch(e) {
-    console.log('音频播放失败', e);
-  }
+  } catch(e) {}
 }
 
 // 初始化显示

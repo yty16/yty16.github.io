@@ -63,13 +63,13 @@ h1 { font-size: 28px; font-weight: 700; margin-bottom: 8px; text-align: center; 
   <p class="subtitle">支持 Base64、凯撒密码、维吉尼亚密码、AES 加密</p>
 
   <div class="card">
-    <!-- 加密/解密切换 -->
+    
     <div class="action-switch">
       <button class="action-btn active" id="actEncrypt" onclick="setAction('encrypt')">加密</button>
       <button class="action-btn" id="actDecrypt" onclick="setAction('decrypt')">解密</button>
     </div>
 
-    <!-- 算法选择 -->
+    
     <div class="algo-select">
       <button class="algo-btn active" id="algoBase64" onclick="setAlgo('base64')">Base64</button>
       <button class="algo-btn" id="algoCaesar" onclick="setAlgo('caesar')">凯撒密码</button>
@@ -77,7 +77,7 @@ h1 { font-size: 28px; font-weight: 700; margin-bottom: 8px; text-align: center; 
       <button class="algo-btn" id="algoAes" onclick="setAlgo('aes')">AES</button>
     </div>
 
-    <!-- 密钥输入（凯撒/维吉尼亚/AES 时显示） -->
+    
     <div id="keySection" style="display:none;">
       <div class="key-hint" id="keyHint">输入密钥</div>
       <div class="key-input-row">
@@ -86,21 +86,21 @@ h1 { font-size: 28px; font-weight: 700; margin-bottom: 8px; text-align: center; 
       </div>
     </div>
 
-    <!-- 输入区 -->
+    
     <div class="label-row">
       <label id="inputLabel">输入要加密的文本</label>
       <span style="font-size:12px;color:var(--muted);" id="inputCount"></span>
     </div>
     <textarea class="textarea" id="inputArea" placeholder="输入文本..." oninput="handleInput()"></textarea>
 
-    <!-- 按钮组 -->
+    
     <div class="btn-group">
       <button class="btn" id="actionBtn" onclick="doAction()">加密</button>
       <button class="btn btn-secondary" onclick="clearAll()">清空</button>
       <button class="btn btn-secondary" onclick="pasteExample()">示例</button>
     </div>
 
-    <!-- 输出区 -->
+    
     <div class="label-row" style="margin-top:20px;">
       <label>结果</label>
       <button style="background:none;border:none;color:var(--accent);cursor:pointer;font-size:13px;font-family:inherit;" onclick="copyOutput()">复制结果</button>

@@ -439,8 +439,7 @@
     </style>
 </head>
 <body>
-    <!-- Theme detection script - runs before render -->
-    <script>
+        <script>
         (function() {
             const savedTheme = localStorage.getItem('theme');
             if (savedTheme) {
@@ -758,7 +757,7 @@
                     time += 0.3;
                 });
             } catch (e) {
-                console.log('Audio playback failed:', e);
+                /* silent */
             }
         }
 

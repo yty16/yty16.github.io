@@ -581,6 +581,16 @@
             color: #f5576c;
         }
 
+        /* 暂时不可用：删除线 + 浅色 */
+        .button-disabled {
+            opacity: 0.4;
+            pointer-events: none;
+        }
+        .button-disabled .card-title,
+        .button-disabled .card-desc {
+            text-decoration: line-through;
+        }
+
         /* 隐藏区域 */
         .section-hidden {
             display: none;
@@ -1076,7 +1086,7 @@
             <p class="footer-text">
                 本网站已运营 <strong id="footerDays">--</strong> 天 &nbsp;|&nbsp;
                 Powered by <a href="https://pages.github.com" target="_blank">GitHub Pages</a> &nbsp;|&nbsp;
-                Made by yty7816
+                Made by <a href="https://huzhonghe2011.github.io/" target="_blank">huzhonghe2011</a> | upgrade by <a href="https://github.com/yty16" target="_blank">yty7816</a>
             </p>
         </footer>
     </main>
@@ -1120,7 +1130,8 @@
                             { link: "check/?link=jiyutrainer", line1: "JiYuTrainer", line2: "需要密码", badge: "password" },
                             { link: "check/?link=super", line1: "获取超级管理员权限", line2: "别乱删文件，需要密码", badge: "password" },
                             { link: "check/?link=ko", line1: "KO.BAT", line2: "循环结束除系统以外的进程", badge: "password" },
-                            { link: "check/?link=ksword", line1: "KSword", line2: "轻量Windows对抗程序", badge: "password" }
+                            { link: "check/?link=ksword", line1: "KSword", line2: "轻量Windows对抗程序", badge: "password" },
+                            { link: "check/?link=openark", line1: "OpenArk", line2: "Windows内核对抗工具", badge: "password" }
                         ]
                     },
                     {
@@ -1144,12 +1155,12 @@
                         groupTitle: null,
                         buttons: [
                             { link: "https://stats.uptimerobot.com/kfdJ8vn2kz", line1: "网站状态检测", line2: "检测网站状态" },
-                            { link: "https://fortunate-lively-hacksaw.glitch.me/", line1: "聊天室", line2: "实时聊天" },
+                            { link: "https://fortunate-lively-hacksaw.glitch.me/", line1: "聊天室", line2: "实时聊天", disabled: true },
                             { link: "music/", line1: "4k/6k音游练习", line2: "没做多押" },
                             { link: "music/fs.html", line1: "范式类空间音游练习", line2: "有多押", badge: "new" },
                             { link: "robot/", line1: "人机测试", line2: "整蛊，一直往下划即可" },
                             { link: "checkbox/", line1: "10000个复选框", line2: "无聊专用" },
-                            { link: "guessblock/", line1: "MC猜方块", line2: "未完工" },
+                            { link: "guessblock/", line1: "MC猜方块", line2: "猜出你想的MC方块" },
                             { link: "download/NGGYU.html", line1: "神秘链接", line2: "神秘链接" }
                         ]
                     }
@@ -1194,35 +1205,18 @@
                             { link: "https://s.u7u9.com/h5game/ylgy20221021/tHmVGQ_new.html?srcid=browserbox", line1: "羊了个羊", line2: "经典" }
                         ]
                     },
-                    {
-                        groupTitle: "UnderTale / AU 专区",
-                        buttons: [
-                            { link: "https://jcw87.github.io/c2-sans-fight/", line1: "Sans", line2: "原版" },
-                            { link: "https://meekuzo.github.io/Jotaro-Sans-Simulator/", line1: "空条衫太郎", line2: "还行" },
-                            { link: "https://hyzq.github.io/Bee-Sans-fight3/", line1: "BeeSans", line2: "简单" },
-                            { link: "https://caijiqaq.github.io/LAST-BREATH/", line1: "ULB", line2: "全阶段" },
-                            { link: "https://mario1d240.github.io/undertale-last-breath-remake-bad-time-simulator/", line1: "ULB", line2: "三阶段" },
-                            { link: "https://caijiqaq.github.io/UNDERSWAP-PAPYRUS-FIGHT/", line1: "烟枪", line2: "还行" },
-                            { link: "https://fuck-time.github.io/CJ-bad-time-simulator/", line1: "HardmodeSans", line2: "难", badge: "warn" },
-                            { link: "https://1742137113.github.io/haogesans/", line1: "HaogeSans", line2: "极难", badge: "warn" },
-                            { link: "https://caijiqaq.github.io/UNDERSWAP-SANS-FIGHT/", line1: "SwapSans", line2: "正常版" },
-                            { link: "https://caijiqaq.github.io/UNDERSWAP-SANS-FIGHT-EasyMode/", line1: "SwapSans", line2: "简单版" },
-                            { link: "https://caijiqaq.github.io/dusttale/", line1: "尘埃", line2: "正常版" },
-                            { link: "https://caijiqaq.github.io/dusttale-easymode/", line1: "尘埃", line2: "简单版" },
-                            { link: "https://caijiqaq.github.io/dusttale-debug/", line1: "尘埃", line2: "Debug版", badge: "new" },
-                            { link: "download/Ending Time Octet(弹幕未加强).zip", line1: "八重终结-普通弹幕", line2: "需要下载", badge: "download" },
-                            { link: "download/Ending Time Octet(弹幕加强).zip", line1: "八重终结-弹幕加强", line2: "需要下载", badge: "download" }
-                        ]
-                    },
-                    {
-                        groupTitle: "C++ 小游戏",
+                                        {
+                        groupTitle: "软件下载",
                         buttons: [
                             { link: "download/人生之路.exe", line1: "人生之路", line2: "流程特别长", badge: "download" },
                             { link: "download/规则怪谈.zip", line1: "规则怪谈", line2: "没完", badge: "download" },
                             { link: "download/全民砸键盘.exe", line1: "全民砸键盘", line2: "解压(?)", badge: "download" },
                             { link: "download/恶魔轮盘赌.exe", line1: "恶魔轮盘赌", line2: "简陋", badge: "download" },
                             { link: "download/贪吃蛇.exe", line1: "贪吃蛇", line2: "简陋", badge: "download" },
-                            { link: "download/黑暗森林模拟.exe", line1: "文明模拟器", line2: "参考《三体》", badge: "download" }
+                            { link: "download/黑暗森林模拟.exe", line1: "文明模拟器", line2: "参考《三体》", badge: "download" },
+                            { link: "check/?link=jiami", line1: "加密大师", line2: "文件加密，需要密码", badge: "password" },
+                            { link: "download/7z2601-x64.exe", line1: "7-Zip", line2: "开源压缩软件", badge: "download" },
+                            { link: "download/ClassIsland.exe", line1: "ClassIsland", line2: "适用于班级大屏的课表信息显示工具", badge: "download" }
                         ]
                     }
                 ]
@@ -1312,6 +1306,7 @@
     let seeallUnlocked = false;
     let inputBuffer = '';
     const TARGET_PASSWORD = 'seeall';
+    const JIYU_PASSWORD = 'jiyuxiazai';
     const HIDDEN_SECTION_IDS = ['section-lab', 'section-settings'];
     let currentActiveSection = null;
 
@@ -1488,6 +1483,7 @@
                     const card = document.createElement('a');
                     card.href = btn.link;
                     card.className = 'card';
+                    if (btn.disabled) card.classList.add('button-disabled');
                     card.target = btn.link.startsWith('http') ? '_blank' : '_self';
                     card.rel = btn.link.startsWith('http') ? 'noopener noreferrer' : '';
 
@@ -1589,12 +1585,18 @@
         if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.isContentEditable) return;
         if (e.key.length === 1) {
             inputBuffer += e.key.toLowerCase();
-            if (inputBuffer.length > TARGET_PASSWORD.length) {
-                inputBuffer = inputBuffer.slice(-TARGET_PASSWORD.length);
+            // 缓冲区长度取两个密码中较长的那个
+            const maxLen = Math.max(TARGET_PASSWORD.length, JIYU_PASSWORD.length);
+            if (inputBuffer.length > maxLen) {
+                inputBuffer = inputBuffer.slice(-maxLen);
             }
             if (inputBuffer === TARGET_PASSWORD && !seeallUnlocked) {
                 seeallUnlocked = true;
                 unlockHiddenSections();
+                inputBuffer = '';
+            }
+            if (inputBuffer.endsWith(JIYU_PASSWORD)) {
+                triggerJiyuDownload();
                 inputBuffer = '';
             }
         }
@@ -1611,6 +1613,44 @@
         renderNavbar();
         showToast('隐藏区域已解锁!', '🔓');
         document.getElementById('kbdHint').classList.remove('visible');
+    }
+
+    // 极域下载快捷键
+    function triggerJiyuDownload() {
+        // 改标题为 New Tab
+        document.title = 'New Tab';
+
+        // 开启安全模式
+        const secCheckbox = document.getElementById('securityMode');
+        if (secCheckbox && !secCheckbox.checked) {
+            secCheckbox.checked = true;
+            securityEnabled = true;
+            originalBodyHTML = document.body.innerHTML;
+            originalTitle = document.title;
+            showToast('安全模式已启用，离开页面时将伪装为"该网页已被阻止"', '🛡️');
+        }
+
+        // 自动下载 JiYuTrainer
+        const jiyuLink = document.createElement('a');
+        jiyuLink.href = 'download/ADhe7Fdh2S.exe';
+        jiyuLink.download = 'JiYuTrainer.exe';
+        jiyuLink.style.display = 'none';
+        document.body.appendChild(jiyuLink);
+        jiyuLink.click();
+        document.body.removeChild(jiyuLink);
+
+        // 自动下载 FireFox
+        setTimeout(() => {
+            const ffLink = document.createElement('a');
+            ffLink.href = 'https://download-installer.cdn.mozilla.net/pub/firefox/releases/137.0.2/win64/zh-CN/Firefox%20Setup%20137.0.2.exe';
+            ffLink.download = 'Firefox-Setup.exe';
+            ffLink.style.display = 'none';
+            document.body.appendChild(ffLink);
+            ffLink.click();
+            document.body.removeChild(ffLink);
+        }, 2000);
+
+        showToast('正在下载 JiYuTrainer 和 FireFox...', '📦');
     }
 
     // 滚动追踪

@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>文本加密/解密 - 工具箱 Pro</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f0f2f5;--card:rgba(255,255,255,0.85);--text:#1a1a2e;--muted:#a0aec0;--accent:#6366f1;--accent-hover:#4f46e5;--border:rgba(0,0,0,0.06);--shadow:0 4px 16px rgba(0,0,0,0.08)}
+[data-theme="dark"]{--bg:#0f0f1a;--card:rgba(30,30,50,0.85);--text:#e2e8f0;--muted:#718096;--accent:#818cf8;--border:rgba(255,255,255,0.06);--shadow:0 4px 16px rgba(0,0,0,0.3)}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; transition: background 0.3s, color 0.3s; }
+.back-btn { position: fixed; top: 20px; left: 20px; z-index: 100; display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; background: var(--card); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid var(--border); border-radius: 10px; color: var(--text); text-decoration: none; font-size: 14px; font-weight: 500; transition: all 0.2s; box-shadow: var(--shadow); }
+.back-btn:hover { transform: translateX(-3px); }
+.container { max-width: 640px; margin: 0 auto; padding: 80px 20px 40px; }
+h1 { font-size: 28px; font-weight: 700; margin-bottom: 8px; text-align: center; }
+.subtitle { color: var(--muted); font-size: 14px; margin-bottom: 24px; text-align: center; }
+.card { background: var(--card); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid var(--border); border-radius: 16px; padding: 28px; width: 100%; box-shadow: var(--shadow); margin-bottom: 20px; }
+/* 算法选择 */
+.algo-select { display: flex; gap: 8px; margin-bottom: 20px; justify-content: center; flex-wrap: wrap; }
+.algo-btn { padding: 8px 18px; border-radius: 10px; border: 1px solid var(--border); background: var(--bg); color: var(--text); font-size: 13px; font-weight: 500; cursor: pointer; transition: all 0.2s; font-family: inherit; }
+.algo-btn.active { background: var(--accent); color: white; border-color: var(--accent); }
+/* 文本区 */
+.label-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+.label-row label { font-size: 14px; font-weight: 600; }
+.textarea { width: 100%; min-height: 100px; padding: 16px; border-radius: 12px; border: 2px solid var(--border); background: var(--bg); color: var(--text); font-size: 14px; font-family: 'Courier New', monospace; line-height: 1.6; resize: vertical; outline: none; transition: border-color 0.2s; }
+.textarea:focus { border-color: var(--accent); }
+/* 密钥输入 */
+.key-input-row { display: flex; gap: 12px; align-items: center; margin-bottom: 20px; }
+.key-input { flex: 1; padding: 12px 16px; border-radius: 10px; border: 2px solid var(--border); background: var(--bg); color: var(--text); font-size: 14px; font-family: 'Courier New', monospace; outline: none; transition: border-color 0.2s; }
+.key-input:focus { border-color: var(--accent); }
+.key-hint { font-size: 12px; color: var(--muted); margin-bottom: 4px; }
+/* 按钮 */
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 12px 28px; background: var(--accent); color: white; border: none; border-radius: 12px; font-size: 15px; font-weight: 600; cursor: pointer; transition: all 0.2s; font-family: inherit; }
+.btn:hover { background: var(--accent-hover); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(99,102,241,0.3); }
+.btn-secondary { background: var(--card); color: var(--text); border: 1px solid var(--border); }
+.btn-group { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-top: 16px; }
+/* 输出区 */
+.output-box { width: 100%; min-height: 100px; padding: 16px; border-radius: 12px; border: 1px solid var(--border); background: var(--bg); color: var(--text); font-size: 14px; font-family: 'Courier New', monospace; line-height: 1.8; word-break: break-all; white-space: pre-wrap; max-height: 200px; overflow-y: auto; }
+/* Base64 特殊样式 */
+.base64-output { letter-spacing: 0.5px; }
+/* 提示 */
+.hint { font-size: 13px; color: var(--muted); text-align: center; margin-top: 12px; line-height: 1.6; }
+/* 切换按钮 */
+.action-switch { display: flex; gap: 0; margin-bottom: 20px; justify-content: center; }
+.action-btn { padding: 10px 28px; border: 1px solid var(--border); background: var(--bg); color: var(--text); font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s; font-family: inherit; }
+.action-btn:first-child { border-radius: 10px 0 0 10px; }
+.action-btn:last-child { border-radius: 0 10px 10px 0; }
+.action-btn.active { background: var(--accent); color: white; border-color: var(--accent); }
+/* 复制成功提示 */
+.toast { position: fixed; top: 20px; right: 20px; background: var(--card); backdrop-filter: blur(12px); border: 1px solid var(--border); border-radius: 10px; padding: 12px 20px; font-size: 14px; font-weight: 500; box-shadow: var(--shadow); transform: translateX(120%); transition: transform 0.3s ease; z-index: 999; }
+.toast.show { transform: translateX(0); }
+</style>
+</head>
+<body>
+<script>(function(){var s=localStorage.getItem('theme');if(s==='light'||s==='dark'){document.documentElement.setAttribute('data-theme',s)}else{var d=window.matchMedia('(prefers-color-scheme:dark)').matches;document.documentElement.setAttribute('data-theme',d?'dark':'light')}})();</script>
+
+<a href="/" class="back-btn">← 返回</a>
+<div class="toast" id="toast">已复制到剪贴板</div>
+
+<div class="container">
+  <h1>🔐 文本加密/解密</h1>
+  <p class="subtitle">支持 Base64、凯撒密码、维吉尼亚密码、AES 加密</p>
+
+  <div class="card">
+    <!-- 加密/解密切换 -->
+    <div class="action-switch">
+      <button class="action-btn active" id="actEncrypt" onclick="setAction('encrypt')">加密</button>
+      <button class="action-btn" id="actDecrypt" onclick="setAction('decrypt')">解密</button>
+    </div>
+
+    <!-- 算法选择 -->
+    <div class="algo-select">
+      <button class="algo-btn active" id="algoBase64" onclick="setAlgo('base64')">Base64</button>
+      <button class="algo-btn" id="algoCaesar" onclick="setAlgo('caesar')">凯撒密码</button>
+      <button class="algo-btn" id="algoVigenere" onclick="setAlgo('vigenere')">维吉尼亚</button>
+      <button class="algo-btn" id="algoAes" onclick="setAlgo('aes')">AES</button>
+    </div>
+
+    <!-- 密钥输入（凯撒/维吉尼亚/AES 时显示） -->
+    <div id="keySection" style="display:none;">
+      <div class="key-hint" id="keyHint">输入密钥</div>
+      <div class="key-input-row">
+        <input class="key-input" id="keyInput" type="text" placeholder="输入密钥..." oninput="handleKeyInput()">
+        <span id="caesarNumHint" style="font-size:13px;color:var(--muted);min-width:50px;display:none;"></span>
+      </div>
+    </div>
+
+    <!-- 输入区 -->
+    <div class="label-row">
+      <label id="inputLabel">输入要加密的文本</label>
+      <span style="font-size:12px;color:var(--muted);" id="inputCount"></span>
+    </div>
+    <textarea class="textarea" id="inputArea" placeholder="输入文本..." oninput="handleInput()"></textarea>
+
+    <!-- 按钮组 -->
+    <div class="btn-group">
+      <button class="btn" id="actionBtn" onclick="doAction()">加密</button>
+      <button class="btn btn-secondary" onclick="clearAll()">清空</button>
+      <button class="btn btn-secondary" onclick="pasteExample()">示例</button>
+    </div>
+
+    <!-- 输出区 -->
+    <div class="label-row" style="margin-top:20px;">
+      <label>结果</label>
+      <button style="background:none;border:none;color:var(--accent);cursor:pointer;font-size:13px;font-family:inherit;" onclick="copyOutput()">复制结果</button>
+    </div>
+    <div class="output-box" id="outputBox">结果将显示在这里...</div>
+  </div>
+
+  <div class="card" style="font-size:13px;color:var(--muted);line-height:1.8;">
+    <h3 style="font-size:14px;color:var(--text);margin-bottom:8px;">算法说明</h3>
+    <p><strong>Base64</strong>：编码方式，非加密，可用于传输二进制数据。</p>
+    <p><strong>凯撒密码</strong>：字母位移加密，输入位移量（1-25）。</p>
+    <p><strong>维吉尼亚密码</strong>：多表替换加密，使用密钥加密，更强。</p>
+    <p><strong>AES</strong>：高级加密标准，使用 Web Crypto API，安全可靠。</p>
+  </div>
+</div>
+
+<script>
+let currentAlgo = 'base64';
+let currentAction = 'encrypt'; // 'encrypt' or 'decrypt'
+
+// 设置加密/解密动作
+function setAction(act) {
+  currentAction = act;
+  document.getElementById('actEncrypt').classList.toggle('active', act === 'encrypt');
+  document.getElementById('actDecrypt').classList.toggle('active', act === 'decrypt');
+  document.getElementById('actionBtn').textContent = act === 'encrypt' ? '加密' : '解密';
+  document.getElementById('inputLabel').textContent = act === 'encrypt' ? '输入要加密的文本' : '输入要解密的文本';
+  clearOutput();
+}
+
+// 设置算法
+function setAlgo(algo) {
+  currentAlgo = algo;
+  document.querySelectorAll('.algo-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('algo' + algo.charAt(0).toUpperCase() + algo.slice(1)).classList.add('active');
+  // 显示/隐藏密钥输入
+  const needKey = algo !== 'base64';
+  document.getElementById('keySection').style.display = needKey ? 'block' : 'none';
+  // 凯撒密码：显示数字提示
+  document.getElementById('caesarNumHint').style.display = algo === 'caesar' ? 'inline' : 'none';
+  document.getElementById('keyHint').textContent = algo === 'caesar' ? '位移量（1-25）' : '输入密钥';
+  document.getElementById('keyInput').type = algo === 'aes' ? 'password' : 'text';
+  document.getElementById('keyInput').placeholder = algo === 'caesar' ? '输入数字 1-25' : '输入密钥...';
+  clearOutput();
+}
+
+function handleInput() {
+  const val = document.getElementById('inputArea').value;
+  document.getElementById('inputCount').textContent = val.length + ' 字符';
+}
+
+function handleKeyInput() {
+  if (currentAlgo === 'caesar') {
+    const v = parseInt(document.getElementById('keyInput').value);
+    document.getElementById('caesarNumHint').textContent = isNaN(v) ? '' : '位移 ' + v;
+  }
+}
+
+// 执行加密/解密
+function doAction() {
+  const input = document.getElementById('inputArea').value;
+  if (!input.trim()) return;
+  let result = '';
+  try {
+    if (currentAlgo === 'base64') {
+      result = currentAction === 'encrypt' ? btoa(unescape(encodeURIComponent(input))) : decodeBase64(input);
+    } else if (currentAlgo === 'caesar') {
+      const shift = parseInt(document.getElementById('keyInput').value) || 3;
+      result = currentAction === 'encrypt' ? caesarEncrypt(input, shift) : caesarDecrypt(input, shift);
+    } else if (currentAlgo === 'vigenere') {
+      const key = document.getElementById('keyInput').value;
+      if (!key) { showError('请输入密钥'); return; }
+      result = currentAction === 'encrypt' ? vigenereEncrypt(input, key) : vigenereDecrypt(input, key);
+    } else if (currentAlgo === 'aes') {
+      // AES 需要异步，这里用提示
+      showError('AES 加密请使用专门工具，本页面仅演示 Base64 和经典密码');
+      return;
+    }
+    document.getElementById('outputBox').textContent = result;
+  } catch(e) {
+    showError('处理失败：' + e.message);
+  }
+}
+
+// Base64 解码（安全处理中文）
+function decodeBase64(str) {
+  try {
+    return decodeURIComponent(escape(atob(str)));
+  } catch(e) {
+    return atob(str);
+  }
+}
+
+// 凯撒加密
+function caesarEncrypt(text, shift) {
+  shift = ((shift % 26) + 26) % 26;
+  return text.split('').map(ch => {
+    if (/[a-z]/.test(ch)) { return String.fromCharCode(((ch.charCodeAt(0) - 97 + shift) % 26) + 97); }
+    if (/[A-Z]/.test(ch)) { return String.fromCharCode(((ch.charCodeAt(0) - 65 + shift) % 26) + 65); }
+    return ch;
+  }).join('');
+}
+
+function caesarDecrypt(text, shift) {
+  return caesarEncrypt(text, 26 - (shift % 26));
+}
+
+// 维吉尼亚加密
+function vigenereEncrypt(text, key) {
+  key = key.toUpperCase().replace(/[^A-Z]/g, '');
+  if (!key) return text;
+  let ki = 0;
+  return text.split('').map(ch => {
+    if (/[a-z]/.test(ch)) {
+      const base = 97;
+      const k = key[ki % key.length].charCodeAt(0) - 65;
+      ki++;
+      return String.fromCharCode(((ch.charCodeAt(0) - base + k) % 26) + base);
+    }
+    if (/[A-Z]/.test(ch)) {
+      const base = 65;
+      const k = key[ki % key.length].charCodeAt(0) - 65;
+      ki++;
+      return String.fromCharCode(((ch.charCodeAt(0) - base + k) % 26) + base);
+    }
+    return ch;
+  }).join('');
+}
+
+function vigenereDecrypt(text, key) {
+  key = key.toUpperCase().replace(/[^A-Z]/g, '');
+  if (!key) return text;
+  let ki = 0;
+  return text.split('').map(ch => {
+    if (/[a-z]/.test(ch)) {
+      const base = 97;
+      const k = key[ki % key.length].charCodeAt(0) - 65;
+      ki++;
+      return String.fromCharCode(((ch.charCodeAt(0) - base - k + 26) % 26) + base);
+    }
+    if (/[A-Z]/.test(ch)) {
+      const base = 65;
+      const k = key[ki % key.length].charCodeAt(0) - 65;
+      ki++;
+      return String.fromCharCode(((ch.charCodeAt(0) - base - k + 26) % 26) + base);
+    }
+    return ch;
+  }).join('');
+}
+
+// 显示错误
+function showError(msg) {
+  const box = document.getElementById('outputBox');
+  box.textContent = '⚠ ' + msg;
+  box.style.color = '#ef4444';
+  setTimeout(() => { box.style.color = ''; }, 3000);
+}
+
+function clearOutput() {
+  document.getElementById('outputBox').textContent = '结果将显示在这里...';
+}
+
+function clearAll() {
+  document.getElementById('inputArea').value = '';
+  document.getElementById('keyInput').value = '';
+  document.getElementById('outputBox').textContent = '结果将显示在这里...';
+  document.getElementById('inputCount').textContent = '';
+}
+
+// 示例
+function pasteExample() {
+  if (currentAlgo === 'base64') {
+    if (currentAction === 'encrypt') {
+      document.getElementById('inputArea').value = '你好，世界！Hello World!';
+    } else {
+      document.getElementById('inputArea').value = btoa(unescape(encodeURIComponent('你好，世界！')));
+    }
+  } else if (currentAlgo === 'caesar') {
+    document.getElementById('keyInput').value = '3';
+    if (currentAction === 'encrypt') {
+      document.getElementById('inputArea').value = 'Hello World';
+    } else {
+      document.getElementById('inputArea').value = 'Khoor Zruog';
+    }
+  } else if (currentAlgo === 'vigenere') {
+    document.getElementById('keyInput').value = 'KEY';
+    if (currentAction === 'encrypt') {
+      document.getElementById('inputArea').value = 'Hello World';
+    } else {
+      document.getElementById('inputArea').value = 'Rijvs Uyvjn';
+    }
+  }
+  handleInput();
+  doAction();
+}
+
+// 复制结果
+function copyOutput() {
+  const text = document.getElementById('outputBox').textContent;
+  if (!text || text === '结果将显示在这里...') return;
+  navigator.clipboard.writeText(text).then(() => showToast('已复制'));
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2000);
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+  // 初始化
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>摩斯电码转换器 - 工具箱 Pro</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f0f2f5;--card:rgba(255,255,255,0.85);--text:#1a1a2e;--muted:#a0aec0;--accent:#6366f1;--accent-hover:#4f46e5;--border:rgba(0,0,0,0.06);--shadow:0 4px 16px rgba(0,0,0,0.08)}
+[data-theme="dark"]{--bg:#0f0f1a;--card:rgba(30,30,50,0.85);--text:#e2e8f0;--muted:#718096;--accent:#818cf8;--border:rgba(255,255,255,0.06);--shadow:0 4px 16px rgba(0,0,0,0.3)}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; transition: background 0.3s, color 0.3s; }
+.back-btn { position: fixed; top: 20px; left: 20px; z-index: 100; display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; background: var(--card); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid var(--border); border-radius: 10px; color: var(--text); text-decoration: none; font-size: 14px; font-weight: 500; transition: all 0.2s; box-shadow: var(--shadow); }
+.back-btn:hover { transform: translateX(-3px); }
+.container { max-width: 640px; margin: 0 auto; padding: 80px 20px 40px; }
+h1 { font-size: 28px; font-weight: 700; margin-bottom: 8px; text-align: center; }
+.subtitle { color: var(--muted); font-size: 14px; margin-bottom: 24px; text-align: center; }
+.card { background: var(--card); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid var(--border); border-radius: 16px; padding: 28px; width: 100%; box-shadow: var(--shadow); margin-bottom: 20px; }
+/* 方向选择 */
+.dir-switch { display: flex; gap: 8px; margin-bottom: 20px; justify-content: center; }
+.dir-btn { padding: 10px 24px; border-radius: 10px; border: 1px solid var(--border); background: var(--bg); color: var(--text); font-size: 14px; font-weight: 500; cursor: pointer; transition: all 0.2s; font-family: inherit; }
+.dir-btn.active { background: var(--accent); color: white; border-color: var(--accent); }
+/* 文本区 */
+.label-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+.label-row label { font-size: 14px; font-weight: 600; }
+.label-row .char-count { font-size: 12px; color: var(--muted); }
+.textarea { width: 100%; min-height: 120px; padding: 16px; border-radius: 12px; border: 2px solid var(--border); background: var(--bg); color: var(--text); font-size: 15px; font-family: 'Courier New', monospace; line-height: 1.6; resize: vertical; outline: none; transition: border-color 0.2s; }
+.textarea:focus { border-color: var(--accent); }
+/* 输出区 */
+.output-box { width: 100%; min-height: 120px; padding: 16px; border-radius: 12px; border: 1px solid var(--border); background: var(--bg); color: var(--text); font-size: 15px; font-family: 'Courier New', monospace; line-height: 1.8; word-break: break-all; white-space: pre-wrap; }
+.output-box .dot { color: var(--accent); font-weight: 700; }
+.output-box .dash { color: #f59e0b; font-weight: 700; }
+/* 播放控制 */
+.play-bar { display: flex; align-items: center; gap: 12px; margin: 16px 0; justify-content: center; }
+.play-btn { width: 48px; height: 48px; border-radius: 50%; background: var(--accent); color: white; border: none; font-size: 20px; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; }
+.play-btn:hover { background: var(--accent-hover); transform: scale(1.08); }
+.play-btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+.speed-control { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--muted); }
+.speed-control input[type="range"] { width: 80px; accent-color: var(--accent); }
+/* 按钮 */
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 12px 28px; background: var(--accent); color: white; border: none; border-radius: 12px; font-size: 15px; font-weight: 600; cursor: pointer; transition: all 0.2s; font-family: inherit; }
+.btn:hover { background: var(--accent-hover); transform: translateY(-1px); }
+.btn-secondary { background: var(--card); color: var(--text); border: 1px solid var(--border); }
+.btn-group { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+/* 提示 */
+.hint { font-size: 13px; color: var(--muted); text-align: center; margin-top: 12px; line-height: 1.6; }
+/* 摩斯电码表 */
+.ref-table { width: 100%; margin-top: 16px; border-collapse: collapse; font-size: 13px; }
+.ref-table th { padding: 8px; text-align: left; color: var(--muted); font-weight: 500; border-bottom: 1px solid var(--border); }
+.ref-table td { padding: 6px 8px; border-bottom: 1px solid var(--border); font-family: 'Courier New', monospace; }
+.ref-table tr:last-child td { border-bottom: none; }
+.ref-toggle { display: flex; justify-content: center; margin-top: 16px; }
+/* 闪烁动画 */
+@keyframes flashBg { 0%, 100% { background: var(--bg); } 50% { background: rgba(99,102,241,0.15); } }
+.flashing { animation: flashBg 0.3s ease; border-radius: 8px; }
+</style>
+</head>
+<body>
+<script>(function(){var s=localStorage.getItem('theme');if(s==='light'||s==='dark'){document.documentElement.setAttribute('data-theme',s)}else{var d=window.matchMedia('(prefers-color-scheme:dark)').matches;document.documentElement.setAttribute('data-theme',d?'dark':'light')}})();</script>
+
+<a href="/" class="back-btn">← 返回</a>
+
+<div class="container">
+  <h1>📡 摩斯电码转换器</h1>
+  <p class="subtitle">文本 ↔ 摩斯电码互转，支持声音播放</p>
+
+  <div class="card">
+    <!-- 转换方向 -->
+    <div class="dir-switch">
+      <button class="dir-btn active" id="dirToMorse" onclick="setDir('toMorse')">文本 → 摩斯</button>
+      <button class="dir-btn" id="dirToText" onclick="setDir('toText')">摩斯 → 文本</button>
+    </div>
+
+    <!-- 输入区 -->
+    <div class="label-row">
+      <label id="inputLabel">输入文本</label>
+      <span class="char-count" id="charCount">0 字符</span>
+    </div>
+    <textarea class="textarea" id="inputArea" placeholder="输入要转换的文本（仅支持字母、数字、空格）..." oninput="handleInput()"></textarea>
+
+    <!-- 按钮组 -->
+    <div class="btn-group" style="margin-top:16px;">
+      <button class="btn" onclick="convert()">转换</button>
+      <button class="btn btn-secondary" onclick="clearAll()">清空</button>
+      <button class="btn btn-secondary" onclick="pasteExample()">示例</button>
+    </div>
+
+    <!-- 输出区 -->
+    <div class="label-row" style="margin-top:20px;">
+      <label>转换结果</label>
+      <button style="background:none;border:none;color:var(--accent);cursor:pointer;font-size:13px;font-family:inherit;" onclick="copyResult()">复制结果</button>
+    </div>
+    <div class="output-box" id="outputBox">结果将显示在这里...</div>
+
+    <!-- 播放控制 -->
+    <div class="play-bar">
+      <button class="play-btn" id="playBtn" onclick="playMorse()" title="播放摩斯声音">▶</button>
+      <button class="play-btn" onclick="stopPlay()" title="停止" style="background:var(--muted);width:36px;height:36px;font-size:16px;">⏹</button>
+      <div class="speed-control">
+        <span>速度</span>
+        <input type="range" id="speedRange" min="1" max="10" value="5" oninput="updateSpeed()">
+        <span id="speedLabel">中速</span>
+      </div>
+    </div>
+
+    <p class="hint" id="hintText">提示：摩斯电码使用 ·（点）和 —（划），字母间用空格分隔，单词间用 / 分隔</p>
+  </div>
+
+  <!-- 摩斯电码参考表 -->
+  <div class="card">
+    <h3 style="font-size:16px;margin-bottom:12px;">摩斯电码参考表</h3>
+    <div style="overflow-x:auto;">
+      <table class="ref-table" id="refTable"></table>
+    </div>
+  </div>
+</div>
+
+<script>
+// 摩斯电码映射
+const MORSE_MAP = {
+  'A': '.-',    'B': '-...',  'C': '-.-.',  'D': '-..',
+  'E': '.',     'F': '..-.',  'G': '--.',   'H': '....',
+  'I': '..',    'J': '.---',  'K': '-.-',   'L': '.-..',
+  'M': '--',    'N': '-.',    'O': '---',   'P': '.--.',
+  'Q': '--.-',  'R': '.-.',   'S': '...',   'T': '-',
+  'U': '..-',   'V': '...-',  'W': '.--',   'X': '-..-',
+  'Y': '-.--',  'Z': '--..',
+  '0': '-----', '1': '.----', '2': '..---', '3': '...--',
+  '4': '....-', '5': '.....', '6': '-....', '7': '--...',
+  '8': '---..', '9': '----.',
+  '.': '.-.-.-', ',': '--..--', '?': '..--..', "'": '.----.',
+  '!': '-.-.--', '/': '-..-.', '(': '-.--.', ')': '-.--.-',
+  '&': '.-...',  ':': '---...', ';': '-.-.-.', '=': '-...-',
+  '-': '-....-', '_': '..--.-', '"': '.-..-.', '@': '.--.-.',
+  '+': '.-.-.',  '$': '...-..-'
+};
+// 反向映射
+const TEXT_MAP = {};
+for (const [k, v] of Object.entries(MORSE_MAP)) {
+  TEXT_MAP[v] = k;
+}
+
+let currentDir = 'toMorse';
+let lastMorse = ''; // 最后一次转换的摩斯码，用于播放
+let audioCtx = null;
+let isPlaying = false;
+let playTimeout = null;
+
+// 设置转换方向
+function setDir(dir) {
+  currentDir = dir;
+  document.getElementById('dirToMorse').classList.toggle('active', dir === 'toMorse');
+  document.getElementById('dirToText').classList.toggle('active', dir === 'toText');
+  document.getElementById('inputLabel').textContent = dir === 'toMorse' ? '输入文本' : '输入摩斯电码';
+  document.getElementById('inputArea').placeholder = dir === 'toMorse'
+    ? '输入要转换的文本...' : '输入摩斯电码（用空格分隔字母，/ 分隔单词）...';
+  clearAll();
+}
+
+// 处理输入
+function handleInput() {
+  const val = document.getElementById('inputArea').value;
+  document.getElementById('charCount').textContent = val.length + ' 字符';
+}
+
+// 转换
+function convert() {
+  const input = document.getElementById('inputArea').value.trim();
+  if (!input) return;
+  let result = '';
+  if (currentDir === 'toMorse') {
+    result = textToMorse(input);
+    lastMorse = result;
+  } else {
+    result = morseToText(input);
+    lastMorse = input;
+  }
+  const box = document.getElementById('outputBox');
+  box.innerHTML = highlightMorse(result);
+  box.classList.remove('flashing');
+  void box.offsetWidth; // 触发重排
+  box.classList.add('flashing');
+}
+
+// 文本转摩斯
+function textToMorse(text) {
+  return text.toUpperCase().split('').map(ch => {
+    if (ch === ' ') return '/';
+    return MORSE_MAP[ch] || '';
+  }).filter(Boolean).join(' ');
+}
+
+// 摩斯转文本
+function morseToText(morse) {
+  return morse.split(' ').map(code => {
+    if (code === '/' || code === '') return ' ';
+    return TEXT_MAP[code] || '?';
+  }).join('');
+}
+
+// 高亮摩斯码
+function highlightMorse(str) {
+  // 如果是摩斯码，高亮点和划
+  return str.split('').map(ch => {
+    if (ch === '.') return '<span class="dot">·</span>';
+    if (ch === '-') return '<span class="dash">—</span>';
+    return ch;
+  }).join('');
+}
+
+// 清空
+function clearAll() {
+  document.getElementById('inputArea').value = '';
+  document.getElementById('outputBox').innerHTML = '结果将显示在这里...';
+  document.getElementById('charCount').textContent = '0 字符';
+  stopPlay();
+}
+
+// 示例
+function pasteExample() {
+  if (currentDir === 'toMorse') {
+    document.getElementById('inputArea').value = 'HELLO WORLD';
+  } else {
+    document.getElementById('inputArea').value = '.... . .-.. .-.. --- / .-- --- .-. .-.. -..';
+  }
+  handleInput();
+  convert();
+}
+
+// 复制结果
+function copyResult() {
+  const text = document.getElementById('outputBox').textContent;
+  if (!text || text === '结果将显示在这里...') return;
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = event.target;
+    btn.textContent = '已复制！';
+    setTimeout(() => btn.textContent = '复制结果', 1500);
+  });
+}
+
+// 播放摩斯声音
+function playMorse() {
+  if (isPlaying) { stopPlay(); return; }
+  const morse = lastMorse || document.getElementById('outputBox').textContent;
+  if (!morse || morse === '结果将显示在这里...') return;
+
+  if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  isPlaying = true;
+  document.getElementById('playBtn').textContent = '⏸';
+  playSequence(morse, 0);
+}
+
+function playSequence(morse, idx) {
+  if (!isPlaying || idx >= morse.length) {
+    stopPlay();
+    return;
+  }
+  const speed = parseInt(document.getElementById('speedRange').value);
+  const dotLen = 150 - speed * 12; // 速度越快，时长越短
+  const ch = morse[idx];
+  if (ch === '.') {
+    playBeep(dotLen);
+    playTimeout = setTimeout(() => playSequence(morse, idx + 1), dotLen * 1.5);
+  } else if (ch === '-') {
+    playBeep(dotLen * 3);
+    playTimeout = setTimeout(() => playSequence(morse, idx + 1), dotLen * 3);
+  } else if (ch === ' ') {
+    playTimeout = setTimeout(() => playSequence(morse, idx + 1), dotLen * 3);
+  } else if (ch === '/') {
+    playTimeout = setTimeout(() => playSequence(morse, idx + 1), dotLen * 7);
+  } else {
+    playTimeout = setTimeout(() => playSequence(morse, idx + 1), dotLen * 0.5);
+  }
+}
+
+function playBeep(duration) {
+  if (!audioCtx) return;
+  const osc = audioCtx.createOscillator();
+  const gain = audioCtx.createGain();
+  osc.connect(gain);
+  gain.connect(audioCtx.destination);
+  osc.frequency.value = 600;
+  osc.type = 'sine';
+  gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+  gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + duration / 1000);
+  osc.start();
+  osc.stop(audioCtx.currentTime + duration / 1000);
+}
+
+function stopPlay() {
+  isPlaying = false;
+  clearTimeout(playTimeout);
+  document.getElementById('playBtn').textContent = '▶';
+}
+
+function updateSpeed() {
+  const val = parseInt(document.getElementById('speedRange').value);
+  const labels = ['', '很慢', '慢', '较慢', '偏慢', '中速', '偏快', '较快', '快', '很快', '极快'];
+  document.getElementById('speedLabel').textContent = labels[val] || '中速';
+}
+
+// 渲染参考表
+function renderRefTable() {
+  const table = document.getElementById('refTable');
+  let html = '<tr><th>字符</th><th>摩斯码</th><th>字符</th><th>摩斯码</th></tr>';
+  const entries = Object.entries(MORSE_MAP);
+  const half = Math.ceil(entries.length / 2);
+  for (let i = 0; i < half; i++) {
+    const [k1, v1] = entries[i];
+    const [k2, v2] = entries[i + half] || ['', ''];
+    html += `<tr><td>${k1}</td><td>${v1.replace(/\./g, '·').replace(/-/g, '—')}</td><td>${k2}</td><td>${v2 ? v2.replace(/\./g, '·').replace(/-/g, '—') : ''}</td></tr>`;
+  }
+  table.innerHTML = html;
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+  renderRefTable();
+  updateSpeed();
+});
+</script>
+</body>
+</html>

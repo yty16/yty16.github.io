@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>打字速度测试 - 工具箱 Pro</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f0f2f5;--card:rgba(255,255,255,0.85);--text:#1a1a2e;--muted:#a0aec0;--accent:#6366f1;--accent-hover:#4f46e5;--border:rgba(0,0,0,0.06);--shadow:0 4px 16px rgba(0,0,0,0.08)}
+[data-theme="dark"]{--bg:#0f0f1a;--card:rgba(30,30,50,0.85);--text:#e2e8f0;--muted:#718096;--accent:#818cf8;--border:rgba(255,255,255,0.06);--shadow:0 4px 16px rgba(0,0,0,0.3)}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; transition: background 0.3s, color 0.3s; }
+.back-btn { position: fixed; top: 20px; left: 20px; z-index: 100; display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; background: var(--card); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid var(--border); border-radius: 10px; color: var(--text); text-decoration: none; font-size: 14px; font-weight: 500; transition: all 0.2s; box-shadow: var(--shadow); }
+.back-btn:hover { transform: translateX(-3px); }
+.container { max-width: 720px; margin: 0 auto; padding: 80px 20px 40px; }
+h1 { font-size: 28px; font-weight: 700; margin-bottom: 8px; text-align: center; }
+.subtitle { color: var(--muted); font-size: 14px; margin-bottom: 24px; text-align: center; }
+.card { background: var(--card); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid var(--border); border-radius: 16px; padding: 28px; width: 100%; box-shadow: var(--shadow); margin-bottom: 20px; }
+/* 模式切换 */
+.mode-switch { display: flex; gap: 8px; margin-bottom: 20px; justify-content: center; }
+.mode-btn { padding: 8px 20px; border-radius: 10px; border: 1px solid var(--border); background: var(--bg); color: var(--muted); font-size: 14px; font-weight: 500; cursor: pointer; transition: all 0.2s; font-family: inherit; }
+.mode-btn.active { background: var(--accent); color: white; border-color: var(--accent); }
+/* 计时器 */
+.timer-bar { width: 100%; height: 6px; background: rgba(99,102,241,0.1); border-radius: 3px; overflow: hidden; margin-bottom: 16px; }
+.timer-fill { height: 100%; background: linear-gradient(90deg, var(--accent), #22c55e); border-radius: 3px; transition: width 0.3s linear, background 0.3s; }
+.timer-fill.warning { background: linear-gradient(90deg, #f59e0b, #ef4444); }
+.timer-text { text-align: center; font-size: 32px; font-weight: 700; color: var(--accent); margin-bottom: 16px; font-variant-numeric: tabular-nums; }
+.timer-text.warning { color: #ef4444; }
+/* 文字展示区 */
+.text-display { background: var(--bg); border-radius: 12px; padding: 20px; font-size: 18px; line-height: 2; margin-bottom: 20px; min-height: 120px; position: relative; overflow-wrap: break-word; border: 1px solid var(--border); }
+.text-display .char { display: inline; transition: all 0.1s; }
+.text-display .char.correct { color: #22c55e; }
+.text-display .char.incorrect { color: #ef4444; background: rgba(239,68,68,0.1); border-radius: 2px; }
+.text-display .char.current { background: var(--accent); color: white; border-radius: 2px; animation: blink 1s infinite; }
+.text-display .char.pending { color: var(--muted); }
+@keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+/* 输入区 */
+.input-area { width: 100%; min-height: 80px; padding: 16px; border-radius: 12px; border: 2px solid var(--border); background: var(--bg); color: var(--text); font-size: 16px; font-family: inherit; line-height: 1.8; resize: none; outline: none; transition: border-color 0.2s; margin-bottom: 16px; }
+.input-area:focus { border-color: var(--accent); }
+.input-area:disabled { opacity: 0.5; cursor: not-allowed; }
+/* 统计 */
+.stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 20px; }
+.stat-box { background: var(--bg); border-radius: 12px; padding: 16px 12px; text-align: center; border: 1px solid var(--border); }
+.stat-num { font-size: 28px; font-weight: 700; color: var(--accent); }
+.stat-label { font-size: 12px; color: var(--muted); margin-top: 4px; }
+/* 按钮 */
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 12px 28px; background: var(--accent); color: white; border: none; border-radius: 12px; font-size: 15px; font-weight: 600; cursor: pointer; transition: all 0.2s; font-family: inherit; }
+.btn:hover { background: var(--accent-hover); transform: translateY(-1px); }
+.btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+.btn-group { display: flex; gap: 12px; justify-content: center; margin-top: 16px; }
+/* 结果弹窗 */
+.overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(4px); z-index: 200; align-items: center; justify-content: center; }
+.overlay.show { display: flex; }
+.modal { background: var(--card); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid var(--border); border-radius: 20px; padding: 40px; max-width: 420px; width: 90%; text-align: center; box-shadow: 0 20px 60px rgba(0,0,0,0.3); animation: modalIn 0.3s ease; }
+@keyframes modalIn { from { opacity: 0; transform: scale(0.9) translateY(20px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+.modal h2 { font-size: 22px; margin-bottom: 20px; }
+.result-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 20px 0; }
+.result-item { background: var(--bg); border-radius: 12px; padding: 16px 12px; }
+.result-item .val { font-size: 28px; font-weight: 700; color: var(--accent); }
+.result-item .lbl { font-size: 12px; color: var(--muted); margin-top: 4px; }
+.modal .btn { width: 100%; }
+/* 提示文字 */
+.hint-text { text-align: center; color: var(--muted); font-size: 13px; margin-bottom: 12px; }
+</style>
+</head>
+<body>
+<script>(function(){var s=localStorage.getItem('theme');if(s==='light'||s==='dark'){document.documentElement.setAttribute('data-theme',s)}else{var d=window.matchMedia('(prefers-color-scheme:dark)').matches;document.documentElement.setAttribute('data-theme',d?'dark':'light')}})();</script>
+
+<a href="/" class="back-btn">← 返回</a>
+
+<div class="container">
+  <h1>⌨️ 打字速度测试</h1>
+  <p class="subtitle">60秒内打出下方文字，测试你的打字速度</p>
+
+  <div class="card">
+    <div class="mode-switch">
+      <button class="mode-btn active" id="modeZh" onclick="switchMode('zh')">中文</button>
+      <button class="mode-btn" id="modeEn" onclick="switchMode('en')">English</button>
+    </div>
+
+    <div class="timer-text" id="timerText">60</div>
+    <div class="timer-bar"><div class="timer-fill" id="timerFill" style="width:100%"></div></div>
+
+    <div class="text-display" id="textDisplay"></div>
+
+    <p class="hint-text" id="hintText">在下方输入框开始打字以开始计时</p>
+    <textarea class="input-area" id="typingInput" placeholder="点击这里开始打字..." oninput="handleInput()" onpaste="return false;"></textarea>
+
+    <div class="stats-grid">
+      <div class="stat-box">
+        <div class="stat-num" id="statWpm">0</div>
+        <div class="stat-label">WPM</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-num" id="statAccuracy">100%</div>
+        <div class="stat-label">准确率</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-num" id="statTyped">0</div>
+        <div class="stat-label">已打字数</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-num" id="statErrors">0</div>
+        <div class="stat-label">错误数</div>
+      </div>
+    </div>
+
+    <div class="btn-group">
+      <button class="btn" id="restartBtn" onclick="restartTest()">重新开始</button>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="overlay">
+  <div class="modal">
+    <h2>时间到！</h2>
+    <div class="result-grid">
+      <div class="result-item">
+        <div class="val" id="resWpm">0</div>
+        <div class="lbl">WPM</div>
+      </div>
+      <div class="result-item">
+        <div class="val" id="resAccuracy">100%</div>
+        <div class="lbl">准确率</div>
+      </div>
+      <div class="result-item">
+        <div class="val" id="resTyped">0</div>
+        <div class="lbl">总字数</div>
+      </div>
+      <div class="result-item">
+        <div class="val" id="resErrors">0</div>
+        <div class="lbl">错误数</div>
+      </div>
+    </div>
+    <button class="btn" onclick="closeResult()">再来一次</button>
+  </div>
+</div>
+
+<script>
+// 中文文本库
+const zhTexts = [
+  "从前有座山，山里有座庙，庙里有个老和尚在给小和尚讲故事。讲的是从前有座山，山里有座庙，庙里有个老和尚在给小和尚讲故事。",
+  "编程是一门需要不断学习和实践的技能。每天进步一点点，坚持下去就能看到显著的成果。代码的魅力在于它可以让计算机按照我们的想法去执行任务。",
+  "春眠不觉晓，处处闻啼鸟。夜来风雨声，花落知多少。这首诗是唐代诗人孟浩然的作品，描写了春天清晨的美好景象。",
+  "科技的发展让我们的生活变得更加便利。人工智能、大数据、云计算等新技术正在深刻地改变着世界的面貌，也为我们带来了前所未有的机遇和挑战。",
+  "读书是一种享受，也是一种修行。在书的世界里，我们可以与古今中外的伟人对话，可以领略不同文化的魅力，可以开阔视野、增长见识。",
+  "生命在于运动，健康的身体是革命的本钱。每天坚持锻炼，不仅可以增强体质，还能缓解压力、改善心情，让我们以更好的状态投入到工作和学习中去。"
+];
+
+// 英文文本库
+const enTexts = [
+  "The quick brown fox jumps over the lazy dog. This sentence contains all the letters of the English alphabet and is commonly used for typing practice around the world.",
+  "Programming is the process of creating a set of instructions that tell a computer how to perform a task. It can be done using many programming languages.",
+  "Technology has transformed the way we live, work, and communicate. From smartphones to artificial intelligence, innovation continues to shape our future.",
+  "Practice makes perfect. The more you type, the faster and more accurate you will become. Consistent effort over time leads to remarkable improvement.",
+  "The internet connects billions of devices worldwide, enabling instant communication and access to information. It has revolutionized every aspect of modern life.",
+  "Learning a new skill requires patience, dedication, and regular practice. Every expert was once a beginner who refused to give up on their dreams."
+];
+
+let currentMode = 'zh'; // 'zh' or 'en'
+let currentText = '';
+let timer = 60;
+let timerInterval = null;
+let isRunning = false;
+let isFinished = false;
+let correctCount = 0;
+let errorCount = 0;
+let totalTyped = 0;
+let startTime = 0;
+
+// 切换中英文模式
+function switchMode(mode) {
+  currentMode = mode;
+  document.getElementById('modeZh').classList.toggle('active', mode === 'zh');
+  document.getElementById('modeEn').classList.toggle('active', mode === 'en');
+  restartTest();
+}
+
+// 选择随机文本
+function pickText() {
+  const pool = currentMode === 'zh' ? zhTexts : enTexts;
+  // 随机选一段，避免重复
+  const idx = Math.floor(Math.random() * pool.length);
+  currentText = pool[idx];
+}
+
+// 渲染文字展示区
+function renderText(currentIndex) {
+  const display = document.getElementById('textDisplay');
+  let html = '';
+  for (let i = 0; i < currentText.length; i++) {
+    let cls = 'pending';
+    if (i < currentIndex) {
+      cls = 'correct'; // 默认正确，输入时再判断
+    }
+    if (i === currentIndex && isRunning) cls = 'current';
+    html += `<span class="char ${cls}" id="ch${i}">${escapeHtml(currentText[i])}</span>`;
+  }
+  display.innerHTML = html;
+  // 根据实际输入更新颜色
+  updateCharColors();
+}
+
+// 更新字符颜色
+function updateCharColors() {
+  const input = document.getElementById('typingInput').value;
+  for (let i = 0; i < currentText.length; i++) {
+    const el = document.getElementById('ch' + i);
+    if (!el) continue;
+    el.className = 'char';
+    if (i < input.length) {
+      if (input[i] === currentText[i]) {
+        el.classList.add('correct');
+      } else {
+        el.classList.add('incorrect');
+      }
+    } else if (i === input.length && isRunning) {
+      el.classList.add('current');
+    } else {
+      el.classList.add('pending');
+    }
+  }
+}
+
+function escapeHtml(str) {
+  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// 处理输入
+function handleInput() {
+  if (isFinished) return;
+
+  const input = document.getElementById('typingInput').value;
+
+  // 如果输入长度超过文本长度，截断
+  if (input.length > currentText.length) {
+    document.getElementById('typingInput').value = input.slice(0, currentText.length);
+    return;
+  }
+
+  // 开始计时
+  if (!isRunning && input.length > 0) {
+    startTimer();
+  }
+
+  // 计算正确/错误
+  let correct = 0;
+  for (let i = 0; i < input.length; i++) {
+    if (input[i] === currentText[i]) correct++;
+  }
+  correctCount = correct;
+  errorCount = input.length - correct;
+  totalTyped = input.length;
+
+  // 更新统计
+  updateStats();
+
+  // 更新文字颜色
+  updateCharColors();
+
+  // 完成检测
+  if (input.length === currentText.length) {
+    finishTest();
+  }
+}
+
+// 开始计时
+function startTimer() {
+  isRunning = true;
+  startTime = Date.now();
+  timer = 60;
+  document.getElementById('hintText').textContent = '继续打字...';
+  timerInterval = setInterval(() => {
+    const elapsed = (Date.now() - startTime) / 1000;
+    timer = Math.max(0, 60 - elapsed);
+    document.getElementById('timerText').textContent = Math.ceil(timer);
+    const pct = (timer / 60) * 100;
+    const fill = document.getElementById('timerFill');
+    fill.style.width = pct + '%';
+    if (pct < 20) fill.classList.add('warning');
+    else fill.classList.remove('warning');
+    if (timer <= 10) document.getElementById('timerText').classList.add('warning');
+    else document.getElementById('timerText').classList.remove('warning');
+    if (timer <= 0) {
+      finishTest();
+    }
+  }, 100);
+}
+
+// 更新统计
+function updateStats() {
+  // WPM 计算：每分钟字数
+  const elapsed = isRunning ? (Date.now() - startTime) / 1000 / 60 : 0;
+  const wpm = elapsed > 0 ? Math.round(correctCount / elapsed) : 0;
+  document.getElementById('statWpm').textContent = wpm;
+  const accuracy = totalTyped > 0 ? Math.round((correctCount / totalTyped) * 100) : 100;
+  document.getElementById('statAccuracy').textContent = accuracy + '%';
+  document.getElementById('statTyped').textContent = totalTyped;
+  document.getElementById('statErrors').textContent = errorCount;
+}
+
+// 完成测试
+function finishTest() {
+  if (isFinished) return;
+  isFinished = true;
+  isRunning = false;
+  clearInterval(timerInterval);
+  document.getElementById('typingInput').disabled = true;
+
+  // 计算最终统计
+  const elapsed = (Date.now() - startTime) / 1000 / 60;
+  const wpm = elapsed > 0 ? Math.round(correctCount / elapsed) : 0;
+  const accuracy = totalTyped > 0 ? Math.round((correctCount / totalTyped) * 100) : 100;
+
+  document.getElementById('resWpm').textContent = wpm;
+  document.getElementById('resAccuracy').textContent = accuracy + '%';
+  document.getElementById('resTyped').textContent = totalTyped;
+  document.getElementById('resErrors').textContent = errorCount;
+
+  setTimeout(() => {
+    document.getElementById('overlay').classList.add('show');
+  }, 500);
+}
+
+// 重新开始
+function restartTest() {
+  clearInterval(timerInterval);
+  isRunning = false;
+  isFinished = false;
+  correctCount = 0;
+  errorCount = 0;
+  totalTyped = 0;
+  timer = 60;
+  pickText();
+  renderText(0);
+  document.getElementById('typingInput').value = '';
+  document.getElementById('typingInput').disabled = false;
+  document.getElementById('typingInput').focus();
+  document.getElementById('timerText').textContent = '60';
+  document.getElementById('timerText').classList.remove('warning');
+  document.getElementById('timerFill').style.width = '100%';
+  document.getElementById('timerFill').classList.remove('warning');
+  document.getElementById('hintText').textContent = '在下方输入框开始打字以开始计时';
+  updateStats();
+}
+
+function closeResult() {
+  document.getElementById('overlay').classList.remove('show');
+  restartTest();
+}
+
+// 初始化
+window.addEventListener('DOMContentLoaded', () => {
+  pickText();
+  renderText(0);
+  updateStats();
+});
+</script>
+</body>
+</html>

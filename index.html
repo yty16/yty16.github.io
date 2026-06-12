@@ -924,29 +924,7 @@
             z-index: 1;
         }
 
-        /* 快捷键提示 */
-        .kbd-hint {
-            position: fixed;
-            bottom: 32px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: var(--bg-card);
-            backdrop-filter: blur(20px);
-            border: 1px solid var(--border);
-            border-radius: var(--radius-lg);
-            padding: 10px 20px;
-            font-size: 12px;
-            color: var(--text-muted);
-            z-index: 80;
-            opacity: 0;
-            transition: opacity 0.5s;
-            pointer-events: none;
-        }
-
-        .kbd-hint.visible {
-            opacity: 1;
-        }
-
+        
         kbd {
             display: inline-block;
             padding: 2px 6px;
@@ -1098,11 +1076,7 @@
         </svg>
     </button>
 
-    <!-- Keyboard Hint (hidden) -->
-    <div class="kbd-hint" id="kbdHint" style="display:none;">
-        输入 <kbd>seeall</kbd> 解锁隐藏区域
-    </div>
-
+    
     <script>
     // 网站数据
     const SITE_DATA = {
@@ -1647,8 +1621,7 @@
         });
         renderNavbar();
         showToast('隐藏区域已解锁!', '🔓');
-        document.getElementById('kbdHint').classList.remove('visible');
-    }
+            }
 
     // 安全模式变量 - 外层作用域，triggerJiyuDownload也能访问
     let securityEnabled = false;
@@ -1857,16 +1830,7 @@
         });
     }
 
-    // 快捷键提示
-    function showKeyboardHint() {
-        setTimeout(() => {
-            document.getElementById('kbdHint').classList.add('visible');
-            setTimeout(() => {
-                document.getElementById('kbdHint').classList.remove('visible');
-            }, 5000);
-        }, 3000);
-    }
-
+    
     // Init
     document.addEventListener('DOMContentLoaded', () => {
         initTheme();
@@ -1877,8 +1841,7 @@
         initMobileSidebar();
         initScrollTop();
         initParticles();
-        showKeyboardHint();
-
+        
         // Theme toggle
         document.getElementById('themeToggle').addEventListener('click', toggleTheme);
 

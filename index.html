@@ -284,6 +284,34 @@
             line-height: 1.2;
         }
 
+        /* 水印 */
+        .watermark {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 9998;
+            overflow: hidden;
+            opacity: 0.07;
+            user-select: none;
+        }
+
+        .watermark-text {
+            position: absolute;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+            white-space: nowrap;
+            transform: rotate(-30deg);
+            transform-origin: center center;
+        }
+
+        [data-theme="dark"] .watermark-text {
+            opacity: 0.6;
+        }
+
         .theme-toggle {
             width: 40px;
             height: 40px;
@@ -1006,6 +1034,9 @@
 
     
     <div class="toast-container" id="toastContainer"></div>
+
+    <!-- 水印 -->
+    <div class="watermark" id="watermark"></div>
 
     
     <header class="header">
@@ -1788,6 +1819,42 @@
     function startClock() {
         updateTime();
         setInterval(updateTime, 1000);
+        initWatermark();
+        updateWatermark();
+        setInterval(updateWatermark, 1000);
+    }
+
+    // 水印
+    function initWatermark() {
+        var watermark = document.getElementById('watermark');
+        if (!watermark) return;
+        watermark.innerHTML = '';
+        var cols = Math.ceil(window.innerWidth / 300);
+        var rows = Math.ceil(window.innerHeight / 200);
+        for (var i = 0; i < cols * rows; i++) {
+            var div = document.createElement('div');
+            div.className = 'watermark-text';
+            div.style.left = (i % cols) * 300 + 50 + 'px';
+            div.style.top = Math.floor(i / cols) * 200 + 100 + 'px';
+            div.setAttribute('data-wm', '1');
+            watermark.appendChild(div);
+        }
+    }
+
+    window.addEventListener('resize', function() {
+        initWatermark();
+        updateWatermark();
+    });
+
+    function updateWatermark() {
+        var domain = window.location.hostname;
+        var now = new Date();
+        var timeStr = String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0');
+        var text = domain + ' | ' + timeStr;
+        var els = document.querySelectorAll('[data-wm="1"]');
+        for (var i = 0; i < els.length; i++) {
+            els[i].textContent = text;
+        }
     }
 
     // Init

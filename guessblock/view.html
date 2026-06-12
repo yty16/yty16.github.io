@@ -97,27 +97,18 @@
             padding: 20px;
             margin-top: 15px;
         }
-        .block-list {
+        .item-list {
             text-align: center;
             line-height: 2;
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             color: var(--text);
-            padding: 15px;
+            padding: 10px;
             max-height: 300px;
             overflow-y: auto;
         }
-        .mob-list {
-            text-align: center;
-            line-height: 2;
-            font-size: 1.2rem;
-            color: var(--text);
-            padding: 15px;
-            max-height: 300px;
-            overflow-y: auto;
-        }
-        .block-list::-webkit-scrollbar, .mob-list::-webkit-scrollbar { width: 6px; }
-        .block-list::-webkit-scrollbar-track, .mob-list::-webkit-scrollbar-track { background: var(--card-border); border-radius: 3px; }
-        .block-list::-webkit-scrollbar-thumb, .mob-list::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 3px; }
+        .item-list::-webkit-scrollbar { width: 6px; }
+        .item-list::-webkit-scrollbar-track { background: var(--card-border); border-radius: 3px; }
+        .item-list::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 3px; }
         .status {
             display: flex;
             align-items: center;
@@ -134,7 +125,7 @@
         @media (max-width: 768px) {
             .container { padding: 20px; }
             h1 { font-size: 1.6rem; }
-            .block-list, .mob-list { font-size: 1rem; }
+            .item-list { font-size: 0.95rem; }
         }
     </style>
 </head>
@@ -146,9 +137,9 @@
         </header>
         <div class="content-box">
             <div class="section-title">🧱 方块</div>
-            <div class="block-list" id="blockList"></div>
+            <div class="item-list" id="blockList"></div>
             <div class="section-title">🐷 生物</div>
-            <div class="mob-list" id="mobList"></div>
+            <div class="item-list" id="mobList"></div>
         </div>
         <div class="status" id="status">
             <div class="dot"></div>
@@ -162,14 +153,14 @@
             var statusEl = document.getElementById('status');
 
             fetch('data.txt')
-                .then(r => r.text())
-                .then(text => {
+                .then(function(r) { return r.text(); })
+                .then(function(text) {
                     var lines = text.split('\n');
                     var blocks = [];
                     var mobs = [];
                     var countEnd = 0;
-                    for (var line of lines) {
-                        line = line.trim();
+                    for (var i = 0; i < lines.length; i++) {
+                        var line = lines[i].trim();
                         if (line === '-1') {
                             countEnd++;
                             if (countEnd === 2) break;
@@ -186,16 +177,8 @@
                         }
                     }
                     statusEl.classList.add('ready');
-                    if (blocks.length > 0) {
-                        blockEl.innerHTML = blocks.join('、');
-                    } else {
-                        blockEl.innerHTML = '暂无方块数据';
-                    }
-                    if (mobs.length > 0) {
-                        mobEl.innerHTML = mobs.join('、');
-                    } else {
-                        mobEl.innerHTML = '暂无生物数据';
-                    }
+                    blockEl.innerHTML = blocks.length > 0 ? blocks.join('、') : '暂无方块数据';
+                    mobEl.innerHTML = mobs.length > 0 ? mobs.join('、') : '暂无生物数据';
                     statusEl.innerHTML = '<div class="dot"></div> 已收录 ' + blocks.length + ' 个方块 + ' + mobs.length + ' 个生物';
                 })
                 .catch(function() {

@@ -151,9 +151,10 @@
             justify-content: center;
             color: var(--text);
         }
-        /* 特殊问题的按钮样式 */
-        .btn-container.is-block-question {
-            /* 方块/生物选择用不同颜色 */
+        .candidates-info {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin: 5px 0;
         }
         .progress-bar {
             width: 100%;
@@ -189,21 +190,24 @@
         }
         .btn:hover { transform: translateY(-2px); }
         .btn:active { transform: translateY(1px); }
-        #yesButton {
+        .btn-yes {
             background: linear-gradient(to bottom, var(--success), #27ae60);
             color: white;
         }
-        #noButton {
+        .btn-no {
             background: linear-gradient(to bottom, var(--danger), #c0392b);
             color: white;
         }
-        /* 方块/生物选择时的特殊按钮 */
         .btn-block {
             background: linear-gradient(to bottom, #3498db, #2980b9);
             color: white;
         }
         .btn-mob {
             background: linear-gradient(to bottom, #e74c3c, #c0392b);
+            color: white;
+        }
+        .btn-dk {
+            background: linear-gradient(to bottom, #9b59b6, #8e44ad);
             color: white;
         }
         #result {
@@ -221,15 +225,20 @@
         }
         .result-title { font-size: 1.6rem; font-weight: 700; margin-bottom: 10px; }
         .result-content {
-            font-size: 1.8rem;
-            padding: 10px;
+            font-size: 2rem;
+            padding: 15px;
             background: rgba(108,92,231,0.1);
             border-radius: 8px;
+            font-weight: 700;
         }
         .result-type {
             font-size: 0.9rem;
             color: var(--text-secondary);
             margin-top: 5px;
+        }
+        .result-emoji {
+            font-size: 3rem;
+            margin-bottom: 5px;
         }
         #restartButton {
             background: linear-gradient(to bottom, var(--warning), #e67e22);
@@ -260,7 +269,7 @@
     <div class="container">
         <a href="/" class="back-btn">← 返回</a>
         <h1>🧱 MC猜方块&生物</h1>
-        <div class="subtitle">V2.0 以网易基岩版为准，想一个方块或生物我来猜</div>
+        <div class="subtitle">V3.0 以网易基岩版为准，想一个方块或生物我来猜</div>
         <div id="info" class="hidden"></div>
         <div id="loading">
             <div class="spinner"></div>
@@ -268,12 +277,13 @@
         </div>
         <div id="gameContainer" class="hidden">
             <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+            <div class="candidates-info" id="candidatesInfo"></div>
             <div class="content-box">
                 <div id="questionContainer" class="question"></div>
             </div>
             <div class="btn-container" id="btnContainer">
-                <button id="yesButton" class="btn" onclick="answerQuestion('1')">是</button>
-                <button id="noButton" class="btn" onclick="answerQuestion('0')">否</button>
+                <button id="yesButton" class="btn btn-yes" onclick="answerQuestion(1)">是</button>
+                <button id="noButton" class="btn btn-no" onclick="answerQuestion(0)">否</button>
             </div>
             <div id="result" class="hidden"></div>
         </div>
@@ -281,35 +291,37 @@
     </div>
 
     <script>
-        let que = [];
-        let items = [];
-        let data = [];
-        let ans = [];
-        let maxAns = 0;
-        let currentQuestion = 0;
-        let totalQuestions = 0;
-        let isBlockMode = null; // null=未确定, true=方块, false=生物
+        // 游戏状态
+        var questions = [];
+        var items = [];
+        var data = [];
+        var candidates = [];      // 当前候选集（索引）
+        var askedQuestions = [];   // 已问过的问题索引
+        var totalCandidates = 191;
+        var questionsAsked = 0;
+
+        // 特殊问题索引映射
+        var FIRST_Q = 0;  // "是方块还是生物？"
 
         function loadData() {
             fetch('data.txt')
-                .then(r => r.text())
-                .then(text => {
+                .then(function(r) { return r.text(); })
+                .then(function(text) {
                     parseData(text);
                     updateInfo();
                     document.getElementById('loading').classList.add('hidden');
                     document.getElementById('gameContainer').classList.remove('hidden');
                     document.getElementById('info').classList.remove('hidden');
-                    totalQuestions = que.length;
                     startGame();
                 })
-                .catch(err => {
+                .catch(function(err) {
                     document.getElementById('loading').innerHTML = '数据加载失败 😢';
                 });
         }
 
         function updateInfo() {
-            let blockCount = data.filter(d => d[0] === '1').length;
-            let mobCount = data.filter(d => d[0] === '0').length;
+            var blockCount = data.filter(function(d) { return d[0] === '1'; }).length;
+            var mobCount = data.filter(function(d) { return d[0] === '0'; }).length;
             document.getElementById("info").innerHTML =
                 '已收录 <b>' + blockCount + '</b> 个方块 + <b>' + mobCount + '</b> 个生物，' +
                 '<a href="view.html" target="_blank">查看全部</a>';
@@ -318,11 +330,11 @@
         function parseData(text) {
             var lines = text.trim().split('\n');
             var section = 0;
-            for (var line of lines) {
-                line = line.trim();
+            for (var i = 0; i < lines.length; i++) {
+                var line = lines[i].trim();
                 if (line === '-1') { section++; continue; }
                 if (section === 0) {
-                    if (line) que.push(line);
+                    if (line) questions.push(line);
                 } else if (section === 1) {
                     var parts = line.split(' ');
                     if (parts.length >= 2) {
@@ -331,141 +343,181 @@
                     }
                 }
             }
-            ans = Array.from({length: items.length}, function(_, i) { return i; });
-            maxAns = items.length;
-        }
-
-        function updateProgress() {
-            var pct = totalQuestions > 0 ? (currentQuestion / totalQuestions * 100) : 0;
-            document.getElementById('progressFill').style.width = pct + '%';
+            totalCandidates = items.length;
         }
 
         function startGame() {
-            currentQuestion = 0;
-            ans = Array.from({length: items.length}, function(_, i) { return i; });
-            maxAns = items.length;
-            isBlockMode = null;
+            candidates = [];
+            for (var i = 0; i < items.length; i++) candidates.push(i);
+            askedQuestions = [];
+            questionsAsked = 0;
             document.getElementById("result").classList.add("hidden");
-            document.getElementById("yesButton").disabled = false;
-            document.getElementById("noButton").disabled = false;
-            var rb = document.getElementById("restartButton");
-            if (rb) rb.remove();
             document.querySelector(".content-box").classList.remove("hidden");
             document.getElementById("btnContainer").classList.remove("hidden");
-            // 恢复默认按钮
-            resetButtons();
+            var rb = document.getElementById("restartButton");
+            if (rb) rb.remove();
             updateProgress();
-            skipQuestions();
+            updateCandidatesInfo();
+            askNextQuestion();
         }
 
-        function resetButtons() {
-            var yesBtn = document.getElementById("yesButton");
-            var noBtn = document.getElementById("noButton");
-            yesBtn.className = 'btn';
-            yesBtn.textContent = '是';
-            noBtn.className = 'btn';
-            noBtn.textContent = '否';
-            yesBtn.onclick = function() { answerQuestion('1'); };
-            noBtn.onclick = function() { answerQuestion('0'); };
+        function updateProgress() {
+            // 进度基于已问问题数
+            var pct = Math.min(questionsAsked / 15 * 100, 100); // 约15问算完成
+            document.getElementById('progressFill').style.width = pct + '%';
         }
 
-        // 跳过所有答案相同的无用问题
-        function skipQuestions() {
-            while (currentQuestion < que.length) {
-                var allSame = true;
-                var firstVal = null;
-                for (var i = 0; i < maxAns; i++) {
-                    var v = data[ans[i]][currentQuestion];
-                    if (firstVal === null) firstVal = v;
-                    else if (v !== firstVal) { allSame = false; break; }
-                }
-                if (!allSame) break;
-                // 如果所有答案相同，自动跳过并记录
-                if (currentQuestion === 0 && firstVal) {
-                    isBlockMode = firstVal === '1';
-                }
-                currentQuestion++;
-            }
-            updateProgress();
-            if (currentQuestion >= que.length || maxAns <= 1) {
-                showResult();
+        function updateCandidatesInfo() {
+            var el = document.getElementById('candidatesInfo');
+            if (candidates.length > 0) {
+                el.textContent = '剩余候选: ' + candidates.length + ' 个';
             } else {
-                showQuestion();
+                el.textContent = '';
             }
         }
 
-        function showQuestion() {
-            var q = que[currentQuestion];
-            document.getElementById("questionContainer").textContent = q;
+        // === 自适应问题选择算法 ===
+        // 每次选择能最均匀分裂当前候选集的问题
+        function findBestQuestion() {
+            var bestIdx = -1;
+            var bestScore = -1;
 
-            // 第一个问题"是方块还是生物？"用特殊按钮
+            for (var q = 0; q < questions.length; q++) {
+                if (askedQuestions.indexOf(q) !== -1) continue; // 已问过
+
+                // 计算该问题对当前候选集的分裂效果
+                var yesCount = 0;
+                var noCount = 0;
+                for (var i = 0; i < candidates.length; i++) {
+                    if (data[candidates[i]][q] === '1') yesCount++;
+                    else noCount++;
+                }
+
+                // 如果所有候选答案相同，跳过（无用问题）
+                if (yesCount === 0 || noCount === 0) continue;
+
+                // 分裂评分：越接近50/50越好
+                // 使用信息熵: -p*log2(p) - (1-p)*log2(1-p)
+                var p = yesCount / candidates.length;
+                var score = 0;
+                if (p > 0 && p < 1) {
+                    score = -p * Math.log2(p) - (1-p) * Math.log2(1-p);
+                }
+
+                // 第一个问题（方块/生物）加权，因为它自然分裂最均匀
+                if (q === FIRST_Q && askedQuestions.length === 0) {
+                    score += 2; // 优先问第一个问题
+                }
+
+                if (score > bestScore) {
+                    bestScore = score;
+                    bestIdx = q;
+                }
+            }
+
+            return bestIdx;
+        }
+
+        function askNextQuestion() {
+            // 如果只剩1个候选，直接出结果
+            if (candidates.length === 1) {
+                showResult(candidates[0]);
+                return;
+            }
+
+            // 如果没有候选了，出失败结果
+            if (candidates.length === 0) {
+                showResult(-1);
+                return;
+            }
+
+            // 找最佳问题
+            var qIdx = findBestQuestion();
+
+            if (qIdx === -1) {
+                // 所有问题都问完了或都无用，但还有多个候选
+                // 这些候选在所有可用属性上完全相同
+                // 直接出结果（显示最可能的第一个）
+                showResult(candidates[0]);
+                return;
+            }
+
+            // 显示问题
+            var qText = questions[qIdx];
+            document.getElementById("questionContainer").textContent = qText;
+
+            // 根据问题类型设置按钮
             var yesBtn = document.getElementById("yesButton");
             var noBtn = document.getElementById("noButton");
-            if (currentQuestion === 0) {
+
+            if (qIdx === FIRST_Q) {
                 yesBtn.className = 'btn btn-block';
                 yesBtn.textContent = '🧱 方块';
-                yesBtn.onclick = function() { answerQuestion('1'); };
+                yesBtn.onclick = function() { answerQuestion(1, qIdx); };
                 noBtn.className = 'btn btn-mob';
                 noBtn.textContent = '🐷 生物';
-                noBtn.onclick = function() { answerQuestion('0'); };
+                noBtn.onclick = function() { answerQuestion(0, qIdx); };
             } else {
-                resetButtons();
+                yesBtn.className = 'btn btn-yes';
+                yesBtn.textContent = '是';
+                yesBtn.onclick = function() { answerQuestion(1, qIdx); };
+                noBtn.className = 'btn btn-no';
+                noBtn.textContent = '否';
+                noBtn.onclick = function() { answerQuestion(0, qIdx); };
             }
         }
 
-        function answerQuestion(answer) {
-            // 记录方块/生物模式
-            if (currentQuestion === 0) {
-                isBlockMode = answer === '1';
-            }
-
+        function answerQuestion(answer, qIdx) {
+            // 过滤候选集
             var next = [];
-            for (var i = 0; i < maxAns; i++) {
-                if (data[ans[i]][currentQuestion] === answer) next.push(ans[i]);
+            for (var i = 0; i < candidates.length; i++) {
+                if (data[candidates[i]][qIdx] === String(answer)) {
+                    next.push(candidates[i]);
+                }
             }
-            ans = next;
-            maxAns = ans.length;
-            currentQuestion++;
+            candidates = next;
+            askedQuestions.push(qIdx);
+            questionsAsked++;
             updateProgress();
-            skipQuestions();
+            updateCandidatesInfo();
+            askNextQuestion();
         }
 
-        function showResult() {
+        function showResult(idx) {
             var el = document.getElementById("result");
             el.innerHTML = '';
+
             var title = document.createElement('div');
             title.className = 'result-title';
             var content = document.createElement('div');
             content.className = 'result-content';
             var typeInfo = document.createElement('div');
             typeInfo.className = 'result-type';
+            var emoji = document.createElement('div');
+            emoji.className = 'result-emoji';
 
-            if (maxAns === 1) {
-                var isBlock = data[ans[0]][0] === '1';
+            if (idx >= 0) {
+                var isBlock = data[idx][0] === '1';
+                emoji.textContent = isBlock ? '🧱' : '🐷';
                 title.textContent = '🎯 你想的是：';
-                content.innerHTML = '<strong>' + items[ans[0]] + '</strong>';
+                content.innerHTML = '<strong>' + items[idx] + '</strong>';
                 typeInfo.textContent = isBlock ? '（方块）' : '（生物）';
-            } else if (maxAns > 1 && maxAns <= 5) {
-                title.textContent = '可能是以下之一：';
-                content.innerHTML = ans.map(function(i){ return '<span>' + items[i] + '</span>'; }).join('、');
-                typeInfo.textContent = '共 ' + maxAns + ' 个候选';
-            } else if (maxAns > 5) {
-                title.textContent = '还剩 ' + maxAns + ' 个候选';
-                content.innerHTML = ans.slice(0, 5).map(function(i){ return items[i]; }).join('、') + '...';
             } else {
-                title.textContent = '🤔 数据库中没找到匹配';
+                emoji.textContent = '🤔';
+                title.textContent = '数据库中没找到匹配';
+                content.textContent = '';
             }
 
+            el.appendChild(emoji);
             el.appendChild(title);
-            if (maxAns > 0) {
+            if (idx >= 0) {
                 el.appendChild(content);
                 el.appendChild(typeInfo);
             }
             el.classList.remove("hidden");
-            document.getElementById("yesButton").disabled = true;
-            document.getElementById("noButton").disabled = true;
             document.querySelector(".content-box").classList.add("hidden");
             document.getElementById("btnContainer").classList.add("hidden");
+            document.getElementById('candidatesInfo').textContent = '';
 
             var rb = document.createElement('button');
             rb.textContent = '再来一次';
@@ -473,6 +525,8 @@
             rb.className = 'btn';
             rb.onclick = startGame;
             el.insertAdjacentElement('afterend', rb);
+
+            updateProgress(); // 完成进度
         }
 
         window.onload = loadData;

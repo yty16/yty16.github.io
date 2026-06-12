@@ -2493,7 +2493,7 @@
     <main class="main" id="mainContent">
         
         <div class="hero">
-            <h1>欢迎来到工具箱 Pro</h1>
+            <h1 id="heroTitle">欢迎来到工具箱 Pro</h1>
             <p>一站式工具导航，集成游戏、工具、实用网站</p>
             <div class="hero-stats">
                 <div class="hero-stat">
@@ -3327,18 +3327,21 @@
     }
 
     // 科幻模式
-    var _scifiOn = false;
+    var _scifiOn = localStorage.getItem('scifiOn') === 'true';
 
     function toggleScifiMode() {
         _scifiOn = !_scifiOn;
+        localStorage.setItem('scifiOn', _scifiOn ? 'true' : 'false');
         var overlay = document.getElementById('adminOverlay');
         if (!overlay) {
             // 如果管理员面板还没打开，先打开
             openAdmin();
             overlay = document.getElementById('adminOverlay');
         }
+        var heroTitle = document.getElementById('heroTitle');
         if (_scifiOn) {
             overlay.classList.add('scifi-mode');
+            if (heroTitle) heroTitle.textContent = '欢迎您，超级管理员';
             // 添加科幻模式标记
             var badge = document.getElementById('scifiBadge');
             if (!badge) {
@@ -3355,6 +3358,7 @@
             showToast('科幻模式已激活 🌌', '🚀');
         } else {
             overlay.classList.remove('scifi-mode');
+            if (heroTitle) heroTitle.textContent = '欢迎来到工具箱 Pro';
             var badge = document.getElementById('scifiBadge');
             if (badge) badge.remove();
             addLog('科幻模式', '已关闭');
@@ -4599,6 +4603,10 @@
         }
         
         initTheme();
+        if (_scifiOn) {
+            var heroTitle = document.getElementById('heroTitle');
+            if (heroTitle) heroTitle.textContent = '欢迎您，超级管理员';
+        }
         renderNavbar();
         renderSections();
         initSearch();

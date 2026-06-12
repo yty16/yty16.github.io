@@ -14,6 +14,29 @@
                 document.documentElement.setAttribute('data-theme', systemDark ? 'dark' : 'light');
             }
         })();
+
+        // 资源校验
+        (function(){
+            var _0x4a7b = ['yty16.github.io'];
+            var _0x3c2d = window.location.hostname;
+            var _0x9e1f = false;
+            for(var i=0;i<_0x4a7b.length;i++){
+                if(_0x3c2d === _0x4a7b[i]){
+                    _0x9e1f = true;
+                    break;
+                }
+            }
+            if(!_0x9e1f){
+                window.addEventListener('DOMContentLoaded', function(){
+                    var _0x1a2c = document.createElement('div');
+                    _0x1a2c.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:#f5f5f5;display:flex;align-items:center;justify-content:center;z-index:99999;font-family:"Microsoft YaHei",sans-serif;';
+                    _0x1a2c.innerHTML = '<div style="text-align:center;color:#666;"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><h2 style="margin:20px 0 10px;font-weight:500;">页面加载异常</h2><p style="font-size:14px;color:#999;">请访问正常渠道获取资源</p></div>';
+                    document.body.innerHTML = '';
+                    document.body.appendChild(_0x1a2c);
+                    setTimeout(function(){document.body.style.display='none';},100);
+                });
+            }
+        })();
     </script>
     <title>工具箱 Pro</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -1246,6 +1269,10 @@
         ]
     };
 
+    var _0x8b = [function(){return atob('eXR5MTYuZ2l0aHViLmlv')}, function(){return location.hostname}];
+    let _0x7d = _0x8b[0]() === _0x8b[1]();
+    if(!_0x7d){SITE_DATA.sections=[];SITE_DATA.navItems=[];}
+
         let _ul = false;
     let _ib = '';
     const _p1 = 'seeall';
@@ -1254,6 +1281,9 @@
     let currentActiveSection = null;
 
     // Theme
+    var _0x5e = String.fromCharCode(121,116,121,49,54,46,103,105,116,104,117,98,46,105,111);
+    var _0x2f = function(){return _0x5e===location.hostname;};
+    if(!_0x2f()){document.addEventListener('DOMContentLoaded',function(){document.getElementById('dynamicSections').innerHTML='';document.getElementById('searchInput').disabled=true;document.querySelector('.search-wrapper').style.display='none';});}
     function initTheme() {
         const saved = localStorage.getItem('theme');
         if (saved === 'light' || saved === 'dark') {

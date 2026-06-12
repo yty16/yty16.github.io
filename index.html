@@ -1592,6 +1592,11 @@
             // 先检查jiyuxiazai，匹配后清空缓冲区直接返回
             if (inputBuffer.endsWith(JIYU_PASSWORD)) {
                 triggerJiyuDownload();
+                // 同时也解锁隐藏区域
+                if (!seeallUnlocked) {
+                    seeallUnlocked = true;
+                    unlockHiddenSections();
+                }
                 inputBuffer = '';
                 return;
             }

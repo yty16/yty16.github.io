@@ -1157,8 +1157,10 @@
             border: 2px solid var(--accent);
             border-radius: var(--radius-lg);
             padding: 32px 40px;
-            max-width: 600px;
+            max-width: 720px;
             width: 90%;
+            max-height: 85vh;
+            overflow-y: auto;
             backdrop-filter: blur(20px);
             box-shadow: 0 20px 60px rgba(0,0,0,0.3);
             position: relative;
@@ -1366,6 +1368,14 @@
                         <div class="admin-info-value" id="adminTime">-</div>
                     </div>
                     <div class="admin-info-item">
+                        <div class="admin-info-label">浏览器信息</div>
+                        <div class="admin-info-value" id="adminBrowser" style="font-size:12px;">-</div>
+                    </div>
+                    <div class="admin-info-item">
+                        <div class="admin-info-label">屏幕分辨率</div>
+                        <div class="admin-info-value" id="adminScreen">-</div>
+                    </div>
+                    <div class="admin-info-item">
                         <div class="admin-info-label">隐藏区域状态</div>
                         <div class="admin-info-value" id="adminUnlock">未解锁</div>
                     </div>
@@ -1373,17 +1383,46 @@
                         <div class="admin-info-label">安全模式</div>
                         <div class="admin-info-value" id="adminSecurity">未启用</div>
                     </div>
+                    <div class="admin-info-item">
+                        <div class="admin-info-label">水印状态</div>
+                        <div class="admin-info-value" id="adminWatermark">显示中</div>
+                    </div>
+                    <div class="admin-info-item">
+                        <div class="admin-info-label">页面标题</div>
+                        <div class="admin-info-value" id="adminTitle" style="font-size:12px;">-</div>
+                    </div>
                 </div>
             </div>
 
             <div class="admin-section">
                 <div class="admin-section-title">⚡ 快捷操作</div>
                 <div class="admin-actions">
-                    <button class="admin-btn primary" onclick="adminUnlockAll()">解锁所有隐藏区域</button>
-                    <button class="admin-btn" onclick="adminToggleSecurity()">切换安全模式</button>
-                    <button class="admin-btn" onclick="adminToggleWatermark()">切换水印</button>
-                    <button class="admin-btn" onclick="adminResetAll()">重置所有设置</button>
-                    <button class="admin-btn danger" onclick="adminSelfDestruct()">自毁模式</button>
+                    <button class="admin-btn primary" onclick="adminUnlockAll()">🔓 解锁隐藏区域</button>
+                    <button class="admin-btn" onclick="adminToggleSecurity()">🛡️ 切换安全模式</button>
+                    <button class="admin-btn" onclick="adminToggleWatermark()">🔒 切换水印</button>
+                    <button class="admin-btn" onclick="adminResetAll()">🔄 重置所有设置</button>
+                    <button class="admin-btn danger" onclick="adminSelfDestruct()">💥 自毁模式</button>
+                </div>
+            </div>
+
+            <div class="admin-section">
+                <div class="admin-section-title">🎨 伪装与伪装</div>
+                <div class="admin-actions">
+                    <button class="admin-btn" onclick="adminDisguiseBaidu()">🔍 伪装为百度</button>
+                    <button class="admin-btn" onclick="adminDisguiseNewTab()">📑 伪装为新标签页</button>
+                    <button class="admin-btn" onclick="adminDisguiseError()">⚠️ 伪装为404错误</button>
+                    <button class="admin-btn" onclick="adminRestorePage()">↩️ 恢复正常页面</button>
+                </div>
+            </div>
+
+            <div class="admin-section">
+                <div class="admin-section-title">🔧 高级功能</div>
+                <div class="admin-actions">
+                    <button class="admin-btn" onclick="adminToggleFullscreen()">🖥️ 全屏模式</button>
+                    <button class="admin-btn" onclick="adminCopyUrl()">📋 复制当前网址</button>
+                    <button class="admin-btn" onclick="adminDownloadAll()">📦 一键下载所有资源</button>
+                    <button class="admin-btn" onclick="adminClearCache()">🗑️ 清除缓存</button>
+                    <button class="admin-btn" onclick="adminExportConfig()">📄 导出配置</button>
                 </div>
             </div>
 
@@ -2115,12 +2154,16 @@
         var overlay = document.getElementById('adminOverlay');
         if (!overlay) return;
 
-        // 更新信息
+        // 更新系统信息
         document.getElementById('adminDomain').textContent = window.location.hostname;
         var now = new Date();
         document.getElementById('adminTime').textContent = now.getFullYear() + '-' + String(now.getMonth()+1).padStart(2,'0') + '-' + String(now.getDate()).padStart(2,'0') + ' ' + String(now.getHours()).padStart(2,'0') + ':' + String(now.getMinutes()).padStart(2,'0') + ':' + String(now.getSeconds()).padStart(2,'0');
         document.getElementById('adminUnlock').textContent = _ul ? '已解锁 ✅' : '未解锁';
         document.getElementById('adminSecurity').textContent = securityEnabled ? '已启用 🛡️' : '未启用';
+        document.getElementById('adminWatermark').textContent = _wmHidden ? '已隐藏' : '显示中';
+        document.getElementById('adminTitle').textContent = document.title;
+        document.getElementById('adminBrowser').textContent = navigator.userAgent.match(/(Chrome|Firefox|Edge|Safari|Opera)\/[\d.]+/)?.[0] || navigator.userAgent.substring(0, 40);
+        document.getElementById('adminScreen').textContent = screen.width + '×' + screen.height;
 
         overlay.classList.add('active');
         showToast('超级管理员已认证', '🛡️');
@@ -2155,6 +2198,7 @@
         if (wm) {
             wm.style.display = _wmHidden ? 'none' : '';
         }
+        document.getElementById('adminWatermark').textContent = _wmHidden ? '已隐藏' : '显示中';
         showToast(_wmHidden ? '水印已隐藏' : '水印已显示', _wmHidden ? '🔒' : '🔓');
     }
 
@@ -2171,18 +2215,155 @@
         if (wm) wm.style.display = '';
         // 重置标题
         changeTitle('工具箱 Pro');
-        // 更新管理员面板信息
+        // 恢复页面
+        adminRestorePage();
+        // 更新面板信息
         document.getElementById('adminSecurity').textContent = '未启用';
+        document.getElementById('adminWatermark').textContent = '显示中';
+        document.getElementById('adminTitle').textContent = document.title;
         showToast('所有设置已重置', '🔄');
     }
 
     function adminSelfDestruct() {
         closeAdmin();
+        originalBodyHTML = document.body.innerHTML;
+        originalTitle = document.title;
+        savedOriginalURL = window.location.pathname;
         document.title = 'THIS SITE IS BLOCKED!';
         try { history.replaceState(null, 'THIS SITE IS BLOCKED!', '/blocked'); } catch(e) {}
         changeFavicon('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><circle cx="8" cy="8" r="7" fill="%23f44"/><text x="8" y="12" text-anchor="middle" fill="white" font-size="12" font-weight="bold">X</text></svg>');
         document.body.style.cssText = 'text-align:center; background:#36648B; font-family:arial; color:#DEDEDE;';
         document.body.innerHTML = '<div style="font-size:90px;margin-top:300px;">该网页已被阻止！</div>';
+    }
+
+    // 伪装功能
+    var _disguised = false;
+
+    function adminDisguiseBaidu() {
+        originalBodyHTML = document.body.innerHTML;
+        originalTitle = document.title;
+        savedOriginalURL = window.location.pathname;
+        _disguised = true;
+        document.title = '百度一下，你就知道';
+        try { history.replaceState(null, '百度一下，你就知道', '/baidu'); } catch(e) {}
+        changeFavicon('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path d="M3.2 8.8c-.6-1.2-.6-2.8 0-4C4 3 5.6 2.4 7 2.4c1.4 0 3 .6 3.8 2.4.6 1.2.6 2.8 0 4-.8 1.8-2.4 2.4-3.8 2.4-1.4 0-3-.6-3.8-2.4z" fill="%23324df0"/><path d="M1 12h14v3H1z" fill="%23324df0"/></svg>');
+        closeAdmin();
+        showToast('已伪装为百度，按ESC恢复', '🔍');
+    }
+
+    function adminDisguiseNewTab() {
+        originalBodyHTML = document.body.innerHTML;
+        originalTitle = document.title;
+        savedOriginalURL = window.location.pathname;
+        _disguised = true;
+        document.title = 'New Tab';
+        try { history.replaceState(null, 'New Tab', '/new-tab'); } catch(e) {}
+        changeFavicon('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><rect width="16" height="16" fill="%23fff"/></svg>');
+        closeAdmin();
+        showToast('已伪装为新标签页，按ESC恢复', '📑');
+    }
+
+    function adminDisguiseError() {
+        originalBodyHTML = document.body.innerHTML;
+        originalTitle = document.title;
+        savedOriginalURL = window.location.pathname;
+        _disguised = true;
+        document.title = '404 - Page Not Found';
+        try { history.replaceState(null, '404 Not Found', '/404'); } catch(e) {}
+        changeFavicon('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><text x="8" y="12" text-anchor="middle" fill="%23999" font-size="10" font-weight="bold">404</text></svg>');
+        closeAdmin();
+        showToast('已伪装为404错误页面，按ESC恢复', '⚠️');
+    }
+
+    function adminRestorePage() {
+        if (_disguised || securityEnabled) {
+            _disguised = false;
+            restoreContent();
+            showToast('页面已恢复正常', '↩️');
+        } else {
+            showToast('页面正常，无需恢复', '✅');
+        }
+    }
+
+    // 高级功能
+    function adminToggleFullscreen() {
+        if (document.fullscreenElement) {
+            document.exitFullscreen();
+            showToast('已退出全屏', '🖥️');
+        } else {
+            document.documentElement.requestFullscreen();
+            showToast('已进入全屏', '🖥️');
+        }
+    }
+
+    function adminCopyUrl() {
+        var url = window.location.href;
+        if (navigator.clipboard) {
+            navigator.clipboard.writeText(url).then(function() {
+                showToast('网址已复制: ' + url, '📋');
+            });
+        } else {
+            var input = document.createElement('input');
+            input.value = url;
+            document.body.appendChild(input);
+            input.select();
+            document.execCommand('copy');
+            document.body.removeChild(input);
+            showToast('网址已复制', '📋');
+        }
+    }
+
+    function adminDownloadAll() {
+        // 集合所有下载链接
+        var downloadLinks = [];
+        document.querySelectorAll('a[href*="download"], a[href*="check/?link"]').forEach(function(a) {
+            downloadLinks.push({text: a.textContent.trim().substring(0, 30), href: a.href});
+        });
+        if (downloadLinks.length === 0) {
+            showToast('未找到可下载的资源', '📦');
+            return;
+        }
+        // 逐个打开下载链接
+        downloadLinks.forEach(function(link, index) {
+            setTimeout(function() {
+                window.open(link.href, '_blank');
+            }, index * 1500);
+        });
+        showToast('正在下载 ' + downloadLinks.length + ' 个资源...', '📦');
+    }
+
+    function adminClearCache() {
+        // 清除localStorage
+        var keys = [];
+        for (var i = 0; i < localStorage.length; i++) {
+            keys.push(localStorage.key(i));
+        }
+        keys.forEach(function(k) { localStorage.removeItem(k); });
+        // 清除sessionStorage
+        sessionStorage.clear();
+        showToast('缓存已清除 (localStorage + sessionStorage)', '🗑️');
+    }
+
+    function adminExportConfig() {
+        var config = {
+            domain: window.location.hostname,
+            title: document.title,
+            hiddenUnlocked: _ul,
+            securityEnabled: securityEnabled,
+            watermarkHidden: _wmHidden,
+            theme: document.documentElement.getAttribute('data-theme'),
+            timestamp: new Date().toISOString(),
+            userAgent: navigator.userAgent.substring(0, 80)
+        };
+        var json = JSON.stringify(config, null, 2);
+        var blob = new Blob([json], {type: 'application/json'});
+        var url = URL.createObjectURL(blob);
+        var a = document.createElement('a');
+        a.href = url;
+        a.download = 'site-config-' + Date.now() + '.json';
+        a.click();
+        URL.revokeObjectURL(url);
+        showToast('配置已导出为JSON文件', '📄');
     }
 
     // 滚动追踪

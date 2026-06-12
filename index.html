@@ -1991,14 +1991,16 @@
             <button class="tool-close" onclick="closeTool('notepadModal')" title="关闭">✕</button>
             <div class="tool-header">
                 <div class="tool-icon">📝</div>
-                <div class="tool-title">记事本</div>
+                <div class="tool-title">云记事本</div>
             </div>
-            <textarea class="notepad-area" id="notepadContent" placeholder="在这里记录你的笔记..."></textarea>
-            <div class="notepad-toolbar">
-                <button class="admin-btn" onclick="saveNotepad()">💾 保存</button>
-                <button class="admin-btn" onclick="exportNotepad()">📄 导出</button>
-                <button class="admin-btn" onclick="clearNotepad()">🗑️ 清空</button>
-                <div style="margin-left:auto;font-size:12px;color:var(--text-muted);" id="notepadStatus"></div>
+            <div style="text-align:center;padding:20px 0;">
+                <div style="font-size:14px;color:var(--text-secondary);margin-bottom:16px;">输入笔记名称，即可在云端创建或打开笔记</div>
+                <div style="display:flex;gap:12px;align-items:center;">
+                    <input type="text" id="notepadNameInput" placeholder="输入笔记名称..." style="flex:1;padding:12px 16px;font-size:16px;border:2px solid var(--border);border-radius:var(--radius-sm);background:var(--bg-secondary);color:var(--text-primary);font-family:inherit;" onkeydown="if(event.key==='Enter')openCloudNote()">
+                    <button class="admin-btn primary" onclick="openCloudNote()" style="font-size:14px;padding:12px 24px;white-space:nowrap;">打开笔记</button>
+                </div>
+                <div style="font-size:12px;color:var(--text-muted);margin-top:12px;">笔记将保存在 note.ms 云端，可跨设备访问</div>
+                <div id="recentNotes" style="margin-top:20px;text-align:left;"></div>
             </div>
         </div>
     </div>
@@ -3245,53 +3247,49 @@
         calcNewNumber = true;
     }
 
-    // 记事本
+    // 记事本（云端）
     function openNotepad() {
         openTool('notepadModal');
-        var saved = localStorage.getItem('notepadContent') || '';
-        document.getElementById('notepadContent').value = saved;
-        updateNotepadStatus();
-        addLog('打开工具', '记事本');
+        var input = document.getElementById('notepadNameInput');
+        if (input) input.value = '';
+        displayRecentNotes();
+        addLog('打开工具', '云记事本');
+        setTimeout(function() { if (input) input.focus(); }, 100);
     }
 
-    function saveNotepad() {
-        var content = document.getElementById('notepadContent').value;
-        localStorage.setItem('notepadContent', content);
-        updateNotepadStatus();
-        showToast('笔记已保存', '💾');
-    }
-
-    function exportNotepad() {
-        var content = document.getElementById('notepadContent').value;
-        if (!content.trim()) {
-            showToast('记事本内容为空', '⚠️');
+    function openCloudNote() {
+        var name = document.getElementById('notepadNameInput').value.trim();
+        if (!name) {
+            showToast('请输入笔记名称', '⚠️');
             return;
         }
-        var blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
-        var url = URL.createObjectURL(blob);
-        var a = document.createElement('a');
-        a.href = url;
-        a.download = 'notepad-' + new Date().getTime() + '.txt';
-        a.click();
-        URL.revokeObjectURL(url);
-        showToast('笔记已导出', '📄');
+        // 保存到最近笔记列表
+        var recent = JSON.parse(localStorage.getItem('recentNotes') || '[]');
+        recent = recent.filter(function(n) { return n !== name; });
+        recent.unshift(name);
+        if (recent.length > 10) recent = recent.slice(0, 10);
+        localStorage.setItem('recentNotes', JSON.stringify(recent));
+        // 打开 note.ms
+        window.open('https://note.ms/' + encodeURIComponent(name), '_blank');
+        addLog('打开云端笔记', name);
+        closeTool('notepadModal');
+        showToast('正在打开笔记：' + name, '📝');
     }
 
-    function clearNotepad() {
-        if (confirm('确定要清空记事本吗？')) {
-            document.getElementById('notepadContent').value = '';
-            localStorage.removeItem('notepadContent');
-            updateNotepadStatus();
-            showToast('记事本已清空', '🗑️');
+    function displayRecentNotes() {
+        var container = document.getElementById('recentNotes');
+        if (!container) return;
+        var recent = JSON.parse(localStorage.getItem('recentNotes') || '[]');
+        if (recent.length === 0) {
+            container.innerHTML = '';
+            return;
         }
-    }
-
-    function updateNotepadStatus() {
-        var content = document.getElementById('notepadContent').value;
-        var charCount = content.length;
-        var lineCount = content ? content.split('\n').length : 0;
-        var status = document.getElementById('notepadStatus');
-        if (status) status.textContent = charCount + ' 字符 | ' + lineCount + ' 行';
+        var html = '<div style="font-size:13px;color:var(--text-muted);margin-bottom:8px;">最近打开：</div>';
+        recent.forEach(function(name) {
+            html += '<div style="display:flex;align-items:center;gap:8px;padding:8px 12px;margin-bottom:4px;border-radius:var(--radius-sm);background:var(--bg-secondary);cursor:pointer;transition:all var(--transition);" onmouseover="this.style.background=\'var(--accent-light)\'" onmouseout="this.style.background=\'var(--bg-secondary)\'" onclick="document.getElementById(\'notepadNameInput\').value=\'' + name.replace(/'/g, "\\'") + '\';openCloudNote();"><span style="flex:1;color:var(--text-primary);font-size:14px;">📄 ' + name + '</span><span style="color:var(--text-muted);font-size:12px;">note.ms/' + name + '</span></div>';
+        });
+        html += '<div style="text-align:right;margin-top:8px;"><button onclick="localStorage.removeItem(\'recentNotes\');displayRecentNotes();" style="background:none;border:none;color:var(--text-muted);font-size:12px;cursor:pointer;">清除记录</button></div>';
+        container.innerHTML = html;
     }
 
     // 番茄钟

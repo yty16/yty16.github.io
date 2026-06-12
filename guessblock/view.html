@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>已收录方块</title>
+    <title>已收录方块&生物</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <script>
@@ -83,6 +83,13 @@
             background-clip: text;
             color: transparent;
         }
+        .section-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--accent);
+            margin: 15px 0 8px;
+            text-align: left;
+        }
         .content-box {
             background: var(--card-bg);
             border: 1px solid var(--card-border);
@@ -96,12 +103,21 @@
             font-size: 1.2rem;
             color: var(--text);
             padding: 15px;
-            max-height: 400px;
+            max-height: 300px;
             overflow-y: auto;
         }
-        .block-list::-webkit-scrollbar { width: 6px; }
-        .block-list::-webkit-scrollbar-track { background: var(--card-border); border-radius: 3px; }
-        .block-list::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 3px; }
+        .mob-list {
+            text-align: center;
+            line-height: 2;
+            font-size: 1.2rem;
+            color: var(--text);
+            padding: 15px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        .block-list::-webkit-scrollbar, .mob-list::-webkit-scrollbar { width: 6px; }
+        .block-list::-webkit-scrollbar-track, .mob-list::-webkit-scrollbar-track { background: var(--card-border); border-radius: 3px; }
+        .block-list::-webkit-scrollbar-thumb, .mob-list::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 3px; }
         .status {
             display: flex;
             align-items: center;
@@ -113,17 +129,12 @@
             border-radius: 10px;
             font-size: 1rem;
         }
-        .dot {
-            width: 10px; height: 10px;
-            border-radius: 50%;
-            background: #e74c3c;
-            margin-right: 8px;
-        }
+        .dot { width: 10px; height: 10px; border-radius: 50%; background: #e74c3c; margin-right: 8px; }
         .status.ready .dot { background: #2ecc71; }
         @media (max-width: 768px) {
             .container { padding: 20px; }
             h1 { font-size: 1.6rem; }
-            .block-list { font-size: 1rem; }
+            .block-list, .mob-list { font-size: 1rem; }
         }
     </style>
 </head>
@@ -131,27 +142,31 @@
     <div class="container">
         <a href="index.html" class="back-btn">← 返回游戏</a>
         <header>
-            <h1>🧱 已收录方块</h1>
+            <h1>🧱🐷 已收录方块&生物</h1>
         </header>
         <div class="content-box">
-            <div class="block-list" id="blockList">
-                <div class="status">
-                    <div class="dot"></div>
-                    正在加载方块数据...
-                </div>
-            </div>
+            <div class="section-title">🧱 方块</div>
+            <div class="block-list" id="blockList"></div>
+            <div class="section-title">🐷 生物</div>
+            <div class="mob-list" id="mobList"></div>
+        </div>
+        <div class="status" id="status">
+            <div class="dot"></div>
+            正在加载数据...
         </div>
     </div>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            var listEl = document.getElementById('blockList');
-            var statusEl = document.querySelector('.status');
+            var blockEl = document.getElementById('blockList');
+            var mobEl = document.getElementById('mobList');
+            var statusEl = document.getElementById('status');
 
             fetch('data.txt')
                 .then(r => r.text())
                 .then(text => {
                     var lines = text.split('\n');
                     var blocks = [];
+                    var mobs = [];
                     var countEnd = 0;
                     for (var line of lines) {
                         line = line.trim();
@@ -161,20 +176,31 @@
                             continue;
                         }
                         if (countEnd === 1 && line) {
-                            var name = line.split(' ')[0];
-                            if (name) blocks.push(name);
+                            var parts = line.split(' ');
+                            var name = parts[0];
+                            var bits = parts[1] || '';
+                            if (name && bits) {
+                                if (bits[0] === '1') blocks.push(name);
+                                else mobs.push(name);
+                            }
                         }
                     }
                     statusEl.classList.add('ready');
                     if (blocks.length > 0) {
-                        listEl.innerHTML = blocks.join('、');
-                        statusEl.innerHTML = '<div class="dot"></div> 已收录 ' + blocks.length + ' 个方块';
+                        blockEl.innerHTML = blocks.join('、');
                     } else {
-                        listEl.innerHTML = '未找到数据';
+                        blockEl.innerHTML = '暂无方块数据';
                     }
+                    if (mobs.length > 0) {
+                        mobEl.innerHTML = mobs.join('、');
+                    } else {
+                        mobEl.innerHTML = '暂无生物数据';
+                    }
+                    statusEl.innerHTML = '<div class="dot"></div> 已收录 ' + blocks.length + ' 个方块 + ' + mobs.length + ' 个生物';
                 })
                 .catch(function() {
-                    listEl.innerHTML = '数据加载失败 😢';
+                    blockEl.innerHTML = '数据加载失败 😢';
+                    mobEl.innerHTML = '';
                 });
         });
     </script>

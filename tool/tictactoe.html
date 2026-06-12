@@ -77,13 +77,13 @@ h1 { font-size: 28px; font-weight: 700; margin-bottom: 8px; text-align: center; 
   <p class="subtitle">挑战不败AI，看看你能不能赢</p>
 
   <div class="card">
-    <!-- 先手选择 -->
+    
     <div class="order-select">
       <button class="order-btn active" id="orderFirst" onclick="setOrder(true)">先手 (X)</button>
       <button class="order-btn" id="orderSecond" onclick="setOrder(false)">后手 (O)</button>
     </div>
 
-    <!-- 战绩 -->
+    
     <div class="record-bar">
       <div class="record-item">
         <div class="record-num win-num" id="recWin">0</div>
@@ -99,10 +99,10 @@ h1 { font-size: 28px; font-weight: 700; margin-bottom: 8px; text-align: center; 
       </div>
     </div>
 
-    <!-- 状态 -->
+    
     <div class="status your-turn" id="status">你的回合 (X)</div>
 
-    <!-- 棋盘 -->
+    
     <div class="board" id="board">
       <div class="cell" data-i="0" onclick="playerMove(0)"><span class="piece"></span></div>
       <div class="cell" data-i="1" onclick="playerMove(1)"><span class="piece"></span></div>
@@ -121,7 +121,7 @@ h1 { font-size: 28px; font-weight: 700; margin-bottom: 8px; text-align: center; 
   </div>
 </div>
 
-<!-- 结果弹窗 -->
+
 <div class="overlay" id="overlay">
   <div class="modal">
     <span class="result-icon" id="resIcon">🏆</span>

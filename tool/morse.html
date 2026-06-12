@@ -65,34 +65,34 @@ h1 { font-size: 28px; font-weight: 700; margin-bottom: 8px; text-align: center; 
   <p class="subtitle">文本 ↔ 摩斯电码互转，支持声音播放</p>
 
   <div class="card">
-    <!-- 转换方向 -->
+    
     <div class="dir-switch">
       <button class="dir-btn active" id="dirToMorse" onclick="setDir('toMorse')">文本 → 摩斯</button>
       <button class="dir-btn" id="dirToText" onclick="setDir('toText')">摩斯 → 文本</button>
     </div>
 
-    <!-- 输入区 -->
+    
     <div class="label-row">
       <label id="inputLabel">输入文本</label>
       <span class="char-count" id="charCount">0 字符</span>
     </div>
     <textarea class="textarea" id="inputArea" placeholder="输入要转换的文本（仅支持字母、数字、空格）..." oninput="handleInput()"></textarea>
 
-    <!-- 按钮组 -->
+    
     <div class="btn-group" style="margin-top:16px;">
       <button class="btn" onclick="convert()">转换</button>
       <button class="btn btn-secondary" onclick="clearAll()">清空</button>
       <button class="btn btn-secondary" onclick="pasteExample()">示例</button>
     </div>
 
-    <!-- 输出区 -->
+    
     <div class="label-row" style="margin-top:20px;">
       <label>转换结果</label>
       <button style="background:none;border:none;color:var(--accent);cursor:pointer;font-size:13px;font-family:inherit;" onclick="copyResult()">复制结果</button>
     </div>
     <div class="output-box" id="outputBox">结果将显示在这里...</div>
 
-    <!-- 播放控制 -->
+    
     <div class="play-bar">
       <button class="play-btn" id="playBtn" onclick="playMorse()" title="播放摩斯声音">▶</button>
       <button class="play-btn" onclick="stopPlay()" title="停止" style="background:var(--muted);width:36px;height:36px;font-size:16px;">⏹</button>
@@ -106,7 +106,7 @@ h1 { font-size: 28px; font-weight: 700; margin-bottom: 8px; text-align: center; 
     <p class="hint" id="hintText">提示：摩斯电码使用 ·（点）和 —（划），字母间用空格分隔，单词间用 / 分隔</p>
   </div>
 
-  <!-- 摩斯电码参考表 -->
+  
   <div class="card">
     <h3 style="font-size:16px;margin-bottom:12px;">摩斯电码参考表</h3>
     <div style="overflow-x:auto;">

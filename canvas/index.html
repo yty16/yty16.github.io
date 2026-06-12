@@ -456,23 +456,18 @@ canvas.eraser-active {
 </head>
 <body>
 
-<!-- Back Button -->
 <a href="/" class="back-btn">&larr; 返回</a>
 
-<!-- Top Toolbar -->
 <div class="toolbar" id="toolbar">
-    <!-- Drawing tools -->
     <div class="tool-group">
         <button class="tool-btn active" id="btnPen" title="画笔" data-tool="pen">&#9998;</button>
         <button class="tool-btn" id="btnEraser" title="橡皮擦" data-tool="eraser">&#129524;</button>
     </div>
 
-    <!-- Color palette -->
     <div class="tool-group">
         <div class="color-palette" id="colorPalette"></div>
     </div>
 
-    <!-- Brush size -->
     <div class="tool-group">
         <div class="brush-size-control">
             <span class="size-label" id="sizeLabel">3</span>
@@ -480,27 +475,22 @@ canvas.eraser-active {
         </div>
     </div>
 
-    <!-- Undo -->
     <div class="tool-group">
         <button class="tool-btn" id="btnUndo" title="撤销 (Ctrl+Z)">&#8617;</button>
     </div>
 </div>
 
-<!-- Canvas -->
 <div class="canvas-container" id="canvasContainer">
     <canvas id="drawCanvas"></canvas>
 </div>
 
-<!-- Side Actions -->
 <div class="side-actions">
     <button class="action-btn" id="btnClear" title="清空画布">&#128465;</button>
     <button class="action-btn" id="btnSave" title="保存为 PNG">&#128190;</button>
 </div>
 
-<!-- Brush Preview -->
 <div class="brush-preview" id="brushPreview"></div>
 
-<!-- Status Bar -->
 <div class="status-bar" id="statusBar">
     <span id="cursorPos">X: 0, Y: 0</span>
     <span class="status-separator">|</span>

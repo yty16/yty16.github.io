@@ -4,14 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script>
-        // 主题跟随系统 - 页面渲染前执行避免闪烁
+        // init theme
         (function() {
             var saved = localStorage.getItem('theme');
             if (saved === 'light' || saved === 'dark') {
                 document.documentElement.setAttribute('data-theme', saved);
             } else {
-                // 无手动偏好时跟随系统
-                var systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                                var systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
                 document.documentElement.setAttribute('data-theme', systemDark ? 'dark' : 'light');
             }
         })();
@@ -937,13 +936,13 @@
     </style>
 </head>
 <body>
-    <!-- Particle Background -->
+    
     <canvas id="particles"></canvas>
 
-    <!-- Toast Container -->
+    
     <div class="toast-container" id="toastContainer"></div>
 
-    <!-- Header -->
+    
     <header class="header">
         <div class="header-left">
             <button class="hamburger" id="hamburgerBtn" aria-label="Toggle navigation">
@@ -984,17 +983,17 @@
         </div>
     </header>
 
-    <!-- Sidebar Overlay (Mobile) -->
+    
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
-    <!-- Sidebar -->
+    
     <nav class="sidebar" id="sidebar">
         <div id="navList"></div>
     </nav>
 
-    <!-- Main Content -->
+    
     <main class="main" id="mainContent">
-        <!-- Hero Banner -->
+        
         <div class="hero">
             <h1>欢迎来到工具箱 Pro</h1>
             <p>一站式工具导航，集成游戏、工具、实用网站</p>
@@ -1018,7 +1017,7 @@
             </div>
         </div>
 
-        <!-- Dynamic Sections -->
+        
         <div id="dynamicSections">
             <div class="loading-container">
                 <div class="spinner"></div>
@@ -1026,7 +1025,7 @@
             </div>
         </div>
 
-        <!-- Section: Settings (Hidden by default) -->
+        
         <section class="section section-hidden" id="section-settings">
             <div class="section-header">
                 <div class="section-icon" style="background: var(--gradient-5);">
@@ -1059,7 +1058,7 @@
             </div>
         </section>
 
-        <!-- Footer -->
+        
         <footer class="footer">
             <p class="footer-text">
                 本网站已运营 <strong id="footerDays">--</strong> 天 &nbsp;|&nbsp;
@@ -1069,7 +1068,7 @@
         </footer>
     </main>
 
-    <!-- Scroll to Top Button -->
+    
     <button class="scroll-top" id="scrollTopBtn" aria-label="Scroll to top">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
             <polyline points="18 15 12 9 6 15"/>
@@ -1078,8 +1077,7 @@
 
     
     <script>
-    // 网站数据
-    const SITE_DATA = {
+        const SITE_DATA = {
         navItems: [
             { text: "机房必备", targetId: "section-lab", icon: "\uD83D\uDCBB", hidden: true },
             { text: "网站内置功能", targetId: "section-builtin", icon: "\u2699\uFE0F" },
@@ -1304,11 +1302,10 @@
         ]
     };
 
-    // 全局变量
-    let seeallUnlocked = false;
-    let inputBuffer = '';
-    const TARGET_PASSWORD = 'seeall';
-    const JIYU_PASSWORD = 'jiyuxiazai';
+        let _ul = false;
+    let _ib = '';
+    const _p1 = 'seeall';
+    const _p2 = 'jiyuxiazai';
     const HIDDEN_SECTION_IDS = ['section-lab', 'section-settings'];
     let currentActiveSection = null;
 
@@ -1318,21 +1315,17 @@
         if (saved === 'light' || saved === 'dark') {
             document.documentElement.setAttribute('data-theme', saved);
         } else {
-            // 无手动偏好时跟随系统
-            const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                        const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
             document.documentElement.setAttribute('data-theme', systemDark ? 'dark' : 'light');
         }
         updateThemeIcon();
 
-        // 监听系统主题变化，实时跟随
-        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function(e) {
+                window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function(e) {
             const saved = localStorage.getItem('theme');
-            // 仅在没有手动偏好时跟随系统变化
-            if (!saved) {
+                        if (!saved) {
                 document.documentElement.setAttribute('data-theme', e.matches ? 'dark' : 'light');
                 updateThemeIcon();
-                // 更新粒子颜色
-                if (typeof updateParticleColors === 'function') updateParticleColors();
+                                if (typeof updateParticleColors === 'function') updateParticleColors();
             }
         });
     }
@@ -1403,7 +1396,7 @@
         navList.innerHTML = '';
 
         SITE_DATA.navItems.forEach((item, index) => {
-            if (item.hidden && !seeallUnlocked) return;
+            if (item.hidden && !_ul) return;
 
             const a = document.createElement('a');
             a.className = 'nav-item';
@@ -1447,7 +1440,7 @@
             const section = document.createElement('section');
             section.className = 'section';
             section.id = sectionData.id;
-            if (sectionData.hidden && !seeallUnlocked) {
+            if (sectionData.hidden && !_ul) {
                 section.classList.add('section-hidden');
             }
 
@@ -1582,31 +1575,27 @@
         });
     }
 
-    // 键盘密码 - 先检查jiyuxiazai，再检查seeall，避免冲突
-    document.addEventListener('keydown', function(e) {
+        document.addEventListener('keydown', function(e) {
         if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.isContentEditable) return;
         if (e.key.length === 1) {
-            inputBuffer += e.key.toLowerCase();
-            const maxLen = Math.max(TARGET_PASSWORD.length, JIYU_PASSWORD.length);
-            if (inputBuffer.length > maxLen) {
-                inputBuffer = inputBuffer.slice(-maxLen);
+            _ib += e.key.toLowerCase();
+            const maxLen = Math.max(_p1.length, _p2.length);
+            if (_ib.length > maxLen) {
+                _ib = _ib.slice(-maxLen);
             }
-            // 先检查jiyuxiazai，匹配后清空缓冲区直接返回
-            if (inputBuffer.endsWith(JIYU_PASSWORD)) {
+                        if (_ib.endsWith(_p2)) {
                 triggerJiyuDownload();
-                // 同时也解锁隐藏区域
-                if (!seeallUnlocked) {
-                    seeallUnlocked = true;
+                                if (!_ul) {
+                    _ul = true;
                     unlockHiddenSections();
                 }
-                inputBuffer = '';
+                _ib = '';
                 return;
             }
-            // 再检查seeall
-            if (inputBuffer === TARGET_PASSWORD && !seeallUnlocked) {
-                seeallUnlocked = true;
+                        if (_ib === _p1 && !_ul) {
+                _ul = true;
                 unlockHiddenSections();
-                inputBuffer = '';
+                _ib = '';
             }
         }
     });
@@ -1629,8 +1618,7 @@
     let originalTitle = '';
     let pressTimer = null;
 
-    // 极域下载快捷键
-    function triggerJiyuDownload() {
+        function triggerJiyuDownload() {
         // 先记住原始URL（后面会改）
         savedOriginalURL = window.location.pathname;
 

@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>扫雷 - 工具箱 Pro</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script>(function(){var s=localStorage.getItem('theme');if(s==='light'||s==='dark'){document.documentElement.setAttribute('data-theme',s)}else{var d=window.matchMedia('(prefers-color-scheme:dark)').matches;document.documentElement.setAttribute('data-theme',d?'dark':'light')}}());</script>
+<style>
+:root{--bg:#f0f2f5;--card:rgba(255,255,255,0.85);--text:#1a1a2e;--muted:#a0aec0;--accent:#6366f1;--accent-hover:#4f46e5;--border:rgba(0,0,0,0.06);--shadow:0 4px 16px rgba(0,0,0,0.08)}
+[data-theme="dark"]{--bg:#0f0f1a;--card:rgba(30,30,50,0.85);--text:#e2e8f0;--muted:#718096;--accent:#818cf8;--border:rgba(255,255,255,0.06);--shadow:0 4px 16px rgba(0,0,0,0.3)}
+* {margin:0;padding:0;box-sizing:border-box}
+body {font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:16px;transition:background .3s,color .3s}
+.back-btn {position:fixed;top:16px;left:16px;z-index:100;padding:8px 16px;background:var(--card);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1px solid var(--border);border-radius:10px;color:var(--text);text-decoration:none;font-size:14px;font-weight:500;transition:all .2s;box-shadow:var(--shadow)}
+.back-btn:hover {background:var(--accent);color:#fff}
+.card {background:var(--card);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1px solid var(--border);border-radius:16px;padding:24px;box-shadow:var(--shadow);transition:all .3s}
+h1 {font-size:28px;font-weight:700;margin-bottom:16px;text-align:center;letter-spacing:-.5px}
+.controls {display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:16px;flex-wrap:wrap}
+.diff-btn {padding:8px 18px;border:1px solid var(--border);border-radius:10px;background:var(--card);color:var(--text);font-size:14px;font-weight:500;cursor:pointer;transition:all .2s;font-family:inherit}
+.diff-btn:hover,.diff-btn.active {background:var(--accent);color:#fff;border-color:var(--accent)}
+.status-bar {display:flex;align-items:center;justify-content:center;gap:24px;margin-bottom:16px;font-size:18px;font-weight:600;font-family:'Courier New',monospace}
+.mine-count,.timer {background:var(--card);border:1px solid var(--border);border-radius:8px;padding:6px 14px;min-width:70px;text-align:center;font-variant-numeric:tabular-nums}
+.smiley-btn {font-size:28px;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:4px 12px;cursor:pointer;transition:all .15s;line-height:1}
+.smiley-btn:hover {transform:scale(1.1)}
+.smiley-btn:active {transform:scale(0.95)}
+.board-container {display:flex;justify-content:center}
+.board {display:grid;gap:1px;background:#999;border:3px solid #999;border-radius:4px;padding:1px;user-select:none;-webkit-user-select:none}
+.cell {width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;cursor:pointer;background:#c0c0c0;border:2px outset #fff;transition:all .08s;line-height:1}
+.cell.revealed {border:1px solid #999;background:#e0e0e0;cursor:default}
+.cell.flagged {background:#c0c0c0}
+.cell.mine-hit {background:#ff4444 !important}
+.cell.mine-show {background:#ffcccc !important}
+/* 经典扫雷数字颜色 */
+.cell.n1 {color:#0000ff}
+.cell.n2 {color:#007b00}
+.cell.n3 {color:#ff0000}
+.cell.n4 {color:#00007b}
+.cell.n5 {color:#7b0000}
+.cell.n6 {color:#007b7b}
+.cell.n7 {color:#000000}
+.cell.n8 {color:#7b7b7b}
+.cell:hover:not(.revealed):not(.flagged) {background:#d5d5d5}
+/* 胜利/失败动画 */
+@keyframes winPulse {0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
+@keyframes loseShake {0%,100%{transform:translateX(0)}20%{transform:translateX(-4px)}40%{transform:translateX(4px)}60%{transform:translateX(-4px)}80%{transform:translateX(4px)}}
+.board.win {animation:winPulse .6s ease 3}
+.board.lose {animation:loseShake .4s ease}
+.message {margin-top:12px;font-size:16px;font-weight:600;text-align:center;min-height:24px}
+.message.win {color:#10b981}
+.message.lose {color:#ef4444}
+.theme-toggle {position:fixed;top:16px;right:16px;z-index:100;padding:8px 12px;background:var(--card);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1px solid var(--border);border-radius:10px;color:var(--text);font-size:18px;cursor:pointer;box-shadow:var(--shadow);transition:all .2s}
+.theme-toggle:hover {background:var(--accent);color:#fff}
+@media(max-width:600px){
+  .cell {width:26px;height:26px;font-size:13px}
+  h1 {font-size:22px}
+}
+</style>
+</head>
+<body>
+
+<a href="../index.html" class="back-btn">← 返回</a>
+<button class="theme-toggle" onclick="toggleTheme()">🌓</button>
+
+<div class="card">
+  <h1>💣 扫雷</h1>
+
+  <div class="controls">
+    <button class="diff-btn active" onclick="setDifficulty('beginner')">初级 9×9</button>
+    <button class="diff-btn" onclick="setDifficulty('intermediate')">中级 16×16</button>
+    <button class="diff-btn" onclick="setDifficulty('expert')">高级 30×16</button>
+  </div>
+
+  <div class="status-bar">
+    <div class="mine-count" id="mineCount">010</div>
+    <button class="smiley-btn" id="smileyBtn" onclick="resetGame()">😊</button>
+    <div class="timer" id="timer">000</div>
+  </div>
+
+  <div class="board-container">
+    <div class="board" id="board"></div>
+  </div>
+
+  <div class="message" id="message"></div>
+</div>
+
+<script>
+// 游戏状态
+let difficulty = 'beginner';
+let rows, cols, mineTotal;
+let grid = [];         // 二维数组，每个元素 {mine, revealed, flagged, count}
+let gameOver = false;
+let gameWon = false;
+let firstClick = true;
+let timerInterval = null;
+let timerSeconds = 0;
+let flagCount = 0;
+let longPressTimer = null;
+let touchStartX = 0, touchStartY = 0;
+
+// 难度配置
+const configs = {
+  beginner:     {rows:9, cols:9, mines:10},
+  intermediate: {rows:16, cols:16, mines:40},
+  expert:       {rows:16, cols:30, mines:99}
+};
+
+// 初始化
+function init() {
+  const cfg = configs[difficulty];
+  rows = cfg.rows;
+  cols = cfg.cols;
+  mineTotal = cfg.mines;
+  grid = [];
+  gameOver = false;
+  gameWon = false;
+  firstClick = true;
+  flagCount = 0;
+  timerSeconds = 0;
+  clearInterval(timerInterval);
+  timerInterval = null;
+
+  // 重置UI
+  document.getElementById('mineCount').textContent = pad(mineTotal);
+  document.getElementById('timer').textContent = '000';
+  document.getElementById('smileyBtn').textContent = '😊';
+  document.getElementById('message').textContent = '';
+  document.getElementById('message').className = 'message';
+  const board = document.getElementById('board');
+  board.className = 'board';
+
+  // 创建空白网格
+  for (let r = 0; r < rows; r++) {
+    grid[r] = [];
+    for (let c = 0; c < cols; c++) {
+      grid[r][c] = {mine:false, revealed:false, flagged:false, count:0};
+    }
+  }
+
+  renderBoard();
+}
+
+// 放置地雷（排除第一次点击位置及其周围）
+function placeMines(safeR, safeC) {
+  let placed = 0;
+  while (placed < mineTotal) {
+    const r = Math.floor(Math.random() * rows);
+    const c = Math.floor(Math.random() * cols);
+    if (grid[r][c].mine) continue;
+    // 排除安全区（第一次点击及周围8格）
+    if (Math.abs(r - safeR) <= 1 && Math.abs(c - safeC) <= 1) continue;
+    grid[r][c].mine = true;
+    placed++;
+  }
+  // 计算每格数字
+  for (let r = 0; r < rows; r++) {
+    for (let c = 0; c < cols; c++) {
+      if (grid[r][c].mine) continue;
+      let cnt = 0;
+      forNeighbors(r, c, (nr, nc) => { if (grid[nr][nc].mine) cnt++; });
+      grid[r][c].count = cnt;
+    }
+  }
+}
+
+// 遍历邻居
+function forNeighbors(r, c, fn) {
+  for (let dr = -1; dr <= 1; dr++) {
+    for (let dc = -1; dc <= 1; dc++) {
+      if (dr === 0 && dc === 0) continue;
+      const nr = r + dr, nc = c + dc;
+      if (nr >= 0 && nr < rows && nc >= 0 && nc < cols) fn(nr, nc);
+    }
+  }
+}
+
+// 渲染棋盘
+function renderBoard() {
+  const board = document.getElementById('board');
+  board.style.gridTemplateColumns = `repeat(${cols}, 32px)`;
+  if (window.innerWidth <= 600) {
+    board.style.gridTemplateColumns = `repeat(${cols}, 26px)`;
+  }
+  board.innerHTML = '';
+  for (let r = 0; r < rows; r++) {
+    for (let c = 0; c < cols; c++) {
+      const cell = document.createElement('div');
+      cell.className = 'cell';
+      cell.dataset.r = r;
+      cell.dataset.c = c;
+
+      // 鼠标事件
+      cell.addEventListener('click', () => handleClick(r, c));
+      cell.addEventListener('contextmenu', (e) => { e.preventDefault(); handleRightClick(r, c); });
+
+      // 触摸事件（长按标旗）
+      cell.addEventListener('touchstart', (e) => handleTouchStart(e, r, c), {passive: false});
+      cell.addEventListener('touchend', (e) => handleTouchEnd(e), {passive: false});
+      cell.addEventListener('touchmove', (e) => handleTouchMove(e), {passive: false});
+
+      board.appendChild(cell);
+    }
+  }
+}
+
+// 获取DOM格子
+function getCellEl(r, c) {
+  return document.querySelector(`.cell[data-r="${r}"][data-c="${c}"]`);
+}
+
+// 更新单个格子显示
+function updateCell(r, c) {
+  const el = getCellEl(r, c);
+  if (!el) return;
+  const cell = grid[r][c];
+
+  // 重置样式
+  el.className = 'cell';
+  el.textContent = '';
+
+  if (cell.revealed) {
+    el.classList.add('revealed');
+    if (cell.mine) {
+      el.textContent = '💣';
+    } else if (cell.count > 0) {
+      el.textContent = cell.count;
+      el.classList.add('n' + cell.count);
+    }
+  } else if (cell.flagged) {
+    el.textContent = '🚩';
+    el.classList.add('flagged');
+  }
+}
+
+// 左键点击
+function handleClick(r, c) {
+  if (gameOver || gameWon || grid[r][c].flagged || grid[r][c].revealed) return;
+
+  if (firstClick) {
+    firstClick = false;
+    placeMines(r, c);
+    startTimer();
+  }
+
+  if (grid[r][c].mine) {
+    // 踩雷
+    revealAllMines(r, c);
+    endGame(false);
+    return;
+  }
+
+  reveal(r, c);
+  checkWin();
+}
+
+// 右键点击 / 长按
+function handleRightClick(r, c) {
+  if (gameOver || gameWon || grid[r][c].revealed) return;
+  grid[r][c].flagged = !grid[r][c].flagged;
+  flagCount += grid[r][c].flagged ? 1 : -1;
+  document.getElementById('mineCount').textContent = pad(mineTotal - flagCount);
+  updateCell(r, c);
+}
+
+// 触摸开始
+function handleTouchStart(e, r, c) {
+  e.preventDefault();
+  touchStartX = e.touches[0].clientX;
+  touchStartY = e.touches[0].clientY;
+  // 长按计时
+  longPressTimer = setTimeout(() => {
+    longPressTimer = null;
+    handleRightClick(r, c);
+  }, 500);
+}
+
+// 触摸结束
+function handleTouchEnd(e) {
+  e.preventDefault();
+  if (longPressTimer) {
+    clearTimeout(longPressTimer);
+    longPressTimer = null;
+    // 如果不是长按，执行左键点击
+    const touch = e.changedTouches[0];
+    const el = document.elementFromPoint(touch.clientX, touch.clientY);
+    if (el && el.classList.contains('cell')) {
+      const r = parseInt(el.dataset.r), c = parseInt(el.dataset.c);
+      handleClick(r, c);
+    }
+  }
+}
+
+// 触摸移动（取消长按）
+function handleTouchMove(e) {
+  if (longPressTimer) {
+    const touch = e.touches[0];
+    const dx = touch.clientX - touchStartX;
+    const dy = touch.clientY - touchStartY;
+    if (Math.abs(dx) > 10 || Math.abs(dy) > 10) {
+      clearTimeout(longPressTimer);
+      longPressTimer = null;
+    }
+  }
+}
+
+// 揭开格子（递归展开空白区域）
+function reveal(r, c) {
+  if (r < 0 || r >= rows || c < 0 || c >= cols) return;
+  if (grid[r][c].revealed || grid[r][c].flagged || grid[r][c].mine) return;
+  grid[r][c].revealed = true;
+  updateCell(r, c);
+  // 如果是空白（0），递归展开邻居
+  if (grid[r][c].count === 0) {
+    forNeighbors(r, c, (nr, nc) => reveal(nr, nc));
+  }
+}
+
+// 揭示所有地雷（游戏结束时）
+function revealAllMines(hitR, hitC) {
+  for (let r = 0; r < rows; r++) {
+    for (let c = 0; c < cols; c++) {
+      const el = getCellEl(r, c);
+      if (grid[r][c].mine) {
+        el.classList.add('revealed');
+        if (r === hitR && c === hitC) {
+          el.classList.add('mine-hit');
+          el.textContent = '💥';
+        } else {
+          el.classList.add('mine-show');
+          el.textContent = '💣';
+        }
+      } else if (grid[r][c].flagged && !grid[r][c].mine) {
+        // 标错的小旗
+        el.classList.add('revealed');
+        el.textContent = '❌';
+      }
+    }
+  }
+}
+
+// 检查是否胜利
+function checkWin() {
+  let revealedCount = 0;
+  for (let r = 0; r < rows; r++) {
+    for (let c = 0; c < cols; c++) {
+      if (grid[r][c].revealed) revealedCount++;
+    }
+  }
+  if (revealedCount === rows * cols - mineTotal) {
+    endGame(true);
+  }
+}
+
+// 游戏结束
+function endGame(won) {
+  gameOver = !won;
+  gameWon = won;
+  clearInterval(timerInterval);
+
+  const board = document.getElementById('board');
+  const msg = document.getElementById('message');
+  const smiley = document.getElementById('smileyBtn');
+
+  if (won) {
+    smiley.textContent = '😎';
+    msg.textContent = '🎉 恭喜你，胜利了！';
+    msg.className = 'message win';
+    board.classList.add('win');
+    // 自动标上所有剩余旗帜
+    for (let r = 0; r < rows; r++) {
+      for (let c = 0; c < cols; c++) {
+        if (grid[r][c].mine && !grid[r][c].flagged) {
+          grid[r][c].flagged = true;
+          updateCell(r, c);
+        }
+      }
+    }
+  } else {
+    smiley.textContent = '😵';
+    msg.textContent = '💥 踩到地雷了，游戏结束！';
+    msg.className = 'message lose';
+    board.classList.add('lose');
+  }
+}
+
+// 计时器
+function startTimer() {
+  timerSeconds = 0;
+  document.getElementById('timer').textContent = '000';
+  timerInterval = setInterval(() => {
+    timerSeconds++;
+    if (timerSeconds > 999) timerSeconds = 999;
+    document.getElementById('timer').textContent = pad(timerSeconds);
+    if (timerSeconds >= 999) clearInterval(timerInterval);
+  }, 1000);
+}
+
+// 补零
+function pad(n) {
+  return String(n).padStart(3, '0');
+}
+
+// 重置游戏
+function resetGame() {
+  init();
+}
+
+// 切换难度
+function setDifficulty(diff) {
+  difficulty = diff;
+  document.querySelectorAll('.diff-btn').forEach(btn => btn.classList.remove('active'));
+  event.target.classList.add('active');
+  init();
+}
+
+// 主题切换
+function toggleTheme() {
+  const html = document.documentElement;
+  const current = html.getAttribute('data-theme');
+  const next = current === 'dark' ? 'light' : 'dark';
+  html.setAttribute('data-theme', next);
+  localStorage.setItem('theme', next);
+}
+
+// 页面加载时初始化
+init();
+</script>
+</body>
+</html>

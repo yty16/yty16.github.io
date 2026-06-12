@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>井字棋AI对战 - 工具箱 Pro</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f0f2f5;--card:rgba(255,255,255,0.85);--text:#1a1a2e;--muted:#a0aec0;--accent:#6366f1;--accent-hover:#4f46e5;--border:rgba(0,0,0,0.06);--shadow:0 4px 16px rgba(0,0,0,0.08)}
+[data-theme="dark"]{--bg:#0f0f1a;--card:rgba(30,30,50,0.85);--text:#e2e8f0;--muted:#718096;--accent:#818cf8;--border:rgba(255,255,255,0.06);--shadow:0 4px 16px rgba(0,0,0,0.3)}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; transition: background 0.3s, color 0.3s; }
+.back-btn { position: fixed; top: 20px; left: 20px; z-index: 100; display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; background: var(--card); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid var(--border); border-radius: 10px; color: var(--text); text-decoration: none; font-size: 14px; font-weight: 500; transition: all 0.2s; box-shadow: var(--shadow); }
+.back-btn:hover { transform: translateX(-3px); }
+.container { max-width: 480px; margin: 0 auto; padding: 80px 20px 40px; display: flex; flex-direction: column; align-items: center; }
+h1 { font-size: 28px; font-weight: 700; margin-bottom: 8px; text-align: center; }
+.subtitle { color: var(--muted); font-size: 14px; margin-bottom: 24px; text-align: center; }
+.card { background: var(--card); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid var(--border); border-radius: 16px; padding: 28px; width: 100%; box-shadow: var(--shadow); margin-bottom: 20px; }
+/* 先手选择 */
+.order-select { display: flex; gap: 8px; margin-bottom: 20px; justify-content: center; }
+.order-btn { padding: 10px 24px; border-radius: 10px; border: 1px solid var(--border); background: var(--bg); color: var(--text); font-size: 14px; font-weight: 500; cursor: pointer; transition: all 0.2s; font-family: inherit; }
+.order-btn.active { background: var(--accent); color: white; border-color: var(--accent); }
+/* 状态信息 */
+.status { text-align: center; font-size: 18px; font-weight: 600; min-height: 36px; margin-bottom: 20px; transition: all 0.3s; }
+.status.thinking { color: var(--muted); }
+.status.your-turn { color: var(--accent); }
+.status.win { color: #22c55e; }
+.status.lose { color: #ef4444; }
+.status.draw { color: var(--muted); }
+/* 棋盘 */
+.board { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 24px; justify-content: center; }
+.cell { width: 100px; height: 100px; background: var(--bg); border-radius: 14px; border: 2px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 40px; font-weight: 700; cursor: pointer; transition: all 0.2s; user-select: none; position: relative; overflow: hidden; }
+.cell:hover:not(.taken) { border-color: var(--accent); background: rgba(99,102,241,0.05); transform: scale(1.03); }
+.cell.taken { cursor: default; }
+.cell .piece { animation: pieceIn 0.3s ease; display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; }
+.cell .piece.x-piece { color: var(--accent); }
+.cell .piece.o-piece { color: #f59e0b; }
+@keyframes pieceIn { from { opacity: 0; transform: scale(0.3) rotate(-20deg); } to { opacity: 1; transform: scale(1) rotate(0); } }
+/* 胜利连线 */
+.win-line { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; pointer-events: none; }
+.win-line svg { position: absolute; width: 100%; height: 100%; }
+.win-line line { stroke: var(--accent); stroke-width: 4; stroke-linecap: round; stroke-dasharray: 150; stroke-dashoffset: 150; animation: drawLine 0.4s ease forwards; }
+@keyframes drawLine { to { stroke-dashoffset: 0; } }
+/* 战绩统计 */
+.record-bar { display: flex; gap: 12px; margin-bottom: 20px; justify-content: center; }
+.record-item { background: var(--bg); border-radius: 12px; padding: 14px 20px; text-align: center; min-width: 80px; border: 1px solid var(--border); }
+.record-num { font-size: 24px; font-weight: 700; }
+.record-num.win-num { color: #22c55e; }
+.record-num.lose-num { color: #ef4444; }
+.record-num.draw-num { color: var(--muted); }
+.record-label { font-size: 12px; color: var(--muted); margin-top: 2px; }
+/* 按钮 */
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 12px 28px; background: var(--accent); color: white; border: none; border-radius: 12px; font-size: 15px; font-weight: 600; cursor: pointer; transition: all 0.2s; font-family: inherit; }
+.btn:hover { background: var(--accent-hover); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(99,102,241,0.3); }
+.btn-group { display: flex; gap: 12px; justify-content: center; }
+/* 结果弹窗 */
+.overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(4px); z-index: 200; align-items: center; justify-content: center; }
+.overlay.show { display: flex; }
+.modal { background: var(--card); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid var(--border); border-radius: 20px; padding: 40px; max-width: 340px; width: 90%; text-align: center; box-shadow: 0 20px 60px rgba(0,0,0,0.3); animation: modalIn 0.3s ease; }
+@keyframes modalIn { from { opacity: 0; transform: scale(0.9) translateY(20px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+.modal .result-icon { font-size: 56px; margin-bottom: 12px; display: block; }
+.modal h2 { font-size: 22px; margin-bottom: 8px; }
+.modal p { color: var(--muted); font-size: 14px; margin-bottom: 20px; }
+.modal .btn { width: 100%; }
+/* 落子音效用CSS动画代替 */
+.cell.just-placed { animation: placePulse 0.3s ease; }
+@keyframes placePulse { 0% { transform: scale(0.8); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
+</style>
+</head>
+<body>
+<script>(function(){var s=localStorage.getItem('theme');if(s==='light'||s==='dark'){document.documentElement.setAttribute('data-theme',s)}else{var d=window.matchMedia('(prefers-color-scheme:dark)').matches;document.documentElement.setAttribute('data-theme',d?'dark':'light')}})();</script>
+
+<a href="/" class="back-btn">← 返回</a>
+
+<div class="container">
+  <h1>🎮 井字棋AI对战</h1>
+  <p class="subtitle">挑战不败AI，看看你能不能赢</p>
+
+  <div class="card">
+    <!-- 先手选择 -->
+    <div class="order-select">
+      <button class="order-btn active" id="orderFirst" onclick="setOrder(true)">先手 (X)</button>
+      <button class="order-btn" id="orderSecond" onclick="setOrder(false)">后手 (O)</button>
+    </div>
+
+    <!-- 战绩 -->
+    <div class="record-bar">
+      <div class="record-item">
+        <div class="record-num win-num" id="recWin">0</div>
+        <div class="record-label">胜</div>
+      </div>
+      <div class="record-item">
+        <div class="record-num draw-num" id="recDraw">0</div>
+        <div class="record-label">平</div>
+      </div>
+      <div class="record-item">
+        <div class="record-num lose-num" id="recLose">0</div>
+        <div class="record-label">负</div>
+      </div>
+    </div>
+
+    <!-- 状态 -->
+    <div class="status your-turn" id="status">你的回合 (X)</div>
+
+    <!-- 棋盘 -->
+    <div class="board" id="board">
+      <div class="cell" data-i="0" onclick="playerMove(0)"><span class="piece"></span></div>
+      <div class="cell" data-i="1" onclick="playerMove(1)"><span class="piece"></span></div>
+      <div class="cell" data-i="2" onclick="playerMove(2)"><span class="piece"></span></div>
+      <div class="cell" data-i="3" onclick="playerMove(3)"><span class="piece"></span></div>
+      <div class="cell" data-i="4" onclick="playerMove(4)"><span class="piece"></span></div>
+      <div class="cell" data-i="5" onclick="playerMove(5)"><span class="piece"></span></div>
+      <div class="cell" data-i="6" onclick="playerMove(6)"><span class="piece"></span></div>
+      <div class="cell" data-i="7" onclick="playerMove(7)"><span class="piece"></span></div>
+      <div class="cell" data-i="8" onclick="playerMove(8)"><span class="piece"></span></div>
+    </div>
+
+    <div class="btn-group">
+      <button class="btn" onclick="restartGame()">重新开始</button>
+    </div>
+  </div>
+</div>
+
+<!-- 结果弹窗 -->
+<div class="overlay" id="overlay">
+  <div class="modal">
+    <span class="result-icon" id="resIcon">🏆</span>
+    <h2 id="resTitle">你赢了！</h2>
+    <p id="resDesc">太厉害了，击败了AI！</p>
+    <button class="btn" onclick="closeModal()">再来一局</button>
+  </div>
+</div>
+
+<script>
+// 游戏状态
+let board = Array(9).fill(''); // 'X', 'O', or ''
+let playerIsX = true; // 玩家是否先手
+let currentPlayer = 'X'; // 当前轮到谁
+let gameOver = false;
+let aiThinking = false;
+
+// 读取战绩
+function loadRecord() {
+  const r = JSON.parse(localStorage.getItem('tttRecord') || '{"w":0,"d":0,"l":0}');
+  document.getElementById('recWin').textContent = r.w;
+  document.getElementById('recDraw').textContent = r.d;
+  document.getElementById('recLose').textContent = r.l;
+  return r;
+}
+
+function saveRecord(win, draw, lose) {
+  const r = { w: win, d: draw, l: lose };
+  localStorage.setItem('tttRecord', JSON.stringify(r));
+}
+
+let record = loadRecord();
+
+// 设置先手/后手
+function setOrder(isFirst) {
+  playerIsX = isFirst;
+  document.getElementById('orderFirst').classList.toggle('active', isFirst);
+  document.getElementById('orderSecond').classList.toggle('active', !isFirst);
+  restartGame();
+}
+
+// 重新开始
+function restartGame() {
+  board = Array(9).fill('');
+  gameOver = false;
+  aiThinking = false;
+  currentPlayer = 'X';
+  // 清空棋盘
+  for (let i = 0; i < 9; i++) {
+    const cell = document.querySelector(`.cell[data-i="${i}"]`);
+    cell.classList.remove('taken');
+    cell.querySelector('.piece').innerHTML = '';
+    cell.querySelector('.piece').className = 'piece';
+  }
+  // 如果玩家后手，AI先走
+  if (!playerIsX) {
+    document.getElementById('status').textContent = 'AI思考中...';
+    document.getElementById('status').className = 'status thinking';
+    aiThinking = true;
+    setTimeout(() => aiMove(), 400);
+  } else {
+    document.getElementById('status').textContent = '你的回合 (X)';
+    document.getElementById('status').className = 'status your-turn';
+  }
+}
+
+// 玩家落子
+function playerMove(i) {
+  if (gameOver || aiThinking) return;
+  if (board[i] !== '') return;
+  const playerMark = playerIsX ? 'X' : 'O';
+  if (currentPlayer !== playerMark) return;
+
+  placePiece(i, playerMark);
+  if (checkEnd()) return;
+
+  currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+  // AI走
+  aiThinking = true;
+  document.getElementById('status').textContent = 'AI思考中...';
+  document.getElementById('status').className = 'status thinking';
+  setTimeout(() => aiMove(), 350);
+}
+
+// 放置棋子
+function placePiece(i, mark) {
+  board[i] = mark;
+  const cell = document.querySelector(`.cell[data-i="${i}"]`);
+  cell.classList.add('taken');
+  const piece = cell.querySelector('.piece');
+  piece.classList.add(mark === 'X' ? 'x-piece' : 'o-piece');
+  piece.innerHTML = mark;
+  cell.style.animation = 'none';
+  cell.offsetHeight; // 触发重排
+  cell.style.animation = '';
+}
+
+// AI走步
+function aiMove() {
+  if (gameOver) return;
+  const aiMark = playerIsX ? 'O' : 'X';
+  const move = getBestMove(board, aiMark);
+  if (move === -1) return;
+  placePiece(move, aiMark);
+  aiThinking = false;
+  if (checkEnd()) return;
+  currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+  const playerMark = playerIsX ? 'X' : 'O';
+  document.getElementById('status').textContent = '你的回合 (' + playerMark + ')';
+  document.getElementById('status').className = 'status your-turn';
+}
+
+// 获取最佳走步（minimax）
+function getBestMove(bd, aiMark) {
+  let bestScore = -Infinity;
+  let bestMove = -1;
+  for (let i = 0; i < 9; i++) {
+    if (bd[i] === '') {
+      bd[i] = aiMark;
+      let score = minimax(bd, 0, false, aiMark);
+      bd[i] = '';
+      if (score > bestScore) {
+        bestScore = score;
+        bestMove = i;
+      }
+    }
+  }
+  return bestMove;
+}
+
+function minimax(bd, depth, isMaximizing, aiMark) {
+  const playerMark = aiMark === 'X' ? 'O' : 'X';
+  const winner = getWinner(bd);
+  if (winner === aiMark) return 10 - depth;
+  if (winner === playerMark) return depth - 10;
+  if (bd.every(c => c !== '')) return 0; // 平局
+
+  if (isMaximizing) {
+    let best = -Infinity;
+    for (let i = 0; i < 9; i++) {
+      if (bd[i] === '') {
+        bd[i] = aiMark;
+        let score = minimax(bd, depth + 1, false, aiMark);
+        bd[i] = '';
+        best = Math.max(best, score);
+      }
+    }
+    return best;
+  } else {
+    let best = Infinity;
+    for (let i = 0; i < 9; i++) {
+      if (bd[i] === '') {
+        bd[i] = playerMark;
+        let score = minimax(bd, depth + 1, true, aiMark);
+        bd[i] = '';
+        best = Math.min(best, score);
+      }
+    }
+    return best;
+  }
+}
+
+// 判断赢家
+function getWinner(bd) {
+  const lines = [
+    [0,1,2],[3,4,5],[6,7,8],
+    [0,3,6],[1,4,7],[2,5,8],
+    [0,4,8],[2,4,6]
+  ];
+  for (let [a,b,c] of lines) {
+    if (bd[a] && bd[a] === bd[b] && bd[a] === bd[c]) return bd[a];
+  }
+  return null;
+}
+
+// 检查游戏是否结束
+function checkEnd() {
+  const winner = getWinner(board);
+  if (winner) {
+    gameOver = true;
+    const playerMark = playerIsX ? 'X' : 'O';
+    let result = '';
+    if (winner === playerMark) {
+      result = 'win';
+      record.w++;
+    } else {
+      result = 'lose';
+      record.l++;
+    }
+    saveRecord(record.w, record.d, record.l);
+    loadRecord();
+    showResult(result, winner);
+    highlightWin(winner);
+    return true;
+  }
+  // 平局
+  if (board.every(c => c !== '')) {
+    gameOver = true;
+    record.d++;
+    saveRecord(record.w, record.d, record.l);
+    loadRecord();
+    showResult('draw', null);
+    return true;
+  }
+  return false;
+}
+
+// 高亮胜利连线
+function highlightWin(mark) {
+  const lines = [
+    [0,1,2],[3,4,5],[6,7,8],
+    [0,3,6],[1,4,7],[2,5,8],
+    [0,4,8],[2,4,6]
+  ];
+  for (let [a,b,c] of lines) {
+    if (board[a] === mark && board[a] === board[b] && board[a] === board[c]) {
+      // 在棋盘上画一条线
+      const line = getLineCoords(a, b, c);
+      // 用CSS直接在棋盘上画
+      const board = document.getElementById('board');
+      const overlay = document.createElement('div');
+      overlay.style.cssText = 'position:absolute;inset:0;pointer-events:none;';
+      const svg = document.createElementNS('http://www.w3.org/2000/svg','svg');
+      svg.setAttribute('width','100%');
+      svg.setAttribute('height','100%');
+      const lineEl = document.createElementNS('http://www.w3.org/2000/svg','line');
+      lineEl.setAttribute('x1', line.x1 + '%');
+      lineEl.setAttribute('y1', line.y1 + '%');
+      lineEl.setAttribute('x2', line.x2 + '%');
+      lineEl.setAttribute('y2', line.y2 + '%');
+      lineEl.setAttribute('stroke', 'var(--accent)');
+      lineEl.setAttribute('stroke-width', '4');
+      lineEl.setAttribute('stroke-linecap', 'round');
+      lineEl.style.strokeDasharray = '150';
+      lineEl.style.strokeDashoffset = '150';
+      lineEl.style.animation = 'drawLine 0.4s ease forwards';
+      svg.appendChild(lineEl);
+      overlay.appendChild(svg);
+      board.style.position = 'relative';
+      board.appendChild(overlay);
+      break;
+    }
+  }
+}
+
+function getLineCoords(a, b, c) {
+  // 计算连线坐标（百分比）
+  const pos = (i) => {
+    const row = Math.floor(i / 3);
+    const col = i % 3;
+    return {
+      x: col * 33.33 + 16.67,
+      y: row * 33.33 + 16.67
+    };
+  };
+  const p1 = pos(a);
+  const p3 = pos(c);
+  return { x1: p1.x, y1: p1.y, x2: p3.x, y2: p3.y };
+}
+
+// 显示结果
+function showResult(result, winner) {
+  const status = document.getElementById('status');
+  const overlay = document.getElementById('overlay');
+  const icon = document.getElementById('resIcon');
+  const title = document.getElementById('resTitle');
+  const desc = document.getElementById('resDesc');
+
+  if (result === 'win') {
+    status.textContent = '🎉 你赢了！';
+    status.className = 'status win';
+    icon.textContent = '🏆';
+    title.textContent = '你赢了！';
+    desc.textContent = '太厉害了，击败了不败AI！';
+  } else if (result === 'lose') {
+    status.textContent = '😔 你输了';
+    status.className = 'status lose';
+    icon.textContent = '🤖';
+    title.textContent = '你输了';
+    desc.textContent = 'AI赢了这局，再来挑战！';
+  } else {
+    status.textContent = '🤝 平局';
+    status.className = 'status draw';
+    icon.textContent = '🤝';
+    title.textContent = '平局！';
+    desc.textContent = '势均力敌，不分胜负！';
+  }
+
+  setTimeout(() => {
+    overlay.classList.add('show');
+  }, 800);
+}
+
+function closeModal() {
+  document.getElementById('overlay').classList.remove('show');
+  // 清除胜利连线
+  const board = document.getElementById('board');
+  const overlays = board.querySelectorAll('div[style]');
+  overlays.forEach(o => { if (o.querySelector('svg')) o.remove(); });
+  restartGame();
+}
+
+// 初始化
+window.addEventListener('DOMContentLoaded', () => {
+  restartGame();
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>在线倒计时 - 工具箱 Pro</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f0f2f5;--card:rgba(255,255,255,0.85);--text:#1a1a2e;--muted:#a0aec0;--accent:#6366f1;--accent-hover:#4f46e5;--border:rgba(0,0,0,0.06);--shadow:0 4px 16px rgba(0,0,0,0.08)}
+[data-theme="dark"]{--bg:#0f0f1a;--card:rgba(30,30,50,0.85);--text:#e2e8f0;--muted:#718096;--accent:#818cf8;--border:rgba(255,255,255,0.06);--shadow:0 4px 16px rgba(0,0,0,0.3)}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: 'Inter', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.3s, color 0.3s;
+  overflow: hidden;
+}
+/* 返回按钮 */
+.back-btn {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  z-index: 100;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  background: var(--card);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  color: var(--text);
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  box-shadow: var(--shadow);
+  transition: all 0.2s;
+}
+.back-btn:hover { background: var(--accent); color: #fff; }
+/* 主卡片 */
+.card {
+  background: var(--card);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 40px;
+  box-shadow: var(--shadow);
+  text-align: center;
+  max-width: 500px;
+  width: 90%;
+  transition: all 0.3s;
+}
+h1 {
+  font-size: 22px;
+  font-weight: 700;
+  margin-bottom: 30px;
+  letter-spacing: -0.5px;
+}
+/* 时间显示 */
+.timer-display {
+  font-size: 120px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 4px;
+  color: var(--text);
+  margin: 20px 0;
+  transition: color 0.3s;
+  line-height: 1;
+  user-select: none;
+}
+.timer-display.warning {
+  color: #ef4444;
+  animation: blink 0.5s ease-in-out infinite alternate;
+}
+@keyframes blink {
+  from { opacity: 1; }
+  to { opacity: 0.4; }
+}
+/* 输入区域 */
+.input-row {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+.input-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+.input-group label {
+  font-size: 12px;
+  color: var(--muted);
+  font-weight: 500;
+}
+.input-group input {
+  width: 80px;
+  padding: 10px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--card);
+  color: var(--text);
+  font-size: 20px;
+  font-weight: 600;
+  text-align: center;
+  font-family: 'Inter', sans-serif;
+  outline: none;
+  transition: border 0.2s;
+}
+.input-group input:focus {
+  border-color: var(--accent);
+}
+/* 快捷预设 */
+.presets {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+.preset-btn {
+  padding: 6px 14px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--card);
+  color: var(--text);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: 'Inter', sans-serif;
+}
+.preset-btn:hover {
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
+}
+/* 控制按钮 */
+.controls {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.btn {
+  padding: 12px 28px;
+  border: none;
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: 'Inter', sans-serif;
+}
+.btn-primary {
+  background: var(--accent);
+  color: #fff;
+}
+.btn-primary:hover { background: var(--accent-hover); }
+.btn-secondary {
+  background: var(--card);
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+.btn-secondary:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+.btn-danger {
+  background: #ef4444;
+  color: #fff;
+}
+.btn-danger:hover { background: #dc2626; }
+/* 全屏模式 */
+.fullscreen-overlay {
+  display: none;
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: var(--bg);
+  z-index: 1000;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.fullscreen-overlay.active {
+  display: flex;
+}
+.fullscreen-overlay .timer-display {
+  font-size: 180px;
+}
+.fullscreen-overlay .timer-display.warning {
+  color: #ef4444;
+}
+.fs-controls {
+  margin-top: 40px;
+  display: flex;
+  gap: 12px;
+}
+/* 响应式 */
+@media (max-width: 600px) {
+  .timer-display { font-size: 80px; }
+  .fullscreen-overlay .timer-display { font-size: 100px; }
+  .card { padding: 24px; }
+}
+</style>
+</head>
+<body>
+
+<!-- 主题检测脚本 -->
+<script>
+(function(){var s=localStorage.getItem('theme');if(s==='light'||s==='dark'){document.documentElement.setAttribute('data-theme',s)}else{var d=window.matchMedia('(prefers-color-scheme:dark)').matches;document.documentElement.setAttribute('data-theme',d?'dark':'light')}})();
+</script>
+
+<!-- 返回按钮 -->
+<a href="../" class="back-btn">← 返回</a>
+
+<!-- 主界面 -->
+<div class="card" id="mainCard">
+  <h1>⏱ 在线倒计时</h1>
+
+  <!-- 时间输入 -->
+  <div class="input-row">
+    <div class="input-group">
+      <label>分钟</label>
+      <input type="number" id="inputMin" min="0" max="999" value="1">
+    </div>
+    <div class="input-group">
+      <label>秒钟</label>
+      <input type="number" id="inputSec" min="0" max="59" value="0">
+    </div>
+  </div>
+
+  <!-- 快捷预设 -->
+  <div class="presets">
+    <button class="preset-btn" onclick="setPreset(1,0)">1 分钟</button>
+    <button class="preset-btn" onclick="setPreset(5,0)">5 分钟</button>
+    <button class="preset-btn" onclick="setPreset(10,0)">10 分钟</button>
+    <button class="preset-btn" onclick="setPreset(25,0)">25 分钟</button>
+  </div>
+
+  <!-- 倒计时显示 -->
+  <div class="timer-display" id="timerDisplay">01:00</div>
+
+  <!-- 控制按钮 -->
+  <div class="controls">
+    <button class="btn btn-primary" id="btnStart" onclick="startTimer()">开始</button>
+    <button class="btn btn-secondary" id="btnPause" onclick="pauseTimer()" style="display:none">暂停</button>
+    <button class="btn btn-secondary" id="btnReset" onclick="resetTimer()">重置</button>
+  </div>
+</div>
+
+<!-- 全屏倒计时覆盖层 -->
+<div class="fullscreen-overlay" id="fsOverlay">
+  <div class="timer-display" id="fsTimerDisplay">01:00</div>
+  <div class="fs-controls">
+    <button class="btn btn-secondary" onclick="pauseTimer()">暂停</button>
+    <button class="btn btn-danger" onclick="resetTimer()">结束</button>
+  </div>
+</div>
+
+<script>
+// 倒计时状态变量
+let totalSeconds = 60;    // 总秒数
+let remaining = 60;       // 剩余秒数
+let timerInterval = null;  // 定时器ID
+let isRunning = false;     // 是否正在运行
+let isPaused = false;      // 是否暂停
+
+// DOM 元素引用
+const inputMin = document.getElementById('inputMin');
+const inputSec = document.getElementById('inputSec');
+const timerDisplay = document.getElementById('timerDisplay');
+const fsTimerDisplay = document.getElementById('fsTimerDisplay');
+const fsOverlay = document.getElementById('fsOverlay');
+const btnStart = document.getElementById('btnStart');
+const btnPause = document.getElementById('btnPause');
+
+// 输入变化时更新显示
+inputMin.addEventListener('input', updateDisplay);
+inputSec.addEventListener('input', updateDisplay);
+
+// 更新倒计时显示
+function updateDisplay() {
+  if (isRunning) return;
+  const m = parseInt(inputMin.value) || 0;
+  const s = parseInt(inputSec.value) || 0;
+  totalSeconds = m * 60 + s;
+  remaining = totalSeconds;
+  renderTime(remaining);
+}
+
+// 渲染时间到显示区域（格式：MM:SS）
+function renderTime(secs) {
+  const m = Math.floor(secs / 60);
+  const s = secs % 60;
+  const str = String(m).padStart(2, '0') + ':' + String(s).padStart(2, '0');
+  timerDisplay.textContent = str;
+  fsTimerDisplay.textContent = str;
+
+  // 最后10秒添加警告样式
+  if (secs <= 10 && secs > 0) {
+    timerDisplay.classList.add('warning');
+    fsTimerDisplay.classList.add('warning');
+  } else {
+    timerDisplay.classList.remove('warning');
+    fsTimerDisplay.classList.remove('warning');
+  }
+}
+
+// 设置快捷预设时间
+function setPreset(min, sec) {
+  if (isRunning) resetTimer();
+  inputMin.value = min;
+  inputSec.value = sec;
+  updateDisplay();
+}
+
+// 开始倒计时
+function startTimer() {
+  if (isRunning) return;
+
+  // 如果暂停后继续，不重新读取输入
+  if (!isPaused) {
+    const m = parseInt(inputMin.value) || 0;
+    const s = parseInt(inputSec.value) || 0;
+    totalSeconds = m * 60 + s;
+    if (totalSeconds <= 0) return;
+    remaining = totalSeconds;
+  }
+
+  isRunning = true;
+  isPaused = false;
+  btnStart.style.display = 'none';
+  btnPause.style.display = 'inline-block';
+  fsOverlay.classList.add('active');
+
+  // 每秒执行一次
+  timerInterval = setInterval(() => {
+    remaining--;
+    renderTime(remaining);
+
+    if (remaining <= 0) {
+      clearInterval(timerInterval);
+      isRunning = false;
+      btnStart.style.display = 'inline-block';
+      btnPause.style.display = 'none';
+      playBeep();  // 播放结束音效
+      // 3秒后退出全屏
+      setTimeout(() => {
+        fsOverlay.classList.remove('active');
+      }, 3000);
+    }
+  }, 1000);
+
+  renderTime(remaining);
+}
+
+// 暂停/继续倒计时
+function pauseTimer() {
+  if (!isRunning) {
+    // 当前是暂停状态，继续
+    startTimer();
+    btnPause.textContent = '暂停';
+    return;
+  }
+  // 暂停
+  clearInterval(timerInterval);
+  isRunning = false;
+  isPaused = true;
+  btnStart.style.display = 'inline-block';
+  btnPause.style.display = 'none';
+  btnStart.textContent = '继续';
+}
+
+// 重置倒计时
+function resetTimer() {
+  clearInterval(timerInterval);
+  isRunning = false;
+  isPaused = false;
+  btnStart.style.display = 'inline-block';
+  btnPause.style.display = 'none';
+  btnStart.textContent = '开始';
+  fsOverlay.classList.remove('active');
+  timerDisplay.classList.remove('warning');
+  fsTimerDisplay.classList.remove('warning');
+  updateDisplay();
+}
+
+// 使用 Web Audio API 播放结束蜂鸣声
+function playBeep() {
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    // 播放3声蜂鸣
+    [0, 0.3, 0.6].forEach(delay => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.frequency.value = 880;  // 频率 880Hz
+      osc.type = 'sine';
+      gain.gain.setValueAtTime(0.5, ctx.currentTime + delay);
+      gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + delay + 0.25);
+      osc.start(ctx.currentTime + delay);
+      osc.stop(ctx.currentTime + delay + 0.25);
+    });
+  } catch(e) {
+    console.log('音频播放失败', e);
+  }
+}
+
+// 初始化显示
+updateDisplay();
+</script>
+</body>
+</html>

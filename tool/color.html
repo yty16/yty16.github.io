@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>色觉挑战 - 工具箱 Pro</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f0f2f5;--card:rgba(255,255,255,0.85);--text:#1a1a2e;--muted:#a0aec0;--accent:#6366f1;--accent-hover:#4f46e5;--border:rgba(0,0,0,0.06);--shadow:0 4px 16px rgba(0,0,0,0.08)}
+[data-theme="dark"]{--bg:#0f0f1a;--card:rgba(30,30,50,0.85);--text:#e2e8f0;--muted:#718096;--accent:#818cf8;--border:rgba(255,255,255,0.06);--shadow:0 4px 16px rgba(0,0,0,0.3)}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; transition: background 0.3s, color 0.3s; }
+.back-btn { position: fixed; top: 20px; left: 20px; z-index: 100; display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; background: var(--card); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid var(--border); border-radius: 10px; color: var(--text); text-decoration: none; font-size: 14px; font-weight: 500; transition: all 0.2s; box-shadow: var(--shadow); }
+.back-btn:hover { transform: translateX(-3px); }
+.container { max-width: 600px; margin: 0 auto; padding: 80px 20px 40px; display: flex; flex-direction: column; align-items: center; }
+h1 { font-size: 28px; font-weight: 700; margin-bottom: 8px; text-align: center; }
+.subtitle { color: var(--muted); font-size: 14px; margin-bottom: 24px; text-align: center; }
+.card { background: var(--card); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid var(--border); border-radius: 16px; padding: 28px; width: 100%; box-shadow: var(--shadow); margin-bottom: 20px; }
+/* 顶部信息栏 */
+.info-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; width: 100%; }
+.info-item { text-align: center; flex: 1; }
+.info-value { font-size: 28px; font-weight: 700; color: var(--accent); }
+.info-label { font-size: 12px; color: var(--muted); margin-top: 2px; }
+/* 网格区 */
+.grid-wrapper { width: 100%; display: flex; justify-content: center; margin-bottom: 24px; }
+.color-grid { display: grid; gap: 6px; padding: 16px; background: var(--bg); border-radius: 16px; border: 1px solid var(--border); }
+.color-cell { border-radius: 8px; cursor: pointer; transition: transform 0.15s, box-shadow 0.15s; aspect-ratio: 1; }
+.color-cell:hover { transform: scale(1.08); box-shadow: 0 4px 12px rgba(0,0,0,0.2); z-index: 1; position: relative; }
+.color-cell:active { transform: scale(0.95); }
+/* 消息提示 */
+.message { text-align: center; font-size: 18px; font-weight: 600; min-height: 40px; display: flex; align-items: center; justify-content: center; margin-bottom: 16px; transition: all 0.3s; }
+.message.correct { color: #22c55e; animation: popIn 0.3s ease; }
+.message.wrong { color: #ef4444; animation: shake 0.4s ease; }
+@keyframes popIn { from { opacity: 0; transform: scale(0.8); } to { opacity: 1; transform: scale(1); } }
+@keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-6px); } 75% { transform: translateX(6px); } }
+/* 按钮 */
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 12px 28px; background: var(--accent); color: white; border: none; border-radius: 12px; font-size: 15px; font-weight: 600; cursor: pointer; transition: all 0.2s; font-family: inherit; }
+.btn:hover { background: var(--accent-hover); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(99,102,241,0.3); }
+.btn-group { display: flex; gap: 12px; justify-content: center; }
+/* 游戏结束弹窗 */
+.overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(4px); z-index: 200; align-items: center; justify-content: center; }
+.overlay.show { display: flex; }
+.modal { background: var(--card); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid var(--border); border-radius: 20px; padding: 40px; max-width: 360px; width: 90%; text-align: center; box-shadow: 0 20px 60px rgba(0,0,0,0.3); animation: modalIn 0.3s ease; }
+@keyframes modalIn { from { opacity: 0; transform: scale(0.9) translateY(20px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+.modal h2 { font-size: 22px; margin-bottom: 8px; }
+.modal .final-score { font-size: 48px; font-weight: 700; background: linear-gradient(135deg, var(--accent), #a855f7); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin: 12px 0; }
+.modal .final-level { font-size: 15px; color: var(--muted); margin-bottom: 20px; }
+.modal .btn { width: 100%; }
+/* 难度指示 */
+.difficulty { display: flex; align-items: center; gap: 8px; justify-content: center; margin-bottom: 16px; }
+.diff-dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(99,102,241,0.2); transition: all 0.3s; }
+.diff-dot.active { background: var(--accent); transform: scale(1.3); }
+/* 开始界面 */
+.start-screen { text-align: center; padding: 40px 20px; }
+.start-screen .icon { font-size: 64px; margin-bottom: 16px; display: block; }
+.start-screen p { color: var(--muted); font-size: 14px; line-height: 1.8; margin-bottom: 24px; }
+</style>
+</head>
+<body>
+<script>(function(){var s=localStorage.getItem('theme');if(s==='light'||s==='dark'){document.documentElement.setAttribute('data-theme',s)}else{var d=window.matchMedia('(prefers-color-scheme:dark)').matches;document.documentElement.setAttribute('data-theme',d?'dark':'light')}})();</script>
+
+<a href="/" class="back-btn">← 返回</a>
+
+<div class="container">
+  <h1>🎨 色觉挑战</h1>
+  <p class="subtitle">找出颜色不同的那一块，越往后越难</p>
+
+  <div class="card" id="gameCard">
+    <!-- 开始界面 -->
+    <div class="start-screen" id="startScreen">
+      <span class="icon">👁️</span>
+      <h2 style="margin-bottom:12px;">你能找到那个不同的颜色吗？</h2>
+      <p>在一个颜色几乎相同的网格中，<br>找到那个颜色略有不同的方块。<br>每过一关，难度都会增加！</p>
+      <button class="btn" onclick="startGame()">开始挑战</button>
+    </div>
+
+    <!-- 游戏界面 -->
+    <div id="gameScreen" style="display:none;">
+      <div class="info-bar">
+        <div class="info-item">
+          <div class="info-value" id="levelNum">1</div>
+          <div class="info-label">关卡</div>
+        </div>
+        <div class="info-item">
+          <div class="info-value" id="scoreNum">0</div>
+          <div class="info-label">得分</div>
+        </div>
+        <div class="info-item">
+          <div class="info-value" id="gridSize">4×4</div>
+          <div class="info-label">网格</div>
+        </div>
+      </div>
+
+      <div class="difficulty" id="diffBar"></div>
+
+      <div class="message" id="message"></div>
+
+      <div class="grid-wrapper">
+        <div class="color-grid" id="colorGrid"></div>
+      </div>
+
+      <div class="btn-group">
+        <button class="btn btn-secondary" onclick="restartGame()" style="background:var(--card);color:var(--text);border:1px solid var(--border);">重新开始</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 游戏结束弹窗 -->
+<div class="overlay" id="overlay">
+  <div class="modal">
+    <h2 id="modalTitle">游戏结束</h2>
+    <div class="final-score" id="finalScore">0</div>
+    <div class="final-level" id="finalLevel">到达第 1 关</div>
+    <button class="btn" onclick="closeModalAndRestart()">再来一次</button>
+  </div>
+</div>
+
+<script>
+// 游戏状态
+let level = 1;
+let score = 0;
+let gridN = 4; // NxN 网格
+let diff = 80; // 颜色差异初始值 (0-255)，越小越难
+let baseColor = { r: 100, g: 150, b: 200 };
+let oddIndex = 0; // 不同颜色块的索引
+let isActive = false; // 是否正在等待点击
+
+// 生成随机颜色
+function randColor() {
+  return {
+    r: Math.floor(Math.random() * 200 + 30),
+    g: Math.floor(Math.random() * 200 + 30),
+    b: Math.floor(Math.random() * 200 + 30)
+  };
+}
+
+// 计算颜色字符串
+function colorStr(c) {
+  return `rgb(${c.r},${c.g},${c.b})`;
+}
+
+// 生成差异颜色
+function offsetColor(base, d) {
+  // 随机决定哪个通道偏移，以及偏移方向
+  const channels = ['r', 'g', 'b'];
+  const idx = Math.floor(Math.random() * 3);
+  const ch = channels[idx];
+  const sign = Math.random() > 0.5 ? 1 : -1;
+  const nc = { ...base };
+  nc[ch] = Math.max(0, Math.min(255, base[ch] + sign * d));
+  return nc;
+}
+
+// 开始游戏
+function startGame() {
+  level = 1;
+  score = 0;
+  document.getElementById('startScreen').style.display = 'none';
+  document.getElementById('gameScreen').style.display = 'block';
+  nextLevel();
+}
+
+function restartGame() {
+  level = 1;
+  score = 0;
+  nextLevel();
+}
+
+// 进入下一关
+function nextLevel() {
+  // 更新参数
+  gridN = Math.min(3 + Math.floor((level - 1) / 2), 8); // 3,3,4,4,5,5,6,6,7,7,8,8...
+  // 差异递减：从80开始，每关减少约4，最小15
+  diff = Math.max(15, 80 - (level - 1) * 4);
+  baseColor = randColor();
+  oddIndex = Math.floor(Math.random() * (gridN * gridN));
+
+  // 更新界面
+  document.getElementById('levelNum').textContent = level;
+  document.getElementById('scoreNum').textContent = score;
+  document.getElementById('gridSize').textContent = gridN + '×' + gridN;
+  document.getElementById('message').textContent = '';
+  document.getElementById('message').className = 'message';
+
+  updateDiffBar();
+  renderGrid();
+  isActive = true;
+}
+
+// 更新难度指示条
+function updateDiffBar() {
+  const bar = document.getElementById('diffBar');
+  bar.innerHTML = '';
+  const maxDots = 10;
+  const activeDots = Math.min(level, maxDots);
+  for (let i = 0; i < maxDots; i++) {
+    const dot = document.createElement('div');
+    dot.className = 'diff-dot' + (i < activeDots ? ' active' : '');
+    bar.appendChild(dot);
+  }
+}
+
+// 渲染网格
+function renderGrid() {
+  const grid = document.getElementById('colorGrid');
+  grid.innerHTML = '';
+  grid.style.gridTemplateColumns = `repeat(${gridN}, 1fr)`;
+  // 根据网格大小决定单元格大小
+  const cellSize = Math.max(40, Math.min(70, 360 / gridN));
+  grid.style.width = (cellSize * gridN + 6 * (gridN - 1) + 32) + 'px';
+
+  for (let i = 0; i < gridN * gridN; i++) {
+    const cell = document.createElement('div');
+    cell.className = 'color-cell';
+    cell.style.width = cellSize + 'px';
+    if (i === oddIndex) {
+      const oddColor = offsetColor(baseColor, diff);
+      cell.style.background = colorStr(oddColor);
+      cell.dataset.odd = '1';
+    } else {
+      cell.style.background = colorStr(baseColor);
+      cell.dataset.odd = '0';
+    }
+    cell.addEventListener('click', () => handleClick(i, cell));
+    grid.appendChild(cell);
+  }
+}
+
+// 处理点击
+function handleClick(index, cell) {
+  if (!isActive) return;
+  isActive = false;
+
+  if (index === oddIndex) {
+    // 答对了
+    score += level; // 关卡越高得分越多
+    document.getElementById('scoreNum').textContent = score;
+    document.getElementById('message').textContent = '✅ 正确！';
+    document.getElementById('message').className = 'message correct';
+    // 高亮正确答案
+    cell.style.boxShadow = '0 0 0 3px #22c55e, 0 0 20px rgba(34,197,94,0.4)';
+    setTimeout(() => {
+      level++;
+      nextLevel();
+    }, 600);
+  } else {
+    // 答错了
+    document.getElementById('message').textContent = '❌ 错了！';
+    document.getElementById('message').className = 'message wrong';
+    // 标记正确答案
+    const cells = document.querySelectorAll('.color-cell');
+    cells.forEach((c, i) => {
+      if (i === oddIndex) {
+        c.style.boxShadow = '0 0 0 3px #22c55e, 0 0 20px rgba(34,197,94,0.4)';
+      } else {
+        c.style.opacity = '0.5';
+      }
+    });
+    setTimeout(() => gameOver(), 1000);
+  }
+}
+
+// 游戏结束
+function gameOver() {
+  document.getElementById('finalScore').textContent = score;
+  document.getElementById('finalLevel').textContent = '到达第 ' + level + ' 关';
+  document.getElementById('overlay').classList.add('show');
+}
+
+function closeModalAndRestart() {
+  document.getElementById('overlay').classList.remove('show');
+  startGame();
+}
+
+// 页面加载时检查历史最佳
+window.addEventListener('DOMContentLoaded', () => {
+  // 可在此显示历史最佳
+});
+</script>
+</body>
+</html>

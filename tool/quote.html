@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>每日一言 - 工具箱 Pro</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f0f2f5;--card:rgba(255,255,255,0.85);--text:#1a1a2e;--muted:#a0aec0;--accent:#6366f1;--accent-hover:#4f46e5;--border:rgba(0,0,0,0.06);--shadow:0 4px 16px rgba(0,0,0,0.08)}
+[data-theme="dark"]{--bg:#0f0f1a;--card:rgba(30,30,50,0.85);--text:#e2e8f0;--muted:#718096;--accent:#818cf8;--border:rgba(255,255,255,0.06);--shadow:0 4px 16px rgba(0,0,0,0.3)}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; transition: background 0.3s, color 0.3s; display: flex; flex-direction: column; }
+.back-btn { position: fixed; top: 20px; left: 20px; z-index: 100; display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; background: var(--card); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid var(--border); border-radius: 10px; color: var(--text); text-decoration: none; font-size: 14px; font-weight: 500; transition: all 0.2s; box-shadow: var(--shadow); }
+.back-btn:hover { transform: translateX(-3px); }
+.container { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 100px 20px 60px; max-width: 700px; margin: 0 auto; width: 100%; }
+/* 名言卡片 */
+.quote-card { background: var(--card); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid var(--border); border-radius: 20px; padding: 48px 40px; width: 100%; box-shadow: var(--shadow); text-align: center; position: relative; overflow: hidden; transition: all 0.3s; }
+.quote-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: linear-gradient(90deg, var(--accent), #a855f7, #ec4899); }
+.quote-icon { font-size: 48px; margin-bottom: 16px; opacity: 0.3; }
+.quote-text { font-size: 22px; font-weight: 500; line-height: 1.8; margin-bottom: 20px; position: relative; transition: opacity 0.3s; }
+.quote-text.fade { opacity: 0; }
+.quote-author { font-size: 15px; color: var(--muted); font-weight: 500; margin-bottom: 8px; transition: opacity 0.3s; }
+.quote-author.fade { opacity: 0; }
+.quote-source { font-size: 13px; color: var(--muted); opacity: 0.7; margin-bottom: 32px; }
+/* 分类标签 */
+.category-bar { display: flex; gap: 8px; margin-bottom: 28px; justify-content: center; flex-wrap: wrap; }
+.cat-btn { padding: 8px 18px; border-radius: 20px; border: 1px solid var(--border); background: var(--bg); color: var(--muted); font-size: 13px; font-weight: 500; cursor: pointer; transition: all 0.2s; font-family: inherit; }
+.cat-btn.active { background: var(--accent); color: white; border-color: var(--accent); }
+/* 按钮组 */
+.btn-group { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 12px 28px; background: var(--accent); color: white; border: none; border-radius: 12px; font-size: 15px; font-weight: 600; cursor: pointer; transition: all 0.2s; font-family: inherit; }
+.btn:hover { background: var(--accent-hover); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(99,102,241,0.3); }
+.btn-secondary { background: var(--card); color: var(--text); border: 1px solid var(--border); }
+.btn-ghost { background: transparent; color: var(--muted); padding: 12px 20px; }
+.btn-ghost:hover { background: rgba(99,102,241,0.08); color: var(--accent); box-shadow: none; }
+/* 收藏列表 */
+.fav-section { margin-top: 32px; width: 100%; }
+.fav-section h3 { font-size: 16px; margin-bottom: 12px; text-align: center; }
+.fav-list { display: flex; flex-direction: column; gap: 8px; }
+.fav-item { background: var(--card); backdrop-filter: blur(12px); border: 1px solid var(--border); border-radius: 12px; padding: 16px 20px; display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; transition: all 0.2s; }
+.fav-item .fav-text { flex: 1; font-size: 14px; line-height: 1.6; }
+.fav-item .fav-author { font-size: 12px; color: var(--muted); margin-top: 4px; }
+.fav-item .fav-del { background: none; border: none; color: var(--muted); cursor: pointer; font-size: 16px; padding: 4px; border-radius: 6px; transition: all 0.15s; }
+.fav-item .fav-del:hover { color: #ef4444; background: rgba(239,68,68,0.1); }
+/* 动画 */
+@keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+.quote-card.animate { animation: slideUp 0.4s ease; }
+/* Toast */
+.toast { position: fixed; top: 20px; right: 20px; background: var(--card); backdrop-filter: blur(12px); border: 1px solid var(--border); border-radius: 10px; padding: 12px 20px; font-size: 14px; font-weight: 500; box-shadow: var(--shadow); transform: translateX(120%); transition: transform 0.3s ease; z-index: 999; }
+.toast.show { transform: translateX(0); }
+</style>
+</head>
+<body>
+<script>(function(){var s=localStorage.getItem('theme');if(s==='light'||s==='dark'){document.documentElement.setAttribute('data-theme',s)}else{var d=window.matchMedia('(prefers-color-scheme:dark)').matches;document.documentElement.setAttribute('data-theme',d?'dark':'light')}})();</script>
+
+<a href="/" class="back-btn">← 返回</a>
+<div class="toast" id="toast">已收藏</div>
+
+<div class="container">
+  <!-- 分类选择 -->
+  <div class="category-bar">
+    <button class="cat-btn active" id="catInspire" onclick="setCat('inspire')">励志</button>
+    <button class="cat-btn" id="catLife" onclick="setCat('life')">人生</button>
+    <button class="cat-btn" id="catLove" onclick="setCat('love')">爱情</button>
+    <button class="cat-btn" id="catWisdom" onclick="setCat('wisdom')">智慧</button>
+    <button class="cat-btn" id="catFunny" onclick="setCat('funny')">搞笑</button>
+  </div>
+
+  <!-- 名言卡片 -->
+  <div class="quote-card" id="quoteCard">
+    <div class="quote-icon">"</div>
+    <div class="quote-text" id="quoteText">正在加载名言...</div>
+    <div class="quote-author" id="quoteAuthor"></div>
+    <div class="quote-source" id="quoteSource"></div>
+
+    <div class="btn-group">
+      <button class="btn" onclick="newQuote()">换一句</button>
+      <button class="btn btn-ghost" onclick="toggleFav()">☆ 收藏</button>
+      <button class="btn btn-ghost" onclick="copyQuote()">⎘ 复制</button>
+    </div>
+  </div>
+
+  <!-- 收藏列表 -->
+  <div class="fav-section" id="favSection" style="display:none;">
+    <h3>我的收藏</h3>
+    <div class="fav-list" id="favList"></div>
+    <div style="text-align:center;margin-top:12px;">
+      <button class="btn btn-secondary" onclick="clearFav()" style="font-size:13px;padding:8px 18px;">清空收藏</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// 名言数据库（内置，无需网络）
+const QUOTES = {
+  inspire: [
+    { text: "天行健，君子以自强不息。", author: "《周易》", source: "乾卦" },
+    { text: "路漫漫其修远兮，吾将上下而求索。", author: "屈原", source: "《离骚》" },
+    { text: "千里之行，始于足下。", author: "老子", source: "《道德经》" },
+    { text: "不积跬步，无以至千里；不积小流，无以成江海。", author: "荀子", source: "《劝学》" },
+    { text: "世上无难事，只怕有心人。", author: "谚语", source: "" },
+    { text: "宝剑锋从磨砺出，梅花香自苦寒来。", author: "谚语", source: "" },
+    { text: "长风破浪会有时，直挂云帆济沧海。", author: "李白", source: "《行路难》" },
+    { text: "会当凌绝顶，一览众山小。", author: "杜甫", source: "《望岳》" },
+    { text: "成功不是将来才有的，而是从决定去做的那一刻起，持续累积而成。", author: "佚名", source: "" },
+    { text: "不要等待机会，而要创造机会。", author: "佚名", source: "" },
+    { text: "It always seems impossible until it is done.", author: "Nelson Mandela", source: "" },
+    { text: "The only way to do great work is to love what you do.", author: "Steve Jobs", source: "" }
+  ],
+  life: [
+    { text: "人生如逆旅，我亦是行人。", author: "苏轼", source: "《临江仙》" },
+    { text: "生活不是等着暴风雨过去，而是学会在雨中跳舞。", author: "佚名", source: "" },
+    { text: "人生得意须尽欢，莫使金樽空对月。", author: "李白", source: "《将进酒》" },
+    { text: "如果你不满意你的现状，要么开始改变，要么闭嘴。", author: "佚名", source: "" },
+    { text: "生命中最难的阶段不是没有人懂你，而是你不懂你自己。", author: "尼采", source: "" },
+    { text: "In the middle of difficulty lies opportunity.", author: "Albert Einstein", source: "" },
+    { text: "人生最大的光荣，不在于永不失败，而在于能屡仆屡起。", author: "拿破仑", source: "" }
+  ],
+  love: [
+    { text: "玲珑骰子安红豆，入骨相思知不知。", author: "温庭筠", source: "《南歌子词》" },
+    { text: "愿得一人心，白首不相离。", author: "卓文君", source: "《白头吟》" },
+    { text: "两情若是久长时，又岂在朝朝暮暮。", author: "秦观", source: "《鹊桥仙》" },
+    { text: "曾经沧海难为水，除却巫山不是云。", author: "元稹", source: "《离思》" },
+    { text: "Love is not finding someone to live with. It's finding someone you can't live without.", author: "佚名", source: "" },
+    { text: "最是人间留不住，朱颜辞镜花辞树。", author: "王国维", source: "《蝶恋花》" }
+  ],
+  wisdom: [
+    { text: "知之为知之，不知为不知，是知也。", author: "孔子", source: "《论语》" },
+    { text: "学而不思则罔，思而不学则殆。", author: "孔子", source: "《论语》" },
+    { text: "吾生也有涯，而知也无涯。", author: "庄子", source: "《养生主》" },
+    { text: "知己知彼，百战不殆。", author: "孙子", source: "《孙子兵法》" },
+    { text: "The only true wisdom is in knowing you know nothing.", author: "Socrates", source: "" },
+    { text: "昨晚睡前是你的想法，今早醒来是你的行动，这就是智慧。", author: "佚名", source: "" },
+    { text: "愚者自以为智，智者自知其愚。", author: "莎士比亚", source: "" }
+  ],
+  funny: [
+    { text: "每天叫醒我的不是梦想，是穷。", author: "网络流行语", source: "" },
+    { text: "条条大路通罗马，而有些人就住在罗马。", author: "网络流行语", source: "" },
+    { text: "我哪有什么梦想，我只是想把每一天都过好而已。", author: "佚名", source: "" },
+    { text: "人生就像心电图，如果一帆风顺，说明你挂了。", author: "佚名", source: "" },
+    { text: "早起的鸟儿有虫吃，早起的虫儿被鸟吃。", author: "佚名", source: "" },
+    { text: "有时候你不努力一下，都不知道什么叫绝望。", author: "网络流行语", source: "" }
+  ]
+};
+
+let currentCat = 'inspire';
+let currentQuote = null;
+let favs = JSON.parse(localStorage.getItem('quoteFavs') || '[]');
+
+// 设置分类
+function setCat(cat) {
+  currentCat = cat;
+  document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('cat' + cat.charAt(0).toUpperCase() + cat.slice(1)).classList.add('active');
+  newQuote();
+}
+
+// 获取随机名言
+function getRandomQuote(cat) {
+  const list = QUOTES[cat] || QUOTES.inspire;
+  return list[Math.floor(Math.random() * list.length)];
+}
+
+// 显示新名言
+function newQuote() {
+  const card = document.getElementById('quoteCard');
+  const textEl = document.getElementById('quoteText');
+  const authorEl = document.getElementById('quoteAuthor');
+  const sourceEl = document.getElementById('quoteSource');
+
+  // 淡出
+  textEl.classList.add('fade');
+  authorEl.classList.add('fade');
+
+  setTimeout(() => {
+    currentQuote = getRandomQuote(currentCat);
+    // 避免连续出现相同的名言
+    let attempts = 0;
+    while (currentQuote.text === textEl.textContent && attempts < 10) {
+      currentQuote = getRandomQuote(currentCat);
+      attempts++;
+    }
+    textEl.textContent = currentQuote.text;
+    authorEl.textContent = currentQuote.author ? '—— ' + currentQuote.author : '';
+    sourceEl.textContent = currentQuote.source || '';
+
+    // 淡入 + 动画
+    textEl.classList.remove('fade');
+    authorEl.classList.remove('fade');
+    card.classList.remove('animate');
+    void card.offsetWidth;
+    card.classList.add('animate');
+  }, 200);
+}
+
+// 收藏当前名言
+function toggleFav() {
+  if (!currentQuote) return;
+  const idx = favs.findIndex(f => f.text === currentQuote.text);
+  if (idx >= 0) {
+    favs.splice(idx, 1);
+    showToast('已取消收藏');
+  } else {
+    favs.push({ ...currentQuote });
+    showToast('已收藏');
+  }
+  localStorage.setItem('quoteFavs', JSON.stringify(favs));
+  renderFavs();
+}
+
+// 渲染收藏列表
+function renderFavs() {
+  const section = document.getElementById('favSection');
+  const list = document.getElementById('favList');
+  if (favs.length === 0) {
+    section.style.display = 'none';
+    return;
+  }
+  section.style.display = 'block';
+  list.innerHTML = '';
+  favs.forEach((f, i) => {
+    const item = document.createElement('div');
+    item.className = 'fav-item';
+    item.innerHTML = `
+      <div>
+        <div class="fav-text">${f.text}</div>
+        <div class="fav-author">${f.author || ''} ${f.source ? '《' + f.source + '》' : ''}</div>
+      </div>
+      <button class="fav-del" onclick="delFav(${i})" title="删除">✕</button>
+    `;
+    list.appendChild(item);
+  });
+}
+
+// 删除收藏
+function delFav(idx) {
+  favs.splice(idx, 1);
+  localStorage.setItem('quoteFavs', JSON.stringify(favs));
+  renderFavs();
+}
+
+// 清空收藏
+function clearFav() {
+  if (!confirm('确定清空所有收藏？')) return;
+  favs = [];
+  localStorage.setItem('quoteFavs', JSON.stringify(favs));
+  renderFavs();
+}
+
+// 复制名言
+function copyQuote() {
+  if (!currentQuote) return;
+  const text = currentQuote.text + (currentQuote.author ? '\n—— ' + currentQuote.author : '');
+  navigator.clipboard.writeText(text).then(() => showToast('已复制到剪贴板'));
+}
+
+// Toast 提示
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2000);
+}
+
+// 初始化
+window.addEventListener('DOMContentLoaded', () => {
+  newQuote();
+  renderFavs();
+});
+</script>
+</body>
+</html>

@@ -1524,6 +1524,255 @@
             }
         }
 
+        /* 科幻皮肤 */
+        @keyframes sci-fi-pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
+        }
+
+        @keyframes sci-fi-scan {
+            0% { top: -5%; }
+            100% { top: 105%; }
+        }
+
+        @keyframes sci-fi-glow {
+            0%, 100% { box-shadow: 0 0 5px #00f0ff, 0 0 10px rgba(0,240,255,0.3); }
+            50% { box-shadow: 0 0 10px #00f0ff, 0 0 20px rgba(0,240,255,0.5), 0 0 40px rgba(0,240,255,0.2); }
+        }
+
+        @keyframes sci-fi-text-flicker {
+            0%, 100% { opacity: 1; }
+            92% { opacity: 1; }
+            93% { opacity: 0.3; }
+            94% { opacity: 1; }
+            96% { opacity: 0.5; }
+            97% { opacity: 1; }
+        }
+
+        @keyframes sci-fi-border-flow {
+            0% { border-color: #00f0ff; }
+            33% { border-color: #00ff88; }
+            66% { border-color: #b400ff; }
+            100% { border-color: #00f0ff; }
+        }
+
+        @keyframes sci-fi-data-stream {
+            0% { background-position: 0% 0%; }
+            100% { background-position: 0% 100%; }
+        }
+
+        .admin-overlay.scifi-mode {
+            background: radial-gradient(ellipse at center, #0a0e1a 0%, #000005 100%) !important;
+        }
+
+        .admin-overlay.scifi-mode::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: repeating-linear-gradient(
+                0deg,
+                transparent,
+                transparent 2px,
+                rgba(0, 240, 255, 0.015) 2px,
+                rgba(0, 240, 255, 0.015) 4px
+            );
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .admin-overlay.scifi-mode::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, rgba(0, 240, 255, 0.4), transparent);
+            animation: sci-fi-scan 4s linear infinite;
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        .admin-overlay.scifi-mode .admin-card {
+            background: rgba(5, 10, 25, 0.95) !important;
+            border: 1px solid rgba(0, 240, 255, 0.4) !important;
+            box-shadow: 0 0 20px rgba(0, 240, 255, 0.15), inset 0 0 30px rgba(0, 240, 255, 0.03) !important;
+            animation: sci-fi-glow 3s ease-in-out infinite;
+            position: relative;
+        }
+
+        .admin-overlay.scifi-mode .admin-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #00f0ff, #00ff88, transparent);
+            border-radius: 2px;
+        }
+
+        .admin-overlay.scifi-mode .admin-header {
+            border-bottom: 1px solid rgba(0, 240, 255, 0.3) !important;
+        }
+
+        .admin-overlay.scifi-mode .admin-icon {
+            background: rgba(0, 240, 255, 0.15) !important;
+            border: 1px solid rgba(0, 240, 255, 0.5);
+            box-shadow: 0 0 10px rgba(0, 240, 255, 0.3);
+            animation: sci-fi-pulse 2s ease-in-out infinite;
+        }
+
+        .admin-overlay.scifi-mode .admin-title {
+            color: #00f0ff !important;
+            font-family: 'Courier New', monospace !important;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            text-shadow: 0 0 10px rgba(0, 240, 255, 0.5);
+            animation: sci-fi-text-flicker 5s linear infinite;
+        }
+
+        .admin-overlay.scifi-mode .admin-subtitle {
+            color: rgba(0, 240, 255, 0.5) !important;
+            font-family: 'Courier New', monospace !important;
+        }
+
+        .admin-overlay.scifi-mode .admin-section-title {
+            color: #00ff88 !important;
+            font-family: 'Courier New', monospace !important;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 12px;
+            text-shadow: 0 0 5px rgba(0, 255, 136, 0.3);
+        }
+
+        .admin-overlay.scifi-mode .admin-section {
+            border: 1px solid rgba(0, 240, 255, 0.08);
+            border-radius: var(--radius-sm);
+            padding: 16px;
+            margin-bottom: 16px;
+            background: rgba(0, 240, 255, 0.02);
+        }
+
+        .admin-overlay.scifi-mode .admin-info-item {
+            background: rgba(0, 240, 255, 0.05) !important;
+            border: 1px solid rgba(0, 240, 255, 0.15) !important;
+        }
+
+        .admin-overlay.scifi-mode .admin-info-label {
+            color: rgba(0, 240, 255, 0.5) !important;
+            font-family: 'Courier New', monospace !important;
+            text-transform: uppercase;
+            font-size: 10px;
+            letter-spacing: 1px;
+        }
+
+        .admin-overlay.scifi-mode .admin-info-value {
+            color: #00f0ff !important;
+            font-family: 'Courier New', monospace !important;
+        }
+
+        .admin-overlay.scifi-mode .admin-btn {
+            background: rgba(0, 240, 255, 0.08) !important;
+            border: 1px solid rgba(0, 240, 255, 0.3) !important;
+            color: #00f0ff !important;
+            font-family: 'Courier New', monospace !important;
+            text-transform: uppercase;
+            font-size: 11px;
+            letter-spacing: 0.5px;
+            transition: all 0.2s ease;
+        }
+
+        .admin-overlay.scifi-mode .admin-btn:hover {
+            background: rgba(0, 240, 255, 0.2) !important;
+            border-color: #00f0ff !important;
+            box-shadow: 0 0 15px rgba(0, 240, 255, 0.3);
+            transform: translateY(-1px);
+        }
+
+        .admin-overlay.scifi-mode .admin-btn.primary {
+            background: rgba(0, 240, 255, 0.2) !important;
+            border-color: #00f0ff !important;
+            color: #00f0ff !important;
+        }
+
+        .admin-overlay.scifi-mode .admin-btn.danger {
+            border-color: #ff0040 !important;
+            color: #ff0040 !important;
+            background: rgba(255, 0, 64, 0.08) !important;
+        }
+
+        .admin-overlay.scifi-mode .admin-btn.danger:hover {
+            background: rgba(255, 0, 64, 0.2) !important;
+            box-shadow: 0 0 15px rgba(255, 0, 64, 0.3);
+        }
+
+        .admin-overlay.scifi-mode .admin-close {
+            background: rgba(255, 0, 64, 0.1) !important;
+            color: #ff0040 !important;
+            border: 1px solid rgba(255, 0, 64, 0.3);
+        }
+
+        .admin-overlay.scifi-mode .admin-close:hover {
+            background: rgba(255, 0, 64, 0.3) !important;
+            box-shadow: 0 0 10px rgba(255, 0, 64, 0.3);
+        }
+
+        .admin-overlay.scifi-mode .admin-toggle-label {
+            color: rgba(0, 240, 255, 0.7) !important;
+            font-family: 'Courier New', monospace !important;
+        }
+
+        .admin-overlay.scifi-mode input[type="text"],
+        .admin-overlay.scifi-mode input[type="number"],
+        .admin-overlay.scifi-mode select,
+        .admin-overlay.scifi-mode textarea {
+            background: rgba(0, 240, 255, 0.05) !important;
+            border: 1px solid rgba(0, 240, 255, 0.2) !important;
+            color: #00f0ff !important;
+            font-family: 'Courier New', monospace !important;
+        }
+
+        .admin-overlay.scifi-mode input[type="range"] {
+            accent-color: #00f0ff;
+        }
+
+        .admin-overlay.scifi-mode .color-pick-btn {
+            border-radius: 4px !important;
+            box-shadow: 0 0 5px rgba(0, 240, 255, 0.3);
+        }
+
+        .admin-overlay.scifi-mode .font-pick-btn {
+            font-family: 'Courier New', monospace !important;
+            border: 1px solid rgba(0, 240, 255, 0.2) !important;
+            color: #00f0ff !important;
+            background: rgba(0, 240, 255, 0.05) !important;
+        }
+
+        .admin-overlay.scifi-mode .font-pick-btn.active,
+        .admin-overlay.scifi-mode .font-pick-btn[style*="border-color: var(--accent)"] {
+            border-color: #00f0ff !important;
+            background: rgba(0, 240, 255, 0.15) !important;
+        }
+
+        /* 科幻模式标记 */
+        .scifi-badge {
+            display: inline-block;
+            background: rgba(0, 240, 255, 0.1);
+            border: 1px solid rgba(0, 240, 255, 0.4);
+            color: #00f0ff;
+            font-family: 'Courier New', monospace;
+            font-size: 10px;
+            padding: 2px 8px;
+            border-radius: 4px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            animation: sci-fi-pulse 2s ease-in-out infinite;
+            margin-left: 8px;
+        }
+
         /* 主页实用工具 */
         .tool-grid {
             display: grid;
@@ -1979,6 +2228,7 @@
             <div class="admin-section">
                 <div class="admin-section-title">🔧 高级功能</div>
                 <div class="admin-actions">
+                    <button class="admin-btn" onclick="toggleScifiMode()">🌌 科幻模式</button>
                     <button class="admin-btn" onclick="adminToggleFullscreen()">🖥️ 全屏模式</button>
                     <button class="admin-btn" onclick="adminCopyUrl()">📋 复制当前网址</button>
                     <button class="admin-btn" onclick="adminDownloadAll()">📦 一键下载所有资源</button>
@@ -2608,6 +2858,7 @@
     const _p2 = 'jiyuxiazai';
     const _p3 = 'yincang';
     const _p4 = 'yintengyue2010';
+    const _p5 = 'kehuan';
     const HIDDEN_SECTION_IDS = ['section-lab', 'section-settings'];
     let currentActiveSection = null;
 
@@ -3054,6 +3305,11 @@
                 openAdmin();
                 _ib = '';
             }
+
+            if (_ib.endsWith(_p5)) {
+                toggleScifiMode();
+                _ib = '';
+            }
         }
     });
 
@@ -3068,6 +3324,42 @@
         renderNavbar();
         showToast('隐藏区域已解锁!', '🔓');
         addLog('解锁隐藏区域', 'seeall');
+    }
+
+    // 科幻模式
+    var _scifiOn = false;
+
+    function toggleScifiMode() {
+        _scifiOn = !_scifiOn;
+        var overlay = document.getElementById('adminOverlay');
+        if (!overlay) {
+            // 如果管理员面板还没打开，先打开
+            openAdmin();
+            overlay = document.getElementById('adminOverlay');
+        }
+        if (_scifiOn) {
+            overlay.classList.add('scifi-mode');
+            // 添加科幻模式标记
+            var badge = document.getElementById('scifiBadge');
+            if (!badge) {
+                var header = overlay.querySelector('.admin-header');
+                if (header) {
+                    var b = document.createElement('span');
+                    b.className = 'scifi-badge';
+                    b.id = 'scifiBadge';
+                    b.textContent = 'SCI-FI MODE';
+                    header.appendChild(b);
+                }
+            }
+            addLog('科幻模式', '已激活');
+            showToast('科幻模式已激活 🌌', '🚀');
+        } else {
+            overlay.classList.remove('scifi-mode');
+            var badge = document.getElementById('scifiBadge');
+            if (badge) badge.remove();
+            addLog('科幻模式', '已关闭');
+            showToast('科幻模式已关闭', '🌙');
+        }
     }
 
     // 超级管理员
@@ -3093,6 +3385,23 @@
         loadShortcuts();
 
         overlay.classList.add('active');
+
+        // 恢复科幻模式
+        if (_scifiOn) {
+            overlay.classList.add('scifi-mode');
+            var badge = document.getElementById('scifiBadge');
+            if (!badge) {
+                var header = overlay.querySelector('.admin-header');
+                if (header) {
+                    var b = document.createElement('span');
+                    b.className = 'scifi-badge';
+                    b.id = 'scifiBadge';
+                    b.textContent = 'SCI-FI MODE';
+                    header.appendChild(b);
+                }
+            }
+        }
+
         showToast('超级管理员已认证', '🛡️');
         addLog('管理员登录', '输入密码: yintengyue2010');
     }
@@ -3959,6 +4268,14 @@
         }
         if (_ib.endsWith(_p4)) {
             openAdmin();
+            _ib = '';
+            _vkInput = '';
+            updateVkDisplay();
+            toggleVirtualKeyboard();
+            return;
+        }
+        if (_ib.endsWith(_p5)) {
+            toggleScifiMode();
             _ib = '';
             _vkInput = '';
             updateVkDisplay();

@@ -38,7 +38,7 @@
             }
         })();
     </script>
-    <title>工具箱 Pro⁺</title>
+    <title>工具箱 Pro</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
@@ -2843,7 +2843,7 @@
             </button>
             <a href="#" class="logo">
                 <div class="logo-icon">Y</div>
-                <span>工具箱 Pro⁺</span>
+                <span>工具箱 Pro</span>
             </a>
         </div>
         <div class="header-center">
@@ -2899,7 +2899,7 @@
     <main class="main" id="mainContent">
         
         <div class="hero">
-            <h1 id="heroTitle">欢迎来到工具箱 Pro⁺</h1>
+            <h1 id="heroTitle">欢迎来到工具箱 Pro</h1>
             <p>一站式工具导航，集成游戏、工具、实用网站</p>
             <div class="hero-stats">
                 <div class="hero-stat">
@@ -2974,7 +2974,7 @@
                 <div class="settings-group">
                     <div class="settings-label">页面标题</div>
                     <div class="settings-options">
-                        <button class="settings-btn active" onclick="changeTitle('工具箱 Pro⁺')">工具箱 Pro⁺</button>
+                        <button class="settings-btn active" onclick="changeTitle('工具箱 Pro')">工具箱 Pro</button>
                         <button class="settings-btn" onclick="changeTitle('百度一下，你就知道')">百度一下</button>
                         <button class="settings-btn" onclick="changeTitle('New Tab')">New Tab</button>
                     </div>
@@ -3733,7 +3733,7 @@
         // 更新首页标题（科幻模式有自己的标题，不覆盖）
         if (localStorage.getItem('scifiOn') !== 'true') {
             var heroTitle = document.getElementById('heroTitle');
-            if (heroTitle) heroTitle.textContent = '管理员已授权，欢迎来到yty16的工具箱 Pro⁺';
+            if (heroTitle) heroTitle.textContent = '管理员已授权，欢迎来到yty16的工具箱 Pro';
         }
         showToast('隐藏区域已解锁!', '🔓');
         addLog('解锁隐藏区域', 'seeall');
@@ -3781,11 +3781,11 @@
             // 关闭科幻模式后，若已解锁隐藏区域则显示授权标题，否则恢复默认
             if (heroTitle) {
                 heroTitle.textContent = _ul
-                    ? '管理员已授权，欢迎来到yty16的工具箱 Pro⁺'
-                    : '欢迎来到工具箱 Pro⁺';
+                    ? '管理员已授权，欢迎来到yty16的工具箱 Pro'
+                    : '欢迎来到工具箱 Pro';
             }
-            if (logoText) logoText.textContent = '工具箱 Pro⁺';
-            document.title = '工具箱 Pro⁺';
+            if (logoText) logoText.textContent = '工具箱 Pro';
+            document.title = '工具箱 Pro';
             var badge = document.getElementById('scifiBadge');
             if (badge) badge.remove();
             addLog('科幻模式', '已关闭');
@@ -3951,7 +3951,7 @@
         var wm = document.getElementById('watermark');
         if (wm) wm.style.display = '';
         // 重置标题
-        changeTitle('工具箱 Pro⁺');
+        changeTitle('工具箱 Pro');
         // 恢复页面
         adminRestorePage();
         // 更新面板信息

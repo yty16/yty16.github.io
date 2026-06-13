@@ -3752,12 +3752,15 @@
             overlay = document.getElementById('adminOverlay');
         }
         var heroTitle = document.getElementById('heroTitle');
+        var logoText = document.querySelector('.logo span');
         if (_scifiOn) {
             _ul = true;
             unlockHiddenSections();
             document.body.classList.add('scifi-mode');
             overlay.classList.add('scifi-mode');
             if (heroTitle) heroTitle.textContent = '工具箱 Pro⁺ MAX';
+            if (logoText) logoText.textContent = 'Pro⁺ MAX';
+            document.title = '工具箱 Pro⁺ MAX';
             // 添加科幻模式标记
             var badge = document.getElementById('scifiBadge');
             if (!badge) {
@@ -3781,6 +3784,8 @@
                     ? '管理员已授权，欢迎来到yty16的工具箱 Pro⁺'
                     : '欢迎来到工具箱 Pro⁺';
             }
+            if (logoText) logoText.textContent = '工具箱 Pro⁺';
+            document.title = '工具箱 Pro⁺';
             var badge = document.getElementById('scifiBadge');
             if (badge) badge.remove();
             addLog('科幻模式', '已关闭');
@@ -5055,6 +5060,9 @@
             document.body.classList.add('scifi-mode');
             var heroTitle = document.getElementById('heroTitle');
             if (heroTitle) heroTitle.textContent = '工具箱 Pro⁺ MAX';
+            var logoText = document.querySelector('.logo span');
+            if (logoText) logoText.textContent = 'Pro⁺ MAX';
+            document.title = '工具箱 Pro⁺ MAX';
         }
         renderNavbar();
         renderSections();

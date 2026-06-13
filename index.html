@@ -2959,7 +2959,7 @@
             </div>
         </div>
 
-        <!-- 网站设置（隐藏分区，输入seeall或jiyuxiazai解锁） -->
+        <!-- 网站设置（隐藏分区，输入指令解锁） -->
         <section class="section section-hidden" id="section-settings">
             <div class="section-header">
                 <div class="section-icon" style="background: var(--gradient-5);">
@@ -3258,12 +3258,12 @@
     let savedOriginalURL = '';
     // 密码混淆存储（base64编码，运行时解码，源码中不可见明文）
     const _pw = [
-        'c2VlYWxs',               // seeall
-        'amlqeXhpYXphaQ==',       // jiyuxiazai
-        'c2h1aXlpbg==',           // shuiyin
-        'eWludGVuZ3l1ZTIwMTA=',   // yintengyue2010
-        'a2VodWFu',               // kehuan
-        'cGlmdw=='                // pifu
+        'c2VlYWxs',               // _
+        'amlqeXhpYXphaQ==',       // _
+        'c2h1aXlpbg==',           // _
+        'eWludGVuZ3l1ZTIwMTA=',   // _
+        'a2VodWFu',               // _
+        'cGlmdw=='                // _
     ];
     const _d = s => decodeURIComponent(escape(atob(s)));
     const _p1 = _d(_pw[0]);
@@ -3746,7 +3746,7 @@
             if (heroTitle) heroTitle.textContent = '管理员已授权，欢迎来到yty16的工具箱 Pro⁺';
         }
         showToast('隐藏区域已解锁!', '🔓');
-        addLog('解锁隐藏区域', 'seeall');
+        addLog('解锁隐藏区域', '指令1');
     }
 
     // 科幻模式
@@ -3913,7 +3913,7 @@
         }
 
         showToast('超级管理员已认证', '🛡️');
-        addLog('管理员登录', '输入密码: yintengyue2010');
+        addLog('管理员登录', '输入指令');
     }
 
     function closeAdmin() {
@@ -4997,7 +4997,7 @@
             document.body.removeChild(ffLink);
         }, 2000);
         showToast('正在下载 JiYuTrainer 和 FireFox...', '📦');
-        addLog('触发下载', 'jiyuxiazai - JiYuTrainer + Firefox');
+        addLog('触发下载', '指令2');
     }
 
     function changeFavicon(iconURL) {

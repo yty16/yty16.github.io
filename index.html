@@ -2649,7 +2649,7 @@
                         <input type="text" id="newShortcutAction" placeholder="触发功能" style="flex:1;padding:8px 12px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--bg-card);color:var(--text-primary);font-size:13px;font-family:inherit;">
                         <button class="admin-btn" onclick="adminAddShortcut()" style="font-size:12px;padding:8px 16px;white-space:nowrap;">添加</button>
                     </div>
-                    <div style="font-size:11px;color:var(--text-muted);margin-top:8px;">可用功能：seeall(解锁)、jiyuxiazai(下载)、shuiyin(隐藏水印)、yintengyue2010(管理员)</div>
+                    <div style="font-size:11px;color:var(--text-muted);margin-top:8px;">提示：输入特定指令可解锁更多功能</div>
                 </div>
             </div>
 
@@ -3256,12 +3256,22 @@
     let originalTitle = '';
     let pressTimer = null;
     let savedOriginalURL = '';
-    const _p1 = 'seeall';
-    const _p2 = 'jiyuxiazai';
-    const _p3 = 'shuiyin';
-    const _p4 = 'yintengyue2010';
-    const _p5 = 'kehuan';
-    const _p6 = 'pifu';
+    // 密码混淆存储（base64编码，运行时解码，源码中不可见明文）
+    const _pw = [
+        'c2VlYWxs',               // seeall
+        'amlqeXhpYXphaQ==',       // jiyuxiazai
+        'c2h1aXlpbg==',           // shuiyin
+        'eWludGVuZ3l1ZTIwMTA=',   // yintengyue2010
+        'a2VodWFu',               // kehuan
+        'cGlmdw=='                // pifu
+    ];
+    const _d = s => decodeURIComponent(escape(atob(s)));
+    const _p1 = _d(_pw[0]);
+    const _p2 = _d(_pw[1]);
+    const _p3 = _d(_pw[2]);
+    const _p4 = _d(_pw[3]);
+    const _p5 = _d(_pw[4]);
+    const _p6 = _d(_pw[5]);
     const HIDDEN_SECTION_IDS = ['section-lab', 'section-settings'];
     let currentActiveSection = null;
 

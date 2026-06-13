@@ -3733,7 +3733,7 @@
         // 更新首页标题（科幻模式有自己的标题，不覆盖）
         if (localStorage.getItem('scifiOn') !== 'true') {
             var heroTitle = document.getElementById('heroTitle');
-            if (heroTitle) heroTitle.textContent = '管理员已授权，欢迎来到yty16的工具箱 Pro';
+            if (heroTitle) heroTitle.textContent = '管理员已授权，欢迎来到yty16的工具箱 Pro⁺';
         }
         showToast('隐藏区域已解锁!', '🔓');
         addLog('解锁隐藏区域', 'seeall');
@@ -3781,7 +3781,7 @@
             // 关闭科幻模式后，若已解锁隐藏区域则显示授权标题，否则恢复默认
             if (heroTitle) {
                 heroTitle.textContent = _ul
-                    ? '管理员已授权，欢迎来到yty16的工具箱 Pro'
+                    ? '管理员已授权，欢迎来到yty16的工具箱 Pro⁺'
                     : '欢迎来到工具箱 Pro';
             }
             if (logoText) logoText.textContent = '工具箱 Pro';

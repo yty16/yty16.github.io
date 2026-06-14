@@ -2656,6 +2656,7 @@
             <div class="admin-section">
                 <div class="admin-section-title">💾 网站备份</div>
                 <div class="admin-actions">
+                    <button class="admin-btn primary" onclick="adminBackupSite()" style="font-size:13px;">💾 备份网站源码(ZIP)</button>
                     <button class="admin-btn primary" onclick="adminBackupConfig()" style="font-size:13px;">📄 导出配置(JSON)</button>
                     <button class="admin-btn" onclick="adminImportConfig()" style="font-size:13px;">📂 导入配置</button>
                     <button class="admin-btn" onclick="adminResetAll()" style="font-size:13px;">🔄 恢复默认</button>
@@ -3421,7 +3422,172 @@
         }
     }
 
-    // 网站备份功能
+    // 网站备份功能 — 纯JS生成ZIP，无需外部库
+    function adminBackupSite() {
+        showToast('正在打包网站源码...', '💾');
+        addLog('网站备份', '开始打包ZIP');
+
+        // ——— 轻量ZIP编码器（Store模式，无压缩）———
+        function crc32Buf(buf) {
+            var table = window.__zip_crc_table;
+            if (!table) {
+                table = window.__zip_crc_table = [];
+                for (var n = 0; n < 256; n++) {
+                    var c = n;
+                    for (var k = 0; k < 8; k++) c = (c & 1) ? (0xEDB88320 ^ (c >>> 1)) : (c >>> 1);
+                    table[n] = c;
+                }
+            }
+            var crc = 0xFFFFFFFF;
+            for (var i = 0; i < buf.length; i++) crc = table[(crc ^ buf[i]) & 0xFF] ^ (crc >>> 8);
+            return (crc ^ 0xFFFFFFFF) >>> 0;
+        }
+
+        function toU8(data) {
+            if (data instanceof Uint8Array) return data;
+            if (typeof data === 'string') {
+                var s = unescape(encodeURIComponent(data));
+                var b = new Uint8Array(s.length);
+                for (var i = 0; i < s.length; i++) b[i] = s.charCodeAt(i);
+                return b;
+            }
+            return new Uint8Array(data);
+        }
+
+        // 将一组数字/数组展平为一个 Uint8Array
+        function flatBytes(arr) {
+            var len = 0;
+            for (var i = 0; i < arr.length; i++) len += (typeof arr[i] === 'number') ? 1 : arr[i].length;
+            var out = new Uint8Array(len);
+            var p = 0;
+            for (var i = 0; i < arr.length; i++) {
+                if (typeof arr[i] === 'number') {
+                    out[p++] = arr[i];
+                } else {
+                    out.set(arr[i], p); p += arr[i].length;
+                }
+            }
+            return out;
+        }
+
+        function u16(v) { return [v & 0xFF, (v >>> 8) & 0xFF]; }
+        function u32(v) { return [v & 0xFF, (v >>> 8) & 0xFF, (v >>> 16) & 0xFF, (v >>> 24) & 0xFF]; }
+
+        function makeZipFile(entries) {
+            var parts = [];  // 所有二进制块
+            var centralParts = [];
+            var offset = 0;
+
+            entries.forEach(function (entry) {
+                var fnameStr = entry.name;
+                var fnameBytes = [];
+                for (var i = 0; i < fnameStr.length; i++) fnameBytes.push(fnameStr.charCodeAt(i));
+
+                var fdata = toU8(entry.data);
+                var ftime = new Date();
+                var dosDate = (((ftime.getFullYear() - 1980) << 9) | ((ftime.getMonth() + 1) << 5) | ftime.getDate()) & 0xFFFF;
+                var dosTime = ((ftime.getHours() << 11) | (ftime.getMinutes() << 5) | Math.floor(ftime.getSeconds() / 2)) & 0xFFFF;
+
+                var crc = crc32Buf(fdata);
+                var compSize = fdata.length;
+                var uncompSize = fdata.length;
+
+                // ——— Local File Header ———
+                var lh = flatBytes([
+                    [0x50, 0x4B, 0x03, 0x04],
+                    u16(20), u16(0),
+                    u16(0),
+                    u16(dosTime), u16(dosDate),
+                    u32(crc),
+                    u32(compSize), u32(uncompSize),
+                    u16(fnameBytes.length), u16(0)
+                ]);
+
+                var part = new Uint8Array(lh.length + fnameBytes.length + fdata.length);
+                var pp = 0;
+                part.set(lh, pp); pp += lh.length;
+                part.set(new Uint8Array(fnameBytes), pp); pp += fnameBytes.length;
+                part.set(fdata, pp);
+                parts.push({ data: part, size: part.length });
+
+                // ——— Central Directory record ———
+                var ch = flatBytes([
+                    [0x50, 0x4B, 0x01, 0x02],
+                    [0x14, 0x00],
+                    u16(20), u16(0),
+                    u16(0),
+                    u16(dosTime), u16(dosDate),
+                    u32(crc),
+                    u32(compSize), u32(uncompSize),
+                    u16(fnameBytes.length), u16(0),
+                    u16(0), u16(0), u16(0),
+                    [0x00, 0x00, 0x00, 0x00],
+                    u32(offset)
+                ]);
+
+                var chFull = new Uint8Array(ch.length + fnameBytes.length);
+                chFull.set(ch, 0);
+                chFull.set(new Uint8Array(fnameBytes), ch.length);
+                centralParts.push({ data: chFull, size: chFull.length });
+
+                offset += part.length;
+            });
+
+            // ——— End of Central Directory ———
+            var centralSize = 0;
+            centralParts.forEach(function (r) { centralSize += r.size; });
+            var eocd = flatBytes([
+                [0x50, 0x4B, 0x05, 0x06],
+                [0x00, 0x00, 0x00, 0x00],
+                u16(entries.length), u16(entries.length),
+                u32(centralSize), u32(offset),
+                [0x00, 0x00]
+            ]);
+
+            var totalLen = offset + centralSize + eocd.length;
+            var result = new Uint8Array(totalLen);
+            var pos = 0;
+            parts.forEach(function (p) { result.set(p.data, pos); pos += p.data.length; });
+            centralParts.forEach(function (p) { result.set(p.data, pos); pos += p.data.length; });
+            result.set(eocd, pos);
+            return result;
+        }
+        // ——————————————————————————————————————————
+
+        try {
+            var htmlContent = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
+            var now = new Date();
+            var ts = now.getFullYear().toString() +
+                ('0' + (now.getMonth() + 1)).slice(-2) +
+                ('0' + now.getDate()).slice(-2) + '_' +
+                ('0' + now.getHours()).slice(-2) +
+                ('0' + now.getMinutes()).slice(-2) +
+                ('0' + now.getSeconds()).slice(-2);
+
+            var zipBytes = makeZipFile([
+                { name: 'index.html', data: htmlContent }
+            ]);
+
+            var blob = new Blob([zipBytes], { type: 'application/zip' });
+            var url = URL.createObjectURL(blob);
+            var a = document.createElement('a');
+            a.href = url;
+            a.download = 'toolbox-backup-' + ts + '.zip';
+            document.body.appendChild(a);
+            a.click();
+            setTimeout(function() {
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            }, 100);
+
+            addLog('网站备份', 'ZIP已下载: toolbox-backup-' + ts + '.zip');
+            showToast('网站源码已备份为ZIP', '✅');
+        } catch (e) {
+            showToast('备份失败: ' + e.message, '❌');
+            addLog('网站备份', '失败: ' + e.message);
+        }
+    }
+
     function adminBackupConfig() {
         var config = {
             visitCount: localStorage.getItem('visitCount') || '0',

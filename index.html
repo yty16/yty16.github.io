@@ -2577,6 +2577,13 @@
             color: #ff4444;
         }
     </style>
+    <link rel="manifest" href="/manifest.json">
+    <link rel="icon" type="image/png" href="/icon-192.png">
+    <meta name="theme-color" content="#58a6ff">
+    <link rel="apple-touch-icon" href="/icon-192.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="工具箱">
 </head>
 <body>
     
@@ -5454,6 +5461,18 @@
         document.addEventListener('touchend', function() { clearTimeout(pressTimer); });
         document.addEventListener('mouseleave', function() { clearTimeout(pressTimer); });
     });
+    </script>
+    <script>
+    // PWA Service Worker 注册
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', function() {
+            navigator.serviceWorker.register('/sw.js').then(function(reg) {
+                console.log('[PWA] SW 已注册, scope:', reg.scope);
+            }).catch(function(err) {
+                console.log('[PWA] SW 注册失败:', err);
+            });
+        });
+    }
     </script>
 </body>
 </html>

@@ -411,6 +411,13 @@ document.body.innerHTML='<div style="position:fixed;top:0;left:0;width:100%;heig
                 align-items: stretch;
             }
         }
+
+        @media (max-width: 400px) {
+            body { padding: 10px; }
+            h1 { font-size: 18px; }
+            .card { padding: 14px; }
+            .ref-grid { grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); font-size: 11px; }
+        }
     </style>
 </head>
 <body>

@@ -168,6 +168,30 @@
             height: 24px;
         }
 
+        .mobile-search-btn {
+            display: none;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: var(--radius-sm);
+            color: var(--text-primary);
+            transition: background var(--transition);
+        }
+
+        .mobile-search-btn:hover {
+            background: var(--accent-light);
+        }
+
+        .mobile-search-btn svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .mobile-search-bar {
+            display: none;
+        }
+
         .logo {
             display: flex;
             align-items: center;
@@ -1289,9 +1313,87 @@
                 display: none;
             }
 
+            .mobile-search-btn {
+                display: flex;
+            }
+
+            .mobile-search-bar {
+                display: none;
+                position: fixed;
+                top: var(--header-height);
+                left: 0;
+                right: 0;
+                background: var(--bg-header);
+                backdrop-filter: blur(20px);
+                padding: 12px 16px;
+                z-index: 95;
+                border-bottom: 1px solid var(--border);
+            }
+
+            .mobile-search-bar.active {
+                display: block;
+            }
+
+            .mobile-search-bar input {
+                width: 100%;
+                height: 40px;
+                border: 1px solid var(--border);
+                border-radius: 20px;
+                padding: 0 16px 0 42px;
+                font-size: 14px;
+                font-family: inherit;
+                background: var(--bg-card);
+                color: var(--text-primary);
+                backdrop-filter: blur(10px);
+                outline: none;
+            }
+
+            .mobile-search-bar input:focus {
+                border-color: var(--accent);
+            }
+
             .hero-stats {
                 flex-wrap: wrap;
                 gap: 16px;
+            }
+
+            .card-grid {
+                grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+                gap: 8px;
+            }
+
+            .card {
+                padding: 12px;
+            }
+
+            .tool-card {
+                width: 95vw;
+                max-width: 95vw;
+                padding: 16px;
+                max-height: 90vh;
+            }
+
+            .admin-card {
+                padding: 16px;
+                width: 95vw;
+                max-width: 95vw;
+            }
+
+            .time-display {
+                min-width: 0;
+                padding: 6px 8px;
+            }
+
+            .time-clock {
+                font-size: 14px;
+            }
+
+            .time-date {
+                font-size: 10px;
+            }
+
+            .tool-grid {
+                grid-template-columns: repeat(2, 1fr);
             }
         }
 
@@ -2842,6 +2944,12 @@
                     <line x1="3" y1="18" x2="21" y2="18"/>
                 </svg>
             </button>
+            <button class="mobile-search-btn" id="mobileSearchBtn" aria-label="搜索">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                    <circle cx="11" cy="11" r="8"/>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                </svg>
+            </button>
             <a href="#" class="logo">
                 <div class="logo-icon">Y</div>
                 <span>工具箱 Pro</span>
@@ -2887,6 +2995,16 @@
             </button>
         </div>
     </header>
+
+    <div class="mobile-search-bar" id="mobileSearchBar">
+        <div class="search-box">
+            <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                <circle cx="11" cy="11" r="8"/>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+            </svg>
+            <input type="text" id="mobileSearchInput" placeholder="搜索工具、游戏、功能..." autocomplete="off">
+        </div>
+    </div>
 
     
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
@@ -3805,8 +3923,12 @@
     // Search
     function initSearch() {
         const input = document.getElementById('searchInput');
+        const mobileInput = document.getElementById('mobileSearchInput');
+        const mobileSearchBtn = document.getElementById('mobileSearchBtn');
+        const mobileSearchBar = document.getElementById('mobileSearchBar');
         let debounceTimer;
 
+        // 桌面端搜索框
         input.addEventListener('input', function() {
             clearTimeout(debounceTimer);
             debounceTimer = setTimeout(() => {
@@ -3814,6 +3936,40 @@
                 filterCards(query);
             }, 200);
         });
+
+        // 移动端搜索按钮：切换搜索栏显示
+        if (mobileSearchBtn && mobileSearchBar) {
+            mobileSearchBtn.addEventListener('click', function() {
+                const isActive = mobileSearchBar.classList.toggle('active');
+                if (isActive) {
+                    setTimeout(() => mobileInput && mobileInput.focus(), 50);
+                } else {
+                    if (mobileInput) mobileInput.value = '';
+                    filterCards('');
+                }
+            });
+        }
+
+        // 移动端搜索输入框同步到主搜索逻辑
+        if (mobileInput) {
+            mobileInput.addEventListener('input', function() {
+                clearTimeout(debounceTimer);
+                debounceTimer = setTimeout(() => {
+                    const query = this.value.trim().toLowerCase();
+                    // 同步到桌面搜索框（如果可见）
+                    if (input) input.value = this.value;
+                    filterCards(query);
+                }, 200);
+            });
+            // ESC 关闭搜索栏
+            mobileInput.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    mobileSearchBar.classList.remove('active');
+                    mobileInput.value = '';
+                    filterCards('');
+                }
+            });
+        }
     }
 
     function filterCards(query) {
@@ -4978,6 +5134,17 @@
         document.getElementById('sidebar').classList.remove('open');
         document.getElementById('sidebarOverlay').classList.remove('active');
     }
+
+    // 点击页面其他区域关闭移动搜索栏
+    document.addEventListener('click', function(e) {
+        var bar = document.getElementById('mobileSearchBar');
+        var btn = document.getElementById('mobileSearchBtn');
+        if (bar && bar.classList.contains('active') && !bar.contains(e.target) && e.target !== btn && !btn.contains(e.target)) {
+            bar.classList.remove('active');
+            var mi = document.getElementById('mobileSearchInput');
+            if (mi) { mi.value = ''; filterCards(''); }
+        }
+    });
 
     // 回顶
     function initScrollTop() {

@@ -151,6 +151,19 @@ document.body.innerHTML='<div style="position:fixed;top:0;left:0;width:100%;heig
         .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
         .shift-group { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
         .shift-group input { width: 80px; margin-bottom: 0; }
+
+        @media (max-width: 600px) {
+            body { padding: 12px; }
+            h1 { font-size: 22px; }
+            .card { padding: 16px; }
+            .tab { padding: 10px; font-size: 14px; }
+            .btn { padding: 10px 20px; font-size: 14px; }
+        }
+
+        @media (max-width: 400px) {
+            .shift-group { flex-direction: column; gap: 8px; }
+            .shift-group input { width: 100%; }
+        }
     </style>
 </head>
 <body>
@@ -169,8 +182,8 @@ document.body.innerHTML='<div style="position:fixed;top:0;left:0;width:100%;heig
         <div class="card">
             <h1>🔒 文本加密/解密</h1>
             <div class="tabs">
-                <button class="tab active" onclick="switchMode('encrypt')">加密</button>
-                <button class="tab" onclick="switchMode('decrypt')">解密</button>
+                <button class="tab active" onclick="switchMode('encrypt', this)">加密</button>
+                <button class="tab" onclick="switchMode('decrypt', this)">解密</button>
             </div>
             <label>算法选择</label>
             <select id="algorithm" onchange="togglePasswordField()">
@@ -182,7 +195,10 @@ document.body.innerHTML='<div style="position:fixed;top:0;left:0;width:100%;heig
             </select>
             <div id="password-group">
                 <label>密码/密钥</label>
-                <input type="password" id="password" placeholder="输入加密密码..." />
+                <div style="display:flex;gap:8px;">
+                    <input type="password" id="password" placeholder="输入加密密码..." style="flex:1;margin-bottom:0;" />
+                    <button class="copy-btn" onclick="togglePasswordVisibility()" style="padding:8px 12px;font-size:13px;white-space:nowrap;" id="pwdToggleBtn">👁 显示</button>
+                </div>
             </div>
             <div id="shift-group" style="display:none;">
                 <label>移位值</label>
@@ -193,7 +209,7 @@ document.body.innerHTML='<div style="position:fixed;top:0;left:0;width:100%;heig
             </div>
             <label>输入文本</label>
             <textarea id="inputText" placeholder="输入要处理的文本..."></textarea>
-            <button class="btn" onclick="processText()">处理</button>
+            <button class="btn" onclick="processText()" id="processBtn">处理</button>
             <label>输出结果</label>
             <div class="output-area" id="output"></div>
             <button class="copy-btn" onclick="copyOutput()">复制结果</button>
@@ -204,10 +220,10 @@ document.body.innerHTML='<div style="position:fixed;top:0;left:0;width:100%;heig
     <script>
         let currentMode = 'encrypt';
 
-        function switchMode(mode) {
+        function switchMode(mode, btn) {
             currentMode = mode;
             document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-            event.target.classList.add('active');
+            btn.classList.add('active');
         }
 
         function togglePasswordField() {
@@ -223,10 +239,38 @@ document.body.innerHTML='<div style="position:fixed;top:0;left:0;width:100%;heig
             setTimeout(() => toast.classList.remove('show'), 2000);
         }
 
+        function togglePasswordVisibility() {
+            const pwd = document.getElementById('password');
+            const btn = document.getElementById('pwdToggleBtn');
+            if (pwd.type === 'password') {
+                pwd.type = 'text';
+                btn.textContent = '🙈 隐藏';
+            } else {
+                pwd.type = 'password';
+                btn.textContent = '👁 显示';
+            }
+        }
+
         function copyOutput() {
             const output = document.getElementById('output').textContent;
             if (!output) return showToast('没有可复制的内容');
-            navigator.clipboard.writeText(output).then(() => showToast('已复制到剪贴板'));
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(output).then(() => showToast('已复制到剪贴板')).catch(() => fallbackCopy(output));
+            } else {
+                fallbackCopy(output);
+            }
+        }
+
+        function fallbackCopy(text) {
+            const textarea = document.createElement('textarea');
+            textarea.value = text;
+            textarea.style.position = 'fixed';
+            textarea.style.opacity = '0';
+            document.body.appendChild(textarea);
+            textarea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textarea);
+            showToast('已复制到剪贴板');
         }
 
         // Base64
@@ -267,7 +311,11 @@ document.body.innerHTML='<div style="position:fixed;top:0;left:0;width:100%;heig
             combined.set(salt);
             combined.set(iv, salt.length);
             combined.set(new Uint8Array(encrypted), salt.length + iv.length);
-            return btoa(String.fromCharCode(...combined));
+            var binary = '';
+            for (var i = 0; i < combined.length; i++) {
+                binary += String.fromCharCode(combined[i]);
+            }
+            return btoa(binary);
         }
 
         async function aesDecrypt(data, password) {
@@ -296,10 +344,13 @@ document.body.innerHTML='<div style="position:fixed;top:0;left:0;width:100%;heig
 
             if (!text) return showToast('请输入文本');
 
+            const btn = document.getElementById('processBtn');
             try {
                 let result = '';
                 if (algo === 'aes') {
                     if (!password) return showToast('请输入密码');
+                    btn.textContent = '处理中...';
+                    btn.disabled = true;
                     result = currentMode === 'encrypt' ? await aesEncrypt(text, password) : await aesDecrypt(text, password);
                 } else if (algo === 'base64') {
                     result = currentMode === 'encrypt' ? base64Encode(text) : base64Decode(text);
@@ -315,6 +366,9 @@ document.body.innerHTML='<div style="position:fixed;top:0;left:0;width:100%;heig
             } catch (e) {
                 output.textContent = '错误: ' + e.message;
                 showToast('处理失败');
+            } finally {
+                btn.textContent = '处理';
+                btn.disabled = false;
             }
         }
     </script>

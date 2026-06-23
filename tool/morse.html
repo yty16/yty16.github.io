@@ -97,7 +97,7 @@ h1 { font-size: 28px; font-weight: 700; margin-bottom: 8px; text-align: center; 
     
     <div class="label-row" style="margin-top:20px;">
       <label>转换结果</label>
-      <button style="background:none;border:none;color:var(--accent);cursor:pointer;font-size:13px;font-family:inherit;" onclick="copyResult()">复制结果</button>
+      <button style="background:none;border:none;color:var(--accent);cursor:pointer;font-size:13px;font-family:inherit;" onclick="copyResult(this)">复制结果</button>
     </div>
     <div class="output-box" id="outputBox">结果将显示在这里...</div>
 
@@ -237,14 +237,31 @@ function pasteExample() {
 }
 
 // 复制结果
-function copyResult() {
+function copyResult(btn) {
   const text = document.getElementById('outputBox').textContent;
   if (!text || text === '结果将显示在这里...') return;
-  navigator.clipboard.writeText(text).then(() => {
-    const btn = event.target;
+  function onCopied() {
     btn.textContent = '已复制！';
     setTimeout(() => btn.textContent = '复制结果', 1500);
-  });
+  }
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(onCopied).catch(() => {
+      fallbackCopy(text); onCopied();
+    });
+  } else {
+    fallbackCopy(text); onCopied();
+  }
+}
+
+function fallbackCopy(text) {
+  var ta = document.createElement('textarea');
+  ta.value = text;
+  ta.style.position = 'fixed';
+  ta.style.opacity = '0';
+  document.body.appendChild(ta);
+  ta.select();
+  try { document.execCommand('copy'); } catch(e) {}
+  document.body.removeChild(ta);
 }
 
 // 播放摩斯声音

@@ -52,6 +52,28 @@ document.body.innerHTML='<div style="position:fixed;top:0;left:0;width:100%;heig
             padding: 20px;
             box-sizing: border-box;
         }
+
+        @media (max-width: 600px) {
+            #checkbox-container {
+                grid-template-columns: repeat(10, 1fr);
+                gap: 10px;
+            }
+            input[type="checkbox"] {
+                width: 24px;
+                height: 24px;
+            }
+        }
+
+        @media (max-width: 400px) {
+            #checkbox-container {
+                grid-template-columns: repeat(8, 1fr);
+                gap: 6px;
+            }
+            input[type="checkbox"] {
+                width: 20px;
+                height: 20px;
+            }
+        }
     </style>
 </head>
 <body>

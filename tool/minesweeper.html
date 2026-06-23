@@ -74,9 +74,9 @@ h1 {font-size:28px;font-weight:700;margin-bottom:16px;text-align:center;letter-s
   <h1>💣 扫雷</h1>
 
   <div class="controls">
-    <button class="diff-btn active" onclick="setDifficulty('beginner')">初级 9×9</button>
-    <button class="diff-btn" onclick="setDifficulty('intermediate')">中级 16×16</button>
-    <button class="diff-btn" onclick="setDifficulty('expert')">高级 30×16</button>
+    <button class="diff-btn active" onclick="setDifficulty('beginner', this)">初级 9×9</button>
+    <button class="diff-btn" onclick="setDifficulty('intermediate', this)">中级 16×16</button>
+    <button class="diff-btn" onclick="setDifficulty('expert', this)">高级 30×16</button>
   </div>
 
   <div class="status-bar">
@@ -414,10 +414,10 @@ function resetGame() {
 }
 
 // 切换难度
-function setDifficulty(diff) {
+function setDifficulty(diff, btn) {
   difficulty = diff;
-  document.querySelectorAll('.diff-btn').forEach(btn => btn.classList.remove('active'));
-  event.target.classList.add('active');
+  document.querySelectorAll('.diff-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
   init();
 }
 

@@ -185,8 +185,9 @@ function doAction() {
       if (!key) { showError('请输入密钥'); return; }
       result = currentAction === 'encrypt' ? vigenereEncrypt(input, key) : vigenereDecrypt(input, key);
     } else if (currentAlgo === 'aes') {
-      // AES 需要异步，这里用提示
-      showError('AES 加密请使用专门工具，本页面仅演示 Base64 和经典密码');
+      // AES 需要异步，跳转到专门的加密页面
+      const box = document.getElementById('outputBox');
+      box.innerHTML = '⚠ AES 需要更强的加密工具，<a href="/encrypt/" style="color:var(--accent);">点击这里前往 AES 加密页面</a>';
       return;
     }
     document.getElementById('outputBox').textContent = result;
@@ -311,7 +312,22 @@ function pasteExample() {
 function copyOutput() {
   const text = document.getElementById('outputBox').textContent;
   if (!text || text === '结果将显示在这里...') return;
-  navigator.clipboard.writeText(text).then(() => showToast('已复制'));
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(() => showToast('已复制')).catch(() => fallbackCopy(text));
+  } else {
+    fallbackCopy(text);
+  }
+}
+
+function fallbackCopy(text) {
+  const ta = document.createElement('textarea');
+  ta.value = text;
+  ta.style.position = 'fixed';
+  ta.style.opacity = '0';
+  document.body.appendChild(ta);
+  ta.select();
+  try { document.execCommand('copy'); showToast('已复制'); } catch(e) { showToast('复制失败'); }
+  document.body.removeChild(ta);
 }
 
 function showToast(msg) {

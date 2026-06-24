@@ -1,0 +1,10 @@
+[{
+  "relation": ["delegate_permission/common.handle_all_urls"],
+  "target": {
+    "namespace": "android_app",
+    "package_name": "io.github.yty16.toolbox",
+    "sha256_cert_fingerprints": [
+      "63:70:B8:06:A8:5D:CD:97:85:17:09:60:7B:0B:35:01:A7:09:66:BE:55:3C:60:12:7A:3B:A9:5F:35:9B:13:B9"
+    ]
+  }
+}]

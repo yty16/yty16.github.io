@@ -5428,6 +5428,15 @@
         initScrollTop();
         initParticles();
         startClock();
+
+        // URL 参数支持：?tool=xxx 直接打开对应弹窗（APK 快捷方式用）
+        setTimeout(() => {
+            const params = new URLSearchParams(window.location.search);
+            const tool = params.get('tool');
+            if (tool === 'calculator') openCalculator();
+            else if (tool === 'notepad') openNotepad();
+            else if (tool === 'pomodoro') openPomodoro();
+        }, 500);
         
         // Theme toggle
         document.getElementById('themeToggle').addEventListener('click', toggleTheme);

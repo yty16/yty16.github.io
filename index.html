@@ -3272,6 +3272,10 @@
                 </div>
             </div>
             <button class="anniversary-btn" onclick="closeAnniversary()">一起庆祝 🎉</button>
+            <label class="anniversary-dismiss" style="display:flex;align-items:center;justify-content:center;gap:6px;margin-top:14px;cursor:pointer;font-size:13px;color:var(--text-secondary);">
+                <input type="checkbox" id="anniDismissToday" style="accent-color:var(--accent);">
+                今日不再显示
+            </label>
         </div>
     </div>
 
@@ -5688,10 +5692,9 @@
         var years = year - FOUNDED_YEAR;
         if (years < 1) return;
 
-        // 每天只弹一次
-        var key = 'anniversary_' + year;
-        if (localStorage.getItem(key)) return;
-        localStorage.setItem(key, '1');
+        // 周年庆：当天每次访问都弹出（除非勾选了"今日不再显示"）
+        var dismissKey = 'anniversary_dismiss_' + year + '_' + month + '_' + day;
+        if (localStorage.getItem(dismissKey)) return;
 
         // 填充数据
         var titleEl = document.getElementById('anniversaryTitle');
@@ -5738,6 +5741,13 @@
     function closeAnniversary() {
         var overlay = document.getElementById('anniversaryOverlay');
         if (overlay) overlay.classList.remove('show');
+        // 如果勾选了"今日不再显示"，记录到 localStorage
+        var dismissBox = document.getElementById('anniDismissToday');
+        if (dismissBox && dismissBox.checked) {
+            var now = new Date();
+            var dismissKey = 'anniversary_dismiss_' + now.getFullYear() + '_' + (now.getMonth()+1) + '_' + now.getDate();
+            localStorage.setItem(dismissKey, '1');
+        }
     }
 
     // Init

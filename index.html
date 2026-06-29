@@ -5550,12 +5550,12 @@
         var watermark = document.getElementById('watermark');
         if (!watermark) return;
         watermark.innerHTML = '';
-        var cols = Math.ceil(window.innerWidth / 300);
+        var cols = Math.ceil(window.innerWidth / 380);
         var rows = Math.ceil(window.innerHeight / 200);
         for (var i = 0; i < cols * rows; i++) {
             var div = document.createElement('div');
             div.className = 'watermark-text';
-            div.style.left = (i % cols) * 300 + 50 + 'px';
+            div.style.left = (i % cols) * 380 + 30 + 'px';
             div.style.top = Math.floor(i / cols) * 200 + 100 + 'px';
             div.setAttribute('data-wm', '1');
             watermark.appendChild(div);
@@ -5580,8 +5580,9 @@
     function updateWatermark() {
         var domain = window.location.hostname;
         var now = new Date();
+        var dateStr = now.getFullYear() + '-' + String(now.getMonth() + 1).padStart(2, '0') + '-' + String(now.getDate()).padStart(2, '0');
         var timeStr = String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0');
-        var text = domain + ' | ' + timeStr;
+        var text = domain + ' | ' + dateStr + ' ' + timeStr;
         var els = document.querySelectorAll('[data-wm="1"]');
         for (var i = 0; i < els.length; i++) {
             els[i].textContent = text;

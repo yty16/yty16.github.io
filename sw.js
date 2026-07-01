@@ -32,7 +32,11 @@ const PRECACHE_URLS = [
     '/image/',
     '/watch/',
     '/watch/index.html',
-    '/watch/manifest.json'
+    '/watch/manifest.json',
+    '/watch/draw.html',
+    '/watch/minesweeper.html',
+    '/watch/snake.html',
+    '/watch/suika.html'
 ];
 
 // 安装: 预缓存核心页面

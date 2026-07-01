@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#000000">
+    <title>贪吃蛇</title>
+    <style>
+        *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+        :root{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}
+        html,body{width:100%;height:100%;overflow:hidden;background:#000;touch-action:none;-webkit-user-select:none;user-select:none;}
+        .app{display:flex;flex-direction:column;align-items:center;height:100%;padding:8px;padding-top:env(safe-area-inset-top,8px);}
+        .header{display:flex;align-items:center;justify-content:space-between;width:100%;max-width:300px;padding:4px 0;flex-shrink:0;}
+        .back-btn{background:none;border:none;color:#2563eb;font-size:16px;cursor:pointer;padding:4px 8px;text-decoration:none;}
+        .title{font-size:15px;font-weight:600;color:#fff;}
+        .score{font-size:14px;color:#22c55e;font-weight:600;}
+        .best{font-size:12px;color:#999;margin-left:8px;}
+        .canvas-wrap{flex:1;display:flex;align-items:center;justify-content:center;}
+        canvas{background:#111;border-radius:12px;border:1px solid #222;}
+        .controls{display:grid;grid-template-columns:repeat(3,54px);grid-template-rows:repeat(3,54px);gap:4px;padding:12px 0;flex-shrink:0;}
+        .ctrl-btn{background:#1a1a1a;border:1.5px solid #333;border-radius:14px;color:#fff;font-size:22px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.1s;-webkit-tap-highlight-color:transparent;}
+        .ctrl-btn:active{background:#2563eb;border-color:#3b82f6;transform:scale(0.9)}
+        .ctrl-btn.empty{background:transparent;border:none}
+        .game-over{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(0,0,0,0.9);border:1px solid #333;border-radius:16px;padding:20px 24px;text-align:center;z-index:10;display:none;color:#fff;}
+        .game-over.show{display:block}
+        .game-over h2{font-size:20px;margin-bottom:8px}
+        .game-over p{color:#999;font-size:14px;margin-bottom:12px}
+        .game-over button{background:#2563eb;border:none;color:#fff;padding:10px 24px;border-radius:14px;font-size:15px;cursor:pointer;}
+    </style>
+</head>
+<body>
+<div class="app">
+    <div class="header">
+        <a class="back-btn" href="index.html">← 返回</a>
+        <span class="title">🐍 贪吃蛇</span>
+        <div><span class="score" id="score">0</span><span class="best" id="best">最佳:0</span></div>
+    </div>
+    <div class="canvas-wrap">
+        <canvas id="canvas"></canvas>
+    </div>
+    <div class="controls">
+        <div class="ctrl-btn empty"></div>
+        <button class="ctrl-btn" data-dir="up">▲</button>
+        <div class="ctrl-btn empty"></div>
+        <button class="ctrl-btn" data-dir="left">◄</button>
+        <button class="ctrl-btn" style="font-size:18px" onclick="resetGame()">↻</button>
+        <button class="ctrl-btn" data-dir="right">►</button>
+        <div class="ctrl-btn empty"></div>
+        <button class="ctrl-btn" data-dir="down">▼</button>
+        <div class="ctrl-btn empty"></div>
+    </div>
+</div>
+<div class="game-over" id="gameOver">
+    <h2 id="goTitle">游戏结束</h2>
+    <p id="goMsg"></p>
+    <button onclick="resetGame()">重新开始</button>
+</div>
+<script>
+(function(){
+var hosts=['yty16.github.io','yty16.pages.dev'];
+if(hosts.indexOf(location.hostname)===-1){document.body.innerHTML='<div style="position:fixed;top:0;left:0;width:100%;height:100%;background:#000;display:flex;align-items:center;justify-content:center;color:#666;">页面无法显示</div>';return;}
+
+var canvas=document.getElementById('canvas'),ctx=canvas.getContext('2d');
+var gridSize=14,cellSize,tileCount;
+var snake=[],food={},dir={x:1,y:0},nextDir={x:1,y:0},score=0,best=0,gameOver=false,gameloop=null,speed=150;
+
+best=parseInt(localStorage.getItem('watch_snake_best')||'0');
+
+function resize(){
+    var maxW=Math.min(window.innerWidth-16,300);
+    cellSize=Math.floor(maxW/gridSize);
+    tileCount=gridSize;
+    canvas.width=cellSize*tileCount;canvas.height=cellSize*tileCount;
+}
+resize();
+
+function resetGame(){
+    clearInterval(gameloop);
+    snake=[{x:7,y:7},{x:6,y:7},{x:5,y:7}];
+    dir={x:1,y:0};nextDir={x:1,y:0};score=0;gameOver=false;
+    document.getElementById('score').textContent='0';
+    document.getElementById('gameOver').classList.remove('show');
+    spawnFood();gameloop=setInterval(gameTick,speed);
+}
+
+function spawnFood(){
+    do{food={x:Math.floor(Math.random()*tileCount),y:Math.floor(Math.random()*tileCount)};}
+    while(snake.some(function(s){return s.x===food.x&&s.y===food.y;}));
+}
+
+function gameTick(){
+    if(gameOver)return;
+    dir=nextDir;
+    var head={x:snake[0].x+dir.x,y:snake[0].y+dir.y};
+    // Wall wrap
+    if(head.x<0)head.x=tileCount-1;if(head.x>=tileCount)head.x=0;
+    if(head.y<0)head.y=tileCount-1;if(head.y>=tileCount)head.y=0;
+    // Self collision
+    if(snake.some(function(s){return s.x===head.x&&s.y===head.y;})){
+        endGame();return;
+    }
+    snake.unshift(head);
+    if(head.x===food.x&&head.y===food.y){score++;document.getElementById('score').textContent=score;spawnFood();}
+    else snake.pop();
+    draw();
+}
+
+function endGame(){
+    gameOver=true;clearInterval(gameloop);
+    if(score>best){best=score;localStorage.setItem('watch_snake_best',best);document.getElementById('best').textContent='最佳:'+best;}
+    document.getElementById('goTitle').textContent='游戏结束';
+    document.getElementById('goMsg').textContent='得分: '+score+' | 最佳: '+best;
+    document.getElementById('gameOver').classList.add('show');
+}
+
+function draw(){
+    ctx.fillStyle='#111';ctx.fillRect(0,0,canvas.width,canvas.height);
+    // Grid
+    ctx.strokeStyle='#1a1a1a';ctx.lineWidth=0.5;
+    for(var i=0;i<=tileCount;i++){ctx.beginPath();ctx.moveTo(i*cellSize,0);ctx.lineTo(i*cellSize,canvas.height);ctx.stroke();ctx.beginPath();ctx.moveTo(0,i*cellSize);ctx.lineTo(canvas.width,i*cellSize);ctx.stroke();}
+    // Food
+    ctx.fillStyle='#ef4444';ctx.beginPath();ctx.arc(food.x*cellSize+cellSize/2,food.y*cellSize+cellSize/2,cellSize*0.4,0,Math.PI*2);ctx.fill();
+    // Snake
+    for(var i=0;i<snake.length;i++){
+        var s=snake[i],alpha=1-i*0.02;
+        ctx.fillStyle=i===0?'rgba(37,99,235,1)':'rgba(37,99,235,'+Math.max(0.3,alpha)+')';
+        ctx.fillRect(s.x*cellSize+1,s.y*cellSize+1,cellSize-2,cellSize-2);
+    }
+}
+
+function changeDir(dx,dy){
+    if((dx!==0&&dx===-dir.x)||(dy!==0&&dy===-dir.y))return;
+    nextDir={x:dx,y:dy};
+}
+
+document.querySelector('.controls').addEventListener('click',function(e){
+    var btn=e.target.closest('button[data-dir]');if(!btn)return;
+    var d=btn.dataset.dir;
+    if(d==='up')changeDir(0,-1);
+    else if(d==='down')changeDir(0,1);
+    else if(d==='left')changeDir(-1,0);
+    else if(d==='right')changeDir(1,0);
+});
+
+// Swipe support
+var touchStartX=0,touchStartY=0;
+canvas.addEventListener('touchstart',function(e){touchStartX=e.touches[0].clientX;touchStartY=e.touches[0].clientY;});
+canvas.addEventListener('touchend',function(e){
+    var dx=e.changedTouches[0].clientX-touchStartX;
+    var dy=e.changedTouches[0].clientY-touchStartY;
+    if(Math.abs(dx)>Math.abs(dy)){if(dx>20)changeDir(1,0);else if(dx<-20)changeDir(-1,0);}
+    else{if(dy>20)changeDir(0,1);else if(dy<-20)changeDir(0,-1);}
+});
+
+window.resetGame=resetGame;
+draw();resetGame();
+})();
+</script>
+</body>
+</html>

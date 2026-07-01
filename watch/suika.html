@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#000000">
+    <title>合成大西瓜</title>
+    <style>
+        *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+        :root{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}
+        html,body{width:100%;height:100%;overflow:hidden;background:#000;touch-action:none;-webkit-user-select:none;user-select:none;}
+        .app{display:flex;flex-direction:column;align-items:center;height:100%;padding:8px;padding-top:env(safe-area-inset-top,8px);}
+        .header{display:flex;align-items:center;justify-content:space-between;width:100%;max-width:340px;padding:4px 0;flex-shrink:0;}
+        .back-btn{background:none;border:none;color:#2563eb;font-size:16px;cursor:pointer;padding:4px 8px;text-decoration:none;}
+        .title{font-size:15px;font-weight:600;color:#fff;}
+        .score{font-size:14px;color:#22c55e;font-weight:600;}
+        .canvas-wrap{flex:1;display:flex;align-items:center;justify-content:center;}
+        canvas{background:#111;border-radius:12px;border:1px solid #222;}
+        .bottom-bar{display:flex;align-items:center;gap:12px;padding:8px 0;flex-shrink:0;}
+        .btn{background:#1a1a1a;border:1.5px solid #333;color:#fff;padding:8px 16px;border-radius:14px;font-size:14px;cursor:pointer;font-family:inherit;-webkit-tap-highlight-color:transparent;}
+        .btn:active{background:#2563eb}
+        .next-preview{font-size:24px;color:#999;}
+        .game-over{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(0,0,0,0.9);border:1px solid #333;border-radius:16px;padding:20px 24px;text-align:center;z-index:10;display:none;color:#fff;}
+        .game-over.show{display:block}
+        .game-over h2{font-size:20px;margin-bottom:8px}
+        .game-over p{color:#999;margin-bottom:12px}
+        .game-over button{background:#2563eb;border:none;color:#fff;padding:10px 24px;border-radius:14px;font-size:15px;cursor:pointer;}
+    </style>
+</head>
+<body>
+<div class="app">
+    <div class="header">
+        <a class="back-btn" href="index.html">← 返回</a>
+        <span class="title">🍉 合成大西瓜</span>
+        <div class="score" id="score">0</div>
+    </div>
+    <div class="canvas-wrap">
+        <canvas id="canvas"></canvas>
+    </div>
+    <div class="bottom-bar">
+        <span class="next-preview" id="nextPreview">🫐</span>
+        <button class="btn" onclick="dropFruit()">▼ 下落</button>
+        <button class="btn" onclick="resetGame()">🔄 重来</button>
+    </div>
+</div>
+<div class="game-over" id="gameOver">
+    <h2>游戏结束</h2>
+    <p id="goMsg"></p>
+    <button onclick="resetGame()">重新开始</button>
+</div>
+<script>
+(function(){
+var hosts=['yty16.github.io','yty16.pages.dev'];
+if(hosts.indexOf(location.hostname)===-1){document.body.innerHTML='<div style="position:fixed;top:0;left:0;width:100%;height:100%;background:#000;display:flex;align-items:center;justify-content:center;color:#666;">页面无法显示</div>';return;}
+
+var canvas=document.getElementById('canvas'),ctx=canvas.getContext('2d');
+var w=280,h=380,fruits=[],nextFruit=null,score=0,bestScore=0,gameRunning=true;
+var FRUIT_TYPES=[
+    {name:'蓝莓',rad:10,color:'#7c3aed',emoji:'🫐',score:1},
+    {name:'樱桃',rad:16,color:'#ef4444',emoji:'🍒',score:2},
+    {name:'橘子',rad:22,color:'#f59e0b',emoji:'🍊',score:4},
+    {name:'柠檬',rad:28,color:'#eab308',emoji:'🍋',score:8},
+    {name:'猕猴桃',rad:34,color:'#22c55e',emoji:'🥝',score:16},
+    {name:'桃子',rad:40,color:'#f97316',emoji:'🍑',score:32},
+    {name:'苹果',rad:46,color:'#ef4444',emoji:'🍎',score:64},
+    {name:'甜瓜',rad:52,color:'#84cc16',emoji:'🍈',score:128},
+    {name:'西瓜',rad:60,color:'#22c55e',emoji:'🍉',score:256}
+];
+var dropX=w/2,dropTypeIdx=0;
+bestScore=parseInt(localStorage.getItem('watch_suika_best')||'0');
+
+function resize(){
+    var maxH=window.innerHeight-160,maxW=Math.min(window.innerWidth-20,320);
+    h=Math.min(maxH,400);w=Math.min(maxW,320);
+    canvas.width=w;canvas.height=h;
+}
+resize();
+
+function rndFruit(){return Math.floor(Math.random()*5);}
+function getFruit(idx){return FRUIT_TYPES[idx];}
+
+function resetGame(){
+    fruits=[];score=0;gameRunning=true;dropX=w/2;dropTypeIdx=rndFruit();
+    document.getElementById('score').textContent='0';
+    document.getElementById('gameOver').classList.remove('show');
+    draw();
+}
+
+function dropFruit(){
+    if(!gameRunning)return;
+    var ft=getFruit(dropTypeIdx);
+    var fx=Math.max(ft.rad,Math.min(w-ft.rad,dropX));
+    // Check collision with existing fruits
+    for(var i=0;i<fruits.length;i++){
+        var f=fruits[i];
+        var dx=fx-f.x,dy=0;
+        var dist=Math.sqrt(dx*dx+dy*dy);
+        if(dist<ft.rad+f.rad)return; // Can't place
+    }
+    fruits.push({x:fx,y:ft.rad,type:dropTypeIdx,vy:0,settled:false});
+    dropTypeIdx=rndFruit();
+    updatePreview();
+    runPhysics();
+}
+
+function updatePreview(){
+    var ft=getFruit(dropTypeIdx);
+    document.getElementById('nextPreview').textContent=ft.emoji;
+}
+
+function runPhysics(){
+    var settled=false;
+    while(!settled){
+        settled=true;
+        for(var i=0;i<fruits.length;i++){
+            var f=fruits[i];if(f.settled)continue;
+            // Gravity
+            f.vy+=0.5;f.y+=f.vy;f.x=Math.max(getFruit(f.type).rad,Math.min(w-getFruit(f.type).rad,f.x));
+            // Floor
+            if(f.y+getFruit(f.type).rad>=h){f.y=h-getFruit(f.type).rad;f.settled=true;f.vy=0;}
+            // Collision with settled
+            for(var j=0;j<fruits.length;j++){
+                if(i===j||fruits[j].settled===false)continue;
+                var o=fruits[j],fr=getFruit(f.type),or_=getFruit(o.type);
+                var dx=f.x-o.x,dy=f.y-o.y,dist=Math.sqrt(dx*dx+dy*dy),minDist=fr.rad+or_.rad;
+                if(dist<minDist){
+                    f.settled=true;f.vy=0;
+                    var angle=Math.atan2(dy,dx);
+                    f.x=o.x+Math.cos(angle)*minDist;
+                    f.y=o.y+Math.sin(angle)*minDist;
+                    // Merge same type
+                    if(f.type===o.type&&f.type<FRUIT_TYPES.length-1){
+                        f.type++;var newFt=getFruit(f.type);
+                        f.x=(f.x+o.x)/2;f.y=(f.y+o.y)/2;
+                        f.settled=false;f.vy=1;
+                        fruits.splice(j,1);j--;
+                        score+=getFruit(f.type).score;
+                        document.getElementById('score').textContent=score;
+                    }
+                }
+            }
+        }
+        draw();
+    }
+    // Check game over
+    for(var i=0;i<fruits.length;i++){
+        if(fruits[i].y-getFruit(fruits[i].type).rad<=10&&fruits[i].settled){
+            gameRunning=false;
+            if(score>bestScore){bestScore=score;localStorage.setItem('watch_suika_best',bestScore);}
+            document.getElementById('goMsg').textContent='得分: '+score+' | 最佳: '+bestScore;
+            document.getElementById('gameOver').classList.add('show');
+            return;
+        }
+    }
+}
+
+function draw(){
+    ctx.fillStyle='#111';ctx.fillRect(0,0,w,h);
+    // Draw fruits
+    for(var i=0;i<fruits.length;i++){
+        var f=fruits[i],ft=getFruit(f.type);
+        ctx.beginPath();ctx.arc(f.x,f.y,ft.rad,0,Math.PI*2);
+        ctx.fillStyle=ft.color;ctx.fill();
+        ctx.font=(ft.rad*0.7)+'px sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';
+        ctx.fillText(ft.emoji,f.x,f.y);
+    }
+    // Ghost preview
+    if(gameRunning){
+        var nf=getFruit(dropTypeIdx);
+        ctx.beginPath();ctx.arc(dropX,20,nf.rad,0,Math.PI*2);
+        ctx.fillStyle='rgba(255,255,255,0.15)';ctx.fill();
+        ctx.font=(nf.rad*0.7)+'px sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';
+        ctx.fillText(nf.emoji,dropX,20);
+    }
+}
+
+// Touch control
+canvas.addEventListener('touchmove',function(e){
+    e.preventDefault();
+    if(!gameRunning)return;
+    dropX=e.touches[0].clientX-canvas.getBoundingClientRect().left;
+    draw();
+});
+
+// Click to drop
+canvas.addEventListener('click',function(e){
+    if(!gameRunning)return;
+    dropX=e.clientX-canvas.getBoundingClientRect().left;
+    dropFruit();
+});
+
+window.dropFruit=dropFruit;
+window.resetGame=resetGame;
+updatePreview();
+draw();
+resetGame();
+})();
+</script>
+</body>
+</html>

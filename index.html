@@ -2,7 +2,7 @@
 <html lang="zh">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0, user-scalable=no">
     <script>
         // init theme
         (function() {
@@ -2809,6 +2809,113 @@
             background: rgba(255,0,0,0.12);
             color: #ff4444;
         }
+
+        /* iOS PWA 安装引导横幅 */
+        .ios-install-banner {
+            display: none;
+            position: fixed;
+            bottom: 16px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10000;
+            background: rgba(30, 30, 40, 0.95);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 18px;
+            padding: 16px 20px;
+            color: #fff;
+            box-shadow: 0 8px 40px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.1);
+            max-width: 380px;
+            width: calc(100% - 32px);
+            text-align: center;
+            animation: iosBannerSlide 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        @keyframes iosBannerSlide {
+            from { opacity: 0; transform: translateX(-50%) translateY(60px); }
+            to { opacity: 1; transform: translateX(-50%) translateY(0); }
+        }
+        .ios-install-banner.show {
+            display: block;
+        }
+        .ios-install-banner .banner-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            margin-bottom: 10px;
+        }
+        .ios-install-banner .banner-title {
+            font-size: 15px;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+        .ios-install-banner .banner-sub {
+            font-size: 12px;
+            color: rgba(255,255,255,0.6);
+            margin-bottom: 12px;
+        }
+        .ios-install-banner .banner-steps {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            font-size: 13px;
+            color: rgba(255,255,255,0.8);
+            margin-bottom: 14px;
+        }
+        .ios-install-banner .banner-step-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: #2563eb;
+            font-size: 12px;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+        .ios-install-banner .banner-arrow {
+            font-size: 14px;
+            margin: 0 2px;
+        }
+        .ios-install-banner .banner-btn {
+            display: inline-block;
+            padding: 8px 24px;
+            background: #2563eb;
+            color: #fff;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-right: 8px;
+            border: none;
+        }
+        .ios-install-banner .banner-dismiss {
+            display: inline-block;
+            padding: 8px 16px;
+            background: transparent;
+            color: rgba(255,255,255,0.5);
+            border-radius: 20px;
+            font-size: 13px;
+            cursor: pointer;
+            border: none;
+        }
+
+        /* iOS 安全区域适配（刘海屏等） */
+        @supports (padding-bottom: env(safe-area-inset-bottom)) {
+            body {
+                padding-bottom: env(safe-area-inset-bottom);
+            }
+            .sidebar {
+                padding-bottom: calc(16px + env(safe-area-inset-bottom)) !important;
+            }
+            .modal, .dialog {
+                padding-bottom: calc(20px + env(safe-area-inset-bottom)) !important;
+            }
+            .ios-install-banner {
+                bottom: calc(16px + env(safe-area-inset-bottom));
+            }
+        }
     </style>
     <link rel="manifest" href="/manifest.json">
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
@@ -2819,8 +2926,29 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Y的工具箱Pro">
+    <!-- iOS Safari 启动画面（Splash Screen）-->
+    <link rel="apple-touch-startup-image" media="screen and (device-width: 320px) and (device-height: 568px)" href="/splash-iphonese.png">
+    <link rel="apple-touch-startup-image" media="screen and (device-width: 375px) and (device-height: 667px)" href="/splash-iphone8.png">
+    <link rel="apple-touch-startup-image" media="screen and (device-width: 414px) and (device-height: 896px)" href="/splash-iphonex.png">
+    <link rel="apple-touch-startup-image" media="screen and (device-width: 390px) and (device-height: 844px)" href="/splash-iphone12.png">
+    <link rel="apple-touch-startup-image" media="screen and (device-width: 430px) and (device-height: 932px)" href="/splash-iphone15.png">
+    <link rel="apple-touch-startup-image" media="screen and (min-device-width: 768px) and (max-device-width: 1024px)" href="/splash-ipad.png">
+    <link rel="apple-touch-startup-image" media="screen and (min-device-width: 1024px) and (min-device-height: 1366px)" href="/splash-ipadpro.png">
 </head>
 <body>
+    <!-- iOS PWA 安装引导横幅 -->
+    <div class="ios-install-banner" id="iosInstallBanner">
+        <img src="/icon-192.png" class="banner-icon" alt="icon" width="48" height="48">
+        <div class="banner-title">安装 Y的工具箱Pro</div>
+        <div class="banner-sub">无需 App Store，添加到主屏幕即可使用</div>
+        <div class="banner-steps">
+            <span class="banner-step-icon">1</span> 点击分享
+            <span class="banner-arrow">→</span>
+            <span class="banner-step-icon">2</span> 添加到主屏幕
+        </div>
+        <button class="banner-btn" onclick="document.getElementById('iosInstallBanner').classList.remove('show');localStorage.setItem('ios_banner_hide','1');">知道了</button>
+        <button class="banner-dismiss" onclick="document.getElementById('iosInstallBanner').classList.remove('show');localStorage.setItem('ios_banner_hide','1');">不再提醒</button>
+    </div>
     
     <canvas id="particles"></canvas>
 
@@ -3634,7 +3762,8 @@
                             { link: "https://yty16.github.io/download/toolbox.apk", line1: "\uD83D\uDCF1 Android APK", line2: "Y\u7684\u5DE5\u5177\u7BB1Pro v1.4.1", badge: "new" },
                             { link: "https://yty16.pages.dev/download/toolbox.apk", line1: "\uD83D\uDCF1 Android APK", line2: "CloudFlare\u955C\u50CF\u4E0B\u8F7D" },
                             { link: "https://github.com/yty16/yty16.github.io/releases/download/v1.0.0-windows/toolbox-windows.exe", line1: "\uD83D\uDCBB Windows \u7248", line2: "Y\u7684\u5DE5\u5177\u7BB1Pro v1.0.0", badge: "new" },
-                            { link: "https://yty16.pages.dev/download/toolbox-windows.exe", line1: "\uD83D\uDCBB Windows \u7248", line2: "CloudFlare\u955C\u50CF\u4E0B\u8F7D" }
+                            { link: "https://yty16.pages.dev/download/toolbox-windows.exe", line1: "\uD83D\uDCBB Windows \u7248", line2: "CloudFlare\u955C\u50CF\u4E0B\u8F7D" },
+                            { link: "javascript:showIOSGuide()", line1: "\uD83C\uDF4E iOS \u5B89\u88C5", line2: "iPhone/iPad Safari\u6DFB\u52A0\u5230\u4E3B\u5C4F\u5E55", badge: "ios" }
                         ]
                     }
                 ]
@@ -5753,6 +5882,35 @@
         }
     }
 
+    function checkIOSInstallBanner() {
+        // 只在 iOS Safari 中显示
+        var ua = navigator.userAgent.toLowerCase();
+        var isIOS = /iphone|ipad|ipod/.test(ua);
+        var isSafari = /safari/.test(ua) && !/crios/.test(ua) && !/fxios/.test(ua) && !/opios/.test(ua);
+        if (!isIOS || !isSafari) return;
+
+        // 如果是 PWA standalone 模式（已安装），不显示
+        if (window.matchMedia('(display-mode: standalone)').matches || navigator.standalone) return;
+
+        // 如果用户之前关掉了，不再提示
+        if (localStorage.getItem('ios_banner_hide')) return;
+
+        // 显示横幅
+        var banner = document.getElementById('iosInstallBanner');
+        if (banner) banner.classList.add('show');
+    }
+
+    function showIOSGuide() {
+        // 强制显示 iOS 安装指导横幅（无视之前的隐藏设置）
+        localStorage.removeItem('ios_banner_hide');
+        var banner = document.getElementById('iosInstallBanner');
+        if (banner) {
+            banner.classList.add('show');
+            // 滚动到底部让用户看到
+            setTimeout(function() { banner.scrollIntoView({behavior:'smooth',block:'center'}); }, 300);
+        }
+    }
+
     // Init
     document.addEventListener('DOMContentLoaded', () => {
         // 访问统计
@@ -5791,10 +5949,15 @@
             else if (tool === 'pomodoro') openPomodoro();
         }, 500);
 
-        // 周年庆弹窗检测（每年7月1日弹出，每天只弹一次）
-        setTimeout(() => {
-            checkAnniversary();
-        }, 800);
+                        // 周年庆弹窗检测（每年7月1日弹出，每天只弹一次）
+                        setTimeout(() => {
+                            checkAnniversary();
+                        }, 800);
+
+                        // iOS PWA 安装引导横幅（仅在 iOS Safari 且非 PWA 模式下显示）
+                        setTimeout(() => {
+                            checkIOSInstallBanner();
+                        }, 1500);
         
         // Theme toggle
         document.getElementById('themeToggle').addEventListener('click', toggleTheme);

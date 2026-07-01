@@ -396,6 +396,15 @@
             border-color: var(--accent);
         }
 
+        .settings-btn.long-title {
+            font-size: 11px;
+            padding: 6px 12px;
+            max-width: 160px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
         .toggle-switch {
             display: flex;
             align-items: center;
@@ -1065,6 +1074,15 @@
             background: var(--accent);
             color: white;
             border-color: var(--accent);
+        }
+
+        .settings-btn.long-title {
+            font-size: 11px;
+            padding: 6px 12px;
+            max-width: 160px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
         }
 
         .toggle-switch {
@@ -3494,6 +3512,7 @@
                         <button class="settings-btn active" onclick="changeTitle('工具箱 Pro')">工具箱 Pro</button>
                         <button class="settings-btn" onclick="changeTitle('百度一下，你就知道')">百度一下</button>
                         <button class="settings-btn" onclick="changeTitle('New Tab')">New Tab</button>
+                        <button class="settings-btn long-title" data-title="工具箱Pro Max Ultra Turbo Hyper Mega Grand Advanced Giant Massive Prime Supreme Ultimate Apex Pinnacle Expert Master+ Super Xtreme Elite Legend Platinum Diamond Royal God Tier Omni Total Full Complete Maximum Dominant Invincible Celestial Cosmic Infinite Eternal Legendary Monarch Emperor Titan Colossal SupremePlus UltraMax TurboHyper MegaGrand AdvancedPro GiantMax MassiveUltimate ApexPrime PinnacleSupreme MasterUltra Godly Heavenly Galactic Boundless Limitless Absolute Perfect Flawless Champion Hero UltraPremium MegaElite GrandLegend" onclick="changeTitle(this.dataset.title)">🌟 究极Pro Max Ultra...</button>
                     </div>
                 </div>
                 <div class="settings-group">
@@ -5768,7 +5787,8 @@
     function changeTitle(title) {
         document.title = title;
         document.querySelectorAll('.settings-btn').forEach(btn => {
-            btn.classList.toggle('active', btn.textContent === title);
+            const btnTitle = btn.dataset.title || btn.textContent;
+            btn.classList.toggle('active', btnTitle === title);
         });
         showToast(`标题已更改为「${title}」`, '📝');
     }

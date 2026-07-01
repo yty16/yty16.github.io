@@ -12,7 +12,7 @@ document.body.innerHTML='<div style="position:fixed;top:0;left:0;width:100%;heig
 </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>❌⭕ 井字棋 AI对战</title>
+<title>❌⭕ 井字棋 人机对战</title>
 <script>
 (function(){var t=localStorage.getItem('theme');if(t==='dark'||(t!=='light'&&window.matchMedia('(prefers-color-scheme:dark)').matches))document.documentElement.setAttribute('data-theme','dark')})();
 </script>
@@ -32,7 +32,7 @@ body{font-family:'Inter','Microsoft YaHei',sans-serif;background:var(--bg);color
 .diff-btn.active{background:var(--accent);color:#fff;border-color:var(--accent)}
 .turn-indicator{text-align:center;font-size:16px;font-weight:600;color:var(--text-secondary);margin-bottom:16px;min-height:24px;transition:color .2s}
 .turn-indicator.player-turn{color:#3498db}
-.turn-indicator.ai-turn{color:var(--danger)}
+.turn-indicator.computer-turn{color:var(--danger)}
 .board{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;max-width:320px;margin:0 auto 16px}
 .cell{aspect-ratio:1;background:var(--grid-bg);backdrop-filter:blur(8px);border:2px solid var(--card-border);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:42px;font-weight:800;cursor:pointer;transition:all .15s;user-select:none;position:relative}
 .cell:hover:not(.taken){background:var(--cell-hover);transform:scale(1.03)}
@@ -49,7 +49,7 @@ body{font-family:'Inter','Microsoft YaHei',sans-serif;background:var(--bg);color
 .score-label{font-size:12px;color:var(--text-secondary);text-transform:uppercase;letter-spacing:1px}
 .score-value{font-size:28px;font-weight:800}
 .score-player{color:#3498db}
-.score-ai{color:var(--danger)}
+.score-computer{color:var(--danger)}
 .score-draw{color:var(--warning)}
 .btn-row{display:flex;gap:10px;justify-content:center;margin-top:18px}
 .btn{padding:10px 22px;border:none;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;transition:all .2s}
@@ -73,7 +73,7 @@ body{font-family:'Inter','Microsoft YaHei',sans-serif;background:var(--bg);color
 <body>
 <a href="/" class="back-btn">← 返回</a>
 <div class="container">
-  <h1 class="title">❌⭕ 井字棋 AI对战</h1>
+  <h1 class="title">❌⭕ 井字棋 人机对战</h1>
   <div class="card">
     <div class="difficulty-bar">
       <button class="diff-btn" data-diff="easy">简单</button>
@@ -86,7 +86,7 @@ body{font-family:'Inter','Microsoft YaHei',sans-serif;background:var(--bg);color
     <div class="scores">
       <div class="score-item"><span class="score-label">玩家胜</span><span class="score-value score-player" id="sPlayer">0</span></div>
       <div class="score-item"><span class="score-label">平局</span><span class="score-value score-draw" id="sDraw">0</span></div>
-      <div class="score-item"><span class="score-label">AI胜</span><span class="score-value score-ai" id="sAI">0</span></div>
+      <div class="score-item"><span class="score-label">电脑胜</span><span class="score-value score-computer" id="sComputer">0</span></div>
     </div>
     <div class="btn-row">
       <button class="btn btn-primary" id="btnReset">重新开始</button>
@@ -99,7 +99,7 @@ body{font-family:'Inter','Microsoft YaHei',sans-serif;background:var(--bg);color
 const $=s=>document.querySelector(s);
 const $$=s=>document.querySelectorAll(s);
 let board,gameOver,currentPlayer,difficulty='medium';
-let scores={player:0,ai:0,draw:0};
+let scores={player:0,computer:0,draw:0};
 const winLines=[[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
 
 function init(){
@@ -136,9 +136,9 @@ function playerMove(i){
   place(i,'X');
   if(checkEnd())return;
   currentPlayer='O';
-  $('#turnInfo').textContent='AI 思考中...';
-  $('#turnInfo').className='turn-indicator ai-turn';
-  setTimeout(aiMove,300+Math.random()*300);
+  $('#turnInfo').textContent='电脑思考中...';
+  $('#turnInfo').className='turn-indicator computer-turn';
+  setTimeout(computerMove,300+Math.random()*300);
 }
 
 function place(i,mark){
@@ -153,7 +153,7 @@ function place(i,mark){
   requestAnimationFrame(()=>requestAnimationFrame(()=>m.classList.add('show')));
 }
 
-function aiMove(){
+function computerMove(){
   if(gameOver)return;
   let move;
   if(difficulty==='easy')move=randomMove();
@@ -211,7 +211,7 @@ function checkEnd(){
     gameOver=true;
     highlightWin(w);
     if(w==='X'){scores.player++;$('#result').textContent='🎉 你赢了！';$('#result').style.color='var(--success)'}
-    else{scores.ai++;$('#result').textContent='😢 AI赢了！';$('#result').style.color='var(--danger)'}
+    else{scores.computer++;$('#result').textContent='😢 电脑赢了！';$('#result').style.color='var(--danger)'}
     updateScores();$('#turnInfo').textContent='';return true;
   }
   if(board.every(v=>v!==null)){
@@ -233,7 +233,7 @@ function highlightWin(w){
 
 function updateScores(){
   $('#sPlayer').textContent=scores.player;
-  $('#sAI').textContent=scores.ai;
+  $('#sComputer').textContent=scores.computer;
   $('#sDraw').textContent=scores.draw;
 }
 
@@ -243,10 +243,10 @@ $$('.diff-btn').forEach(btn=>btn.addEventListener('click',()=>{
   btn.classList.add('active');
   difficulty=btn.dataset.diff;
   init();
-}));
+})));
 
 $('#btnReset').addEventListener('click',init);
-$('#btnClearScores').addEventListener('click',()=>{scores={player:0,ai:0,draw:0};updateScores();init()});
+$('#btnClearScores').addEventListener('click',()=>{scores={player:0,computer:0,draw:0};updateScores();init()});
 
 init();
 })();

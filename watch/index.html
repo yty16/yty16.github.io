@@ -1,0 +1,1082 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#000000">
+    <meta name="description" content="Y的工具箱 - 手表版">
+    <title>工具箱 · 手表版</title>
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" type="image/png" sizes="192x192" href="../icon-192.png">
+    <link rel="apple-touch-icon" href="../apple-touch-icon.png">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        :root {
+            --bg: #000;
+            --surface: #111;
+            --surface2: #1a1a1a;
+            --text: #fff;
+            --text2: #999;
+            --accent: #2563eb;
+            --accent2: #3b82f6;
+            --danger: #ef4444;
+            --success: #22c55e;
+            --warn: #f59e0b;
+            --radius: 50%;
+            --safe-top: env(safe-area-inset-top, 0px);
+            --safe-bottom: env(safe-area-inset-bottom, 0px);
+            --safe-left: env(safe-area-inset-left, 0px);
+            --safe-right: env(safe-area-inset-right, 0px);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            font-size: 16px;
+            -webkit-tap-highlight-color: transparent;
+            -webkit-user-select: none;
+            user-select: none;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        html, body {
+            width: 100%; height: 100%;
+            overflow: hidden;
+            background: var(--bg);
+            color: var(--text);
+            touch-action: manipulation;
+        }
+
+        /* ---- Round screen detection ---- */
+        @media (shape: round) {
+            :root { --radius: 50%; }
+            body {
+                border-radius: 50%;
+                overflow: hidden;
+            }
+            .app-shell {
+                border-radius: 50%;
+                clip-path: circle(50% at 50% 50%);
+            }
+        }
+
+        /* ---- App Shell ---- */
+        .app-shell {
+            width: 100%; height: 100%;
+            display: flex; flex-direction: column;
+            padding: var(--safe-top) var(--safe-right) var(--safe-bottom) var(--safe-left);
+            position: relative;
+        }
+
+        /* ---- Status Bar ---- */
+        .status-bar {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 4px 10px 2px;
+            min-height: 28px;
+            font-size: 13px;
+            color: var(--text2);
+            flex-shrink: 0;
+            z-index: 10;
+        }
+        @media (shape: round) {
+            .status-bar {
+                padding: 8px 16px 2px;
+                min-height: 36px;
+                font-size: 14px;
+            }
+        }
+        .status-time {
+            font-weight: 600;
+            color: var(--text);
+            font-variant-numeric: tabular-nums;
+            font-size: 14px;
+        }
+        .status-battery {
+            display: flex; align-items: center; gap: 3px;
+        }
+        .status-battery .battery-icon {
+            width: 18px; height: 9px;
+            border: 1.5px solid var(--text2);
+            border-radius: 2px;
+            position: relative;
+            display: inline-block;
+        }
+        .status-battery .battery-icon::after {
+            content: '';
+            position: absolute;
+            right: -3px; top: 50%; transform: translateY(-50%);
+            width: 2px; height: 4px;
+            background: var(--text2);
+            border-radius: 0 1px 1px 0;
+        }
+        .status-battery .battery-fill {
+            position: absolute;
+            left: 1px; top: 1px;
+            height: calc(100% - 2px);
+            background: var(--success);
+            border-radius: 1px;
+            transition: width 0.5s;
+        }
+
+        /* ---- Main Content ---- */
+        .main-content {
+            flex: 1;
+            display: flex; align-items: center; justify-content: center;
+            position: relative;
+            overflow: hidden;
+            touch-action: pan-x;
+        }
+
+        /* ---- Screen Container (swipe) ---- */
+        .screens {
+            display: flex;
+            width: 100%; height: 100%;
+            transition: transform 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            will-change: transform;
+        }
+        .screen {
+            min-width: 100%; height: 100%;
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            padding: 8px;
+            flex-shrink: 0;
+        }
+
+        /* ---- Bottom Nav ---- */
+        .bottom-nav {
+            display: flex; justify-content: center; align-items: center;
+            gap: 8px;
+            padding: 6px 0 calc(6px + var(--safe-bottom));
+            flex-shrink: 0;
+            z-index: 10;
+        }
+        @media (shape: round) {
+            .bottom-nav { padding-bottom: calc(12px + var(--safe-bottom)); }
+        }
+        .nav-dot {
+            width: 6px; height: 6px;
+            border-radius: 50%;
+            background: var(--text2);
+            opacity: 0.3;
+            transition: all 0.3s;
+            flex-shrink: 0;
+        }
+        .nav-dot.active {
+            opacity: 1;
+            background: var(--accent);
+            width: 18px;
+            border-radius: 3px;
+        }
+        .nav-icon {
+            width: 32px; height: 32px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 16px;
+            opacity: 0.4;
+            transition: all 0.3s;
+            flex-shrink: 0;
+        }
+        .nav-icon.active {
+            opacity: 1;
+            font-size: 20px;
+        }
+
+        /* ========== CLOCK SCREEN ========== */
+        .clock-face {
+            position: relative;
+            width: min(85vw, 85vh, 280px);
+            height: min(85vw, 85vh, 280px);
+        }
+        .clock-canvas {
+            width: 100%; height: 100%;
+        }
+        .clock-date {
+            text-align: center;
+            font-size: 13px;
+            color: var(--text2);
+            margin-top: 6px;
+            letter-spacing: 0.5px;
+        }
+
+        /* ========== STOPWATCH SCREEN ========== */
+        .sw-display {
+            font-size: clamp(36px, 12vw, 56px);
+            font-weight: 300;
+            font-variant-numeric: tabular-nums;
+            letter-spacing: 2px;
+            margin-bottom: 16px;
+            font-family: "SF Mono", "Menlo", "Consolas", monospace;
+        }
+        .sw-ms {
+            font-size: 0.5em;
+            color: var(--text2);
+        }
+        .sw-laps {
+            max-height: 30%;
+            overflow-y: auto;
+            width: 90%;
+            font-size: 13px;
+            color: var(--text2);
+            scrollbar-width: none;
+        }
+        .sw-laps::-webkit-scrollbar { display: none; }
+        .sw-lap-row {
+            display: flex; justify-content: space-between;
+            padding: 3px 8px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        .sw-lap-row .lap-num { color: var(--accent2); }
+        .sw-btns {
+            display: flex; gap: 12px;
+            margin-top: 12px;
+        }
+
+        /* ========== TIMER SCREEN ========== */
+        .timer-display {
+            font-size: clamp(36px, 12vw, 56px);
+            font-weight: 300;
+            font-variant-numeric: tabular-nums;
+            letter-spacing: 2px;
+            margin-bottom: 12px;
+            font-family: "SF Mono", "Menlo", "Consolas", monospace;
+        }
+        .timer-presets {
+            display: flex; gap: 6px; flex-wrap: wrap;
+            justify-content: center; margin-bottom: 12px;
+            max-width: 240px;
+        }
+        .timer-preset {
+            background: var(--surface2);
+            color: var(--text);
+            border: 1.5px solid transparent;
+            border-radius: 20px;
+            padding: 6px 14px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: inherit;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .timer-preset:active {
+            background: var(--accent);
+            border-color: var(--accent2);
+        }
+        .timer-preset.selected {
+            background: var(--accent);
+            border-color: var(--accent2);
+        }
+        .timer-btns {
+            display: flex; gap: 12px;
+        }
+
+        /* ========== CALCULATOR SCREEN ========== */
+        .calc-display {
+            width: 90%;
+            max-width: 240px;
+            text-align: right;
+            font-size: clamp(28px, 9vw, 42px);
+            font-weight: 300;
+            padding: 8px 12px;
+            min-height: 50px;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            font-family: "SF Mono", "Menlo", "Consolas", monospace;
+            letter-spacing: 1px;
+        }
+        .calc-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+            width: 92%;
+            max-width: 250px;
+            margin-top: 4px;
+        }
+        .calc-btn {
+            aspect-ratio: 1;
+            border-radius: 50%;
+            border: none;
+            font-size: 18px;
+            font-weight: 500;
+            cursor: pointer;
+            background: var(--surface2);
+            color: var(--text);
+            transition: all 0.15s;
+            display: flex; align-items: center; justify-content: center;
+            font-family: inherit;
+            -webkit-tap-highlight-color: transparent;
+            min-width: 44px; min-height: 44px;
+        }
+        .calc-btn:active { transform: scale(0.9); background: #333; }
+        .calc-btn.op { background: var(--accent); color: #fff; }
+        .calc-btn.op:active { background: var(--accent2); }
+        .calc-btn.eq { background: var(--success); color: #000; font-weight: 700; }
+        .calc-btn.clear { color: var(--danger); }
+
+        /* ========== NOTES SCREEN ========== */
+        .notes-input {
+            width: 92%;
+            max-width: 260px;
+            height: 55%;
+            background: var(--surface);
+            border: 1.5px solid var(--surface2);
+            border-radius: 16px;
+            color: var(--text);
+            font-size: 15px;
+            padding: 12px;
+            resize: none;
+            font-family: inherit;
+            outline: none;
+            transition: border-color 0.2s;
+            -webkit-user-select: text;
+            user-select: text;
+        }
+        .notes-input:focus {
+            border-color: var(--accent);
+        }
+        .notes-hint {
+            font-size: 12px; color: var(--text2);
+            margin-top: 6px;
+        }
+        .notes-saved {
+            font-size: 12px; color: var(--success);
+            margin-top: 4px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .notes-saved.show { opacity: 1; }
+
+        /* ========== FLASHLIGHT SCREEN ========== */
+        .flashlight-btn {
+            width: 100px; height: 100px;
+            border-radius: 50%;
+            background: var(--accent);
+            color: #fff;
+            border: none;
+            font-size: 36px;
+            cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            transition: all 0.3s;
+            box-shadow: 0 0 40px rgba(37, 99, 235, 0.4);
+            -webkit-tap-highlight-color: transparent;
+        }
+        .flashlight-btn:active { transform: scale(0.9); }
+        .flashlight-btn.on {
+            background: #fff;
+            box-shadow: 0 0 80px rgba(255, 255, 255, 0.6);
+        }
+        .flashlight-btn.on span { filter: brightness(0); }
+        .flashlight-label {
+            margin-top: 12px;
+            font-size: 14px;
+            color: var(--text2);
+        }
+
+        /* ---- Generic Button ---- */
+        .btn {
+            border: none; border-radius: 24px;
+            padding: 10px 24px;
+            font-size: 15px; font-weight: 600;
+            cursor: pointer; font-family: inherit;
+            transition: all 0.2s;
+            -webkit-tap-highlight-color: transparent;
+            min-width: 60px; min-height: 44px;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .btn:active { transform: scale(0.93); }
+        .btn-primary { background: var(--accent); color: #fff; }
+        .btn-primary:active { background: var(--accent2); }
+        .btn-danger { background: var(--danger); color: #fff; }
+        .btn-outline {
+            background: transparent;
+            border: 1.5px solid var(--text2);
+            color: var(--text);
+        }
+
+        /* ========== Vibrate feedback ========== */
+        .vibrate { /* will be applied via JS */ }
+
+        /* ---- Wake Lock notice ---- */
+        .wakelock-indicator {
+            position: fixed; top: 4px; right: 10px;
+            width: 6px; height: 6px;
+            border-radius: 50%;
+            background: var(--success);
+            opacity: 0;
+            transition: opacity 0.3s;
+            z-index: 100;
+        }
+        .wakelock-indicator.active { opacity: 1; }
+    </style>
+</head>
+<body>
+    <div class="app-shell">
+        <!-- Status Bar -->
+        <div class="status-bar">
+            <span class="status-time" id="statusTime">12:00</span>
+            <span class="status-battery">
+                <span id="batteryPct" style="font-size:11px;">--</span>
+                <span class="battery-icon"><span class="battery-fill" id="batteryFill" style="width:70%"></span></span>
+            </span>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content" id="mainContent">
+            <div class="screens" id="screens" style="transform:translateX(0%)">
+                <!-- Screen 0: Clock -->
+                <div class="screen" id="screen-clock">
+                    <div class="clock-face">
+                        <canvas class="clock-canvas" id="clockCanvas"></canvas>
+                    </div>
+                    <div class="clock-date" id="clockDate"></div>
+                </div>
+
+                <!-- Screen 1: Stopwatch -->
+                <div class="screen" id="screen-stopwatch">
+                    <div class="sw-display" id="swDisplay">00:00<span class="sw-ms">.00</span></div>
+                    <div class="sw-laps" id="swLaps"></div>
+                    <div class="sw-btns">
+                        <button class="btn btn-outline" id="swLapBtn" disabled>计次</button>
+                        <button class="btn btn-primary" id="swStartBtn">开始</button>
+                        <button class="btn btn-danger" id="swResetBtn">重置</button>
+                    </div>
+                </div>
+
+                <!-- Screen 2: Timer -->
+                <div class="screen" id="screen-timer">
+                    <div class="timer-display" id="timerDisplay">05:00</div>
+                    <div class="timer-presets" id="timerPresets">
+                        <button class="timer-preset" data-sec="60">1分</button>
+                        <button class="timer-preset selected" data-sec="300">5分</button>
+                        <button class="timer-preset" data-sec="600">10分</button>
+                        <button class="timer-preset" data-sec="900">15分</button>
+                        <button class="timer-preset" data-sec="1800">30分</button>
+                    </div>
+                    <div class="timer-btns">
+                        <button class="btn btn-primary" id="timerStartBtn">开始</button>
+                        <button class="btn btn-danger" id="timerResetBtn">重置</button>
+                    </div>
+                </div>
+
+                <!-- Screen 3: Calculator -->
+                <div class="screen" id="screen-calculator">
+                    <div class="calc-display" id="calcDisplay">0</div>
+                    <div class="calc-grid" id="calcGrid"></div>
+                </div>
+
+                <!-- Screen 4: Notes -->
+                <div class="screen" id="screen-notes">
+                    <textarea class="notes-input" id="notesInput" placeholder="在这里写点什么..."></textarea>
+                    <div class="notes-hint">自动保存</div>
+                    <div class="notes-saved" id="notesSaved">✓ 已保存</div>
+                </div>
+
+                <!-- Screen 5: Flashlight -->
+                <div class="screen" id="screen-flashlight">
+                    <button class="flashlight-btn" id="flashlightBtn">
+                        <span>🔦</span>
+                    </button>
+                    <div class="flashlight-label">点击开关手电筒</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom Nav -->
+        <div class="bottom-nav" id="bottomNav">
+            <span class="nav-icon active" data-idx="0">🕐</span>
+            <span class="nav-icon" data-idx="1">⏱</span>
+            <span class="nav-icon" data-idx="2">⏲</span>
+            <span class="nav-icon" data-idx="3">🧮</span>
+            <span class="nav-icon" data-idx="4">📝</span>
+            <span class="nav-icon" data-idx="5">🔦</span>
+        </div>
+    </div>
+
+    <div class="wakelock-indicator" id="wakelockIndicator"></div>
+
+<script>
+(function() {
+    var _hosts = ['yty16.github.io', 'yty16.pages.dev'];
+    if (_hosts.indexOf(window.location.hostname) === -1) {
+        document.body.innerHTML = '<div style="position:fixed;top:0;left:0;width:100%;height:100%;background:#000;display:flex;align-items:center;justify-content:center;color:#666;font-size:14px;">页面无法显示</div>';
+        return;
+    }
+
+    // ============ STATE ============
+    var currentScreen = 0;
+    var totalScreens = 6;
+    var screensEl = document.getElementById('screens');
+    var isDragging = false;
+    var startX = 0;
+    var startTransform = 0;
+
+    // ============ NAVIGATION ============
+    function goToScreen(idx) {
+        if (idx < 0 || idx >= totalScreens) return;
+        currentScreen = idx;
+        screensEl.style.transform = 'translateX(' + (-idx * 100) + '%)';
+        updateNav();
+        if (idx === 0) drawClock();
+    }
+
+    function updateNav() {
+        var icons = document.querySelectorAll('.nav-icon');
+        icons.forEach(function(icon, i) {
+            icon.classList.toggle('active', i === currentScreen);
+        });
+    }
+
+    // Swipe support
+    var mc = document.getElementById('mainContent');
+    mc.addEventListener('touchstart', function(e) {
+        isDragging = true;
+        startX = e.touches[0].clientX;
+        startTransform = -currentScreen * mc.offsetWidth;
+        screensEl.style.transition = 'none';
+    }, {passive: true});
+
+    mc.addEventListener('touchmove', function(e) {
+        if (!isDragging) return;
+        var dx = e.touches[0].clientX - startX;
+        var newX = startTransform + dx;
+        var maxX = 0;
+        var minX = -(totalScreens - 1) * mc.offsetWidth;
+        newX = Math.max(minX, Math.min(maxX, newX));
+        screensEl.style.transform = 'translateX(' + newX + 'px)';
+    }, {passive: true});
+
+    mc.addEventListener('touchend', function(e) {
+        if (!isDragging) return;
+        isDragging = false;
+        screensEl.style.transition = 'transform 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+        var dx = e.changedTouches[0].clientX - startX;
+        var threshold = mc.offsetWidth * 0.15;
+        if (Math.abs(dx) > threshold) {
+            if (dx > 0) goToScreen(currentScreen - 1);
+            else goToScreen(currentScreen + 1);
+        } else {
+            goToScreen(currentScreen);
+        }
+    });
+
+    // Bottom nav click
+    document.getElementById('bottomNav').addEventListener('click', function(e) {
+        var icon = e.target.closest('.nav-icon');
+        if (!icon) return;
+        var idx = parseInt(icon.getAttribute('data-idx'));
+        goToScreen(idx);
+        vibrate();
+    });
+
+    // ============ HAPTIC FEEDBACK ============
+    function vibrate() {
+        if (navigator.vibrate) {
+            try { navigator.vibrate(8); } catch(e) {}
+        }
+    }
+
+    // ============ STATUS BAR CLOCK ============
+    function updateStatusTime() {
+        var now = new Date();
+        var h = now.getHours().toString().padStart(2, '0');
+        var m = now.getMinutes().toString().padStart(2, '0');
+        document.getElementById('statusTime').textContent = h + ':' + m;
+    }
+    setInterval(updateStatusTime, 15000);
+    updateStatusTime();
+
+    // Battery indicator (simulated if not available)
+    function updateBattery() {
+        var fill = document.getElementById('batteryFill');
+        var pct = document.getElementById('batteryPct');
+        if (navigator.getBattery) {
+            navigator.getBattery().then(function(b) {
+                var level = Math.round(b.level * 100);
+                fill.style.width = level + '%';
+                pct.textContent = level + '%';
+                if (level <= 15) fill.style.background = 'var(--danger)';
+                else if (level <= 30) fill.style.background = 'var(--warn)';
+                else fill.style.background = 'var(--success)';
+                b.addEventListener('levelchange', updateBattery);
+            }).catch(function() {
+                fill.style.width = '85%';
+                pct.textContent = '';
+            });
+        } else {
+            fill.style.width = '85%';
+            pct.textContent = '';
+        }
+    }
+    updateBattery();
+
+    // ============ CLOCK ============
+    var clockCanvas = document.getElementById('clockCanvas');
+    var clockCtx = clockCanvas.getContext('2d');
+    var clockDateEl = document.getElementById('clockDate');
+
+    function drawClock() {
+        var size = clockCanvas.parentElement.offsetWidth;
+        clockCanvas.width = size * 2;
+        clockCanvas.height = size * 2;
+        clockCanvas.style.width = size + 'px';
+        clockCanvas.style.height = size + 'px';
+
+        var now = new Date();
+        var cx = size, cy = size;
+        var r = size * 0.82;
+        var h = now.getHours() % 12;
+        var m = now.getMinutes();
+        var s = now.getSeconds();
+        var ms = now.getMilliseconds();
+
+        clockCtx.clearRect(0, 0, size * 2, size * 2);
+
+        // Outer ring
+        clockCtx.beginPath();
+        clockCtx.arc(cx, cy, r, 0, Math.PI * 2);
+        clockCtx.strokeStyle = '#333';
+        clockCtx.lineWidth = 3;
+        clockCtx.stroke();
+
+        // Minute markers
+        for (var i = 0; i < 60; i++) {
+            var angle = (i / 60) * Math.PI * 2 - Math.PI / 2;
+            var innerR = i % 5 === 0 ? r - 12 : r - 6;
+            var outerR = r - 3;
+            clockCtx.beginPath();
+            clockCtx.moveTo(cx + Math.cos(angle) * innerR, cy + Math.sin(angle) * innerR);
+            clockCtx.lineTo(cx + Math.cos(angle) * outerR, cy + Math.sin(angle) * outerR);
+            clockCtx.strokeStyle = i % 5 === 0 ? '#fff' : '#444';
+            clockCtx.lineWidth = i % 5 === 0 ? 2.5 : 1;
+            clockCtx.stroke();
+        }
+
+        // Hour numbers
+        clockCtx.fillStyle = '#fff';
+        clockCtx.font = 'bold ' + (size * 0.14) + 'px -apple-system, sans-serif';
+        clockCtx.textAlign = 'center';
+        clockCtx.textBaseline = 'middle';
+        for (var i = 1; i <= 12; i++) {
+            var angle = (i / 12) * Math.PI * 2 - Math.PI / 2;
+            var numR = r * 0.72;
+            clockCtx.fillText(i, cx + Math.cos(angle) * numR, cy + Math.sin(angle) * numR);
+        }
+
+        // Hour hand
+        var hAngle = ((h + m / 60) / 12) * Math.PI * 2 - Math.PI / 2;
+        clockCtx.beginPath();
+        clockCtx.moveTo(cx, cy);
+        clockCtx.lineTo(cx + Math.cos(hAngle) * r * 0.45, cy + Math.sin(hAngle) * r * 0.45);
+        clockCtx.strokeStyle = '#fff';
+        clockCtx.lineWidth = 4;
+        clockCtx.lineCap = 'round';
+        clockCtx.stroke();
+
+        // Minute hand
+        var mAngle = ((m + s / 60) / 60) * Math.PI * 2 - Math.PI / 2;
+        clockCtx.beginPath();
+        clockCtx.moveTo(cx, cy);
+        clockCtx.lineTo(cx + Math.cos(mAngle) * r * 0.62, cy + Math.sin(mAngle) * r * 0.62);
+        clockCtx.strokeStyle = '#ddd';
+        clockCtx.lineWidth = 2.5;
+        clockCtx.stroke();
+
+        // Second hand
+        var sAngle = ((s + ms / 1000) / 60) * Math.PI * 2 - Math.PI / 2;
+        clockCtx.beginPath();
+        clockCtx.moveTo(cx - Math.cos(sAngle) * r * 0.12, cy - Math.sin(sAngle) * r * 0.12);
+        clockCtx.lineTo(cx + Math.cos(sAngle) * r * 0.75, cy + Math.sin(sAngle) * r * 0.75);
+        clockCtx.strokeStyle = '#2563eb';
+        clockCtx.lineWidth = 1.5;
+        clockCtx.stroke();
+
+        // Center dot
+        clockCtx.beginPath();
+        clockCtx.arc(cx, cy, 4, 0, Math.PI * 2);
+        clockCtx.fillStyle = '#2563eb';
+        clockCtx.fill();
+
+        // Date
+        var days = ['日', '一', '二', '三', '四', '五', '六'];
+        clockDateEl.textContent = (now.getMonth() + 1) + '月' + now.getDate() + '日 周' + days[now.getDay()];
+    }
+
+    // ============ STOPWATCH ============
+    var swRunning = false;
+    var swStartTime = 0;
+    var swElapsed = 0;
+    var swInterval = null;
+    var swLapCount = 0;
+    var swLapsArr = [];
+
+    function formatSW(ms) {
+        var totalSec = Math.floor(ms / 1000);
+        var min = Math.floor(totalSec / 60);
+        var sec = totalSec % 60;
+        var cs = Math.floor((ms % 1000) / 10);
+        return min.toString().padStart(2, '0') + ':' +
+               sec.toString().padStart(2, '0') +
+               '<span class="sw-ms">.' + cs.toString().padStart(2, '0') + '</span>';
+    }
+
+    function updateSWDisplay() {
+        document.getElementById('swDisplay').innerHTML = formatSW(swElapsed);
+    }
+
+    function updateSWButtons() {
+        var startBtn = document.getElementById('swStartBtn');
+        var lapBtn = document.getElementById('swLapBtn');
+        if (swRunning) {
+            startBtn.textContent = '暂停';
+            startBtn.className = 'btn btn-outline';
+            lapBtn.disabled = false;
+        } else if (swElapsed > 0) {
+            startBtn.textContent = '继续';
+            startBtn.className = 'btn btn-primary';
+            lapBtn.disabled = true;
+        } else {
+            startBtn.textContent = '开始';
+            startBtn.className = 'btn btn-primary';
+            lapBtn.disabled = true;
+        }
+    }
+
+    document.getElementById('swStartBtn').addEventListener('click', function() {
+        vibrate();
+        if (swRunning) {
+            // Pause
+            clearInterval(swInterval);
+            swElapsed += Date.now() - swStartTime;
+            swRunning = false;
+        } else {
+            // Start/Resume
+            swStartTime = Date.now();
+            swRunning = true;
+            swInterval = setInterval(function() {
+                var now = Date.now();
+                swElapsed = swElapsed + (now - swStartTime);
+                swStartTime = now;
+                updateSWDisplay();
+            }, 16);
+            requestWakeLock();
+        }
+        updateSWDisplay();
+        updateSWButtons();
+    });
+
+    document.getElementById('swLapBtn').addEventListener('click', function() {
+        vibrate();
+        swLapCount++;
+        swLapsArr.unshift({ num: swLapCount, time: swElapsed });
+        renderLaps();
+    });
+
+    document.getElementById('swResetBtn').addEventListener('click', function() {
+        vibrate();
+        clearInterval(swInterval);
+        swRunning = false;
+        swElapsed = 0;
+        swStartTime = 0;
+        swLapCount = 0;
+        swLapsArr = [];
+        updateSWDisplay();
+        updateSWButtons();
+        document.getElementById('swLaps').innerHTML = '';
+    });
+
+    function renderLaps() {
+        var html = '';
+        swLapsArr.forEach(function(lap) {
+            html += '<div class="sw-lap-row"><span class="lap-num">#' + lap.num + '</span><span>' + formatSW(lap.time) + '</span></div>';
+        });
+        document.getElementById('swLaps').innerHTML = html;
+    }
+
+    // ============ TIMER ============
+    var timerSeconds = 300;
+    var timerRemaining = 300;
+    var timerRunning = false;
+    var timerInterval = null;
+
+    function formatTimer(s) {
+        var min = Math.floor(Math.abs(s) / 60);
+        var sec = Math.abs(s) % 60;
+        return min.toString().padStart(2, '0') + ':' + sec.toString().padStart(2, '0');
+    }
+
+    function updateTimerDisplay() {
+        var display = document.getElementById('timerDisplay');
+        display.textContent = formatTimer(timerRemaining);
+        if (timerRemaining <= 0 && timerRunning) {
+            display.style.color = 'var(--danger)';
+        } else {
+            display.style.color = '';
+        }
+    }
+
+    function updateTimerPresets() {
+        document.querySelectorAll('.timer-preset').forEach(function(btn) {
+            var sec = parseInt(btn.getAttribute('data-sec'));
+            btn.classList.toggle('selected', sec === timerSeconds && !timerRunning);
+        });
+    }
+
+    document.getElementById('timerPresets').addEventListener('click', function(e) {
+        var btn = e.target.closest('.timer-preset');
+        if (!btn || timerRunning) return;
+        vibrate();
+        timerSeconds = parseInt(btn.getAttribute('data-sec'));
+        timerRemaining = timerSeconds;
+        updateTimerDisplay();
+        updateTimerPresets();
+    });
+
+    document.getElementById('timerStartBtn').addEventListener('click', function() {
+        vibrate();
+        if (timerRunning) {
+            clearInterval(timerInterval);
+            timerRunning = false;
+            document.getElementById('timerStartBtn').textContent = '开始';
+            document.getElementById('timerStartBtn').className = 'btn btn-primary';
+        } else {
+            if (timerRemaining <= 0) {
+                timerRemaining = timerSeconds;
+            }
+            timerRunning = true;
+            document.getElementById('timerStartBtn').textContent = '暂停';
+            document.getElementById('timerStartBtn').className = 'btn btn-outline';
+            requestWakeLock();
+            timerInterval = setInterval(function() {
+                timerRemaining--;
+                updateTimerDisplay();
+                if (timerRemaining <= 0) {
+                    clearInterval(timerInterval);
+                    timerRunning = false;
+                    document.getElementById('timerStartBtn').textContent = '开始';
+                    document.getElementById('timerStartBtn').className = 'btn btn-primary';
+                    // Vibrate pattern for alarm
+                    if (navigator.vibrate) {
+                        navigator.vibrate([200, 100, 200, 100, 500]);
+                    }
+                }
+            }, 1000);
+        }
+    });
+
+    document.getElementById('timerResetBtn').addEventListener('click', function() {
+        vibrate();
+        clearInterval(timerInterval);
+        timerRunning = false;
+        timerRemaining = timerSeconds;
+        updateTimerDisplay();
+        document.getElementById('timerStartBtn').textContent = '开始';
+        document.getElementById('timerStartBtn').className = 'btn btn-primary';
+        document.getElementById('timerDisplay').style.color = '';
+    });
+
+    // ============ CALCULATOR ============
+    var calcExpr = '0';
+    var calcShouldReset = true;
+    var calcDisplay = document.getElementById('calcDisplay');
+
+    function updateCalcDisplay() {
+        calcDisplay.textContent = calcExpr;
+        // Auto-size font
+        if (calcExpr.length > 8) {
+            calcDisplay.style.fontSize = '28px';
+        } else if (calcExpr.length > 15) {
+            calcDisplay.style.fontSize = '22px';
+        } else {
+            calcDisplay.style.fontSize = '';
+        }
+    }
+
+    function safeEval(expr) {
+        // Replace ÷ and ×
+        var clean = expr.replace(/×/g, '*').replace(/÷/g, '/');
+        // Only allow safe characters
+        if (/[^0-9+\-*/.()]/.test(clean)) return NaN;
+        try {
+            var result = Function('"use strict"; return (' + clean + ')')();
+            if (typeof result !== 'number' || !isFinite(result)) return 'Error';
+            // Limit precision
+            if (Math.abs(result) > 1e12 || (Math.abs(result) < 1e-10 && result !== 0)) {
+                return result.toExponential(6);
+            }
+            return parseFloat(result.toPrecision(12));
+        } catch(e) {
+            return 'Error';
+        }
+    }
+
+    var calcBtns = [
+        'C', '÷', '×', '⌫',
+        '7', '8', '9', '-',
+        '4', '5', '6', '+',
+        '1', '2', '3', '=',
+        '0', '00', '.', ''
+    ];
+    // Last button is empty placeholder
+
+    var calcGrid = document.getElementById('calcGrid');
+    calcBtns.forEach(function(label, idx) {
+        if (!label) return;
+        var btn = document.createElement('button');
+        btn.className = 'calc-btn';
+        btn.textContent = label;
+        if (label === 'C') btn.classList.add('clear');
+        if ('÷×-+'.indexOf(label) !== -1) btn.classList.add('op');
+        if (label === '=') btn.classList.add('eq');
+        btn.addEventListener('click', function() {
+            vibrate();
+            handleCalc(label);
+        });
+        calcGrid.appendChild(btn);
+    });
+
+    function handleCalc(key) {
+        if (key === 'C') {
+            calcExpr = '0';
+            calcShouldReset = true;
+        } else if (key === '⌫') {
+            calcExpr = calcExpr.slice(0, -1);
+            if (calcExpr === '' || calcExpr === '-') { calcExpr = '0'; calcShouldReset = true; }
+        } else if (key === '=') {
+            var result = safeEval(calcExpr);
+            calcExpr = String(result);
+            calcShouldReset = true;
+        } else {
+            if (calcShouldReset) {
+                calcExpr = '';
+                calcShouldReset = false;
+            }
+            // Prevent double operators
+            var lastChar = calcExpr.slice(-1);
+            var isOp = '÷×+-'.indexOf(key) !== -1;
+            var lastIsOp = '÷×+-'.indexOf(lastChar) !== -1;
+            if (isOp && lastIsOp) {
+                calcExpr = calcExpr.slice(0, -1) + key;
+            } else if (calcExpr === '0' && !isOp && key !== '.') {
+                calcExpr = key;
+            } else if (calcExpr === '0' && key === '.') {
+                calcExpr = '0.';
+            } else {
+                calcExpr += key;
+            }
+        }
+        updateCalcDisplay();
+    }
+
+    // ============ NOTES ============
+    var notesInput = document.getElementById('notesInput');
+    var notesSaved = document.getElementById('notesSaved');
+    var saveTimeout = null;
+
+    // Load saved note
+    var savedNote = localStorage.getItem('watch_notes');
+    if (savedNote) {
+        notesInput.value = savedNote;
+    }
+
+    notesInput.addEventListener('input', function() {
+        clearTimeout(saveTimeout);
+        saveTimeout = setTimeout(function() {
+            localStorage.setItem('watch_notes', notesInput.value);
+            notesSaved.classList.add('show');
+            setTimeout(function() { notesSaved.classList.remove('show'); }, 1500);
+        }, 500);
+    });
+
+    // ============ FLASHLIGHT ============
+    var flashlightOn = false;
+    var flashlightBtn = document.getElementById('flashlightBtn');
+
+    flashlightBtn.addEventListener('click', function() {
+        vibrate();
+        flashlightOn = !flashlightOn;
+        var appShell = document.querySelector('.app-shell');
+        if (flashlightOn) {
+            flashlightBtn.classList.add('on');
+            document.body.style.background = '#fff';
+            document.body.style.color = '#000';
+            appShell.style.filter = 'brightness(3)';
+            // Also try to set screen brightness to max (may not work on all browsers)
+            if ('setScreenBrightness' in navigator) {
+                try { navigator.setScreenBrightness(1.0); } catch(e) {}
+            }
+            requestWakeLock();
+        } else {
+            flashlightBtn.classList.remove('on');
+            document.body.style.background = '';
+            document.body.style.color = '';
+            appShell.style.filter = '';
+        }
+    });
+
+    // ============ WAKE LOCK ============
+    var wakeLock = null;
+
+    function requestWakeLock() {
+        if ('wakeLock' in navigator) {
+            navigator.wakeLock.request('screen').then(function(wl) {
+                wakeLock = wl;
+                document.getElementById('wakelockIndicator').classList.add('active');
+                wl.addEventListener('release', function() {
+                    document.getElementById('wakelockIndicator').classList.remove('active');
+                });
+            }).catch(function() {});
+        }
+    }
+
+    // Auto-release wake lock when page hidden
+    document.addEventListener('visibilitychange', function() {
+        if (document.visibilityState === 'visible' && wakeLock === null && (swRunning || timerRunning)) {
+            requestWakeLock();
+        }
+    });
+
+    // ============ INIT ============
+    function init() {
+        updateSWDisplay();
+        updateSWButtons();
+        updateTimerDisplay();
+        updateTimerPresets();
+        updateCalcDisplay();
+        drawClock();
+
+        // Check if round screen
+        function updateShape() {
+            var isRound = window.matchMedia('(shape: round)').matches;
+            document.documentElement.setAttribute('data-shape', isRound ? 'round' : 'square');
+        }
+        updateShape();
+        window.matchMedia('(shape: round)').addEventListener('change', updateShape);
+
+        // URL query parameter for direct screen navigation
+        var params = new URLSearchParams(window.location.search);
+        var screenParam = parseInt(params.get('screen'));
+        if (!isNaN(screenParam) && screenParam >= 0 && screenParam < totalScreens) {
+            goToScreen(screenParam);
+        }
+    }
+
+    // Clock animation loop
+    function animateClock() {
+        if (currentScreen === 0) drawClock();
+        if (flashlightOn) return; // Don't keep animating during flashlight
+        requestAnimationFrame(function() {
+            setTimeout(animateClock, 500);
+        });
+    }
+
+    // Register Service Worker
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', function() {
+            navigator.serviceWorker.register('sw.js').catch(function() {});
+        });
+    }
+
+    init();
+    animateClock();
+})();
+</script>
+</body>
+</html>

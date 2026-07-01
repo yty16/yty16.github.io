@@ -29,7 +29,10 @@ const PRECACHE_URLS = [
     '/music/',
     '/watermelon/',
     '/main/',
-    '/image/'
+    '/image/',
+    '/watch/',
+    '/watch/index.html',
+    '/watch/manifest.json'
 ];
 
 // 安装: 预缓存核心页面

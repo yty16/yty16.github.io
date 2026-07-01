@@ -12,7 +12,7 @@ document.body.innerHTML='<div style="position:fixed;top:0;left:0;width:100%;heig
 </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>井字棋AI对战 - 工具箱 Pro</title>
+<title>井字棋人机对战 - 工具箱 Pro</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{--bg:#f0f2f5;--card:rgba(255,255,255,0.85);--text:#1a1a2e;--muted:#a0aec0;--accent:#6366f1;--accent-hover:#4f46e5;--border:rgba(0,0,0,0.06);--shadow:0 4px 16px rgba(0,0,0,0.08)}
@@ -82,8 +82,8 @@ h1 { font-size: 28px; font-weight: 700; margin-bottom: 8px; text-align: center; 
 <a href="/" class="back-btn">← 返回</a>
 
 <div class="container">
-  <h1>🎮 井字棋AI对战</h1>
-  <p class="subtitle">挑战不败AI，看看你能不能赢</p>
+  <h1>🎮 井字棋人机对战</h1>
+  <p class="subtitle">挑战人机对战，看看你能不能赢</p>
 
   <div class="card">
     
@@ -135,7 +135,7 @@ h1 { font-size: 28px; font-weight: 700; margin-bottom: 8px; text-align: center; 
   <div class="modal">
     <span class="result-icon" id="resIcon">🏆</span>
     <h2 id="resTitle">你赢了！</h2>
-    <p id="resDesc">太厉害了，击败了AI！</p>
+    <p id="resDesc">太厉害了，击败了电脑！</p>
     <button class="btn" onclick="closeModal()">再来一局</button>
   </div>
 </div>
@@ -146,7 +146,7 @@ let board = Array(9).fill(''); // 'X', 'O', or ''
 let playerIsX = true; // 玩家是否先手
 let currentPlayer = 'X'; // 当前轮到谁
 let gameOver = false;
-let aiThinking = false;
+let computerThinking = false;
 
 // 读取战绩
 function loadRecord() {
@@ -176,7 +176,7 @@ function setOrder(isFirst) {
 function restartGame() {
   board = Array(9).fill('');
   gameOver = false;
-  aiThinking = false;
+  computerThinking = false;
   currentPlayer = 'X';
   // 清空棋盘
   for (let i = 0; i < 9; i++) {
@@ -185,12 +185,12 @@ function restartGame() {
     cell.querySelector('.piece').innerHTML = '';
     cell.querySelector('.piece').className = 'piece';
   }
-  // 如果玩家后手，AI先走
+  // 如果玩家后手，电脑先走
   if (!playerIsX) {
-    document.getElementById('status').textContent = 'AI思考中...';
+    document.getElementById('status').textContent = '电脑思考中...';
     document.getElementById('status').className = 'status thinking';
-    aiThinking = true;
-    setTimeout(() => aiMove(), 400);
+    computerThinking = true;
+    setTimeout(() => computerMove(), 400);
   } else {
     document.getElementById('status').textContent = '你的回合 (X)';
     document.getElementById('status').className = 'status your-turn';
@@ -199,7 +199,7 @@ function restartGame() {
 
 // 玩家落子
 function playerMove(i) {
-  if (gameOver || aiThinking) return;
+  if (gameOver || computerThinking) return;
   if (board[i] !== '') return;
   const playerMark = playerIsX ? 'X' : 'O';
   if (currentPlayer !== playerMark) return;
@@ -208,11 +208,11 @@ function playerMove(i) {
   if (checkEnd()) return;
 
   currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
-  // AI走
-  aiThinking = true;
-  document.getElementById('status').textContent = 'AI思考中...';
+  // 电脑走
+  computerThinking = true;
+  document.getElementById('status').textContent = '电脑思考中...';
   document.getElementById('status').className = 'status thinking';
-  setTimeout(() => aiMove(), 350);
+  setTimeout(() => computerMove(), 350);
 }
 
 // 放置棋子
@@ -228,14 +228,14 @@ function placePiece(i, mark) {
   cell.style.animation = '';
 }
 
-// AI走步
-function aiMove() {
+// 电脑走步
+function computerMove() {
   if (gameOver) return;
   const aiMark = playerIsX ? 'O' : 'X';
   const move = getBestMove(board, aiMark);
   if (move === -1) return;
   placePiece(move, aiMark);
-  aiThinking = false;
+  computerThinking = false;
   if (checkEnd()) return;
   currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
   const playerMark = playerIsX ? 'X' : 'O';
@@ -404,13 +404,13 @@ function showResult(result, winner) {
     status.className = 'status win';
     icon.textContent = '🏆';
     title.textContent = '你赢了！';
-    desc.textContent = '太厉害了，击败了不败AI！';
+    desc.textContent = '太厉害了，击败了人机对手！';
   } else if (result === 'lose') {
     status.textContent = '😔 你输了';
     status.className = 'status lose';
     icon.textContent = '🤖';
     title.textContent = '你输了';
-    desc.textContent = 'AI赢了这局，再来挑战！';
+    desc.textContent = '电脑赢了这局，再来挑战！';
   } else {
     status.textContent = '🤝 平局';
     status.className = 'status draw';

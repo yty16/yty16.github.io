@@ -405,6 +405,29 @@
             z-index: 100;
         }
         .wakelock-indicator.active { opacity: 1; }
+
+        /* APK download banner */
+        .apk-banner {
+            position: fixed; bottom: 60px; left: 50%; transform: translateX(-50%);
+            background: #1a1a2e; border: 1px solid #2563eb;
+            border-radius: 20px; padding: 6px 12px;
+            display: flex; align-items: center; gap: 8px;
+            z-index: 90; max-width: 95vw;
+            font-size: 12px; color: #ccc;
+        }
+        .apk-banner-icon { font-size: 16px; }
+        .apk-banner-text { white-space: nowrap; }
+        .apk-banner-btn {
+            background: #2563eb; color: #fff; text-decoration: none;
+            padding: 4px 10px; border-radius: 12px;
+            font-weight: bold; font-size: 12px;
+        }
+        .apk-banner-close {
+            background: none; border: none; color: #666;
+            font-size: 12px; cursor: pointer; padding: 2px;
+        }
+        /* Hide banner on very small round screens to avoid overlap */
+        @media (max-width: 220px) { .apk-banner { display: none !important; } }
     </style>
 </head>
 <body>
@@ -491,6 +514,14 @@
     </div>
 
     <div class="wakelock-indicator" id="wakelockIndicator"></div>
+
+    <!-- 手表版 APK 下载横幅 -->
+    <div class="apk-banner" id="apkBanner">
+        <span class="apk-banner-icon">⌚</span>
+        <span class="apk-banner-text">独立APP · 更流畅</span>
+        <a class="apk-banner-btn" href="https://yty16.github.io/download/toolbox-watch.apk">下载APK</a>
+        <button class="apk-banner-close" onclick="document.getElementById('apkBanner').style.display='none'" title="关闭">✕</button>
+    </div>
 
 <script>
 (function() {

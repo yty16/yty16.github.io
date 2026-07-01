@@ -13,18 +13,10 @@
     <link rel="apple-touch-icon" href="../apple-touch-icon.png">
     <style>
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
         :root {
-            --bg: #000;
-            --surface: #111;
-            --surface2: #1a1a1a;
-            --text: #fff;
-            --text2: #999;
-            --accent: #2563eb;
-            --accent2: #3b82f6;
-            --danger: #ef4444;
-            --success: #22c55e;
-            --warn: #f59e0b;
+            --bg: #000; --surface: #111; --surface2: #1a1a1a;
+            --text: #fff; --text2: #999; --accent: #2563eb; --accent2: #3b82f6;
+            --danger: #ef4444; --success: #22c55e; --warn: #f59e0b;
             --radius: 50%;
             --safe-top: env(safe-area-inset-top, 0px);
             --safe-bottom: env(safe-area-inset-bottom, 0px);
@@ -33,406 +25,166 @@
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
             font-size: 16px;
             -webkit-tap-highlight-color: transparent;
-            -webkit-user-select: none;
-            user-select: none;
+            -webkit-user-select: none; user-select: none;
             -webkit-font-smoothing: antialiased;
         }
-
-        html, body {
-            width: 100%; height: 100%;
-            overflow: hidden;
-            background: var(--bg);
-            color: var(--text);
-            touch-action: manipulation;
-        }
-
-        /* ---- Round screen detection ---- */
         @media (shape: round) {
             :root { --radius: 50%; }
-            body {
-                border-radius: 50%;
-                overflow: hidden;
-            }
-            .app-shell {
-                border-radius: 50%;
-                clip-path: circle(50% at 50% 50%);
-            }
+            body { border-radius: 50%; overflow: hidden; }
+            .app-shell { border-radius: 50%; clip-path: circle(50% at 50% 50%); }
         }
+        html, body { width: 100%; height: 100%; overflow: hidden; background: var(--bg); color: var(--text); touch-action: manipulation; }
+        .app-shell { width: 100%; height: 100%; display: flex; flex-direction: column; padding: var(--safe-top) var(--safe-right) var(--safe-bottom) var(--safe-left); position: relative; }
+        .status-bar { display: flex; align-items: center; justify-content: space-between; padding: 4px 10px 2px; min-height: 28px; font-size: 13px; color: var(--text2); flex-shrink: 0; z-index: 10; }
+        @media (shape: round) { .status-bar { padding: 8px 16px 2px; min-height: 36px; font-size: 14px; } }
+        .status-time { font-weight: 600; color: var(--text); font-variant-numeric: tabular-nums; font-size: 14px; }
+        .status-battery { display: flex; align-items: center; gap: 3px; }
+        .status-battery .battery-icon { width: 18px; height: 9px; border: 1.5px solid var(--text2); border-radius: 2px; position: relative; display: inline-block; }
+        .status-battery .battery-icon::after { content: ''; position: absolute; right: -3px; top: 50%; transform: translateY(-50%); width: 2px; height: 4px; background: var(--text2); border-radius: 0 1px 1px 0; }
+        .status-battery .battery-fill { position: absolute; left: 1px; top: 1px; height: calc(100% - 2px); background: var(--success); border-radius: 1px; transition: width 0.5s; }
+        .main-content { flex: 1; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; touch-action: pan-x; }
+        .screens { display: flex; width: 100%; height: 100%; transition: transform 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94); will-change: transform; }
+        .screen { min-width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 8px; flex-shrink: 0; }
+        .bottom-nav { display: flex; justify-content: center; align-items: center; gap: 3px; padding: 6px 0 calc(6px + var(--safe-bottom)); flex-shrink: 0; z-index: 10; flex-wrap: wrap; max-width: 100%; }
+        @media (shape: round) { .bottom-nav { padding-bottom: calc(12px + var(--safe-bottom)); } }
+        .nav-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--text2); opacity: 0.3; transition: all 0.3s; flex-shrink: 0; }
+        .nav-dot.active { opacity: 1; background: var(--accent); width: 14px; border-radius: 3px; }
+        .nav-icon { width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; font-size: 13px; opacity: 0.4; transition: all 0.3s; flex-shrink: 0; cursor: pointer; }
+        .nav-icon.active { opacity: 1; font-size: 16px; }
 
-        /* ---- App Shell ---- */
-        .app-shell {
-            width: 100%; height: 100%;
-            display: flex; flex-direction: column;
-            padding: var(--safe-top) var(--safe-right) var(--safe-bottom) var(--safe-left);
-            position: relative;
-        }
-
-        /* ---- Status Bar ---- */
-        .status-bar {
-            display: flex; align-items: center; justify-content: space-between;
-            padding: 4px 10px 2px;
-            min-height: 28px;
-            font-size: 13px;
-            color: var(--text2);
-            flex-shrink: 0;
-            z-index: 10;
-        }
-        @media (shape: round) {
-            .status-bar {
-                padding: 8px 16px 2px;
-                min-height: 36px;
-                font-size: 14px;
-            }
-        }
-        .status-time {
-            font-weight: 600;
-            color: var(--text);
-            font-variant-numeric: tabular-nums;
-            font-size: 14px;
-        }
-        .status-battery {
-            display: flex; align-items: center; gap: 3px;
-        }
-        .status-battery .battery-icon {
-            width: 18px; height: 9px;
-            border: 1.5px solid var(--text2);
-            border-radius: 2px;
-            position: relative;
-            display: inline-block;
-        }
-        .status-battery .battery-icon::after {
-            content: '';
-            position: absolute;
-            right: -3px; top: 50%; transform: translateY(-50%);
-            width: 2px; height: 4px;
-            background: var(--text2);
-            border-radius: 0 1px 1px 0;
-        }
-        .status-battery .battery-fill {
-            position: absolute;
-            left: 1px; top: 1px;
-            height: calc(100% - 2px);
-            background: var(--success);
-            border-radius: 1px;
-            transition: width 0.5s;
-        }
-
-        /* ---- Main Content ---- */
-        .main-content {
-            flex: 1;
-            display: flex; align-items: center; justify-content: center;
-            position: relative;
-            overflow: hidden;
-            touch-action: pan-x;
-        }
-
-        /* ---- Screen Container (swipe) ---- */
-        .screens {
-            display: flex;
-            width: 100%; height: 100%;
-            transition: transform 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-            will-change: transform;
-        }
-        .screen {
-            min-width: 100%; height: 100%;
-            display: flex; flex-direction: column;
-            align-items: center; justify-content: center;
-            padding: 8px;
-            flex-shrink: 0;
-        }
-
-        /* ---- Bottom Nav ---- */
-        .bottom-nav {
-            display: flex; justify-content: center; align-items: center;
-            gap: 8px;
-            padding: 6px 0 calc(6px + var(--safe-bottom));
-            flex-shrink: 0;
-            z-index: 10;
-        }
-        @media (shape: round) {
-            .bottom-nav { padding-bottom: calc(12px + var(--safe-bottom)); }
-        }
-        .nav-dot {
-            width: 6px; height: 6px;
-            border-radius: 50%;
-            background: var(--text2);
-            opacity: 0.3;
-            transition: all 0.3s;
-            flex-shrink: 0;
-        }
-        .nav-dot.active {
-            opacity: 1;
-            background: var(--accent);
-            width: 18px;
-            border-radius: 3px;
-        }
-        .nav-icon {
-            width: 32px; height: 32px;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 16px;
-            opacity: 0.4;
-            transition: all 0.3s;
-            flex-shrink: 0;
-        }
-        .nav-icon.active {
-            opacity: 1;
-            font-size: 20px;
-        }
-
-        /* ========== CLOCK SCREEN ========== */
-        .clock-face {
-            position: relative;
-            width: min(85vw, 85vh, 280px);
-            height: min(85vw, 85vh, 280px);
-        }
-        .clock-canvas {
-            width: 100%; height: 100%;
-        }
-        .clock-date {
-            text-align: center;
-            font-size: 13px;
-            color: var(--text2);
-            margin-top: 6px;
-            letter-spacing: 0.5px;
-        }
-
-        /* ========== STOPWATCH SCREEN ========== */
-        .sw-display {
-            font-size: clamp(36px, 12vw, 56px);
-            font-weight: 300;
-            font-variant-numeric: tabular-nums;
-            letter-spacing: 2px;
-            margin-bottom: 16px;
-            font-family: "SF Mono", "Menlo", "Consolas", monospace;
-        }
-        .sw-ms {
-            font-size: 0.5em;
-            color: var(--text2);
-        }
-        .sw-laps {
-            max-height: 30%;
-            overflow-y: auto;
-            width: 90%;
-            font-size: 13px;
-            color: var(--text2);
-            scrollbar-width: none;
-        }
+        /* Clock */
+        .clock-face { position: relative; width: min(85vw, 85vh, 280px); height: min(85vw, 85vh, 280px); }
+        .clock-canvas { width: 100%; height: 100%; }
+        .clock-date { text-align: center; font-size: 13px; color: var(--text2); margin-top: 6px; letter-spacing: 0.5px; }
+        .sw-display { font-size: clamp(36px, 12vw, 56px); font-weight: 300; font-variant-numeric: tabular-nums; letter-spacing: 2px; margin-bottom: 16px; font-family: "SF Mono", "Menlo", "Consolas", monospace; }
+        .sw-ms { font-size: 0.5em; color: var(--text2); }
+        .sw-laps { max-height: 30%; overflow-y: auto; width: 90%; font-size: 13px; color: var(--text2); scrollbar-width: none; }
         .sw-laps::-webkit-scrollbar { display: none; }
-        .sw-lap-row {
-            display: flex; justify-content: space-between;
-            padding: 3px 8px;
-            border-bottom: 1px solid rgba(255,255,255,0.05);
-        }
+        .sw-lap-row { display: flex; justify-content: space-between; padding: 3px 8px; border-bottom: 1px solid rgba(255,255,255,0.05); }
         .sw-lap-row .lap-num { color: var(--accent2); }
-        .sw-btns {
-            display: flex; gap: 12px;
-            margin-top: 12px;
-        }
-
-        /* ========== TIMER SCREEN ========== */
-        .timer-display {
-            font-size: clamp(36px, 12vw, 56px);
-            font-weight: 300;
-            font-variant-numeric: tabular-nums;
-            letter-spacing: 2px;
-            margin-bottom: 12px;
-            font-family: "SF Mono", "Menlo", "Consolas", monospace;
-        }
-        .timer-presets {
-            display: flex; gap: 6px; flex-wrap: wrap;
-            justify-content: center; margin-bottom: 12px;
-            max-width: 240px;
-        }
-        .timer-preset {
-            background: var(--surface2);
-            color: var(--text);
-            border: 1.5px solid transparent;
-            border-radius: 20px;
-            padding: 6px 14px;
-            font-size: 14px;
-            cursor: pointer;
-            transition: all 0.2s;
-            font-family: inherit;
-            -webkit-tap-highlight-color: transparent;
-        }
-        .timer-preset:active {
-            background: var(--accent);
-            border-color: var(--accent2);
-        }
-        .timer-preset.selected {
-            background: var(--accent);
-            border-color: var(--accent2);
-        }
-        .timer-btns {
-            display: flex; gap: 12px;
-        }
-
-        /* ========== CALCULATOR SCREEN ========== */
-        .calc-display {
-            width: 90%;
-            max-width: 240px;
-            text-align: right;
-            font-size: clamp(28px, 9vw, 42px);
-            font-weight: 300;
-            padding: 8px 12px;
-            min-height: 50px;
-            overflow: hidden;
-            white-space: nowrap;
-            text-overflow: ellipsis;
-            font-family: "SF Mono", "Menlo", "Consolas", monospace;
-            letter-spacing: 1px;
-        }
-        .calc-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 8px;
-            width: 92%;
-            max-width: 250px;
-            margin-top: 4px;
-        }
-        .calc-btn {
-            aspect-ratio: 1;
-            border-radius: 50%;
-            border: none;
-            font-size: 18px;
-            font-weight: 500;
-            cursor: pointer;
-            background: var(--surface2);
-            color: var(--text);
-            transition: all 0.15s;
-            display: flex; align-items: center; justify-content: center;
-            font-family: inherit;
-            -webkit-tap-highlight-color: transparent;
-            min-width: 44px; min-height: 44px;
-        }
+        .sw-btns { display: flex; gap: 12px; margin-top: 12px; }
+        .timer-display { font-size: clamp(36px, 12vw, 56px); font-weight: 300; font-variant-numeric: tabular-nums; letter-spacing: 2px; margin-bottom: 12px; font-family: "SF Mono", "Menlo", "Consolas", monospace; }
+        .timer-presets { display: flex; gap: 6px; flex-wrap: wrap; justify-content: center; margin-bottom: 12px; max-width: 240px; }
+        .timer-preset { background: var(--surface2); color: var(--text); border: 1.5px solid transparent; border-radius: 20px; padding: 6px 14px; font-size: 14px; cursor: pointer; transition: all 0.2s; font-family: inherit; -webkit-tap-highlight-color: transparent; }
+        .timer-preset:active { background: var(--accent); border-color: var(--accent2); }
+        .timer-preset.selected { background: var(--accent); border-color: var(--accent2); }
+        .timer-btns { display: flex; gap: 12px; }
+        .calc-display { width: 90%; max-width: 240px; text-align: right; font-size: clamp(28px, 9vw, 42px); font-weight: 300; padding: 8px 12px; min-height: 50px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; font-family: "SF Mono", "Menlo", "Consolas", monospace; letter-spacing: 1px; }
+        .calc-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; width: 92%; max-width: 250px; margin-top: 4px; }
+        .calc-btn { aspect-ratio: 1; border-radius: 50%; border: none; font-size: 18px; font-weight: 500; cursor: pointer; background: var(--surface2); color: var(--text); transition: all 0.15s; display: flex; align-items: center; justify-content: center; font-family: inherit; -webkit-tap-highlight-color: transparent; min-width: 44px; min-height: 44px; }
         .calc-btn:active { transform: scale(0.9); background: #333; }
         .calc-btn.op { background: var(--accent); color: #fff; }
         .calc-btn.op:active { background: var(--accent2); }
         .calc-btn.eq { background: var(--success); color: #000; font-weight: 700; }
         .calc-btn.clear { color: var(--danger); }
-
-        /* ========== NOTES SCREEN ========== */
-        .notes-input {
-            width: 92%;
-            max-width: 260px;
-            height: 55%;
-            background: var(--surface);
-            border: 1.5px solid var(--surface2);
-            border-radius: 16px;
-            color: var(--text);
-            font-size: 15px;
-            padding: 12px;
-            resize: none;
-            font-family: inherit;
-            outline: none;
-            transition: border-color 0.2s;
-            -webkit-user-select: text;
-            user-select: text;
-        }
-        .notes-input:focus {
-            border-color: var(--accent);
-        }
-        .notes-hint {
-            font-size: 12px; color: var(--text2);
-            margin-top: 6px;
-        }
-        .notes-saved {
-            font-size: 12px; color: var(--success);
-            margin-top: 4px;
-            opacity: 0;
-            transition: opacity 0.3s;
-        }
+        .notes-input { width: 92%; max-width: 260px; height: 55%; background: var(--surface); border: 1.5px solid var(--surface2); border-radius: 16px; color: var(--text); font-size: 15px; padding: 12px; resize: none; font-family: inherit; outline: none; transition: border-color 0.2s; -webkit-user-select: text; user-select: text; }
+        .notes-input:focus { border-color: var(--accent); }
+        .notes-hint { font-size: 12px; color: var(--text2); margin-top: 6px; }
+        .notes-saved { font-size: 12px; color: var(--success); margin-top: 4px; opacity: 0; transition: opacity 0.3s; }
         .notes-saved.show { opacity: 1; }
-
-        /* ========== FLASHLIGHT SCREEN ========== */
-        .flashlight-btn {
-            width: 100px; height: 100px;
-            border-radius: 50%;
-            background: var(--accent);
-            color: #fff;
-            border: none;
-            font-size: 36px;
-            cursor: pointer;
-            display: flex; align-items: center; justify-content: center;
-            transition: all 0.3s;
-            box-shadow: 0 0 40px rgba(37, 99, 235, 0.4);
-            -webkit-tap-highlight-color: transparent;
-        }
+        .flashlight-btn { width: 100px; height: 100px; border-radius: 50%; background: var(--accent); color: #fff; border: none; font-size: 36px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.3s; box-shadow: 0 0 40px rgba(37, 99, 235, 0.4); -webkit-tap-highlight-color: transparent; }
         .flashlight-btn:active { transform: scale(0.9); }
-        .flashlight-btn.on {
-            background: #fff;
-            box-shadow: 0 0 80px rgba(255, 255, 255, 0.6);
-        }
+        .flashlight-btn.on { background: #fff; box-shadow: 0 0 80px rgba(255, 255, 255, 0.6); }
         .flashlight-btn.on span { filter: brightness(0); }
-        .flashlight-label {
-            margin-top: 12px;
-            font-size: 14px;
-            color: var(--text2);
-        }
-
-        /* ---- Generic Button ---- */
-        .btn {
-            border: none; border-radius: 24px;
-            padding: 10px 24px;
-            font-size: 15px; font-weight: 600;
-            cursor: pointer; font-family: inherit;
-            transition: all 0.2s;
-            -webkit-tap-highlight-color: transparent;
-            min-width: 60px; min-height: 44px;
-            display: flex; align-items: center; justify-content: center;
-        }
+        .flashlight-label { margin-top: 12px; font-size: 14px; color: var(--text2); }
+        .btn { border: none; border-radius: 24px; padding: 10px 24px; font-size: 15px; font-weight: 600; cursor: pointer; font-family: inherit; transition: all 0.2s; -webkit-tap-highlight-color: transparent; min-width: 60px; min-height: 44px; display: flex; align-items: center; justify-content: center; }
         .btn:active { transform: scale(0.93); }
         .btn-primary { background: var(--accent); color: #fff; }
         .btn-primary:active { background: var(--accent2); }
         .btn-danger { background: var(--danger); color: #fff; }
-        .btn-outline {
-            background: transparent;
-            border: 1.5px solid var(--text2);
-            color: var(--text);
-        }
-
-        /* ========== Vibrate feedback ========== */
-        .vibrate { /* will be applied via JS */ }
-
-        /* ---- Wake Lock notice ---- */
-        .wakelock-indicator {
-            position: fixed; top: 4px; right: 10px;
-            width: 6px; height: 6px;
-            border-radius: 50%;
-            background: var(--success);
-            opacity: 0;
-            transition: opacity 0.3s;
-            z-index: 100;
-        }
+        .btn-outline { background: transparent; border: 1.5px solid var(--text2); color: var(--text); }
+        .wakelock-indicator { position: fixed; top: 4px; right: 10px; width: 6px; height: 6px; border-radius: 50%; background: var(--success); opacity: 0; transition: opacity 0.3s; z-index: 100; }
         .wakelock-indicator.active { opacity: 1; }
-
-        /* APK download banner */
-        .apk-banner {
-            position: fixed; bottom: 60px; left: 50%; transform: translateX(-50%);
-            background: #1a1a2e; border: 1px solid #2563eb;
-            border-radius: 20px; padding: 6px 12px;
-            display: flex; align-items: center; gap: 8px;
-            z-index: 90; max-width: 95vw;
-            font-size: 12px; color: #ccc;
-        }
+        .apk-banner { position: fixed; bottom: 60px; left: 50%; transform: translateX(-50%); background: #1a1a2e; border: 1px solid #2563eb; border-radius: 20px; padding: 6px 12px; display: flex; align-items: center; gap: 8px; z-index: 90; max-width: 95vw; font-size: 12px; color: #ccc; }
         .apk-banner-icon { font-size: 16px; }
         .apk-banner-text { white-space: nowrap; }
-        .apk-banner-btn {
-            background: #2563eb; color: #fff; text-decoration: none;
-            padding: 4px 10px; border-radius: 12px;
-            font-weight: bold; font-size: 12px;
-        }
-        .apk-banner-close {
-            background: none; border: none; color: #666;
-            font-size: 12px; cursor: pointer; padding: 2px;
-        }
-        /* Hide banner on very small round screens to avoid overlap */
+        .apk-banner-btn { background: #2563eb; color: #fff; text-decoration: none; padding: 4px 10px; border-radius: 12px; font-weight: bold; font-size: 12px; }
+        .apk-banner-close { background: none; border: none; color: #666; font-size: 12px; cursor: pointer; padding: 2px; }
         @media (max-width: 220px) { .apk-banner { display: none !important; } }
+
+        /* ---- More Tools Grid ---- */
+        .tools-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; width: 95%; max-width: 280px; max-height: 85%; overflow-y: auto; padding: 4px; scrollbar-width: none; }
+        .tools-grid::-webkit-scrollbar { display: none; }
+        .tool-card { background: var(--surface); border: 1.5px solid var(--surface2); border-radius: 16px; padding: 10px 4px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; cursor: pointer; transition: all 0.2s; min-height: 70px; -webkit-tap-highlight-color: transparent; }
+        .tool-card:active { background: var(--accent); border-color: var(--accent2); transform: scale(0.95); }
+        .tool-card-icon { font-size: 24px; }
+        .tool-card-name { font-size: 11px; color: var(--text); text-align: center; line-height: 1.2; }
+        .tool-card-badge { font-size: 9px; color: var(--accent2); }
+        .more-title { font-size: 15px; font-weight: 600; margin-bottom: 8px; color: var(--text2); }
+
+        /* ---- Tool Overlay ---- */
+        .tool-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg); z-index: 200; display: flex; flex-direction: column; transform: translateY(100%); transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94); padding: var(--safe-top) 0 var(--safe-bottom) 0; }
+        .tool-overlay.open { transform: translateY(0); }
+        .tool-overlay-header { display: flex; align-items: center; padding: 8px 10px; gap: 8px; border-bottom: 1px solid var(--surface2); flex-shrink: 0; min-height: 44px; }
+        .tool-overlay-back { background: none; border: none; color: var(--accent); font-size: 16px; cursor: pointer; padding: 6px 10px; font-family: inherit; -webkit-tap-highlight-color: transparent; }
+        .tool-overlay-title { font-size: 15px; font-weight: 600; flex: 1; }
+        .tool-overlay-body { flex: 1; overflow-y: auto; padding: 8px; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+        .tool-overlay-body::-webkit-scrollbar { display: none; }
+
+        /* Tool shared styles */
+        .tool-input { width: 100%; background: var(--surface); border: 1.5px solid var(--surface2); border-radius: 12px; color: var(--text); font-size: 14px; padding: 10px; font-family: inherit; outline: none; -webkit-user-select: text; user-select: text; resize: none; }
+        .tool-input:focus { border-color: var(--accent); }
+        .tool-output { width: 100%; background: var(--surface); border: 1.5px solid var(--surface2); border-radius: 12px; color: var(--text); font-size: 14px; padding: 10px; min-height: 60px; word-break: break-all; font-family: "SF Mono", "Menlo", "Consolas", monospace; }
+        .tool-row { display: flex; gap: 8px; margin-bottom: 8px; align-items: center; }
+        .tool-label { font-size: 13px; color: var(--text2); min-width: 50px; }
+        .tool-select { background: var(--surface); border: 1.5px solid var(--surface2); border-radius: 10px; color: var(--text); font-size: 13px; padding: 8px 10px; font-family: inherit; outline: none; flex: 1; }
+        .tool-btn-sm { background: var(--accent); color: #fff; border: none; border-radius: 10px; padding: 8px 14px; font-size: 13px; cursor: pointer; font-family: inherit; -webkit-tap-highlight-color: transparent; white-space: nowrap; }
+        .tool-btn-sm:active { background: var(--accent2); }
+        .tool-btn-sm.copy { background: var(--success); }
+        .tool-btn-sm.secondary { background: var(--surface2); color: var(--text); }
+        .tool-tabs { display: flex; gap: 4px; margin-bottom: 10px; }
+        .tool-tab { flex: 1; background: var(--surface); border: 1.5px solid var(--surface2); border-radius: 10px; padding: 8px; font-size: 12px; color: var(--text2); cursor: pointer; text-align: center; font-family: inherit; -webkit-tap-highlight-color: transparent; }
+        .tool-tab.active { background: var(--accent); border-color: var(--accent2); color: #fff; }
+
+        /* Reaction test */
+        .reaction-area { width: 100%; aspect-ratio: 1; max-width: 200px; max-height: 200px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.3s; font-size: 15px; font-weight: 600; margin: 10px auto; }
+        .reaction-area.wait { background: #ef4444; color: #fff; }
+        .reaction-area.ready { background: #22c55e; color: #fff; }
+        .reaction-area.result { background: var(--accent); color: #fff; }
+        .reaction-area.foul { background: #f59e0b; color: #000; }
+        .reaction-stats { display: flex; justify-content: space-around; width: 100%; margin-top: 10px; font-size: 12px; color: var(--text2); }
+        .reaction-stats span { color: var(--accent); font-weight: 600; }
+
+        /* Color test */
+        .color-grid-watch { display: grid; gap: 4px; width: 95%; max-width: 220px; margin: 8px auto; }
+        .color-cell-watch { aspect-ratio: 1; border-radius: 8px; cursor: pointer; transition: transform 0.1s; }
+        .color-cell-watch:active { transform: scale(0.9); }
+
+        /* Tic Tac Toe */
+        .ttt-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; width: 90%; max-width: 200px; margin: 8px auto; }
+        .ttt-cell { aspect-ratio: 1; background: var(--surface); border: 1.5px solid var(--surface2); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 28px; cursor: pointer; transition: all 0.15s; }
+        .ttt-cell:active { background: #333; }
+        .ttt-cell.x { color: var(--accent); }
+        .ttt-cell.o { color: var(--danger); }
+        .ttt-turn { text-align: center; font-size: 14px; font-weight: 600; margin: 6px 0; }
+
+        /* Password generator */
+        .pw-display { font-size: 16px; padding: 10px; background: var(--surface); border-radius: 12px; word-break: break-all; text-align: center; margin: 8px 0; font-family: "SF Mono", "Menlo", "Consolas", monospace; }
+        .pw-chk { display: flex; flex-wrap: wrap; gap: 6px; margin: 6px 0; font-size: 12px; }
+        .pw-chk label { display: flex; align-items: center; gap: 3px; cursor: pointer; color: var(--text2); }
+        .pw-chk input[type="checkbox"] { accent-color: var(--accent); }
+        .pw-slider { width: 100%; margin: 6px 0; accent-color: var(--accent); }
+
+        /* Unit converter */
+        .unit-result { font-size: 28px; font-weight: 600; text-align: center; margin: 12px 0; color: var(--accent); }
+
+        /* Disk links */
+        .disk-list { display: flex; flex-direction: column; gap: 6px; width: 95%; max-width: 260px; margin: 0 auto; }
+        .disk-item { background: var(--surface); border: 1.5px solid var(--surface2); border-radius: 14px; padding: 12px; display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--text); transition: all 0.2s; }
+        .disk-item:active { background: var(--accent); border-color: var(--accent2); }
+        .disk-item-icon { font-size: 22px; }
+        .disk-item-info { flex: 1; }
+        .disk-item-name { font-size: 14px; font-weight: 600; }
+        .disk-item-desc { font-size: 11px; color: var(--text2); }
+        .disk-item-arrow { color: var(--text2); font-size: 14px; }
+
+        /* Slider */
+        input[type="range"] { -webkit-appearance: none; height: 6px; background: var(--surface2); border-radius: 3px; outline: none; }
+        input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 24px; height: 24px; background: var(--accent); border-radius: 50%; cursor: pointer; }
     </style>
 </head>
 <body>
     <div class="app-shell">
-        <!-- Status Bar -->
         <div class="status-bar">
             <span class="status-time" id="statusTime">12:00</span>
             <span class="status-battery">
@@ -441,18 +193,12 @@
             </span>
         </div>
 
-        <!-- Main Content -->
         <div class="main-content" id="mainContent">
             <div class="screens" id="screens" style="transform:translateX(0%)">
-                <!-- Screen 0: Clock -->
                 <div class="screen" id="screen-clock">
-                    <div class="clock-face">
-                        <canvas class="clock-canvas" id="clockCanvas"></canvas>
-                    </div>
+                    <div class="clock-face"><canvas class="clock-canvas" id="clockCanvas"></canvas></div>
                     <div class="clock-date" id="clockDate"></div>
                 </div>
-
-                <!-- Screen 1: Stopwatch -->
                 <div class="screen" id="screen-stopwatch">
                     <div class="sw-display" id="swDisplay">00:00<span class="sw-ms">.00</span></div>
                     <div class="sw-laps" id="swLaps"></div>
@@ -462,8 +208,6 @@
                         <button class="btn btn-danger" id="swResetBtn">重置</button>
                     </div>
                 </div>
-
-                <!-- Screen 2: Timer -->
                 <div class="screen" id="screen-timer">
                     <div class="timer-display" id="timerDisplay">05:00</div>
                     <div class="timer-presets" id="timerPresets">
@@ -478,31 +222,26 @@
                         <button class="btn btn-danger" id="timerResetBtn">重置</button>
                     </div>
                 </div>
-
-                <!-- Screen 3: Calculator -->
                 <div class="screen" id="screen-calculator">
                     <div class="calc-display" id="calcDisplay">0</div>
                     <div class="calc-grid" id="calcGrid"></div>
                 </div>
-
-                <!-- Screen 4: Notes -->
                 <div class="screen" id="screen-notes">
                     <textarea class="notes-input" id="notesInput" placeholder="在这里写点什么..."></textarea>
                     <div class="notes-hint">自动保存</div>
                     <div class="notes-saved" id="notesSaved">✓ 已保存</div>
                 </div>
-
-                <!-- Screen 5: Flashlight -->
                 <div class="screen" id="screen-flashlight">
-                    <button class="flashlight-btn" id="flashlightBtn">
-                        <span>🔦</span>
-                    </button>
+                    <button class="flashlight-btn" id="flashlightBtn"><span>🔦</span></button>
                     <div class="flashlight-label">点击开关手电筒</div>
+                </div>
+                <div class="screen" id="screen-more">
+                    <div class="more-title">更多工具</div>
+                    <div class="tools-grid" id="toolsGrid"></div>
                 </div>
             </div>
         </div>
 
-        <!-- Bottom Nav -->
         <div class="bottom-nav" id="bottomNav">
             <span class="nav-icon active" data-idx="0">🕐</span>
             <span class="nav-icon" data-idx="1">⏱</span>
@@ -510,12 +249,177 @@
             <span class="nav-icon" data-idx="3">🧮</span>
             <span class="nav-icon" data-idx="4">📝</span>
             <span class="nav-icon" data-idx="5">🔦</span>
+            <span class="nav-icon" data-idx="6">⋯</span>
         </div>
     </div>
 
     <div class="wakelock-indicator" id="wakelockIndicator"></div>
 
-    <!-- 手表版 APK 下载横幅 -->
+    <!-- ============ TOOL OVERLAYS ============ -->
+    <!-- Unit Converter -->
+    <div class="tool-overlay" id="ol-unit">
+        <div class="tool-overlay-header">
+            <button class="tool-overlay-back" onclick="closeOverlay()">←</button>
+            <span class="tool-overlay-title">📏 单位换算</span>
+        </div>
+        <div class="tool-overlay-body">
+            <select class="tool-select" id="unitCat" onchange="unitConvSwitch()">
+                <option value="length">长度</option>
+                <option value="weight">重量</option>
+                <option value="temp">温度</option>
+                <option value="area">面积</option>
+                <option value="speed">速度</option>
+            </select>
+            <div style="margin-top:10px;">
+                <input class="tool-input" type="number" id="unitInput" placeholder="输入数值" value="1" oninput="unitConvCalc()" style="text-align:center;font-size:22px;">
+            </div>
+            <div style="display:flex;gap:8px;margin-top:8px;align-items:center;">
+                <select class="tool-select" id="unitFrom" onchange="unitConvCalc()"></select>
+                <span style="color:var(--text2);">→</span>
+                <select class="tool-select" id="unitTo" onchange="unitConvCalc()"></select>
+            </div>
+            <div class="unit-result" id="unitResult">--</div>
+            <div style="text-align:center;font-size:12px;color:var(--text2);" id="unitFormula"></div>
+        </div>
+    </div>
+
+    <!-- Encrypt/Decrypt -->
+    <div class="tool-overlay" id="ol-encrypt">
+        <div class="tool-overlay-header">
+            <button class="tool-overlay-back" onclick="closeOverlay()">←</button>
+            <span class="tool-overlay-title">🔐 文字解密加密</span>
+        </div>
+        <div class="tool-overlay-body">
+            <div class="tool-tabs">
+                <button class="tool-tab active" data-t="base64" onclick="encSwitch('base64',this)">Base64</button>
+                <button class="tool-tab" data-t="rot13" onclick="encSwitch('rot13',this)">ROT13</button>
+                <button class="tool-tab" data-t="caesar" onclick="encSwitch('caesar',this)">凯撒</button>
+                <button class="tool-tab" data-t="hex" onclick="encSwitch('hex',this)">Hex</button>
+            </div>
+            <textarea class="tool-input" id="encInput" placeholder="输入文本..." rows="3" oninput="encProcess()"></textarea>
+            <div class="tool-row" style="margin-top:6px;">
+                <button class="tool-btn-sm" onclick="encDo('encode')">加密 ▸</button>
+                <button class="tool-btn-sm secondary" onclick="encDo('decode')">◂ 解密</button>
+                <button class="tool-btn-sm copy" onclick="encCopy()">复制</button>
+            </div>
+            <div style="margin-top:6px;display:none;" id="encCaesarRow">
+                <span style="font-size:12px;color:var(--text2);">偏移:</span>
+                <input type="number" class="tool-input" id="encShift" value="3" min="1" max="25" style="width:60px;text-align:center;padding:6px;" oninput="encProcess()">
+            </div>
+            <div class="tool-output" id="encOutput"></div>
+        </div>
+    </div>
+
+    <!-- Morse Code -->
+    <div class="tool-overlay" id="ol-morse">
+        <div class="tool-overlay-header">
+            <button class="tool-overlay-back" onclick="closeOverlay()">←</button>
+            <span class="tool-overlay-title">⚡ 摩斯密码</span>
+        </div>
+        <div class="tool-overlay-body">
+            <div class="tool-tabs">
+                <button class="tool-tab active" data-m="encode" onclick="morseSwitch('encode',this)">文字→摩斯</button>
+                <button class="tool-tab" data-m="decode" onclick="morseSwitch('decode',this)">摩斯→文字</button>
+            </div>
+            <textarea class="tool-input" id="morseInput" placeholder="输入内容..." rows="3" oninput="morseProcess()"></textarea>
+            <div class="tool-row" style="margin-top:6px;">
+                <button class="tool-btn-sm copy" onclick="morseCopy()">复制结果</button>
+                <button class="tool-btn-sm secondary" onclick="morsePlay()" id="morsePlayBtn">🔊 播放</button>
+            </div>
+            <div class="tool-output" id="morseOutput" style="margin-top:6px;"></div>
+        </div>
+    </div>
+
+    <!-- Password Generator -->
+    <div class="tool-overlay" id="ol-password">
+        <div class="tool-overlay-header">
+            <button class="tool-overlay-back" onclick="closeOverlay()">←</button>
+            <span class="tool-overlay-title">🔑 随机密码</span>
+        </div>
+        <div class="tool-overlay-body">
+            <div class="pw-display" id="pwDisplay">点击生成</div>
+            <div style="display:flex;align-items:center;gap:8px;margin:6px 0;">
+                <span style="font-size:12px;color:var(--text2);">长度:</span>
+                <span id="pwLenLabel" style="font-size:14px;font-weight:600;color:var(--accent);min-width:24px;">16</span>
+                <input type="range" class="pw-slider" id="pwSlider" min="4" max="32" value="16" oninput="pwUpdate()">
+            </div>
+            <div class="pw-chk">
+                <label><input type="checkbox" id="pwUpper" checked onchange="pwGen()"> 大写</label>
+                <label><input type="checkbox" id="pwLower" checked onchange="pwGen()"> 小写</label>
+                <label><input type="checkbox" id="pwDigits" checked onchange="pwGen()"> 数字</label>
+                <label><input type="checkbox" id="pwSym" onchange="pwGen()"> 符号</label>
+            </div>
+            <div class="tool-row">
+                <button class="tool-btn-sm" onclick="pwGen()" style="flex:1;">🔄 重新生成</button>
+                <button class="tool-btn-sm copy" onclick="pwCopy()">📋 复制</button>
+            </div>
+            <div id="pwStrength" style="text-align:center;font-size:12px;margin-top:4px;"></div>
+        </div>
+    </div>
+
+    <!-- Reaction Speed Test -->
+    <div class="tool-overlay" id="ol-reaction">
+        <div class="tool-overlay-header">
+            <button class="tool-overlay-back" onclick="closeOverlay()">←</button>
+            <span class="tool-overlay-title">⚡ 反应测试</span>
+        </div>
+        <div class="tool-overlay-body" style="display:flex;flex-direction:column;align-items:center;">
+            <div class="reaction-area wait" id="reactionArea" onclick="reactionTap()">点击开始</div>
+            <div class="reaction-stats">
+                <div>本次: <span id="reactionLast">--</span>ms</div>
+                <div>最快: <span id="reactionBest">--</span>ms</div>
+                <div>平均: <span id="reactionAvg">--</span>ms</div>
+            </div>
+            <div style="margin-top:4px;font-size:11px;color:var(--text2);" id="reactionGrade"></div>
+        </div>
+    </div>
+
+    <!-- Color Block Test -->
+    <div class="tool-overlay" id="ol-color">
+        <div class="tool-overlay-header">
+            <button class="tool-overlay-back" onclick="closeOverlay()">←</button>
+            <span class="tool-overlay-title">🎨 色块测试</span>
+        </div>
+        <div class="tool-overlay-body" style="display:flex;flex-direction:column;align-items:center;">
+            <div style="font-size:13px;color:var(--text2);margin-bottom:6px;">找出颜色不同的方块</div>
+            <div style="display:flex;gap:8px;margin-bottom:8px;">
+                <span style="font-size:13px;">得分: <b style="color:var(--accent);" id="colorScore">0</b></span>
+                <span style="font-size:13px;">等级: <b id="colorLevel">1</b></span>
+            </div>
+            <div class="color-grid-watch" id="colorGrid"></div>
+            <button class="tool-btn-sm" onclick="colorStart()" style="margin-top:8px;">重新开始</button>
+        </div>
+    </div>
+
+    <!-- Tic Tac Toe -->
+    <div class="tool-overlay" id="ol-tictactoe">
+        <div class="tool-overlay-header">
+            <button class="tool-overlay-back" onclick="closeOverlay()">←</button>
+            <span class="tool-overlay-title">❌ 井字棋</span>
+        </div>
+        <div class="tool-overlay-body" style="display:flex;flex-direction:column;align-items:center;">
+            <div class="ttt-turn" id="tttTurn">轮到: ❌ 你</div>
+            <div class="ttt-grid" id="tttGrid"></div>
+            <button class="tool-btn-sm" onclick="tttReset()" style="margin-top:10px;">🔄 重新开始</button>
+            <div style="display:flex;gap:16px;margin-top:4px;font-size:12px;color:var(--text2);">
+                <span>你: <b id="tttWins" style="color:var(--accent);">0</b></span>
+                <span>AI: <b id="tttLosses" style="color:var(--danger);">0</b></span>
+                <span>平: <b id="tttDraws">0</b></span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cloud Disk Links -->
+    <div class="tool-overlay" id="ol-disk">
+        <div class="tool-overlay-header">
+            <button class="tool-overlay-back" onclick="closeOverlay()">←</button>
+            <span class="tool-overlay-title">☁️ 网盘专栏</span>
+        </div>
+        <div class="tool-overlay-body">
+            <div class="disk-list" id="diskList"></div>
+        </div>
+    </div>
+
     <div class="apk-banner" id="apkBanner">
         <span class="apk-banner-icon">⌚</span>
         <span class="apk-banner-text">独立APP · 更流畅</span>
@@ -533,13 +437,12 @@
 
     // ============ STATE ============
     var currentScreen = 0;
-    var totalScreens = 6;
+    var totalScreens = 7;
     var screensEl = document.getElementById('screens');
     var isDragging = false;
     var startX = 0;
     var startTransform = 0;
 
-    // ============ NAVIGATION ============
     function goToScreen(idx) {
         if (idx < 0 || idx >= totalScreens) return;
         currentScreen = idx;
@@ -547,566 +450,624 @@
         updateNav();
         if (idx === 0) drawClock();
     }
-
     function updateNav() {
         var icons = document.querySelectorAll('.nav-icon');
-        icons.forEach(function(icon, i) {
-            icon.classList.toggle('active', i === currentScreen);
-        });
+        for (var i = 0; i < icons.length; i++) {
+            icons[i].classList.toggle('active', i === currentScreen);
+        }
     }
 
-    // Swipe support
     var mc = document.getElementById('mainContent');
     mc.addEventListener('touchstart', function(e) {
-        isDragging = true;
-        startX = e.touches[0].clientX;
+        isDragging = true; startX = e.touches[0].clientX;
         startTransform = -currentScreen * mc.offsetWidth;
         screensEl.style.transition = 'none';
     }, {passive: true});
-
     mc.addEventListener('touchmove', function(e) {
         if (!isDragging) return;
         var dx = e.touches[0].clientX - startX;
         var newX = startTransform + dx;
-        var maxX = 0;
-        var minX = -(totalScreens - 1) * mc.offsetWidth;
+        var maxX = 0, minX = -(totalScreens - 1) * mc.offsetWidth;
         newX = Math.max(minX, Math.min(maxX, newX));
         screensEl.style.transform = 'translateX(' + newX + 'px)';
     }, {passive: true});
-
     mc.addEventListener('touchend', function(e) {
-        if (!isDragging) return;
-        isDragging = false;
+        if (!isDragging) return; isDragging = false;
         screensEl.style.transition = 'transform 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
         var dx = e.changedTouches[0].clientX - startX;
         var threshold = mc.offsetWidth * 0.15;
         if (Math.abs(dx) > threshold) {
-            if (dx > 0) goToScreen(currentScreen - 1);
-            else goToScreen(currentScreen + 1);
-        } else {
-            goToScreen(currentScreen);
-        }
+            if (dx > 0) goToScreen(currentScreen - 1); else goToScreen(currentScreen + 1);
+        } else { goToScreen(currentScreen); }
     });
-
-    // Bottom nav click
     document.getElementById('bottomNav').addEventListener('click', function(e) {
         var icon = e.target.closest('.nav-icon');
         if (!icon) return;
-        var idx = parseInt(icon.getAttribute('data-idx'));
-        goToScreen(idx);
+        goToScreen(parseInt(icon.getAttribute('data-idx')));
         vibrate();
     });
 
-    // ============ HAPTIC FEEDBACK ============
-    function vibrate() {
-        if (navigator.vibrate) {
-            try { navigator.vibrate(8); } catch(e) {}
-        }
-    }
+    function vibrate() { if (navigator.vibrate) { try { navigator.vibrate(8); } catch(e) {} } }
 
-    // ============ STATUS BAR CLOCK ============
+    // Status bar
     function updateStatusTime() {
         var now = new Date();
-        var h = now.getHours().toString().padStart(2, '0');
-        var m = now.getMinutes().toString().padStart(2, '0');
-        document.getElementById('statusTime').textContent = h + ':' + m;
+        document.getElementById('statusTime').textContent = now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0');
     }
-    setInterval(updateStatusTime, 15000);
-    updateStatusTime();
+    setInterval(updateStatusTime, 15000); updateStatusTime();
 
-    // Battery indicator (simulated if not available)
     function updateBattery() {
-        var fill = document.getElementById('batteryFill');
-        var pct = document.getElementById('batteryPct');
+        var fill = document.getElementById('batteryFill'), pct = document.getElementById('batteryPct');
         if (navigator.getBattery) {
             navigator.getBattery().then(function(b) {
-                var level = Math.round(b.level * 100);
-                fill.style.width = level + '%';
-                pct.textContent = level + '%';
-                if (level <= 15) fill.style.background = 'var(--danger)';
-                else if (level <= 30) fill.style.background = 'var(--warn)';
-                else fill.style.background = 'var(--success)';
+                var lv = Math.round(b.level * 100); fill.style.width = lv + '%'; pct.textContent = lv + '%';
+                fill.style.background = lv <= 15 ? 'var(--danger)' : lv <= 30 ? 'var(--warn)' : 'var(--success)';
                 b.addEventListener('levelchange', updateBattery);
-            }).catch(function() {
-                fill.style.width = '85%';
-                pct.textContent = '';
-            });
-        } else {
-            fill.style.width = '85%';
-            pct.textContent = '';
-        }
+            }).catch(function() { fill.style.width = '85%'; pct.textContent = ''; });
+        } else { fill.style.width = '85%'; pct.textContent = ''; }
     }
     updateBattery();
 
     // ============ CLOCK ============
-    var clockCanvas = document.getElementById('clockCanvas');
-    var clockCtx = clockCanvas.getContext('2d');
-    var clockDateEl = document.getElementById('clockDate');
-
+    var clockCanvas = document.getElementById('clockCanvas'), clockCtx = clockCanvas.getContext('2d'), clockDateEl = document.getElementById('clockDate');
     function drawClock() {
         var size = clockCanvas.parentElement.offsetWidth;
-        clockCanvas.width = size * 2;
-        clockCanvas.height = size * 2;
-        clockCanvas.style.width = size + 'px';
-        clockCanvas.style.height = size + 'px';
-
-        var now = new Date();
-        var cx = size, cy = size;
-        var r = size * 0.82;
-        var h = now.getHours() % 12;
-        var m = now.getMinutes();
-        var s = now.getSeconds();
-        var ms = now.getMilliseconds();
-
+        clockCanvas.width = size * 2; clockCanvas.height = size * 2;
+        clockCanvas.style.width = size + 'px'; clockCanvas.style.height = size + 'px';
+        var now = new Date(), cx = size, cy = size, r = size * 0.82;
+        var h = now.getHours() % 12, m = now.getMinutes(), s = now.getSeconds(), ms = now.getMilliseconds();
         clockCtx.clearRect(0, 0, size * 2, size * 2);
-
-        // Outer ring
-        clockCtx.beginPath();
-        clockCtx.arc(cx, cy, r, 0, Math.PI * 2);
-        clockCtx.strokeStyle = '#333';
-        clockCtx.lineWidth = 3;
-        clockCtx.stroke();
-
-        // Minute markers
+        clockCtx.beginPath(); clockCtx.arc(cx, cy, r, 0, Math.PI * 2); clockCtx.strokeStyle = '#333'; clockCtx.lineWidth = 3; clockCtx.stroke();
         for (var i = 0; i < 60; i++) {
             var angle = (i / 60) * Math.PI * 2 - Math.PI / 2;
-            var innerR = i % 5 === 0 ? r - 12 : r - 6;
-            var outerR = r - 3;
+            var ir = i % 5 === 0 ? r - 12 : r - 6, or_ = r - 3;
             clockCtx.beginPath();
-            clockCtx.moveTo(cx + Math.cos(angle) * innerR, cy + Math.sin(angle) * innerR);
-            clockCtx.lineTo(cx + Math.cos(angle) * outerR, cy + Math.sin(angle) * outerR);
+            clockCtx.moveTo(cx + Math.cos(angle) * ir, cy + Math.sin(angle) * ir);
+            clockCtx.lineTo(cx + Math.cos(angle) * or_, cy + Math.sin(angle) * or_);
             clockCtx.strokeStyle = i % 5 === 0 ? '#fff' : '#444';
-            clockCtx.lineWidth = i % 5 === 0 ? 2.5 : 1;
-            clockCtx.stroke();
+            clockCtx.lineWidth = i % 5 === 0 ? 2.5 : 1; clockCtx.stroke();
         }
-
-        // Hour numbers
-        clockCtx.fillStyle = '#fff';
-        clockCtx.font = 'bold ' + (size * 0.14) + 'px -apple-system, sans-serif';
-        clockCtx.textAlign = 'center';
-        clockCtx.textBaseline = 'middle';
+        clockCtx.fillStyle = '#fff'; clockCtx.font = 'bold ' + (size * 0.14) + 'px -apple-system, sans-serif';
+        clockCtx.textAlign = 'center'; clockCtx.textBaseline = 'middle';
         for (var i = 1; i <= 12; i++) {
             var angle = (i / 12) * Math.PI * 2 - Math.PI / 2;
-            var numR = r * 0.72;
-            clockCtx.fillText(i, cx + Math.cos(angle) * numR, cy + Math.sin(angle) * numR);
+            clockCtx.fillText(i, cx + Math.cos(angle) * r * 0.72, cy + Math.sin(angle) * r * 0.72);
         }
-
-        // Hour hand
         var hAngle = ((h + m / 60) / 12) * Math.PI * 2 - Math.PI / 2;
-        clockCtx.beginPath();
-        clockCtx.moveTo(cx, cy);
-        clockCtx.lineTo(cx + Math.cos(hAngle) * r * 0.45, cy + Math.sin(hAngle) * r * 0.45);
-        clockCtx.strokeStyle = '#fff';
-        clockCtx.lineWidth = 4;
-        clockCtx.lineCap = 'round';
-        clockCtx.stroke();
-
-        // Minute hand
+        clockCtx.beginPath(); clockCtx.moveTo(cx, cy); clockCtx.lineTo(cx + Math.cos(hAngle) * r * 0.45, cy + Math.sin(hAngle) * r * 0.45);
+        clockCtx.strokeStyle = '#fff'; clockCtx.lineWidth = 4; clockCtx.lineCap = 'round'; clockCtx.stroke();
         var mAngle = ((m + s / 60) / 60) * Math.PI * 2 - Math.PI / 2;
-        clockCtx.beginPath();
-        clockCtx.moveTo(cx, cy);
-        clockCtx.lineTo(cx + Math.cos(mAngle) * r * 0.62, cy + Math.sin(mAngle) * r * 0.62);
-        clockCtx.strokeStyle = '#ddd';
-        clockCtx.lineWidth = 2.5;
-        clockCtx.stroke();
-
-        // Second hand
+        clockCtx.beginPath(); clockCtx.moveTo(cx, cy); clockCtx.lineTo(cx + Math.cos(mAngle) * r * 0.62, cy + Math.sin(mAngle) * r * 0.62);
+        clockCtx.strokeStyle = '#ddd'; clockCtx.lineWidth = 2.5; clockCtx.stroke();
         var sAngle = ((s + ms / 1000) / 60) * Math.PI * 2 - Math.PI / 2;
-        clockCtx.beginPath();
-        clockCtx.moveTo(cx - Math.cos(sAngle) * r * 0.12, cy - Math.sin(sAngle) * r * 0.12);
+        clockCtx.beginPath(); clockCtx.moveTo(cx - Math.cos(sAngle) * r * 0.12, cy - Math.sin(sAngle) * r * 0.12);
         clockCtx.lineTo(cx + Math.cos(sAngle) * r * 0.75, cy + Math.sin(sAngle) * r * 0.75);
-        clockCtx.strokeStyle = '#2563eb';
-        clockCtx.lineWidth = 1.5;
-        clockCtx.stroke();
-
-        // Center dot
-        clockCtx.beginPath();
-        clockCtx.arc(cx, cy, 4, 0, Math.PI * 2);
-        clockCtx.fillStyle = '#2563eb';
-        clockCtx.fill();
-
-        // Date
+        clockCtx.strokeStyle = '#2563eb'; clockCtx.lineWidth = 1.5; clockCtx.stroke();
+        clockCtx.beginPath(); clockCtx.arc(cx, cy, 4, 0, Math.PI * 2); clockCtx.fillStyle = '#2563eb'; clockCtx.fill();
         var days = ['日', '一', '二', '三', '四', '五', '六'];
         clockDateEl.textContent = (now.getMonth() + 1) + '月' + now.getDate() + '日 周' + days[now.getDay()];
     }
 
     // ============ STOPWATCH ============
-    var swRunning = false;
-    var swStartTime = 0;
-    var swElapsed = 0;
-    var swInterval = null;
-    var swLapCount = 0;
-    var swLapsArr = [];
-
+    var swRunning = false, swStartTime = 0, swElapsed = 0, swInterval = null, swLapCount = 0, swLapsArr = [];
     function formatSW(ms) {
-        var totalSec = Math.floor(ms / 1000);
-        var min = Math.floor(totalSec / 60);
-        var sec = totalSec % 60;
-        var cs = Math.floor((ms % 1000) / 10);
-        return min.toString().padStart(2, '0') + ':' +
-               sec.toString().padStart(2, '0') +
-               '<span class="sw-ms">.' + cs.toString().padStart(2, '0') + '</span>';
+        var ts = Math.floor(ms / 1000), min = Math.floor(ts / 60), sec = ts % 60, cs = Math.floor((ms % 1000) / 10);
+        return min.toString().padStart(2, '0') + ':' + sec.toString().padStart(2, '0') + '<span class="sw-ms">.' + cs.toString().padStart(2, '0') + '</span>';
     }
-
-    function updateSWDisplay() {
-        document.getElementById('swDisplay').innerHTML = formatSW(swElapsed);
-    }
-
+    function updateSWDisplay() { document.getElementById('swDisplay').innerHTML = formatSW(swElapsed); }
     function updateSWButtons() {
-        var startBtn = document.getElementById('swStartBtn');
-        var lapBtn = document.getElementById('swLapBtn');
-        if (swRunning) {
-            startBtn.textContent = '暂停';
-            startBtn.className = 'btn btn-outline';
-            lapBtn.disabled = false;
-        } else if (swElapsed > 0) {
-            startBtn.textContent = '继续';
-            startBtn.className = 'btn btn-primary';
-            lapBtn.disabled = true;
-        } else {
-            startBtn.textContent = '开始';
-            startBtn.className = 'btn btn-primary';
-            lapBtn.disabled = true;
-        }
+        var sb = document.getElementById('swStartBtn'), lb = document.getElementById('swLapBtn');
+        if (swRunning) { sb.textContent = '暂停'; sb.className = 'btn btn-outline'; lb.disabled = false; }
+        else if (swElapsed > 0) { sb.textContent = '继续'; sb.className = 'btn btn-primary'; lb.disabled = true; }
+        else { sb.textContent = '开始'; sb.className = 'btn btn-primary'; lb.disabled = true; }
     }
-
     document.getElementById('swStartBtn').addEventListener('click', function() {
         vibrate();
-        if (swRunning) {
-            // Pause
-            clearInterval(swInterval);
-            swElapsed += Date.now() - swStartTime;
-            swRunning = false;
-        } else {
-            // Start/Resume
-            swStartTime = Date.now();
-            swRunning = true;
-            swInterval = setInterval(function() {
-                var now = Date.now();
-                swElapsed = swElapsed + (now - swStartTime);
-                swStartTime = now;
-                updateSWDisplay();
-            }, 16);
-            requestWakeLock();
-        }
-        updateSWDisplay();
-        updateSWButtons();
+        if (swRunning) { clearInterval(swInterval); swElapsed += Date.now() - swStartTime; swRunning = false; }
+        else { swStartTime = Date.now(); swRunning = true; swInterval = setInterval(function() { var n = Date.now(); swElapsed += n - swStartTime; swStartTime = n; updateSWDisplay(); }, 16); requestWakeLock(); }
+        updateSWDisplay(); updateSWButtons();
     });
-
-    document.getElementById('swLapBtn').addEventListener('click', function() {
-        vibrate();
-        swLapCount++;
-        swLapsArr.unshift({ num: swLapCount, time: swElapsed });
-        renderLaps();
-    });
-
+    document.getElementById('swLapBtn').addEventListener('click', function() { vibrate(); swLapCount++; swLapsArr.unshift({ num: swLapCount, time: swElapsed }); renderLaps(); });
     document.getElementById('swResetBtn').addEventListener('click', function() {
-        vibrate();
-        clearInterval(swInterval);
-        swRunning = false;
-        swElapsed = 0;
-        swStartTime = 0;
-        swLapCount = 0;
-        swLapsArr = [];
-        updateSWDisplay();
-        updateSWButtons();
-        document.getElementById('swLaps').innerHTML = '';
+        vibrate(); clearInterval(swInterval); swRunning = false; swElapsed = 0; swStartTime = 0; swLapCount = 0; swLapsArr = [];
+        updateSWDisplay(); updateSWButtons(); document.getElementById('swLaps').innerHTML = '';
     });
-
     function renderLaps() {
-        var html = '';
-        swLapsArr.forEach(function(lap) {
-            html += '<div class="sw-lap-row"><span class="lap-num">#' + lap.num + '</span><span>' + formatSW(lap.time) + '</span></div>';
-        });
-        document.getElementById('swLaps').innerHTML = html;
+        var h = ''; for (var i = 0; i < swLapsArr.length; i++) h += '<div class="sw-lap-row"><span class="lap-num">#' + swLapsArr[i].num + '</span><span>' + formatSW(swLapsArr[i].time) + '</span></div>';
+        document.getElementById('swLaps').innerHTML = h;
     }
 
     // ============ TIMER ============
-    var timerSeconds = 300;
-    var timerRemaining = 300;
-    var timerRunning = false;
-    var timerInterval = null;
-
-    function formatTimer(s) {
-        var min = Math.floor(Math.abs(s) / 60);
-        var sec = Math.abs(s) % 60;
-        return min.toString().padStart(2, '0') + ':' + sec.toString().padStart(2, '0');
-    }
-
+    var timerSeconds = 300, timerRemaining = 300, timerRunning = false, timerInterval = null;
+    function formatTimer(s) { var min = Math.floor(Math.abs(s) / 60), sec = Math.abs(s) % 60; return min.toString().padStart(2, '0') + ':' + sec.toString().padStart(2, '0'); }
     function updateTimerDisplay() {
-        var display = document.getElementById('timerDisplay');
-        display.textContent = formatTimer(timerRemaining);
-        if (timerRemaining <= 0 && timerRunning) {
-            display.style.color = 'var(--danger)';
-        } else {
-            display.style.color = '';
-        }
+        var d = document.getElementById('timerDisplay'); d.textContent = formatTimer(timerRemaining);
+        d.style.color = timerRemaining <= 0 && timerRunning ? 'var(--danger)' : '';
     }
-
     function updateTimerPresets() {
-        document.querySelectorAll('.timer-preset').forEach(function(btn) {
-            var sec = parseInt(btn.getAttribute('data-sec'));
-            btn.classList.toggle('selected', sec === timerSeconds && !timerRunning);
-        });
+        var ps = document.querySelectorAll('.timer-preset');
+        for (var i = 0; i < ps.length; i++) { var s = parseInt(ps[i].getAttribute('data-sec')); ps[i].classList.toggle('selected', s === timerSeconds && !timerRunning); }
     }
-
     document.getElementById('timerPresets').addEventListener('click', function(e) {
         var btn = e.target.closest('.timer-preset');
-        if (!btn || timerRunning) return;
-        vibrate();
-        timerSeconds = parseInt(btn.getAttribute('data-sec'));
-        timerRemaining = timerSeconds;
-        updateTimerDisplay();
-        updateTimerPresets();
+        if (!btn || timerRunning) return; vibrate();
+        timerSeconds = parseInt(btn.getAttribute('data-sec')); timerRemaining = timerSeconds;
+        updateTimerDisplay(); updateTimerPresets();
     });
-
     document.getElementById('timerStartBtn').addEventListener('click', function() {
         vibrate();
-        if (timerRunning) {
-            clearInterval(timerInterval);
-            timerRunning = false;
-            document.getElementById('timerStartBtn').textContent = '开始';
-            document.getElementById('timerStartBtn').className = 'btn btn-primary';
-        } else {
-            if (timerRemaining <= 0) {
-                timerRemaining = timerSeconds;
-            }
-            timerRunning = true;
-            document.getElementById('timerStartBtn').textContent = '暂停';
-            document.getElementById('timerStartBtn').className = 'btn btn-outline';
+        if (timerRunning) { clearInterval(timerInterval); timerRunning = false; document.getElementById('timerStartBtn').textContent = '开始'; document.getElementById('timerStartBtn').className = 'btn btn-primary'; }
+        else {
+            if (timerRemaining <= 0) timerRemaining = timerSeconds;
+            timerRunning = true; document.getElementById('timerStartBtn').textContent = '暂停'; document.getElementById('timerStartBtn').className = 'btn btn-outline';
             requestWakeLock();
             timerInterval = setInterval(function() {
-                timerRemaining--;
-                updateTimerDisplay();
-                if (timerRemaining <= 0) {
-                    clearInterval(timerInterval);
-                    timerRunning = false;
-                    document.getElementById('timerStartBtn').textContent = '开始';
-                    document.getElementById('timerStartBtn').className = 'btn btn-primary';
-                    // Vibrate pattern for alarm
-                    if (navigator.vibrate) {
-                        navigator.vibrate([200, 100, 200, 100, 500]);
-                    }
-                }
+                timerRemaining--; updateTimerDisplay();
+                if (timerRemaining <= 0) { clearInterval(timerInterval); timerRunning = false; document.getElementById('timerStartBtn').textContent = '开始'; document.getElementById('timerStartBtn').className = 'btn btn-primary'; if (navigator.vibrate) navigator.vibrate([200,100,200,100,500]); }
             }, 1000);
         }
     });
-
     document.getElementById('timerResetBtn').addEventListener('click', function() {
-        vibrate();
-        clearInterval(timerInterval);
-        timerRunning = false;
-        timerRemaining = timerSeconds;
-        updateTimerDisplay();
-        document.getElementById('timerStartBtn').textContent = '开始';
-        document.getElementById('timerStartBtn').className = 'btn btn-primary';
-        document.getElementById('timerDisplay').style.color = '';
+        vibrate(); clearInterval(timerInterval); timerRunning = false; timerRemaining = timerSeconds;
+        updateTimerDisplay(); document.getElementById('timerStartBtn').textContent = '开始'; document.getElementById('timerStartBtn').className = 'btn btn-primary'; document.getElementById('timerDisplay').style.color = '';
     });
 
     // ============ CALCULATOR ============
-    var calcExpr = '0';
-    var calcShouldReset = true;
-    var calcDisplay = document.getElementById('calcDisplay');
-
-    function updateCalcDisplay() {
-        calcDisplay.textContent = calcExpr;
-        // Auto-size font
-        if (calcExpr.length > 8) {
-            calcDisplay.style.fontSize = '28px';
-        } else if (calcExpr.length > 15) {
-            calcDisplay.style.fontSize = '22px';
-        } else {
-            calcDisplay.style.fontSize = '';
-        }
-    }
-
+    var calcExpr = '0', calcShouldReset = true, calcDisplay = document.getElementById('calcDisplay');
+    function updateCalcDisplay() { calcDisplay.textContent = calcExpr; calcDisplay.style.fontSize = calcExpr.length > 10 ? '24px' : calcExpr.length > 8 ? '28px' : ''; }
     function safeEval(expr) {
-        // Replace ÷ and ×
-        var clean = expr.replace(/×/g, '*').replace(/÷/g, '/');
-        // Only allow safe characters
-        if (/[^0-9+\-*/.()]/.test(clean)) return NaN;
-        try {
-            var result = Function('"use strict"; return (' + clean + ')')();
-            if (typeof result !== 'number' || !isFinite(result)) return 'Error';
-            // Limit precision
-            if (Math.abs(result) > 1e12 || (Math.abs(result) < 1e-10 && result !== 0)) {
-                return result.toExponential(6);
-            }
-            return parseFloat(result.toPrecision(12));
-        } catch(e) {
-            return 'Error';
-        }
+        var c = expr.replace(/×/g, '*').replace(/÷/g, '/');
+        if (/[^0-9+\-*/.()]/.test(c)) return NaN;
+        try { var r = Function('"use strict"; return (' + c + ')')(); if (typeof r !== 'number' || !isFinite(r)) return 'Error'; if (Math.abs(r) > 1e12 || (Math.abs(r) < 1e-10 && r !== 0)) return r.toExponential(6); return parseFloat(r.toPrecision(12)); } catch(e) { return 'Error'; }
     }
-
-    var calcBtns = [
-        'C', '÷', '×', '⌫',
-        '7', '8', '9', '-',
-        '4', '5', '6', '+',
-        '1', '2', '3', '=',
-        '0', '00', '.', ''
-    ];
-    // Last button is empty placeholder
-
+    var calcBtns = ['C','÷','×','⌫','7','8','9','-','4','5','6','+','1','2','3','=','0','00','.',''];
     var calcGrid = document.getElementById('calcGrid');
-    calcBtns.forEach(function(label, idx) {
-        if (!label) return;
-        var btn = document.createElement('button');
-        btn.className = 'calc-btn';
-        btn.textContent = label;
-        if (label === 'C') btn.classList.add('clear');
-        if ('÷×-+'.indexOf(label) !== -1) btn.classList.add('op');
-        if (label === '=') btn.classList.add('eq');
-        btn.addEventListener('click', function() {
-            vibrate();
-            handleCalc(label);
-        });
+    for (var i = 0; i < calcBtns.length; i++) {
+        if (!calcBtns[i]) continue;
+        var btn = document.createElement('button'); btn.className = 'calc-btn'; btn.textContent = calcBtns[i];
+        if (calcBtns[i] === 'C') btn.classList.add('clear');
+        if ('÷×-+'.indexOf(calcBtns[i]) !== -1) btn.classList.add('op');
+        if (calcBtns[i] === '=') btn.classList.add('eq');
+        (function(l) { btn.addEventListener('click', function() { vibrate(); handleCalc(l); }); })(calcBtns[i]);
         calcGrid.appendChild(btn);
-    });
-
+    }
     function handleCalc(key) {
-        if (key === 'C') {
-            calcExpr = '0';
-            calcShouldReset = true;
-        } else if (key === '⌫') {
-            calcExpr = calcExpr.slice(0, -1);
-            if (calcExpr === '' || calcExpr === '-') { calcExpr = '0'; calcShouldReset = true; }
-        } else if (key === '=') {
-            var result = safeEval(calcExpr);
-            calcExpr = String(result);
-            calcShouldReset = true;
-        } else {
-            if (calcShouldReset) {
-                calcExpr = '';
-                calcShouldReset = false;
-            }
-            // Prevent double operators
-            var lastChar = calcExpr.slice(-1);
-            var isOp = '÷×+-'.indexOf(key) !== -1;
-            var lastIsOp = '÷×+-'.indexOf(lastChar) !== -1;
-            if (isOp && lastIsOp) {
-                calcExpr = calcExpr.slice(0, -1) + key;
-            } else if (calcExpr === '0' && !isOp && key !== '.') {
-                calcExpr = key;
-            } else if (calcExpr === '0' && key === '.') {
-                calcExpr = '0.';
-            } else {
-                calcExpr += key;
-            }
+        if (key === 'C') { calcExpr = '0'; calcShouldReset = true; }
+        else if (key === '⌫') { calcExpr = calcExpr.slice(0, -1); if (calcExpr === '' || calcExpr === '-') { calcExpr = '0'; calcShouldReset = true; } }
+        else if (key === '=') { calcExpr = String(safeEval(calcExpr)); calcShouldReset = true; }
+        else {
+            if (calcShouldReset) { calcExpr = ''; calcShouldReset = false; }
+            var lc = calcExpr.slice(-1), isOp = '÷×+-'.indexOf(key) !== -1, lastIsOp = '÷×+-'.indexOf(lc) !== -1;
+            if (isOp && lastIsOp) calcExpr = calcExpr.slice(0, -1) + key;
+            else if (calcExpr === '0' && !isOp && key !== '.') calcExpr = key;
+            else if (calcExpr === '0' && key === '.') calcExpr = '0.';
+            else calcExpr += key;
         }
         updateCalcDisplay();
     }
 
     // ============ NOTES ============
-    var notesInput = document.getElementById('notesInput');
-    var notesSaved = document.getElementById('notesSaved');
-    var saveTimeout = null;
-
-    // Load saved note
-    var savedNote = localStorage.getItem('watch_notes');
-    if (savedNote) {
-        notesInput.value = savedNote;
-    }
-
+    var notesInput = document.getElementById('notesInput'), notesSaved = document.getElementById('notesSaved'), saveTimeout = null;
+    var savedNote = localStorage.getItem('watch_notes'); if (savedNote) notesInput.value = savedNote;
     notesInput.addEventListener('input', function() {
         clearTimeout(saveTimeout);
-        saveTimeout = setTimeout(function() {
-            localStorage.setItem('watch_notes', notesInput.value);
-            notesSaved.classList.add('show');
-            setTimeout(function() { notesSaved.classList.remove('show'); }, 1500);
-        }, 500);
+        saveTimeout = setTimeout(function() { localStorage.setItem('watch_notes', notesInput.value); notesSaved.classList.add('show'); setTimeout(function() { notesSaved.classList.remove('show'); }, 1500); }, 500);
     });
 
     // ============ FLASHLIGHT ============
-    var flashlightOn = false;
-    var flashlightBtn = document.getElementById('flashlightBtn');
-
+    var flashlightOn = false, flashlightBtn = document.getElementById('flashlightBtn');
     flashlightBtn.addEventListener('click', function() {
-        vibrate();
-        flashlightOn = !flashlightOn;
-        var appShell = document.querySelector('.app-shell');
-        if (flashlightOn) {
-            flashlightBtn.classList.add('on');
-            document.body.style.background = '#fff';
-            document.body.style.color = '#000';
-            appShell.style.filter = 'brightness(3)';
-            // Also try to set screen brightness to max (may not work on all browsers)
-            if ('setScreenBrightness' in navigator) {
-                try { navigator.setScreenBrightness(1.0); } catch(e) {}
-            }
-            requestWakeLock();
-        } else {
-            flashlightBtn.classList.remove('on');
-            document.body.style.background = '';
-            document.body.style.color = '';
-            appShell.style.filter = '';
-        }
+        vibrate(); flashlightOn = !flashlightOn;
+        var as = document.querySelector('.app-shell');
+        if (flashlightOn) { flashlightBtn.classList.add('on'); document.body.style.background = '#fff'; document.body.style.color = '#000'; as.style.filter = 'brightness(3)'; requestWakeLock(); }
+        else { flashlightBtn.classList.remove('on'); document.body.style.background = ''; document.body.style.color = ''; as.style.filter = ''; }
     });
 
     // ============ WAKE LOCK ============
     var wakeLock = null;
-
     function requestWakeLock() {
         if ('wakeLock' in navigator) {
-            navigator.wakeLock.request('screen').then(function(wl) {
-                wakeLock = wl;
-                document.getElementById('wakelockIndicator').classList.add('active');
-                wl.addEventListener('release', function() {
-                    document.getElementById('wakelockIndicator').classList.remove('active');
-                });
-            }).catch(function() {});
+            navigator.wakeLock.request('screen').then(function(wl) { wakeLock = wl; document.getElementById('wakelockIndicator').classList.add('active'); wl.addEventListener('release', function() { document.getElementById('wakelockIndicator').classList.remove('active'); }); }).catch(function() {});
         }
     }
+    document.addEventListener('visibilitychange', function() { if (document.visibilityState === 'visible' && wakeLock === null && (swRunning || timerRunning)) requestWakeLock(); });
 
-    // Auto-release wake lock when page hidden
-    document.addEventListener('visibilitychange', function() {
-        if (document.visibilityState === 'visible' && wakeLock === null && (swRunning || timerRunning)) {
-            requestWakeLock();
+    // ============ MORE TOOLS GRID ============
+    var toolsList = [
+        { name: '单位换算', icon: '📏', type: 'overlay', id: 'unit', badge: '' },
+        { name: '屏幕画板', icon: '🎨', type: 'page', url: 'draw.html', badge: '' },
+        { name: '解密加密', icon: '🔐', type: 'overlay', id: 'encrypt', badge: '' },
+        { name: '摩斯密码', icon: '⚡', type: 'overlay', id: 'morse', badge: '' },
+        { name: '密码生成', icon: '🔑', type: 'overlay', id: 'password', badge: '' },
+        { name: '反应测试', icon: '⏱', type: 'overlay', id: 'reaction', badge: '' },
+        { name: '色块测试', icon: '🎯', type: 'overlay', id: 'color', badge: '' },
+        { name: '井字棋', icon: '❌', type: 'overlay', id: 'tictactoe', badge: '' },
+        { name: '扫雷', icon: '💣', type: 'page', url: 'minesweeper.html', badge: '' },
+        { name: '贪吃蛇', icon: '🐍', type: 'page', url: 'snake.html', badge: '' },
+        { name: '大西瓜', icon: '🍉', type: 'page', url: 'suika.html', badge: '' },
+        { name: '网盘专栏', icon: '☁️', type: 'overlay', id: 'disk', badge: '' }
+    ];
+
+    var toolsGrid = document.getElementById('toolsGrid');
+    for (var t = 0; t < toolsList.length; t++) {
+        (function(tool) {
+            var card = document.createElement('div'); card.className = 'tool-card';
+            card.innerHTML = '<div class="tool-card-icon">' + tool.icon + '</div><div class="tool-card-name">' + tool.name + '</div>' + (tool.badge ? '<div class="tool-card-badge">' + tool.badge + '</div>' : '');
+            card.addEventListener('click', function() {
+                vibrate();
+                if (tool.type === 'overlay') openOverlay(tool.id);
+                else if (tool.type === 'page') window.location.href = tool.url;
+            });
+            toolsGrid.appendChild(card);
+        })(toolsList[t]);
+    }
+
+    // ============ OVERLAY SYSTEM ============
+    var currentOverlay = null;
+    function openOverlay(id) {
+        vibrate();
+        if (currentOverlay) closeOverlay();
+        var ol = document.getElementById('ol-' + id);
+        if (!ol) return;
+        currentOverlay = id;
+        ol.classList.add('open');
+        // Init tool-specific state
+        if (id === 'unit') unitConvCalc();
+        if (id === 'password') pwGen();
+        if (id === 'reaction') reactionReset();
+        if (id === 'color') colorStart();
+        if (id === 'tictactoe') tttReset();
+        if (id === 'disk') initDisk();
+    }
+    function closeOverlay() {
+        if (!currentOverlay) return;
+        var ol = document.getElementById('ol-' + currentOverlay);
+        if (ol) ol.classList.remove('open');
+        // Cleanup
+        if (currentOverlay === 'reaction') clearTimeout(reactionTimeout);
+        currentOverlay = null;
+    }
+    // Global closeOverlay for onclick handlers
+    window.closeOverlay = closeOverlay;
+
+    // ============ UNIT CONVERTER ============
+    var unitData = {
+        length: { units: { '米': 1, '千米': 0.001, '厘米': 100, '毫米': 1000, '英里': 0.000621371, '英尺': 3.28084, '英寸': 39.3701, '码': 1.09361 }, from: '米', to: '英尺' },
+        weight: { units: { '千克': 1, '克': 1000, '毫克': 1000000, '吨': 0.001, '磅': 2.20462, '盎司': 35.274 }, from: '千克', to: '磅' },
+        temp: { units: { '摄氏度': 'C', '华氏度': 'F', '开尔文': 'K' }, from: '摄氏度', to: '华氏度' },
+        area: { units: { '平方米': 1, '平方公里': 0.000001, '公顷': 0.0001, '亩': 0.0015, '平方英尺': 10.7639, '平方英寸': 1550 }, from: '平方米', to: '平方英尺' },
+        speed: { units: { 'km/h': 1, 'm/s': 0.277778, 'mph': 0.621371, '节': 0.539957 }, from: 'km/h', to: 'm/s' }
+    };
+    var unitCat = 'length';
+    function unitConvSwitch() {
+        unitCat = document.getElementById('unitCat').value;
+        var d = unitData[unitCat], from = document.getElementById('unitFrom'), to = document.getElementById('unitTo');
+        from.innerHTML = ''; to.innerHTML = '';
+        for (var k in d.units) { var o1 = document.createElement('option'); o1.value = k; o1.textContent = k; from.appendChild(o1); var o2 = document.createElement('option'); o2.value = k; o2.textContent = k; to.appendChild(o2); }
+        from.value = d.from; to.value = d.to;
+        unitConvCalc();
+    }
+    function unitConvCalc() {
+        var d = unitData[unitCat], val = parseFloat(document.getElementById('unitInput').value) || 0;
+        var from = document.getElementById('unitFrom').value, to = document.getElementById('unitTo').value;
+        if (unitCat === 'temp') {
+            var c = val;
+            if (from === '华氏度') c = (val - 32) * 5 / 9;
+            else if (from === '开尔文') c = val - 273.15;
+            var result = to === '摄氏度' ? c : to === '华氏度' ? c * 9 / 5 + 32 : c + 273.15;
+            document.getElementById('unitResult').textContent = result.toFixed(2) + ' ' + to;
+        } else {
+            var base = val / d.units[from], result = base * d.units[to];
+            document.getElementById('unitResult').textContent = result.toPrecision(10).replace(/\.?0+$/, '') + ' ' + to;
         }
-    });
+    }
+    window.unitConvSwitch = unitConvSwitch;
+    window.unitConvCalc = unitConvCalc;
+    unitConvSwitch();
+
+    // ============ ENCRYPT/DECRYPT ============
+    var encMode = 'base64';
+    function encSwitch(mode, el) {
+        encMode = mode;
+        var tabs = document.querySelectorAll('#ol-encrypt .tool-tab');
+        for (var i = 0; i < tabs.length; i++) tabs[i].classList.toggle('active', tabs[i].getAttribute('data-t') === mode);
+        document.getElementById('encCaesarRow').style.display = mode === 'caesar' ? 'flex' : 'none';
+        encProcess();
+    }
+    function encDo(dir) {
+        var input = document.getElementById('encInput').value;
+        var output = '';
+        if (encMode === 'base64') {
+            try { output = dir === 'encode' ? btoa(unescape(encodeURIComponent(input))) : decodeURIComponent(escape(atob(input))); } catch(e) { output = '错误: 无效输入'; }
+        } else if (encMode === 'rot13') {
+            output = input.replace(/[a-zA-Z]/g, function(c) { return String.fromCharCode((c <= 'Z' ? 90 : 122) >= (c = c.charCodeAt(0) + 13) ? c : c - 26); });
+        } else if (encMode === 'caesar') {
+            var shift = parseInt(document.getElementById('encShift').value) || 3;
+            if (dir === 'decode') shift = 26 - shift;
+            output = input.replace(/[a-zA-Z]/g, function(c) { var base = c <= 'Z' ? 65 : 97; return String.fromCharCode(((c.charCodeAt(0) - base + shift) % 26) + base); });
+        } else if (encMode === 'hex') {
+            if (dir === 'encode') { for (var i = 0; i < input.length; i++) output += input.charCodeAt(i).toString(16).padStart(2, '0'); }
+            else { try { for (var i = 0; i < input.length; i += 2) output += String.fromCharCode(parseInt(input.substr(i, 2), 16)); } catch(e) { output = '错误'; } }
+        }
+        document.getElementById('encOutput').textContent = output;
+    }
+    function encProcess() { encDo('encode'); }
+    function encCopy() { copyText(document.getElementById('encOutput').textContent); }
+    window.encSwitch = encSwitch; window.encDo = encDo; window.encProcess = encProcess; window.encCopy = encCopy;
+
+    // ============ MORSE CODE ============
+    var morseMap = { 'A': '.-','B': '-...','C': '-.-.','D': '-..','E': '.','F': '..-.','G': '--.','H': '....','I': '..','J': '.---','K': '-.-','L': '.-..','M': '--','N': '-.','O': '---','P': '.--.','Q': '--.-','R': '.-.','S': '...','T': '-','U': '..-','V': '...-','W': '.--','X': '-..-','Y': '-.--','Z': '--..','0': '-----','1': '.----','2': '..---','3': '...--','4': '....-','5': '.....','6': '-....','7': '--...','8': '---..','9': '----.','.': '.-.-.-',',': '--..--','?': '..--..',' ': '/' };
+    var morseRev = {}; for (var k in morseMap) morseRev[morseMap[k]] = k;
+    var morseMode = 'encode';
+    function morseSwitch(mode, el) {
+        morseMode = mode;
+        var tabs = document.querySelectorAll('#ol-morse .tool-tab');
+        for (var i = 0; i < tabs.length; i++) tabs[i].classList.toggle('active', tabs[i].getAttribute('data-m') === mode);
+        morseProcess();
+    }
+    function morseProcess() {
+        var input = document.getElementById('morseInput').value.toUpperCase(), output = '';
+        if (morseMode === 'encode') {
+            for (var i = 0; i < input.length; i++) { var c = input[i]; output += (morseMap[c] || (c === '\n' ? '\n' : '')) + ' '; }
+        } else {
+            var words = input.trim().split(/\s+/);
+            for (var i = 0; i < words.length; i++) output += morseRev[words[i]] || (words[i] === '/' ? ' ' : '?');
+        }
+        document.getElementById('morseOutput').textContent = output.trim();
+    }
+    function morseCopy() { copyText(document.getElementById('morseOutput').textContent); }
+    var morseAudioCtx = null;
+    function morsePlay() {
+        var code = document.getElementById('morseOutput').textContent.replace(/\s/g, '');
+        if (!code) return;
+        try {
+            if (!morseAudioCtx) morseAudioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            var t = morseAudioCtx.currentTime;
+            for (var i = 0; i < code.length; i++) {
+                var c = code[i];
+                if (c === '.') { var o1 = morseAudioCtx.createOscillator(), g1 = morseAudioCtx.createGain(); o1.frequency.value = 600; o1.type = 'sine'; g1.gain.setValueAtTime(0.3, t); g1.gain.setValueAtTime(0, t + 0.08); o1.connect(g1); g1.connect(morseAudioCtx.destination); o1.start(t); o1.stop(t + 0.08); t += 0.12; }
+                else if (c === '-') { var o2 = morseAudioCtx.createOscillator(), g2 = morseAudioCtx.createGain(); o2.frequency.value = 600; o2.type = 'sine'; g2.gain.setValueAtTime(0.3, t); g2.gain.setValueAtTime(0, t + 0.2); o2.connect(g2); g2.connect(morseAudioCtx.destination); o2.start(t); o2.stop(t + 0.2); t += 0.24; }
+                else t += 0.2;
+            }
+        } catch(e) {}
+    }
+    window.morseSwitch = morseSwitch; window.morseProcess = morseProcess; window.morseCopy = morseCopy; window.morsePlay = morsePlay;
+
+    // ============ PASSWORD GENERATOR ============
+    function pwGen() {
+        var len = parseInt(document.getElementById('pwSlider').value);
+        var chars = '';
+        if (document.getElementById('pwUpper').checked) chars += 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        if (document.getElementById('pwLower').checked) chars += 'abcdefghijklmnopqrstuvwxyz';
+        if (document.getElementById('pwDigits').checked) chars += '0123456789';
+        if (document.getElementById('pwSym').checked) chars += '!@#$%^&*()_+-=[]{};:,.<>?';
+        if (!chars) { document.getElementById('pwDisplay').textContent = '请选择字符类型'; return; }
+        var pw = '', arr = new Uint32Array(len); crypto.getRandomValues(arr);
+        for (var i = 0; i < len; i++) pw += chars[arr[i] % chars.length];
+        document.getElementById('pwDisplay').textContent = pw;
+        // Strength
+        var types = (document.getElementById('pwUpper').checked ? 1 : 0) + (document.getElementById('pwLower').checked ? 1 : 0) + (document.getElementById('pwDigits').checked ? 1 : 0) + (document.getElementById('pwSym').checked ? 1 : 0);
+        var strength = len >= 16 && types >= 3 ? '🔒 强' : len >= 10 && types >= 2 ? '🔓 中等' : '⚠️ 弱';
+        document.getElementById('pwStrength').textContent = '强度: ' + strength;
+    }
+    function pwUpdate() { document.getElementById('pwLenLabel').textContent = document.getElementById('pwSlider').value; pwGen(); }
+    function pwCopy() { copyText(document.getElementById('pwDisplay').textContent); }
+    window.pwGen = pwGen; window.pwUpdate = pwUpdate; window.pwCopy = pwCopy;
+
+    // ============ REACTION SPEED TEST ============
+    var reactionState = 'wait', reactionTimeout = null, reactionTimes = [], reactionBest = Infinity;
+    function reactionReset() {
+        reactionState = 'wait'; reactionTimeout = null;
+        var area = document.getElementById('reactionArea');
+        area.className = 'reaction-area wait'; area.textContent = '点击开始';
+        document.getElementById('reactionLast').textContent = '--';
+        document.getElementById('reactionGrade').textContent = '';
+        updateReactionStats();
+    }
+    window.reactionReset = reactionReset;
+    function reactionTap() {
+        var area = document.getElementById('reactionArea');
+        if (reactionState === 'wait') {
+            reactionState = 'pending'; area.className = 'reaction-area wait'; area.textContent = '等待...';
+            clearTimeout(reactionTimeout);
+            reactionTimeout = setTimeout(function() {
+                if (reactionState !== 'pending') return;
+                reactionState = 'ready'; area.className = 'reaction-area ready'; area.textContent = '快按!';
+                reactionStartTime = Date.now();
+            }, 500 + Math.random() * 2500);
+        } else if (reactionState === 'pending') {
+            reactionState = 'foul'; area.className = 'reaction-area foul'; area.textContent = '太早了!';
+            clearTimeout(reactionTimeout);
+            setTimeout(reactionReset, 1200);
+        } else if (reactionState === 'ready') {
+            var rt = Date.now() - reactionStartTime;
+            reactionState = 'result'; area.className = 'reaction-area result'; area.textContent = rt + 'ms';
+            reactionTimes.push(rt);
+            if (rt < reactionBest) reactionBest = rt;
+            document.getElementById('reactionLast').textContent = rt;
+            updateReactionStats();
+            var grade = rt < 200 ? '⚡ 闪电反应!' : rt < 300 ? '🔥 非常快!' : rt < 400 ? '👍 不错' : rt < 600 ? '🙂 一般' : '🐢 继续加油';
+            document.getElementById('reactionGrade').textContent = grade;
+            setTimeout(reactionReset, 1500);
+        } else if (reactionState === 'foul' || reactionState === 'result') {
+            reactionReset();
+        }
+    }
+    function updateReactionStats() {
+        document.getElementById('reactionBest').textContent = reactionBest === Infinity ? '--' : reactionBest;
+        if (reactionTimes.length > 0) {
+            var sum = 0; for (var i = 0; i < reactionTimes.length; i++) sum += reactionTimes[i];
+            document.getElementById('reactionAvg').textContent = Math.round(sum / reactionTimes.length);
+        } else document.getElementById('reactionAvg').textContent = '--';
+    }
+    window.reactionTap = reactionTap;
+
+    // ============ COLOR BLOCK TEST ============
+    var colorScore = 0, colorLevel = 1, colorGridSize = 3;
+    function colorStart() {
+        colorScore = 0; colorLevel = 1; colorGridSize = 3;
+        document.getElementById('colorScore').textContent = '0';
+        document.getElementById('colorLevel').textContent = '1';
+        colorGenerate();
+    }
+    function colorGenerate() {
+        var grid = document.getElementById('colorGrid');
+        var n = colorGridSize; grid.style.gridTemplateColumns = 'repeat(' + n + ', 1fr)';
+        var h = Math.floor(Math.random() * 360), s = 40 + colorLevel * 5, l = 45;
+        var baseColor = 'hsl(' + h + ',' + s + '%,' + l + '%)';
+        var diff = Math.max(3, 25 - colorLevel);
+        var diffColor = 'hsl(' + h + ',' + s + '%,' + (l + diff) + '%)';
+        var targetIdx = Math.floor(Math.random() * n * n);
+        grid.innerHTML = '';
+        for (var i = 0; i < n * n; i++) {
+            var cell = document.createElement('div'); cell.className = 'color-cell-watch';
+            cell.style.background = i === targetIdx ? diffColor : baseColor;
+            (function(isTarget) {
+                cell.addEventListener('click', function() {
+                    vibrate();
+                    if (isTarget) {
+                        colorScore++; colorLevel++;
+                        if (colorLevel > 5) colorGridSize = 4;
+                        if (colorLevel > 12) colorGridSize = 5;
+                        document.getElementById('colorScore').textContent = colorScore;
+                        document.getElementById('colorLevel').textContent = colorLevel;
+                        colorGenerate();
+                    } else {
+                        var msg = document.querySelector('#ol-color .tool-overlay-body');
+                        var el = document.createElement('div');
+                        el.style.cssText = 'text-align:center;color:var(--danger);font-size:16px;font-weight:600;margin:6px 0;';
+                        el.textContent = '错了! 得分: ' + colorScore;
+                        var gridEl = document.getElementById('colorGrid');
+                        gridEl.parentNode.insertBefore(el, gridEl);
+                        setTimeout(function() { el.remove(); colorStart(); }, 1500);
+                    }
+                });
+            })(i === targetIdx);
+            grid.appendChild(cell);
+        }
+    }
+    window.colorStart = colorStart;
+
+    // ============ TIC TAC TOE ============
+    var tttBoard = [], tttPlayer = 'X', tttGameOver = false, tttWins = 0, tttLosses = 0, tttDraws = 0;
+    function tttReset() {
+        tttBoard = [['','',''],['','',''],['','','']]; tttPlayer = 'X'; tttGameOver = false;
+        document.getElementById('tttTurn').textContent = '轮到: ❌ 你';
+        document.getElementById('tttTurn').style.color = '';
+        tttRender();
+    }
+    function tttRender() {
+        var grid = document.getElementById('tttGrid'); grid.innerHTML = '';
+        for (var r = 0; r < 3; r++) {
+            for (var c = 0; c < 3; c++) {
+                var cell = document.createElement('div'); cell.className = 'ttt-cell';
+                if (tttBoard[r][c] === 'X') { cell.textContent = '❌'; cell.classList.add('x'); }
+                else if (tttBoard[r][c] === 'O') { cell.textContent = '⭕'; cell.classList.add('o'); }
+                if (!tttBoard[r][c] && !tttGameOver) {
+                    (function(ri, ci) {
+                        cell.addEventListener('click', function() { tttMove(ri, ci); });
+                    })(r, c);
+                }
+                grid.appendChild(cell);
+            }
+        }
+    }
+    function tttMove(r, c) {
+        if (tttBoard[r][c] || tttGameOver || tttPlayer !== 'X') return;
+        vibrate(); tttBoard[r][c] = 'X'; tttRender();
+        var winner = tttCheck();
+        if (winner) { tttEndGame(winner); return; }
+        if (tttIsFull()) { tttEndGame(''); return; }
+        tttPlayer = 'O'; document.getElementById('tttTurn').textContent = '轮到: ⭕ AI...';
+        setTimeout(function() {
+            tttAIMove(); tttRender();
+            var w = tttCheck();
+            if (w) { tttEndGame(w); return; }
+            if (tttIsFull()) { tttEndGame(''); return; }
+            tttPlayer = 'X'; document.getElementById('tttTurn').textContent = '轮到: ❌ 你';
+        }, 300);
+    }
+    function tttAIMove() {
+        // Try win, block, center, corners, random
+        for (var i = 0; i < 3; i++) for (var j = 0; j < 3; j++) { if (!tttBoard[i][j]) { tttBoard[i][j] = 'O'; if (tttCheck() === 'O') return; tttBoard[i][j] = ''; } }
+        for (var i = 0; i < 3; i++) for (var j = 0; j < 3; j++) { if (!tttBoard[i][j]) { tttBoard[i][j] = 'X'; if (tttCheck() === 'X') { tttBoard[i][j] = 'O'; return; } tttBoard[i][j] = ''; } }
+        if (!tttBoard[1][1]) { tttBoard[1][1] = 'O'; return; }
+        var corners = [[0,0],[0,2],[2,0],[2,2]];
+        for (var i = 0; i < corners.length; i++) { if (!tttBoard[corners[i][0]][corners[i][1]]) { tttBoard[corners[i][0]][corners[i][1]] = 'O'; return; } }
+        for (var i = 0; i < 3; i++) for (var j = 0; j < 3; j++) { if (!tttBoard[i][j]) { tttBoard[i][j] = 'O'; return; } }
+    }
+    function tttCheck() {
+        for (var i = 0; i < 3; i++) { if (tttBoard[i][0] && tttBoard[i][0] === tttBoard[i][1] && tttBoard[i][1] === tttBoard[i][2]) return tttBoard[i][0]; }
+        for (var j = 0; j < 3; j++) { if (tttBoard[0][j] && tttBoard[0][j] === tttBoard[1][j] && tttBoard[1][j] === tttBoard[2][j]) return tttBoard[0][j]; }
+        if (tttBoard[0][0] && tttBoard[0][0] === tttBoard[1][1] && tttBoard[1][1] === tttBoard[2][2]) return tttBoard[0][0];
+        if (tttBoard[0][2] && tttBoard[0][2] === tttBoard[1][1] && tttBoard[1][1] === tttBoard[2][0]) return tttBoard[0][2];
+        return null;
+    }
+    function tttIsFull() { for (var i = 0; i < 3; i++) for (var j = 0; j < 3; j++) if (!tttBoard[i][j]) return false; return true; }
+    function tttEndGame(winner) {
+        tttGameOver = true; tttRender();
+        var msg = '';
+        if (winner === 'X') { tttWins++; msg = '🎉 你赢了!'; }
+        else if (winner === 'O') { tttLosses++; msg = '😔 AI赢了'; }
+        else { tttDraws++; msg = '🤝 平局'; }
+        document.getElementById('tttTurn').textContent = msg;
+        document.getElementById('tttWins').textContent = tttWins;
+        document.getElementById('tttLosses').textContent = tttLosses;
+        document.getElementById('tttDraws').textContent = tttDraws;
+    }
+    window.tttReset = tttReset;
+
+    // ============ CLOUD DISK LINKS ============
+    function initDisk() {
+        var list = document.getElementById('diskList');
+        if (list.children.length > 0) return;
+        var disks = [
+            { name: '百度网盘', icon: '📦', desc: 'pan.baidu.com', url: 'https://pan.baidu.com' },
+            { name: '阿里云盘', icon: '☁️', desc: 'aliyundrive.com', url: 'https://www.aliyundrive.com' },
+            { name: '夸克网盘', icon: '🔍', desc: 'pan.quark.cn', url: 'https://pan.quark.cn' },
+            { name: '腾讯微云', icon: '💬', desc: 'weiyun.com', url: 'https://www.weiyun.com' },
+            { name: '蓝奏云', icon: '📁', desc: 'lanzou.com', url: 'https://www.lanzou.com' },
+            { name: '123云盘', icon: '🔢', desc: '123pan.com', url: 'https://www.123pan.com' },
+            { name: 'UC网盘', icon: '🌐', desc: 'drive.uc.cn', url: 'https://drive.uc.cn' },
+            { name: '迅雷云盘', icon: '⚡', desc: 'pan.xunlei.com', url: 'https://pan.xunlei.com' }
+        ];
+        for (var i = 0; i < disks.length; i++) {
+            var a = document.createElement('a'); a.className = 'disk-item'; a.href = disks[i].url; a.target = '_blank';
+            a.innerHTML = '<span class="disk-item-icon">' + disks[i].icon + '</span><div class="disk-item-info"><div class="disk-item-name">' + disks[i].name + '</div><div class="disk-item-desc">' + disks[i].desc + '</div></div><span class="disk-item-arrow">›</span>';
+            list.appendChild(a);
+        }
+    }
+    window.initDisk = initDisk;
+
+    // ============ UTILITY ============
+    function copyText(text) {
+        vibrate();
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(text).then(function() {}).catch(function() { fallbackCopy(text); });
+        } else fallbackCopy(text);
+    }
+    function fallbackCopy(text) {
+        var ta = document.createElement('textarea'); ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+        document.body.appendChild(ta); ta.select();
+        try { document.execCommand('copy'); } catch(e) {}
+        document.body.removeChild(ta);
+    }
 
     // ============ INIT ============
     function init() {
-        updateSWDisplay();
-        updateSWButtons();
-        updateTimerDisplay();
-        updateTimerPresets();
-        updateCalcDisplay();
-        drawClock();
-
-        // Check if round screen
-        function updateShape() {
-            var isRound = window.matchMedia('(shape: round)').matches;
-            document.documentElement.setAttribute('data-shape', isRound ? 'round' : 'square');
-        }
-        updateShape();
-        window.matchMedia('(shape: round)').addEventListener('change', updateShape);
-
-        // URL query parameter for direct screen navigation
+        updateSWDisplay(); updateSWButtons(); updateTimerDisplay(); updateTimerPresets(); updateCalcDisplay(); drawClock();
+        function updateShape() { var isRound = window.matchMedia('(shape: round)').matches; document.documentElement.setAttribute('data-shape', isRound ? 'round' : 'square'); }
+        updateShape(); window.matchMedia('(shape: round)').addEventListener('change', updateShape);
         var params = new URLSearchParams(window.location.search);
-        var screenParam = parseInt(params.get('screen'));
-        if (!isNaN(screenParam) && screenParam >= 0 && screenParam < totalScreens) {
-            goToScreen(screenParam);
-        }
+        var sp = parseInt(params.get('screen'));
+        if (!isNaN(sp) && sp >= 0 && sp < totalScreens) goToScreen(sp);
     }
 
-    // Clock animation loop
-    function animateClock() {
-        if (currentScreen === 0) drawClock();
-        if (flashlightOn) return; // Don't keep animating during flashlight
-        requestAnimationFrame(function() {
-            setTimeout(animateClock, 500);
-        });
-    }
+    function animateClock() { if (currentScreen === 0) drawClock(); if (!flashlightOn) requestAnimationFrame(function() { setTimeout(animateClock, 500); }); }
 
-    // Register Service Worker
-    if ('serviceWorker' in navigator) {
-        window.addEventListener('load', function() {
-            navigator.serviceWorker.register('sw.js').catch(function() {});
-        });
-    }
+    if ('serviceWorker' in navigator) { window.addEventListener('load', function() { navigator.serviceWorker.register('sw.js').catch(function() {}); }); }
 
-    init();
-    animateClock();
+    init(); animateClock();
 })();
 </script>
 </body>

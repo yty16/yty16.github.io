@@ -403,7 +403,7 @@
             <button class="tool-btn-sm" onclick="tttReset()" style="margin-top:10px;">🔄 重新开始</button>
             <div style="display:flex;gap:16px;margin-top:4px;font-size:12px;color:var(--text2);">
                 <span>你: <b id="tttWins" style="color:var(--accent);">0</b></span>
-                <span>AI: <b id="tttLosses" style="color:var(--danger);">0</b></span>
+                <span>电脑: <b id="tttComputerWins" style="color:var(--danger);">0</b></span>
                 <span>平: <b id="tttDraws">0</b></span>
             </div>
         </div>
@@ -949,7 +949,7 @@
     window.colorStart = colorStart;
 
     // ============ TIC TAC TOE ============
-    var tttBoard = [], tttPlayer = 'X', tttGameOver = false, tttWins = 0, tttLosses = 0, tttDraws = 0;
+    var tttBoard = [], tttPlayer = 'X', tttGameOver = false, tttWins = 0, tttComputerWins = 0, tttDraws = 0;
     function tttReset() {
         tttBoard = [['','',''],['','',''],['','','']]; tttPlayer = 'X'; tttGameOver = false;
         document.getElementById('tttTurn').textContent = '轮到: ❌ 你';
@@ -978,16 +978,16 @@
         var winner = tttCheck();
         if (winner) { tttEndGame(winner); return; }
         if (tttIsFull()) { tttEndGame(''); return; }
-        tttPlayer = 'O'; document.getElementById('tttTurn').textContent = '轮到: ⭕ AI...';
+        tttPlayer = 'O'; document.getElementById('tttTurn').textContent = '轮到: ⭕ 电脑思考中...';
         setTimeout(function() {
-            tttAIMove(); tttRender();
+            tttComputerMove(); tttRender();
             var w = tttCheck();
             if (w) { tttEndGame(w); return; }
             if (tttIsFull()) { tttEndGame(''); return; }
             tttPlayer = 'X'; document.getElementById('tttTurn').textContent = '轮到: ❌ 你';
         }, 300);
     }
-    function tttAIMove() {
+    function tttComputerMove() {
         // Try win, block, center, corners, random
         for (var i = 0; i < 3; i++) for (var j = 0; j < 3; j++) { if (!tttBoard[i][j]) { tttBoard[i][j] = 'O'; if (tttCheck() === 'O') return; tttBoard[i][j] = ''; } }
         for (var i = 0; i < 3; i++) for (var j = 0; j < 3; j++) { if (!tttBoard[i][j]) { tttBoard[i][j] = 'X'; if (tttCheck() === 'X') { tttBoard[i][j] = 'O'; return; } tttBoard[i][j] = ''; } }
@@ -1008,11 +1008,11 @@
         tttGameOver = true; tttRender();
         var msg = '';
         if (winner === 'X') { tttWins++; msg = '🎉 你赢了!'; }
-        else if (winner === 'O') { tttLosses++; msg = '😔 AI赢了'; }
+        else if (winner === 'O') { tttComputerWins++; msg = '😔 电脑赢了'; }
         else { tttDraws++; msg = '🤝 平局'; }
         document.getElementById('tttTurn').textContent = msg;
         document.getElementById('tttWins').textContent = tttWins;
-        document.getElementById('tttLosses').textContent = tttLosses;
+        document.getElementById('tttComputerWins').textContent = tttComputerWins;
         document.getElementById('tttDraws').textContent = tttDraws;
     }
     window.tttReset = tttReset;

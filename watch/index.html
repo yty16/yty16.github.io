@@ -102,6 +102,53 @@
         .apk-banner-close { background: none; border: none; color: #666; font-size: 12px; cursor: pointer; padding: 2px; }
         @media (max-width: 220px) { .apk-banner { display: none !important; } }
 
+        /* Hide APK banner when opened inside the native watch app */
+        body.in-app .apk-banner { display: none !important; }
+
+        /* Compact layout for very small round watch screens */
+        @media (max-width: 380px) {
+            .btn { padding: 8px 16px; font-size: 13px; min-height: 38px; }
+            .sw-display, .timer-display { font-size: clamp(32px, 11vw, 48px); }
+            .sw-btns, .timer-btns { gap: 8px; }
+            .timer-presets { max-width: 220px; gap: 4px; }
+            .timer-preset { padding: 5px 10px; font-size: 12px; }
+            .calc-grid { max-width: 210px; gap: 6px; }
+            .calc-btn { min-width: 36px; min-height: 36px; font-size: 16px; }
+            .calc-display { font-size: clamp(24px, 8vw, 36px); }
+            .notes-input { max-width: 220px; height: 50%; font-size: 14px; }
+            .clock-face { width: min(80vw, 80vh, 220px); height: min(80vw, 80vh, 220px); }
+            .more-title { font-size: 14px; }
+            .tools-grid { gap: 6px; max-width: 240px; }
+            .tool-card { min-height: 60px; padding: 8px 2px; }
+            .tool-card-icon { font-size: 20px; }
+            .tool-card-name { font-size: 10px; }
+        }
+        @media (shape: round) {
+            body { border-radius: 50%; overflow: hidden; }
+            .app-shell { border-radius: 50%; clip-path: circle(50% at 50% 50%); }
+            .status-bar { padding: 10px 22px 2px; min-height: 38px; font-size: 13px; }
+            .bottom-nav { padding: 4px 0 calc(14px + var(--safe-bottom)); }
+            .screen { padding: 6px; }
+            .sw-display, .timer-display { font-size: clamp(28px, 10vw, 44px); margin-bottom: 8px; }
+            .sw-btns, .timer-btns { gap: 6px; margin-top: 8px; }
+            .btn { padding: 7px 14px; font-size: 12px; min-height: 36px; }
+            .timer-presets { max-width: 200px; gap: 4px; margin-bottom: 8px; }
+            .timer-preset { padding: 4px 8px; font-size: 11px; }
+            .calc-grid { max-width: 190px; gap: 5px; }
+            .calc-btn { min-width: 34px; min-height: 34px; font-size: 15px; }
+            .calc-display { font-size: clamp(22px, 7vw, 32px); min-height: 42px; }
+            .notes-input { max-width: 200px; height: 48%; font-size: 13px; }
+            .clock-face { width: min(72vw, 72vh, 180px); height: min(72vw, 72vh, 180px); }
+            .clock-date { font-size: 12px; margin-top: 4px; }
+            .tools-grid { gap: 5px; max-width: 210px; }
+            .tool-card { min-height: 56px; padding: 6px 2px; border-radius: 14px; }
+            .tool-card-icon { font-size: 18px; }
+            .tool-card-name { font-size: 9px; }
+            .more-title { font-size: 13px; margin-bottom: 6px; }
+            .flashlight-btn { width: 84px; height: 84px; font-size: 30px; }
+            .apk-banner { bottom: 54px; }
+        }
+
         /* ---- More Tools Grid ---- */
         .tools-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; width: 95%; max-width: 280px; max-height: 85%; overflow-y: auto; padding: 4px; scrollbar-width: none; }
         .tools-grid::-webkit-scrollbar { display: none; }
@@ -1058,6 +1105,10 @@
         updateSWDisplay(); updateSWButtons(); updateTimerDisplay(); updateTimerPresets(); updateCalcDisplay(); drawClock();
         function updateShape() { var isRound = window.matchMedia('(shape: round)').matches; document.documentElement.setAttribute('data-shape', isRound ? 'round' : 'square'); }
         updateShape(); window.matchMedia('(shape: round)').addEventListener('change', updateShape);
+        // Detect native watch APK (set custom UA in WebView) and hide APK banner
+        if (navigator.userAgent.indexOf('ToolboxWatch') !== -1) {
+            document.body.classList.add('in-app');
+        }
         var params = new URLSearchParams(window.location.search);
         var sp = parseInt(params.get('screen'));
         if (!isNaN(sp) && sp >= 0 && sp < totalScreens) goToScreen(sp);

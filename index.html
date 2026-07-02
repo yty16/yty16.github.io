@@ -37,6 +37,17 @@
                 });
             }
         })();
+
+        // 手表设备自动跳转到手表版
+        (function(){
+            var path = window.location.pathname;
+            if (path.indexOf('/watch') === 0) return;
+            var w = window.innerWidth || screen.width || 320;
+            var h = window.innerHeight || screen.height || 320;
+            if (w <= 400 && h <= 400) {
+                window.location.href = 'watch/';
+            }
+        })();
     </script>
     <title>工具箱 Pro</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">

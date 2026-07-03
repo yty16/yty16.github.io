@@ -1,0 +1,50 @@
+plugins {
+    id 'com.android.application'
+}
+
+android {
+    compileSdk 36
+    namespace "io.github.yty16.toolbox.watch"
+    defaultConfig {
+        applicationId "io.github.yty16.toolbox.watch"
+        minSdkVersion 25
+        targetSdkVersion 35
+        versionCode 3
+        versionName "1.0.2"
+
+        resValue "string", "appName", "Y的工具箱·手表版"
+        resValue "string", "launcherName", "工具箱手表"
+        resValue "color", "backgroundColor", "#000000"
+    }
+    buildTypes {
+        release {
+            minifyEnabled true
+            signingConfig signingConfigs.create("release") {
+                storeFile file("C:\\Users\\Yin\\WorkBuddy\\2026-06-12-10-40-19\\apk-build\\android.keystore")
+                storePassword "android"
+                keyAlias "android"
+                keyPassword "android"
+            }
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+        debug {
+            minifyEnabled false
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+    lintOptions {
+        checkReleaseBuilds false
+        abortOnError false
+    }
+}
+
+repositories {
+    google()
+    mavenCentral()
+}
+
+dependencies {
+}

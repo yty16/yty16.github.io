@@ -22,72 +22,74 @@
             --safe-bottom: env(safe-area-inset-bottom, 0px);
             --safe-left: env(safe-area-inset-left, 0px);
             --safe-right: env(safe-area-inset-right, 0px);
+            --content-width: min(92%, 280px);
+            --content-width-round: min(68vmin, 220px);
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
             font-size: 16px;
             -webkit-tap-highlight-color: transparent;
             -webkit-user-select: none; user-select: none;
             -webkit-font-smoothing: antialiased;
         }
+        html, body { width: 100%; height: 100%; overflow: hidden; background: var(--bg); color: var(--text); touch-action: manipulation; }
+        .app-shell { width: 100%; height: 100%; display: flex; flex-direction: column; padding: var(--safe-top) var(--safe-right) var(--safe-bottom) var(--safe-left); position: relative; }
         @media (shape: round) {
-            :root { --radius: 50%; }
+            :root { --content-width: var(--content-width-round); }
             body { border-radius: 50%; overflow: hidden; }
             .app-shell { border-radius: 50%; clip-path: circle(50% at 50% 50%); }
         }
-        html, body { width: 100%; height: 100%; overflow: hidden; background: var(--bg); color: var(--text); touch-action: manipulation; }
-        .app-shell { width: 100%; height: 100%; display: flex; flex-direction: column; padding: var(--safe-top) var(--safe-right) var(--safe-bottom) var(--safe-left); position: relative; }
-        .status-bar { display: flex; align-items: center; justify-content: space-between; padding: 4px 10px 2px; min-height: 28px; font-size: 13px; color: var(--text2); flex-shrink: 0; z-index: 10; }
-        @media (shape: round) { .status-bar { padding: 8px 16px 2px; min-height: 36px; font-size: 14px; } }
-        .status-time { font-weight: 600; color: var(--text); font-variant-numeric: tabular-nums; font-size: 14px; }
+        .status-bar { display: flex; align-items: center; justify-content: space-between; padding: 4px 10px 2px; min-height: 26px; font-size: 12px; color: var(--text2); flex-shrink: 0; z-index: 10; }
+        @media (shape: round) { .status-bar { padding: 8px 18px 2px; min-height: 32px; font-size: 12px; } }
+        .status-time { font-weight: 600; color: var(--text); font-variant-numeric: tabular-nums; font-size: 13px; }
         .status-battery { display: flex; align-items: center; gap: 3px; }
-        .status-battery .battery-icon { width: 18px; height: 9px; border: 1.5px solid var(--text2); border-radius: 2px; position: relative; display: inline-block; }
+        .status-battery .battery-icon { width: 16px; height: 8px; border: 1.5px solid var(--text2); border-radius: 2px; position: relative; display: inline-block; }
         .status-battery .battery-icon::after { content: ''; position: absolute; right: -3px; top: 50%; transform: translateY(-50%); width: 2px; height: 4px; background: var(--text2); border-radius: 0 1px 1px 0; }
         .status-battery .battery-fill { position: absolute; left: 1px; top: 1px; height: calc(100% - 2px); background: var(--success); border-radius: 1px; transition: width 0.5s; }
         .main-content { flex: 1; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; touch-action: pan-x; }
         .screens { display: flex; width: 100%; height: 100%; transition: transform 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94); will-change: transform; }
-        .screen { min-width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 8px; flex-shrink: 0; }
-        .bottom-nav { display: flex; justify-content: center; align-items: center; gap: 3px; padding: 6px 0 calc(6px + var(--safe-bottom)); flex-shrink: 0; z-index: 10; flex-wrap: wrap; max-width: 100%; }
-        @media (shape: round) { .bottom-nav { padding-bottom: calc(12px + var(--safe-bottom)); } }
+        .screen { min-width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 6px; flex-shrink: 0; }
+        .bottom-nav { display: flex; justify-content: center; align-items: center; gap: 3px; padding: 4px 0 calc(4px + var(--safe-bottom)); flex-shrink: 0; z-index: 10; flex-wrap: wrap; max-width: 100%; }
+        @media (shape: round) { .bottom-nav { padding-bottom: calc(10px + var(--safe-bottom)); } }
         .nav-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--text2); opacity: 0.3; transition: all 0.3s; flex-shrink: 0; }
         .nav-dot.active { opacity: 1; background: var(--accent); width: 14px; border-radius: 3px; }
-        .nav-icon { width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; font-size: 13px; opacity: 0.4; transition: all 0.3s; flex-shrink: 0; cursor: pointer; }
-        .nav-icon.active { opacity: 1; font-size: 16px; }
+        .nav-icon { width: 26px; height: 26px; display: flex; align-items: center; justify-content: center; font-size: 12px; opacity: 0.4; transition: all 0.3s; flex-shrink: 0; cursor: pointer; }
+        .nav-icon.active { opacity: 1; font-size: 14px; }
 
         /* Clock */
-        .clock-face { position: relative; width: min(85vw, 85vh, 280px); height: min(85vw, 85vh, 280px); }
+        .clock-face { position: relative; width: min(75vmin, 220px); height: min(75vmin, 220px); }
         .clock-canvas { width: 100%; height: 100%; }
-        .clock-date { text-align: center; font-size: 13px; color: var(--text2); margin-top: 6px; letter-spacing: 0.5px; }
-        .sw-display { font-size: clamp(36px, 12vw, 56px); font-weight: 300; font-variant-numeric: tabular-nums; letter-spacing: 2px; margin-bottom: 16px; font-family: "SF Mono", "Menlo", "Consolas", monospace; }
+        .clock-date { text-align: center; font-size: 12px; color: var(--text2); margin-top: 4px; letter-spacing: 0.5px; }
+        .sw-display { font-size: clamp(28px, 10vmin, 44px); font-weight: 300; font-variant-numeric: tabular-nums; letter-spacing: 1px; margin-bottom: 10px; font-family: "SF Mono", "Menlo", "Consolas", monospace; }
         .sw-ms { font-size: 0.5em; color: var(--text2); }
-        .sw-laps { max-height: 30%; overflow-y: auto; width: 90%; font-size: 13px; color: var(--text2); scrollbar-width: none; }
+        .sw-laps { max-height: 26%; overflow-y: auto; width: var(--content-width); font-size: 12px; color: var(--text2); scrollbar-width: none; }
         .sw-laps::-webkit-scrollbar { display: none; }
-        .sw-lap-row { display: flex; justify-content: space-between; padding: 3px 8px; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .sw-lap-row { display: flex; justify-content: space-between; padding: 2px 6px; border-bottom: 1px solid rgba(255,255,255,0.05); }
         .sw-lap-row .lap-num { color: var(--accent2); }
-        .sw-btns { display: flex; gap: 12px; margin-top: 12px; }
-        .timer-display { font-size: clamp(36px, 12vw, 56px); font-weight: 300; font-variant-numeric: tabular-nums; letter-spacing: 2px; margin-bottom: 12px; font-family: "SF Mono", "Menlo", "Consolas", monospace; }
-        .timer-presets { display: flex; gap: 6px; flex-wrap: wrap; justify-content: center; margin-bottom: 12px; max-width: 240px; }
-        .timer-preset { background: var(--surface2); color: var(--text); border: 1.5px solid transparent; border-radius: 20px; padding: 6px 14px; font-size: 14px; cursor: pointer; transition: all 0.2s; font-family: inherit; -webkit-tap-highlight-color: transparent; }
+        .sw-btns { display: flex; gap: 6px; flex-wrap: wrap; justify-content: center; margin-top: 8px; }
+        .timer-display { font-size: clamp(28px, 10vmin, 44px); font-weight: 300; font-variant-numeric: tabular-nums; letter-spacing: 1px; margin-bottom: 8px; font-family: "SF Mono", "Menlo", "Consolas", monospace; }
+        .timer-presets { display: flex; gap: 4px; flex-wrap: wrap; justify-content: center; margin-bottom: 8px; width: var(--content-width); }
+        .timer-preset { background: var(--surface2); color: var(--text); border: 1.5px solid transparent; border-radius: 16px; padding: 4px 10px; font-size: 12px; cursor: pointer; transition: all 0.2s; font-family: inherit; -webkit-tap-highlight-color: transparent; }
         .timer-preset:active { background: var(--accent); border-color: var(--accent2); }
         .timer-preset.selected { background: var(--accent); border-color: var(--accent2); }
-        .timer-btns { display: flex; gap: 12px; }
-        .calc-display { width: 90%; max-width: 240px; text-align: right; font-size: clamp(28px, 9vw, 42px); font-weight: 300; padding: 8px 12px; min-height: 50px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; font-family: "SF Mono", "Menlo", "Consolas", monospace; letter-spacing: 1px; }
-        .calc-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; width: 92%; max-width: 250px; margin-top: 4px; }
-        .calc-btn { aspect-ratio: 1; border-radius: 50%; border: none; font-size: 18px; font-weight: 500; cursor: pointer; background: var(--surface2); color: var(--text); transition: all 0.15s; display: flex; align-items: center; justify-content: center; font-family: inherit; -webkit-tap-highlight-color: transparent; min-width: 44px; min-height: 44px; }
+        .timer-btns { display: flex; gap: 6px; flex-wrap: wrap; justify-content: center; }
+        .calc-display { width: var(--content-width); text-align: right; font-size: clamp(22px, 7vmin, 36px); font-weight: 300; padding: 6px 10px; min-height: 42px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; font-family: "SF Mono", "Menlo", "Consolas", monospace; letter-spacing: 1px; }
+        .calc-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; width: var(--content-width); margin-top: 4px; }
+        .calc-btn { aspect-ratio: 1; border-radius: 50%; border: none; font-size: clamp(13px, 3.8vmin, 17px); font-weight: 500; cursor: pointer; background: var(--surface2); color: var(--text); transition: all 0.15s; display: flex; align-items: center; justify-content: center; font-family: inherit; -webkit-tap-highlight-color: transparent; min-width: 0; min-height: 0; padding: 0; }
         .calc-btn:active { transform: scale(0.9); background: #333; }
         .calc-btn.op { background: var(--accent); color: #fff; }
         .calc-btn.op:active { background: var(--accent2); }
         .calc-btn.eq { background: var(--success); color: #000; font-weight: 700; }
         .calc-btn.clear { color: var(--danger); }
-        .notes-input { width: 92%; max-width: 260px; height: 55%; background: var(--surface); border: 1.5px solid var(--surface2); border-radius: 16px; color: var(--text); font-size: 15px; padding: 12px; resize: none; font-family: inherit; outline: none; transition: border-color 0.2s; -webkit-user-select: text; user-select: text; }
+        .notes-input { width: var(--content-width); height: 46%; background: var(--surface); border: 1.5px solid var(--surface2); border-radius: 14px; color: var(--text); font-size: 14px; padding: 10px; resize: none; font-family: inherit; outline: none; transition: border-color 0.2s; -webkit-user-select: text; user-select: text; }
         .notes-input:focus { border-color: var(--accent); }
-        .notes-hint { font-size: 12px; color: var(--text2); margin-top: 6px; }
-        .notes-saved { font-size: 12px; color: var(--success); margin-top: 4px; opacity: 0; transition: opacity 0.3s; }
+        .notes-hint { font-size: 11px; color: var(--text2); margin-top: 4px; }
+        .notes-saved { font-size: 11px; color: var(--success); margin-top: 3px; opacity: 0; transition: opacity 0.3s; }
         .notes-saved.show { opacity: 1; }
-        .flashlight-btn { width: 100px; height: 100px; border-radius: 50%; background: var(--accent); color: #fff; border: none; font-size: 36px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.3s; box-shadow: 0 0 40px rgba(37, 99, 235, 0.4); -webkit-tap-highlight-color: transparent; }
+        .flashlight-btn { width: 90px; height: 90px; border-radius: 50%; background: var(--accent); color: #fff; border: none; font-size: 32px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.3s; box-shadow: 0 0 36px rgba(37, 99, 235, 0.4); -webkit-tap-highlight-color: transparent; }
         .flashlight-btn:active { transform: scale(0.9); }
-        .flashlight-btn.on { background: #fff; box-shadow: 0 0 80px rgba(255, 255, 255, 0.6); }
+        .flashlight-btn.on { background: #fff; box-shadow: 0 0 70px rgba(255, 255, 255, 0.6); }
         .flashlight-btn.on span { filter: brightness(0); }
-        .flashlight-label { margin-top: 12px; font-size: 14px; color: var(--text2); }
-        .btn { border: none; border-radius: 24px; padding: 10px 24px; font-size: 15px; font-weight: 600; cursor: pointer; font-family: inherit; transition: all 0.2s; -webkit-tap-highlight-color: transparent; min-width: 60px; min-height: 44px; display: flex; align-items: center; justify-content: center; }
+        .flashlight-label { margin-top: 10px; font-size: 13px; color: var(--text2); }
+        .btn { border: none; border-radius: 20px; padding: 7px 14px; font-size: 13px; font-weight: 600; cursor: pointer; font-family: inherit; transition: all 0.2s; -webkit-tap-highlight-color: transparent; min-width: 54px; min-height: 34px; display: flex; align-items: center; justify-content: center; }
         .btn:active { transform: scale(0.93); }
         .btn-primary { background: var(--accent); color: #fff; }
         .btn-primary:active { background: var(--accent2); }
@@ -95,139 +97,93 @@
         .btn-outline { background: transparent; border: 1.5px solid var(--text2); color: var(--text); }
         .wakelock-indicator { position: fixed; top: 4px; right: 10px; width: 6px; height: 6px; border-radius: 50%; background: var(--success); opacity: 0; transition: opacity 0.3s; z-index: 100; }
         .wakelock-indicator.active { opacity: 1; }
-        .apk-banner { position: fixed; bottom: 60px; left: 50%; transform: translateX(-50%); background: #1a1a2e; border: 1px solid #2563eb; border-radius: 20px; padding: 6px 12px; display: flex; align-items: center; gap: 8px; z-index: 90; max-width: 95vw; font-size: 12px; color: #ccc; }
-        .apk-banner-icon { font-size: 16px; }
+        .apk-banner { position: fixed; bottom: 54px; left: 50%; transform: translateX(-50%); background: #1a1a2e; border: 1px solid #2563eb; border-radius: 18px; padding: 5px 10px; display: flex; align-items: center; gap: 6px; z-index: 90; max-width: min(92%, 260px); font-size: 11px; color: #ccc; flex-wrap: wrap; justify-content: center; }
+        .apk-banner-icon { font-size: 14px; }
         .apk-banner-text { white-space: nowrap; }
-        .apk-banner-btn { background: #2563eb; color: #fff; text-decoration: none; padding: 4px 10px; border-radius: 12px; font-weight: bold; font-size: 12px; }
-        .apk-banner-close { background: none; border: none; color: #666; font-size: 12px; cursor: pointer; padding: 2px; }
+        .apk-banner-btn { background: #2563eb; color: #fff; text-decoration: none; padding: 4px 8px; border-radius: 10px; font-weight: bold; font-size: 11px; }
+        .apk-banner-close { background: none; border: none; color: #666; font-size: 11px; cursor: pointer; padding: 2px; }
+        body.in-app .apk-banner, .apk-banner.hidden { display: none !important; }
         @media (max-width: 220px) { .apk-banner { display: none !important; } }
 
-        /* Hide APK banner when opened inside the native watch app */
-        body.in-app .apk-banner { display: none !important; }
-
-        /* Compact layout for very small round watch screens */
-        @media (max-width: 380px) {
-            .btn { padding: 8px 16px; font-size: 13px; min-height: 38px; }
-            .sw-display, .timer-display { font-size: clamp(32px, 11vw, 48px); }
-            .sw-btns, .timer-btns { gap: 8px; }
-            .timer-presets { max-width: 220px; gap: 4px; }
-            .timer-preset { padding: 5px 10px; font-size: 12px; }
-            .calc-grid { max-width: 210px; gap: 6px; }
-            .calc-btn { min-width: 36px; min-height: 36px; font-size: 16px; }
-            .calc-display { font-size: clamp(24px, 8vw, 36px); }
-            .notes-input { max-width: 220px; height: 50%; font-size: 14px; }
-            .clock-face { width: min(80vw, 80vh, 220px); height: min(80vw, 80vh, 220px); }
-            .more-title { font-size: 14px; }
-            .tools-grid { gap: 6px; max-width: 240px; }
-            .tool-card { min-height: 60px; padding: 8px 2px; }
-            .tool-card-icon { font-size: 20px; }
-            .tool-card-name { font-size: 10px; }
-        }
-        @media (shape: round) {
-            body { border-radius: 50%; overflow: hidden; }
-            .app-shell { border-radius: 50%; clip-path: circle(50% at 50% 50%); }
-            .status-bar { padding: 10px 22px 2px; min-height: 38px; font-size: 13px; }
-            .bottom-nav { padding: 4px 0 calc(14px + var(--safe-bottom)); }
-            .screen { padding: 6px; }
-            .sw-display, .timer-display { font-size: clamp(28px, 10vw, 44px); margin-bottom: 8px; }
-            .sw-btns, .timer-btns { gap: 6px; margin-top: 8px; }
-            .btn { padding: 7px 14px; font-size: 12px; min-height: 36px; }
-            .timer-presets { max-width: 200px; gap: 4px; margin-bottom: 8px; }
-            .timer-preset { padding: 4px 8px; font-size: 11px; }
-            .calc-grid { max-width: 190px; gap: 5px; }
-            .calc-btn { min-width: 34px; min-height: 34px; font-size: 15px; }
-            .calc-display { font-size: clamp(22px, 7vw, 32px); min-height: 42px; }
-            .notes-input { max-width: 200px; height: 48%; font-size: 13px; }
-            .clock-face { width: min(72vw, 72vh, 180px); height: min(72vw, 72vh, 180px); }
-            .clock-date { font-size: 12px; margin-top: 4px; }
-            .tools-grid { gap: 5px; max-width: 210px; }
-            .tool-card { min-height: 56px; padding: 6px 2px; border-radius: 14px; }
-            .tool-card-icon { font-size: 18px; }
-            .tool-card-name { font-size: 9px; }
-            .more-title { font-size: 13px; margin-bottom: 6px; }
-            .flashlight-btn { width: 84px; height: 84px; font-size: 30px; }
-            .apk-banner { bottom: 54px; }
-        }
-
-        /* ---- More Tools Grid ---- */
-        .tools-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; width: 95%; max-width: 280px; max-height: 85%; overflow-y: auto; padding: 4px; scrollbar-width: none; }
+        /* More Tools Grid */
+        .tools-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; width: var(--content-width); max-height: 80%; overflow-y: auto; padding: 4px; scrollbar-width: none; }
         .tools-grid::-webkit-scrollbar { display: none; }
-        .tool-card { background: var(--surface); border: 1.5px solid var(--surface2); border-radius: 16px; padding: 10px 4px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; cursor: pointer; transition: all 0.2s; min-height: 70px; -webkit-tap-highlight-color: transparent; }
+        .tool-card { background: var(--surface); border: 1.5px solid var(--surface2); border-radius: 14px; padding: 8px 2px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; cursor: pointer; transition: all 0.2s; min-height: 54px; -webkit-tap-highlight-color: transparent; }
         .tool-card:active { background: var(--accent); border-color: var(--accent2); transform: scale(0.95); }
-        .tool-card-icon { font-size: 24px; }
-        .tool-card-name { font-size: 11px; color: var(--text); text-align: center; line-height: 1.2; }
+        .tool-card-icon { font-size: 22px; }
+        .tool-card-name { font-size: 10px; color: var(--text); text-align: center; line-height: 1.2; }
         .tool-card-badge { font-size: 9px; color: var(--accent2); }
-        .more-title { font-size: 15px; font-weight: 600; margin-bottom: 8px; color: var(--text2); }
+        .more-title { font-size: 14px; font-weight: 600; margin-bottom: 6px; color: var(--text2); }
 
-        /* ---- Tool Overlay ---- */
+        /* Tool Overlay */
         .tool-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg); z-index: 200; display: flex; flex-direction: column; transform: translateY(100%); transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94); padding: var(--safe-top) 0 var(--safe-bottom) 0; }
         .tool-overlay.open { transform: translateY(0); }
-        .tool-overlay-header { display: flex; align-items: center; padding: 8px 10px; gap: 8px; border-bottom: 1px solid var(--surface2); flex-shrink: 0; min-height: 44px; }
-        .tool-overlay-back { background: none; border: none; color: var(--accent); font-size: 16px; cursor: pointer; padding: 6px 10px; font-family: inherit; -webkit-tap-highlight-color: transparent; }
-        .tool-overlay-title { font-size: 15px; font-weight: 600; flex: 1; }
-        .tool-overlay-body { flex: 1; overflow-y: auto; padding: 8px; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+        .tool-overlay-header { display: flex; align-items: center; padding: 6px 8px; gap: 6px; border-bottom: 1px solid var(--surface2); flex-shrink: 0; min-height: 40px; }
+        .tool-overlay-back { background: none; border: none; color: var(--accent); font-size: 15px; cursor: pointer; padding: 5px 8px; font-family: inherit; -webkit-tap-highlight-color: transparent; }
+        .tool-overlay-title { font-size: 14px; font-weight: 600; flex: 1; }
+        .tool-overlay-body { flex: 1; overflow-y: auto; padding: 6px; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
         .tool-overlay-body::-webkit-scrollbar { display: none; }
 
         /* Tool shared styles */
-        .tool-input { width: 100%; background: var(--surface); border: 1.5px solid var(--surface2); border-radius: 12px; color: var(--text); font-size: 14px; padding: 10px; font-family: inherit; outline: none; -webkit-user-select: text; user-select: text; resize: none; }
+        .tool-input { width: 100%; background: var(--surface); border: 1.5px solid var(--surface2); border-radius: 12px; color: var(--text); font-size: 13px; padding: 8px; font-family: inherit; outline: none; -webkit-user-select: text; user-select: text; resize: none; }
         .tool-input:focus { border-color: var(--accent); }
-        .tool-output { width: 100%; background: var(--surface); border: 1.5px solid var(--surface2); border-radius: 12px; color: var(--text); font-size: 14px; padding: 10px; min-height: 60px; word-break: break-all; font-family: "SF Mono", "Menlo", "Consolas", monospace; }
-        .tool-row { display: flex; gap: 8px; margin-bottom: 8px; align-items: center; }
-        .tool-label { font-size: 13px; color: var(--text2); min-width: 50px; }
-        .tool-select { background: var(--surface); border: 1.5px solid var(--surface2); border-radius: 10px; color: var(--text); font-size: 13px; padding: 8px 10px; font-family: inherit; outline: none; flex: 1; }
-        .tool-btn-sm { background: var(--accent); color: #fff; border: none; border-radius: 10px; padding: 8px 14px; font-size: 13px; cursor: pointer; font-family: inherit; -webkit-tap-highlight-color: transparent; white-space: nowrap; }
+        .tool-output { width: 100%; background: var(--surface); border: 1.5px solid var(--surface2); border-radius: 12px; color: var(--text); font-size: 13px; padding: 8px; min-height: 52px; word-break: break-all; font-family: "SF Mono", "Menlo", "Consolas", monospace; }
+        .tool-row { display: flex; gap: 6px; margin-bottom: 6px; align-items: center; flex-wrap: wrap; }
+        .tool-label { font-size: 12px; color: var(--text2); min-width: 46px; }
+        .tool-select { background: var(--surface); border: 1.5px solid var(--surface2); border-radius: 10px; color: var(--text); font-size: 12px; padding: 6px 8px; font-family: inherit; outline: none; flex: 1; }
+        .tool-btn-sm { background: var(--accent); color: #fff; border: none; border-radius: 10px; padding: 7px 12px; font-size: 12px; cursor: pointer; font-family: inherit; -webkit-tap-highlight-color: transparent; white-space: nowrap; }
         .tool-btn-sm:active { background: var(--accent2); }
         .tool-btn-sm.copy { background: var(--success); }
         .tool-btn-sm.secondary { background: var(--surface2); color: var(--text); }
-        .tool-tabs { display: flex; gap: 4px; margin-bottom: 10px; }
-        .tool-tab { flex: 1; background: var(--surface); border: 1.5px solid var(--surface2); border-radius: 10px; padding: 8px; font-size: 12px; color: var(--text2); cursor: pointer; text-align: center; font-family: inherit; -webkit-tap-highlight-color: transparent; }
+        .tool-tabs { display: flex; gap: 4px; margin-bottom: 8px; flex-wrap: wrap; }
+        .tool-tab { flex: 1; min-width: 54px; background: var(--surface); border: 1.5px solid var(--surface2); border-radius: 10px; padding: 7px 4px; font-size: 11px; color: var(--text2); cursor: pointer; text-align: center; font-family: inherit; -webkit-tap-highlight-color: transparent; }
         .tool-tab.active { background: var(--accent); border-color: var(--accent2); color: #fff; }
 
         /* Reaction test */
-        .reaction-area { width: 100%; aspect-ratio: 1; max-width: 200px; max-height: 200px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.3s; font-size: 15px; font-weight: 600; margin: 10px auto; }
+        .reaction-area { width: min(180px, 55vmin); height: min(180px, 55vmin); border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.3s; font-size: 14px; font-weight: 600; margin: 8px auto; }
         .reaction-area.wait { background: #ef4444; color: #fff; }
         .reaction-area.ready { background: #22c55e; color: #fff; }
         .reaction-area.result { background: var(--accent); color: #fff; }
         .reaction-area.foul { background: #f59e0b; color: #000; }
-        .reaction-stats { display: flex; justify-content: space-around; width: 100%; margin-top: 10px; font-size: 12px; color: var(--text2); }
+        .reaction-stats { display: flex; justify-content: space-around; width: 100%; margin-top: 8px; font-size: 11px; color: var(--text2); }
         .reaction-stats span { color: var(--accent); font-weight: 600; }
 
         /* Color test */
-        .color-grid-watch { display: grid; gap: 4px; width: 95%; max-width: 220px; margin: 8px auto; }
-        .color-cell-watch { aspect-ratio: 1; border-radius: 8px; cursor: pointer; transition: transform 0.1s; }
+        .color-grid-watch { display: grid; gap: 3px; width: var(--content-width); margin: 6px auto; }
+        .color-cell-watch { aspect-ratio: 1; border-radius: 7px; cursor: pointer; transition: transform 0.1s; }
         .color-cell-watch:active { transform: scale(0.9); }
 
         /* Tic Tac Toe */
-        .ttt-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; width: 90%; max-width: 200px; margin: 8px auto; }
-        .ttt-cell { aspect-ratio: 1; background: var(--surface); border: 1.5px solid var(--surface2); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 28px; cursor: pointer; transition: all 0.15s; }
+        .ttt-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 3px; width: var(--content-width); max-width: 180px; margin: 6px auto; }
+        .ttt-cell { aspect-ratio: 1; background: var(--surface); border: 1.5px solid var(--surface2); border-radius: 9px; display: flex; align-items: center; justify-content: center; font-size: clamp(18px, 5.5vmin, 26px); cursor: pointer; transition: all 0.15s; }
         .ttt-cell:active { background: #333; }
         .ttt-cell.x { color: var(--accent); }
         .ttt-cell.o { color: var(--danger); }
-        .ttt-turn { text-align: center; font-size: 14px; font-weight: 600; margin: 6px 0; }
+        .ttt-turn { text-align: center; font-size: 13px; font-weight: 600; margin: 4px 0; }
 
         /* Password generator */
-        .pw-display { font-size: 16px; padding: 10px; background: var(--surface); border-radius: 12px; word-break: break-all; text-align: center; margin: 8px 0; font-family: "SF Mono", "Menlo", "Consolas", monospace; }
-        .pw-chk { display: flex; flex-wrap: wrap; gap: 6px; margin: 6px 0; font-size: 12px; }
-        .pw-chk label { display: flex; align-items: center; gap: 3px; cursor: pointer; color: var(--text2); }
+        .pw-display { font-size: 15px; padding: 8px; background: var(--surface); border-radius: 12px; word-break: break-all; text-align: center; margin: 6px 0; font-family: "SF Mono", "Menlo", "Consolas", monospace; }
+        .pw-chk { display: flex; flex-wrap: wrap; gap: 5px; margin: 5px 0; font-size: 11px; }
+        .pw-chk label { display: flex; align-items: center; gap: 2px; cursor: pointer; color: var(--text2); }
         .pw-chk input[type="checkbox"] { accent-color: var(--accent); }
-        .pw-slider { width: 100%; margin: 6px 0; accent-color: var(--accent); }
+        .pw-slider { width: 100%; margin: 5px 0; accent-color: var(--accent); }
 
         /* Unit converter */
-        .unit-result { font-size: 28px; font-weight: 600; text-align: center; margin: 12px 0; color: var(--accent); }
+        .unit-result { font-size: 24px; font-weight: 600; text-align: center; margin: 10px 0; color: var(--accent); }
 
         /* Disk links */
-        .disk-list { display: flex; flex-direction: column; gap: 6px; width: 95%; max-width: 260px; margin: 0 auto; }
-        .disk-item { background: var(--surface); border: 1.5px solid var(--surface2); border-radius: 14px; padding: 12px; display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--text); transition: all 0.2s; }
+        .disk-list { display: flex; flex-direction: column; gap: 5px; width: var(--content-width); margin: 0 auto; }
+        .disk-item { background: var(--surface); border: 1.5px solid var(--surface2); border-radius: 12px; padding: 10px; display: flex; align-items: center; gap: 8px; text-decoration: none; color: var(--text); transition: all 0.2s; }
         .disk-item:active { background: var(--accent); border-color: var(--accent2); }
-        .disk-item-icon { font-size: 22px; }
+        .disk-item-icon { font-size: 20px; }
         .disk-item-info { flex: 1; }
-        .disk-item-name { font-size: 14px; font-weight: 600; }
-        .disk-item-desc { font-size: 11px; color: var(--text2); }
-        .disk-item-arrow { color: var(--text2); font-size: 14px; }
+        .disk-item-name { font-size: 13px; font-weight: 600; }
+        .disk-item-desc { font-size: 10px; color: var(--text2); }
+        .disk-item-arrow { color: var(--text2); font-size: 13px; }
 
         /* Slider */
-        input[type="range"] { -webkit-appearance: none; height: 6px; background: var(--surface2); border-radius: 3px; outline: none; }
-        input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 24px; height: 24px; background: var(--accent); border-radius: 50%; cursor: pointer; }
+        input[type="range"] { -webkit-appearance: none; height: 5px; background: var(--surface2); border-radius: 3px; outline: none; }
+        input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 20px; height: 20px; background: var(--accent); border-radius: 50%; cursor: pointer; }
     </style>
 </head>
 <body>
@@ -1105,9 +1061,17 @@
         updateSWDisplay(); updateSWButtons(); updateTimerDisplay(); updateTimerPresets(); updateCalcDisplay(); drawClock();
         function updateShape() { var isRound = window.matchMedia('(shape: round)').matches; document.documentElement.setAttribute('data-shape', isRound ? 'round' : 'square'); }
         updateShape(); window.matchMedia('(shape: round)').addEventListener('change', updateShape);
-        // Detect native watch APK (set custom UA in WebView) and hide APK banner
-        if (navigator.userAgent.indexOf('ToolboxWatch') !== -1) {
+        // 检测是否在独立手表 APP 中：UA 标记、URL 参数、JSBridge
+        var inApp = navigator.userAgent.indexOf('ToolboxWatch') !== -1 || /[?&]in_app=1/.test(window.location.search);
+        try { if (window.AppBridge && window.AppBridge.isApp()) inApp = true; } catch(e){}
+        if (inApp || localStorage.getItem('watch_banner_closed') === '1') {
             document.body.classList.add('in-app');
+            var banner = document.getElementById('apkBanner');
+            if (banner) banner.style.display = 'none';
+        }
+        var closeBtn = document.querySelector('.apk-banner-close');
+        if (closeBtn) {
+            closeBtn.addEventListener('click', function() { localStorage.setItem('watch_banner_closed', '1'); });
         }
         var params = new URLSearchParams(window.location.search);
         var sp = parseInt(params.get('screen'));

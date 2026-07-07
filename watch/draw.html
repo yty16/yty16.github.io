@@ -10,16 +10,25 @@
     <style>
         *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
         html,body{width:100%;height:100%;overflow:hidden;background:#000;touch-action:none;-webkit-user-select:none;user-select:none;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;}
-        canvas{display:block;width:100%;height:100%;cursor:crosshair}
-        .toolbar{position:fixed;bottom:12px;left:50%;transform:translateX(-50%);display:flex;gap:6px;padding:6px 10px;background:rgba(30,30,30,0.9);border-radius:20px;z-index:10;flex-wrap:wrap;justify-content:center;max-width:95vw;}
-        .tb{width:36px;height:36px;border-radius:50%;border:none;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;transition:all 0.15s;-webkit-tap-highlight-color:transparent;}
+        canvas{display:block;width:100%;height:100%;cursor:crosshair;position:absolute;top:0;left:0;}
+        .back-btn{position:fixed;top:calc(8px + env(safe-area-inset-top,0px));left:calc(8px + env(safe-area-inset-left,0px));z-index:10;background:rgba(30,30,30,0.85);border:none;color:#fff;padding:5px 10px;border-radius:12px;font-size:13px;cursor:pointer;text-decoration:none;display:flex;align-items:center;gap:4px;}
+        .toolbar{position:fixed;bottom:calc(8px + env(safe-area-inset-bottom,0px));left:50%;transform:translateX(-50%);display:flex;gap:5px;padding:5px 8px;background:rgba(30,30,30,0.9);border-radius:18px;z-index:10;flex-wrap:wrap;justify-content:center;max-width:92vw;}
+        .tb{width:32px;height:32px;border-radius:50%;border:none;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;transition:all 0.15s;-webkit-tap-highlight-color:transparent;}
         .tb:active{transform:scale(0.85)}
         .tb-color{border:2px solid rgba(255,255,255,0.2)}
         .tb-color.active{border-color:#fff;box-shadow:0 0 8px rgba(255,255,255,0.5)}
-        .tb-tool{background:rgba(255,255,255,0.1);color:#fff;font-size:18px}
+        .tb-tool{background:rgba(255,255,255,0.1);color:#fff;font-size:16px}
         .tb-tool.active{background:#2563eb}
-        .tb-action{background:rgba(255,255,255,0.1);color:#fff;font-size:14px;width:auto;padding:0 12px;border-radius:18px}
-        .back-btn{position:fixed;top:12px;left:12px;z-index:10;background:rgba(30,30,30,0.85);border:none;color:#fff;padding:6px 12px;border-radius:14px;font-size:14px;cursor:pointer;text-decoration:none;display:flex;align-items:center;gap:4px}
+        .tb-action{background:rgba(255,255,255,0.1);color:#fff;font-size:12px;width:auto;padding:0 10px;border-radius:16px}
+        @media (shape: round){
+            .toolbar{bottom:calc(24px + env(safe-area-inset-bottom,0px));max-width:70vw;}
+            .back-btn{top:calc(20px + env(safe-area-inset-top,0px));left:calc(22px + env(safe-area-inset-left,0px));}
+            .tb{width:28px;height:28px;font-size:13px;}
+        }
+        @media (max-width: 200px){
+            .tb{width:26px;height:26px;font-size:11px;}
+            .toolbar{gap:3px;padding:4px 6px;}
+        }
     </style>
 </head>
 <body>
@@ -45,20 +54,37 @@ var drawing=false,color='#fff',tool='pen',lineWidth=3;
 var lastX=0,lastY=0;
 
 function resize(){
-    canvas.width=window.innerWidth*2;
-    canvas.height=window.innerHeight*2;
-    ctx.scale(2,2);
+    var dpr=window.devicePixelRatio||1;
+    var imgData=null;
+    try{imgData=ctx.getImageData(0,0,canvas.width,canvas.height);}catch(e){}
+    canvas.width=window.innerWidth*dpr;
+    canvas.height=window.innerHeight*dpr;
+    canvas.style.width=window.innerWidth+'px';
+    canvas.style.height=window.innerHeight+'px';
+    ctx.scale(dpr,dpr);
+    if(imgData){
+        try{ctx.putImageData(imgData,0,0);}catch(e){}
+    }
 }
-resize();window.addEventListener('resize',resize);
+resize();
+window.addEventListener('resize',resize);
 
 function getPos(e){var t=e.touches?e.touches[0]:e;return{x:t.clientX,y:t.clientY};}
 
-canvas.addEventListener('touchstart',function(e){e.preventDefault();drawing=true;var p=getPos(e);lastX=p.x;lastY=p.y;if(tool==='pen'){ctx.beginPath();ctx.moveTo(p.x,p.y);ctx.strokeStyle=color;ctx.lineWidth=lineWidth;ctx.lineCap='round';ctx.lineJoin='round';ctx.stroke();}});
+canvas.addEventListener('touchstart',function(e){e.preventDefault();drawing=true;var p=getPos(e);lastX=p.x;lastY=p.y;if(tool==='pen'){ctx.beginPath();ctx.moveTo(p.x,p.y);ctx.strokeStyle=color;ctx.lineWidth=lineWidth;ctx.lineCap='round';ctx.lineJoin='round';ctx.stroke();}},{passive:false});
 canvas.addEventListener('touchmove',function(e){e.preventDefault();if(!drawing)return;var p=getPos(e);
 if(tool==='pen'){ctx.beginPath();ctx.moveTo(lastX,lastY);ctx.lineTo(p.x,p.y);ctx.strokeStyle=color;ctx.lineWidth=lineWidth;ctx.lineCap='round';ctx.lineJoin='round';ctx.stroke();}
 else if(tool==='eraser'){ctx.clearRect(p.x-10,p.y-10,20,20);}
-lastX=p.x;lastY=p.y;});
+lastX=p.x;lastY=p.y;},{passive:false});
 canvas.addEventListener('touchend',function(){drawing=false;});
+
+// Mouse support
+canvas.addEventListener('mousedown',function(e){drawing=true;var p=getPos(e);lastX=p.x;lastY=p.y;if(tool==='pen'){ctx.beginPath();ctx.moveTo(p.x,p.y);ctx.strokeStyle=color;ctx.lineWidth=lineWidth;ctx.lineCap='round';ctx.lineJoin='round';ctx.stroke();}});
+canvas.addEventListener('mousemove',function(e){if(!drawing)return;var p=getPos(e);
+if(tool==='pen'){ctx.beginPath();ctx.moveTo(lastX,lastY);ctx.lineTo(p.x,p.y);ctx.strokeStyle=color;ctx.lineWidth=lineWidth;ctx.lineCap='round';ctx.lineJoin='round';ctx.stroke();}
+else if(tool==='eraser'){ctx.clearRect(p.x-10,p.y-10,20,20);}
+lastX=p.x;lastY=p.y;});
+canvas.addEventListener('mouseup',function(){drawing=false;});
 
 document.getElementById('toolbar').addEventListener('click',function(e){
     var btn=e.target.closest('button');if(!btn)return;

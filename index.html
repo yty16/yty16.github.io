@@ -141,7 +141,8 @@
             top: 0;
             left: 0;
             right: 0;
-            height: var(--header-height);
+            height: calc(var(--header-height) + env(safe-area-inset-top, 0px));
+            padding-top: env(safe-area-inset-top, 0px);
             background: var(--bg-header);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
@@ -683,10 +684,10 @@
         /* 侧边栏 */
         .sidebar {
             position: fixed;
-            top: var(--header-height);
+            top: calc(var(--header-height) + env(safe-area-inset-top, 0px));
             left: 0;
             width: var(--sidebar-width);
-            height: calc(100vh - var(--header-height));
+            height: calc(100vh - var(--header-height) - env(safe-area-inset-top, 0px));
             background: var(--bg-sidebar);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
@@ -775,9 +776,9 @@
         /* 主内容区 */
         .main {
             margin-left: var(--sidebar-width);
-            margin-top: var(--header-height);
+            margin-top: calc(var(--header-height) + env(safe-area-inset-top, 0px));
             padding: 28px 32px 80px;
-            min-height: calc(100vh - var(--header-height));
+            min-height: calc(100vh - var(--header-height) - env(safe-area-inset-top, 0px));
             position: relative;
             z-index: 1;
         }
@@ -2934,10 +2935,12 @@
             border: none;
         }
 
-        /* iOS 安全区域适配（刘海屏等） */
-        @supports (padding-bottom: env(safe-area-inset-bottom)) {
+        /* iOS 安全区域适配（刘海屏、开孔摄像头等） */
+        @supports (padding: env(safe-area-inset-top)) {
             body {
-                padding-bottom: env(safe-area-inset-bottom);
+                padding-left: env(safe-area-inset-left, 0px);
+                padding-right: env(safe-area-inset-right, 0px);
+                padding-bottom: env(safe-area-inset-bottom, 0px);
             }
             .sidebar {
                 padding-bottom: calc(16px + env(safe-area-inset-bottom)) !important;
@@ -3853,12 +3856,13 @@
         updateThemeIcon();
         loadAppearance();
 
-                window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function(e) {
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function(e) {
             const saved = localStorage.getItem('theme');
-                        if (!saved) {
+            if (!saved) {
                 document.documentElement.setAttribute('data-theme', e.matches ? 'dark' : 'light');
                 updateThemeIcon();
-                                if (typeof updateParticleColors === 'function') updateParticleColors();
+                loadAppearance();
+                if (typeof updateParticleColors === 'function') updateParticleColors();
             }
         });
     }
@@ -3887,9 +3891,9 @@
             showToast('亮色模式');
         }
         updateThemeIcon();
+        loadAppearance();
+        if (typeof updateParticleColors === 'function') updateParticleColors();
     }
-
-    function updateThemeIcon() {
         const icon = document.getElementById('themeIcon');
         const saved = localStorage.getItem('theme');
         const isDark = document.documentElement.getAttribute('data-theme') === 'dark';

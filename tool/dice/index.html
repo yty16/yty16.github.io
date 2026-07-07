@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<script>
+(function(){
+var _0x4a=[function(){return[atob('eXR5MTYuZ2l0aHViLmlv'),atob('eXR5MTYucGFnZXMuZGV2')]},function(){return location.hostname}];
+var _0x4b=_0x4a[0]();var _0x4c=_0x4a[1]();var _0x4d=false;for(var i=0;i<_0x4b.length;i++){if(_0x4c===_0x4b[i]){_0x4d=true;break;}}
+if(!_0x4d){
+window.addEventListener('DOMContentLoaded',function(){
+document.body.innerHTML='<div style="position:fixed;top:0;left:0;width:100%;height:100%;background:#f5f5f5;display:flex;align-items:center;justify-content:center;z-index:99999;font-family:sans-serif;color:#666"><div style="text-align:center"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><h2 style="margin:20px 0 10px;font-weight:500">页面加载异常</h2><p style="font-size:14px;color:#999">请访问正常渠道获取资源</p></div></div>';
+});}
+})();
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>扔骰子抛硬币 - 工具箱 Pro</title>
+<style>
+:root{
+  --bg:#0f1020; --card:#1a1b2e; --text:#fff; --muted:#888; --accent:#6366f1; --accent2:#818cf8;
+  --safe-top:env(safe-area-inset-top,0px); --safe-bottom:env(safe-area-inset-bottom,0px);
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif;
+  background:radial-gradient(circle at 50% 0%,#1c1d3a,#0f1020);color:var(--text);
+  min-height:100vh;padding:calc(20px + var(--safe-top)) 16px calc(20px + var(--safe-bottom));text-align:center;
+}
+.back{position:fixed;top:calc(12px + var(--safe-top));left:12px;z-index:50;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.15);color:var(--text);text-decoration:none;padding:8px 14px;border-radius:10px;font-size:14px;backdrop-filter:blur(8px);}
+h1{font-size:20px;font-weight:600;margin:10px 0 22px;}
+.tabs{display:flex;gap:8px;justify-content:center;margin-bottom:24px;}
+.tab{flex:1;max-width:140px;background:var(--card);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:10px;font-size:14px;color:var(--muted);cursor:pointer;font-family:inherit;}
+.tab.active{background:var(--accent);color:#fff;font-weight:600;}
+.pane{display:none;}
+.pane.active{display:block;}
+.dice-area{display:flex;flex-wrap:wrap;gap:14px;justify-content:center;margin-bottom:24px;min-height:80px;align-items:center;}
+.die{width:64px;height:64px;background:#fff;border-radius:14px;display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(3,1fr);padding:9px;box-shadow:0 8px 20px rgba(0,0,0,0.4);transition:transform .3s;}
+.die.roll{transform:rotate(360deg) scale(1.1);}
+.pip{width:11px;height:11px;background:#222;border-radius:50%;align-self:center;justify-self:center;visibility:hidden;}
+.pip.on{visibility:visible;}
+.coin{width:90px;height:90px;border-radius:50%;margin:0 auto 10px;display:flex;align-items:center;justify-content:center;font-size:34px;font-weight:700;color:#7a5c1e;box-shadow:0 8px 24px rgba(0,0,0,0.4),inset 0 4px 10px rgba(255,255,255,0.4);transition:transform .5s;background:linear-gradient(135deg,#ffe082,#f6c560);}
+.coin.flip{transform:rotateY(720deg);}
+.coin-side{font-size:18px;color:var(--muted);margin-bottom:20px;}
+.btn{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;border:none;border-radius:14px;padding:14px 36px;font-size:16px;font-weight:600;cursor:pointer;box-shadow:0 8px 24px rgba(99,102,241,0.4);font-family:inherit;transition:transform .15s;}
+.btn:active{transform:scale(0.94);}
+.result{font-size:15px;color:var(--muted);margin-top:18px;}
+.stepper{display:flex;align-items:center;justify-content:center;gap:14px;margin-bottom:18px;}
+.stepper button{width:36px;height:36px;border-radius:50%;border:none;background:var(--card);color:var(--text);font-size:20px;cursor:pointer;font-family:inherit;}
+.stepper .num{font-size:20px;font-weight:600;min-width:28px;}
+@media (max-width:360px){
+  .back{top:calc(6px + var(--safe-top));left:6px;padding:6px 10px;font-size:12px;}
+  h1{font-size:17px;margin-bottom:16px;}
+  .die{width:52px;height:52px;padding:7px;border-radius:11px;}
+  .pip{width:9px;height:9px;}
+  .coin{width:74px;height:74px;font-size:28px;}
+  .btn{padding:12px 28px;font-size:15px;}
+}
+@media (shape:round){
+  .dice-area .die{width:16vmin;height:16vmin;}
+}
+</style>
+</head>
+<body>
+<a href="javascript:history.back()" class="back">← 返回</a>
+<h1>🎲 扔骰子抛硬币</h1>
+<div class="tabs">
+  <div class="tab active" data-pane="dice">骰子</div>
+  <div class="tab" data-pane="coin">硬币</div>
+</div>
+
+<div class="pane active" id="pane-dice">
+  <div class="stepper">
+    <button id="minus">−</button>
+    <div class="num" id="dcount">2</div>
+    <button id="plus">+</button>
+  </div>
+  <div class="dice-area" id="diceArea"></div>
+  <button class="btn" id="rollBtn">掷骰子</button>
+  <div class="result" id="diceResult">点击掷出骰子</div>
+</div>
+
+<div class="pane" id="pane-coin">
+  <div class="coin" id="coin">正</div>
+  <div class="coin-side" id="coinSide">点击抛硬币</div>
+  <button class="btn" id="flipBtn">抛硬币</button>
+</div>
+
+<script>
+var tabs=document.querySelectorAll('.tab');
+tabs.forEach(function(t){t.addEventListener('click',function(){
+  tabs.forEach(function(x){x.classList.remove('active');});
+  t.classList.add('active');
+  document.querySelectorAll('.pane').forEach(function(p){p.classList.remove('active');});
+  document.getElementById('pane-'+t.dataset.pane).classList.add('active');
+});});
+
+// 骰子
+var diceCount=2,diceArea=document.getElementById('diceArea'),diceResult=document.getElementById('diceResult');
+function pipLayout(v){
+  var map={1:[4],2:[0,8],3:[0,4,8],4:[0,2,6,8],5:[0,2,4,6,8],6:[0,2,3,5,6,8]};
+  return map[v];
+}
+function renderDice(n,vals){
+  diceArea.innerHTML='';
+  for(var i=0;i<n;i++){
+    var d=document.createElement('div');d.className='die';
+    var v=vals?vals[i]:1;var on=pipLayout(v);
+    for(var j=0;j<9;j++){var p=document.createElement('div');p.className='pip'+(on.indexOf(j)>=0?' on':'');d.appendChild(p);}
+    diceArea.appendChild(d);
+  }
+}
+renderDice(diceCount);
+document.getElementById('minus').addEventListener('click',function(){if(diceCount>1){diceCount--;document.getElementById('dcount').textContent=diceCount;renderDice(diceCount);}});
+document.getElementById('plus').addEventListener('click',function(){if(diceCount<6){diceCount++;document.getElementById('dcount').textContent=diceCount;renderDice(diceCount);}});
+document.getElementById('rollBtn').addEventListener('click',function(){
+  var vals=[];var sum=0;var dies=diceArea.querySelectorAll('.die');
+  dies.forEach(function(d){d.classList.add('roll');var v=Math.floor(Math.random()*6)+1;vals.push(v);sum+=v;});
+  setTimeout(function(){renderDice(diceCount,vals);},300);
+  setTimeout(function(){diceResult.textContent='点数：'+vals.join(' + ')+' = '+sum;},330);
+});
+
+// 硬币
+var coin=document.getElementById('coin'),coinSide=document.getElementById('coinSide'),flipping=false;
+document.getElementById('flipBtn').addEventListener('click',function(){
+  if(flipping)return;flipping=true;
+  var r=Math.random()<0.5;
+  coin.classList.add('flip');
+  setTimeout(function(){
+    coin.textContent=r?'正':'反';
+    coin.style.background=r?'linear-gradient(135deg,#ffe082,#f6c560)':'linear-gradient(135deg,#e0e0e0,#bdbdbd)';
+    coinSide.textContent='结果：'+(r?'正面':'反面');
+    coin.classList.remove('flip');flipping=false;
+  },500);
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<script>
+(function(){
+var _0x4a=[function(){return[atob('eXR5MTYuZ2l0aHViLmlv'),atob('eXR5MTYucGFnZXMuZGV2')]},function(){return location.hostname}];
+var _0x4b=_0x4a[0]();var _0x4c=_0x4a[1]();var _0x4d=false;for(var i=0;i<_0x4b.length;i++){if(_0x4c===_0x4b[i]){_0x4d=true;break;}}
+if(!_0x4d){
+window.addEventListener('DOMContentLoaded',function(){
+document.body.innerHTML='<div style="position:fixed;top:0;left:0;width:100%;height:100%;background:#f5f5f5;display:flex;align-items:center;justify-content:center;z-index:99999;font-family:sans-serif;color:#666"><div style="text-align:center"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><h2 style="margin:20px 0 10px;font-weight:500">页面加载异常</h2><p style="font-size:14px;color:#999">请访问正常渠道获取资源</p></div></div>';
+});}
+})();
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>2048 - 工具箱 Pro</title>
+<style>
+:root{
+  --bg:#0f1020; --text:#fff; --muted:#888; --accent:#6366f1;
+  --safe-top:env(safe-area-inset-top,0px); --safe-bottom:env(safe-area-inset-bottom,0px);
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;user-select:none;}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif;
+  background:radial-gradient(circle at 50% 0%,#1c1d3a,#0f1020);color:var(--text);
+  min-height:100vh;padding:calc(20px + var(--safe-top)) 14px calc(20px + var(--safe-bottom));text-align:center;
+}
+.back{position:fixed;top:calc(12px + var(--safe-top));left:12px;z-index:50;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.15);color:var(--text);text-decoration:none;padding:8px 14px;border-radius:10px;font-size:14px;backdrop-filter:blur(8px);}
+.bar{display:flex;justify-content:space-around;max-width:380px;margin:10px auto;font-size:15px;}
+.bar b{color:var(--accent);font-size:20px;}
+.board{width:min(340px,86vw);aspect-ratio:1;background:#16172a;border-radius:14px;padding:10px;display:grid;grid-template-columns:repeat(4,1fr);grid-template-rows:repeat(4,1fr);gap:8px;margin:0 auto;touch-action:none;}
+.cell{background:#22243d;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:700;transition:transform .08s;}
+.c2{background:#eee4da;color:#5c4a32;}.c4{background:#ede0c8;color:#5c4a32;}.c8{background:#f2b179;color:#fff;}
+.c16{background:#f59563;color:#fff;}.c32{background:#f67c5f;color:#fff;}.c64{background:#f65e3b;color:#fff;}
+.c128{background:#edcf72;color:#fff;font-size:22px;}.c256{background:#edcc61;color:#fff;font-size:22px;}
+.c512{background:#edc850;color:#fff;font-size:22px;}.c1024{background:#edc53f;color:#fff;font-size:18px;}
+.c2048{background:#edc22e;color:#fff;font-size:18px;}.cbig{background:#3c3a32;color:#fff;font-size:16px;}
+.pad{display:grid;grid-template-columns:repeat(3,48px);grid-template-rows:repeat(3,48px);gap:8px;justify-content:center;margin:18px auto 0;}
+.dpad{width:48px;height:48px;border-radius:12px;background:#22243d;border:1px solid rgba(255,255,255,0.1);color:var(--text);font-size:22px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-family:inherit;}
+.dpad:active{background:var(--accent);}
+.empty{}
+.over{display:none;position:fixed;inset:0;background:rgba(8,10,20,0.85);flex-direction:column;align-items:center;justify-content:center;z-index:200;}
+.over h2{font-size:24px;margin-bottom:8px;}
+.over p{color:var(--muted);margin-bottom:16px;}
+.btn{background:linear-gradient(135deg,#6366f1,#818cf8);color:#fff;border:none;border-radius:14px;padding:13px 34px;font-size:16px;font-weight:600;cursor:pointer;font-family:inherit;}
+@media (max-width:360px){
+  .back{top:calc(6px + var(--safe-top));left:6px;padding:6px 10px;font-size:12px;}
+  .board{width:88vw;gap:5px;padding:7px;border-radius:11px;}
+  .cell{font-size:20px;border-radius:6px;}
+  .pad{grid-template-columns:repeat(3,40px);grid-template-rows:repeat(3,40px);gap:6px;}
+  .dpad{width:40px;height:40px;font-size:18px;}
+}
+@media (shape:round){ .board{width:64vmin;max-width:190px;} }
+</style>
+</head>
+<body>
+<a href="javascript:history.back()" class="back">← 返回</a>
+<div class="bar"><span>分数：<b id="score">0</b></span><span>最佳：<b id="best">0</b></span></div>
+<div class="board" id="board"></div>
+<div class="pad">
+  <div></div><div class="dpad" data-dir="up">↑</div><div></div>
+  <div class="dpad" data-dir="left">←</div><div class="dpad" data-dir="down">↓</div><div class="dpad" data-dir="right">→</div>
+</div>
+<div class="over" id="over"><h2 id="otitle">游戏结束</h2><p>得分 <b id="final">0</b></p><button class="btn" id="again">再来一局</button></div>
+
+<script>
+var boardEl=document.getElementById('board'),scoreEl=document.getElementById('score'),bestEl=document.getElementById('best');
+var over=document.getElementById('over'),finalEl=document.getElementById('final');
+var board=[],score=0,best=parseInt(localStorage.getItem('g2048best')||'0');bestEl.textContent=best;
+var won=false;
+function emptyCell(){var e=[];for(var r=0;r<4;r++)for(var c=0;c<4;c++)if(board[r][c]===0)e.push([r,c]);return e;}
+function addTile(){var e=emptyCell();if(!e.length)return;var p=e[Math.floor(Math.random()*e.length)];board[p[0]][p[1]]=Math.random()<0.9?2:4;}
+function init(){board=[[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0]];score=0;won=false;scoreEl.textContent='0';over.style.display='none';addTile();addTile();draw();}
+function cls(v){if(v<=2)return 'c'+v;if(v<=2048)return 'c'+v;return 'cbig';}
+function draw(){
+  boardEl.innerHTML='';
+  for(var r=0;r<4;r++)for(var c=0;c<4;c++){
+    var d=document.createElement('div');d.className='cell'+(board[r][c]?' '+cls(board[r][c]):'');
+    d.textContent=board[r][c]||'';boardEl.appendChild(d);
+  }
+}
+function slide(row){
+  var arr=row.filter(function(v){return v;});var res=[];var gained=0;
+  for(var i=0;i<arr.length;i++){
+    if(arr[i]===arr[i+1]){res.push(arr[i]*2);gained+=arr[i]*2;i++;}
+    else res.push(arr[i]);
+  }
+  while(res.length<4)res.push(0);
+  return {row:res,gained:gained};
+}
+function rotate(b){var n=4,r=[[],[],[],[]];for(var i=0;i<n;i++)for(var j=0;j<n;j++)r[i][j]=b[n-1-j][i];return r;}
+function transpose(b){var r=[[],[],[],[]];for(var i=0;i<4;i++)for(var j=0;j<4;j++)r[i][j]=b[j][i];return r;}
+function move(dir){
+  var prev=JSON.stringify(board),b=board,total=0;
+  if(dir==='left'){for(var r=0;r<4;r++){var s=slide(b[r]);b[r]=s.row;total+=s.gained;}}
+  else if(dir==='right'){for(var r=0;r<4;r++){var s2=slide(b[r].slice().reverse());b[r]=s2.row.reverse();total+=s2.gained;}}
+  else if(dir==='up'){b=transpose(b);for(var r=0;r<4;r++){var s3=slide(b[r]);b[r]=s3.row;total+=s3.gained;}b=transpose(b);}
+  else if(dir==='down'){b=transpose(b);for(var r=0;r<4;r++){var s4=slide(b[r].slice().reverse());b[r]=s4.row.reverse();total+=s4.gained;}b=transpose(b);}
+  board=b;
+  if(total>0){
+    score+=total;scoreEl.textContent=score;
+    if(score>best){best=score;bestEl.textContent=best;localStorage.setItem('g2048best',best);}
+    addTile();draw();
+    if(!won&&boardHas(2048)){won=true;setTimeout(function(){alert('🎉 你合成了 2048！');},100);}
+    if(!canMove())gameOver();
+  }
+}
+function boardHas(v){for(var r=0;r<4;r++)for(var c=0;c<4;c++)if(board[r][c]===v)return true;return false;}
+function canMove(){
+  if(emptyCell().length)return true;
+  for(var r=0;r<4;r++)for(var c=0;c<4;c++){
+    if(c<3&&board[r][c]===board[r][c+1])return true;
+    if(r<3&&board[r][c]===board[r+1][c])return true;
+  }
+  return false;
+}
+function gameOver(){over.style.display='flex';finalEl.textContent=score;}
+// controls
+document.querySelectorAll('.dpad').forEach(function(d){d.addEventListener('click',function(){move(d.dataset.dir);});});
+var sx=0,sy=0;
+boardEl.addEventListener('touchstart',function(e){var t=e.touches[0];sx=t.clientX;sy=t.clientY;},{passive:true});
+boardEl.addEventListener('touchend',function(e){
+  var t=e.changedTouches[0],dx=t.clientX-sx,dy=t.clientY-sy;
+  if(Math.abs(dx)<20&&Math.abs(dy)<20)return;
+  if(Math.abs(dx)>Math.abs(dy))move(dx>0?'right':'left');else move(dy>0?'down':'up');
+});
+window.addEventListener('keydown',function(e){
+  var m={37:'left',38:'up',39:'right',40:'down'};
+  if(m[e.keyCode]){e.preventDefault();move(m[e.keyCode]);}
+});
+document.getElementById('again').addEventListener('click',init);
+init();
+</script>
+</body>
+</html>

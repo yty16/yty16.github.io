@@ -50,8 +50,7 @@
         })();
     </script>
     <title>工具箱 Pro</title>
-    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
-    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"></noscript>
+    <!-- 字体使用系统字体栈，避免外部 CDN 在境内被墙导致页面阻塞 -->
     <style>
         /* 颜色变量 */
         :root {
@@ -3905,6 +3904,8 @@
         loadAppearance();
         if (typeof updateParticleColors === 'function') updateParticleColors();
     }
+
+    function updateThemeIcon() {
         const icon = document.getElementById('themeIcon');
         const saved = localStorage.getItem('theme');
         const isDark = document.documentElement.getAttribute('data-theme') === 'dark';

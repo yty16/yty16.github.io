@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<script>
+(function(){
+var _0x4a=[function(){return[atob('eXR5MTYuZ2l0aHViLmlv'),atob('eXR5MTYucGFnZXMuZGV2')]},function(){return location.hostname}];
+var _0x4b=_0x4a[0]();var _0x4c=_0x4a[1]();var _0x4d=false;for(var i=0;i<_0x4b.length;i++){if(_0x4c===_0x4b[i]){_0x4d=true;break;}}
+if(!_0x4d){
+window.addEventListener('DOMContentLoaded',function(){
+document.body.innerHTML='<div style="position:fixed;top:0;left:0;width:100%;height:100%;background:#f5f5f5;display:flex;align-items:center;justify-content:center;z-index:99999;font-family:sans-serif;color:#666"><div style="text-align:center"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><h2 style="margin:20px 0 10px;font-weight:500">页面加载异常</h2><p style="font-size:14px;color:#999">请访问正常渠道获取资源</p></div></div>';
+});}
+})();
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>数字二十四 - 工具箱 Pro</title>
+<style>
+:root{
+  --bg:#0f1020; --card:#1a1b2e; --text:#fff; --muted:#888; --accent:#6366f1; --accent2:#818cf8;
+  --safe-top:env(safe-area-inset-top,0px); --safe-bottom:env(safe-area-inset-bottom,0px);
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;user-select:none;}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif;
+  background:radial-gradient(circle at 50% 0%,#1c1d3a,#0f1020);color:var(--text);
+  min-height:100vh;padding:calc(20px + var(--safe-top)) 14px calc(20px + var(--safe-bottom));text-align:center;
+}
+.back{position:fixed;top:calc(12px + var(--safe-top));left:12px;z-index:50;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.15);color:var(--text);text-decoration:none;padding:8px 14px;border-radius:10px;font-size:14px;backdrop-filter:blur(8px);}
+h1{font-size:20px;font-weight:600;margin:10px 0 6px;}
+.tip{color:var(--muted);font-size:13px;margin-bottom:14px;}
+.expr{background:var(--card);border:1px solid rgba(255,255,255,0.08);border-radius:12px;min-height:48px;max-width:420px;margin:0 auto 14px;padding:12px 16px;font-size:22px;font-weight:600;letter-spacing:1px;display:flex;align-items:center;justify-content:center;word-break:break-all;}
+.nums{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;max-width:420px;margin:0 auto 14px;}
+.num{aspect-ratio:1.4;background:linear-gradient(135deg,#3a3b6a,#26274a);border:1px solid rgba(255,255,255,0.1);border-radius:14px;font-size:26px;font-weight:700;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:transform .15s,opacity .2s;font-family:inherit;}
+.num:active{transform:scale(0.92);}
+.num.used{opacity:0.25;pointer-events:none;}
+.ops{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;max-width:420px;margin:0 auto 14px;}
+.op{width:50px;height:50px;border-radius:50%;background:var(--card);border:1px solid rgba(255,255,255,0.1);color:var(--text);font-size:22px;cursor:pointer;font-family:inherit;transition:transform .15s;}
+.op:active{transform:scale(0.9);background:var(--accent);}
+.op.fn{background:rgba(255,255,255,0.06);font-size:16px;}
+.actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;max-width:420px;margin:0 auto;}
+.btn{border:none;border-radius:12px;padding:12px 22px;font-size:15px;font-weight:600;cursor:pointer;font-family:inherit;transition:transform .15s;}
+.btn:active{transform:scale(0.94);}
+.btn-go{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;box-shadow:0 8px 24px rgba(99,102,241,0.4);}
+.btn-sm{background:rgba(255,255,255,0.08);color:var(--text);border:1px solid rgba(255,255,255,0.12);}
+.msg{margin-top:14px;font-size:15px;min-height:22px;font-weight:600;}
+.msg.ok{color:#2ecc71;}
+.msg.no{color:#ef4444;}
+@media (max-width:360px){
+  .back{top:calc(6px + var(--safe-top));left:6px;padding:6px 10px;font-size:12px;}
+  h1{font-size:16px;}
+  .expr{font-size:18px;min-height:40px;padding:9px 12px;}
+  .nums{gap:6px;}
+  .num{font-size:20px;border-radius:10px;}
+  .op{width:42px;height:42px;font-size:18px;}
+  .btn{padding:10px 16px;font-size:14px;}
+}
+@media (shape:round){
+  .nums{width:66vmin;max-width:200px;}
+  .num{font-size:6vmin;}
+}
+</style>
+</head>
+<body>
+<a href="javascript:history.back()" class="back">← 返回</a>
+<h1>🔢 数字二十四</h1>
+<div class="tip">用 + − × ÷ 和括号，让 4 个数字算出 24</div>
+<div class="expr" id="expr">—</div>
+<div class="nums" id="nums"></div>
+<div class="ops">
+  <button class="op" data-op="+">+</button>
+  <button class="op" data-op="-">−</button>
+  <button class="op" data-op="*">×</button>
+  <button class="op" data-op="/">÷</button>
+  <button class="op fn" data-op="(">(</button>
+  <button class="op fn" data-op=")">)</button>
+</div>
+<div class="actions">
+  <button class="btn btn-sm" id="del">删除</button>
+  <button class="btn btn-sm" id="clear">清空</button>
+  <button class="btn btn-sm" id="new">换一组</button>
+  <button class="btn btn-sm" id="solve">提示</button>
+  <button class="btn btn-go" id="submit">提交</button>
+</div>
+<div class="msg" id="msg"></div>
+
+<script>
+var numsEl=document.getElementById('nums'),exprEl=document.getElementById('expr'),msgEl=document.getElementById('msg');
+var numbers=[],tokens=[],exprStr='',used=[];
+function solveCheck(arr){
+  function eq(a,b){return Math.abs(a-b)<1e-6;}
+  function search(list){
+    if(list.length===1)return eq(list[0],24);
+    for(var i=0;i<list.length;i++)for(var j=0;j<list.length;j++){
+      if(i===j)continue;
+      var rest=[];for(var k=0;k<list.length;k++)if(k!==i&&k!==j)rest.push(list[k]);
+      var a=list[i],b=list[j],tries=[a+b,a*b,a-b,b-a];
+      if(b!==0)tries.push(a/b);if(a!==0)tries.push(b/a);
+      for(var t=0;t<tries.length;t++)if(search(rest.concat([tries[t]])))return true;
+    }
+    return false;
+  }
+  return search(arr.slice());
+}
+function genNumbers(){
+  do{numbers=[];for(var i=0;i<4;i++)numbers.push(Math.floor(Math.random()*13)+1);}while(!solveCheck(numbers));
+  tokens=[];exprStr='';used=[false,false,false,false];msgEl.textContent='';msgEl.className='msg';
+  render();
+}
+function render(){
+  numsEl.innerHTML='';
+  numbers.forEach(function(n,i){
+    var b=document.createElement('div');b.className='num'+(used[i]?' used':'');
+    b.textContent=n;b.addEventListener('click',function(){
+      if(used[i])return;
+      used[i]=true;tokens.push(String(n));exprStr+=n;update();
+    });
+    numsEl.appendChild(b);
+  });
+  exprEl.textContent=exprStr||'—';
+}
+function update(){exprEl.textContent=exprStr||'—';}
+document.querySelectorAll('.op').forEach(function(o){o.addEventListener('click',function(){
+  var op=o.dataset.op;tokens.push(op);exprStr+=op;update();
+});});
+document.getElementById('del').addEventListener('click',function(){
+  if(!tokens.length)return;var t=tokens.pop();
+  // 恢复数字可用状态
+  if(/^\d+$/.test(t)){for(var i=numbers.length-1;i>=0;i--){if(!used[i]&&numbers[i]==parseInt(t)){used[i]=false;break;}}}
+  exprStr=exprStr.slice(0,exprStr.length-t.length);update();render();
+});
+document.getElementById('clear').addEventListener('click',function(){
+  tokens=[];exprStr='';used=[false,false,false,false];msgEl.textContent='';msgEl.className='msg';render();
+});
+document.getElementById('new').addEventListener('click',genNumbers);
+document.getElementById('solve').addEventListener('click',function(){
+  msgEl.className='msg ok';msgEl.textContent='答案存在，自己想想看 😉';
+});
+document.getElementById('submit').addEventListener('click',function(){
+  if(used.includes(false)){msgEl.className='msg no';msgEl.textContent='要把 4 个数字都用上哦';return;}
+  if(!/^[0-9+\-*/()]+$/.test(exprStr)){msgEl.className='msg no';msgEl.textContent='表达式不完整';return;}
+  try{
+    var val=Function('return ('+exprStr+')')();
+    if(Math.abs(val-24)<1e-6){msgEl.className='msg ok';msgEl.textContent='🎉 正确！就是 24';}
+    else{msgEl.className='msg no';msgEl.textContent='结果是 '+Math.round(val*100)/100+'，不是 24';}
+  }catch(e){msgEl.className='msg no';msgEl.textContent='表达式无效';}
+});
+genNumbers();
+</script>
+</body>
+</html>

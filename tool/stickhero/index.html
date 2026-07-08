@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<script>
+(function(){
+var _0x4a=[function(){return[atob('eXR5MTYuZ2l0aHViLmlv'),atob('eXR5MTYucGFnZXMuZGV2')]},function(){return location.hostname}];
+var _0x4b=_0x4a[0]();var _0x4c=_0x4a[1]();var _0x4d=false;for(var i=0;i<_0x4b.length;i++){if(_0x4c===_0x4b[i]){_0x4d=true;break;}}
+if(!_0x4d){
+window.addEventListener('DOMContentLoaded',function(){
+document.body.innerHTML='<div style="position:fixed;top:0;left:0;width:100%;height:100%;background:#f5f5f5;display:flex;align-items:center;justify-content:center;z-index:99999;font-family:sans-serif;color:#666"><div style="text-align:center"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><h2 style="margin:20px 0 10px;font-weight:500">页面加载异常</h2><p style="font-size:14px;color:#999">请访问正常渠道获取资源</p></div></div>';
+});}
+})();
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>小人过桥 - 工具箱 Pro</title>
+<style>
+:root{
+  --bg:#0f1020; --text:#fff; --muted:#888; --accent:#22c55e;
+  --safe-top:env(safe-area-inset-top,0px); --safe-bottom:env(safe-area-inset-bottom,0px);
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;user-select:none;}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif;
+  background:radial-gradient(circle at 50% 0%,#2a2a4a,#0a0a14);color:var(--text);
+  min-height:100vh;padding:calc(16px + var(--safe-top)) 12px calc(16px + var(--safe-bottom));text-align:center;
+}
+.back{position:fixed;top:calc(12px + var(--safe-top));left:12px;z-index:50;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.15);color:var(--text);text-decoration:none;padding:8px 14px;border-radius:10px;font-size:14px;backdrop-filter:blur(8px);}
+.bar{display:flex;justify-content:space-around;max-width:420px;margin:6px auto 10px;font-size:15px;}
+.bar b{color:var(--accent);font-size:20px;}
+.stage{position:relative;max-width:460px;margin:0 auto;border-radius:16px;overflow:hidden;background:linear-gradient(#1a2340,#0c1020);box-shadow:0 10px 30px rgba(0,0,0,0.4);}
+canvas{display:block;width:100%;touch-action:none;}
+.hint{color:var(--muted);font-size:13px;margin-top:12px;}
+.over{display:none;position:absolute;inset:0;background:rgba(8,10,20,0.82);flex-direction:column;align-items:center;justify-content:center;}
+.over h2{font-size:22px;margin-bottom:8px;}
+.over p{color:var(--muted);margin-bottom:16px;}
+.btn{background:linear-gradient(135deg,#6366f1,#818cf8);color:#fff;border:none;border-radius:14px;padding:13px 34px;font-size:16px;font-weight:600;cursor:pointer;font-family:inherit;}
+@media (max-width:360px){
+  .back{top:calc(6px + var(--safe-top));left:6px;padding:6px 10px;font-size:12px;}
+  .bar{font-size:13px;}.bar b{font-size:17px;}
+  .hint{font-size:11px;}
+}
+@media (shape:round){ .stage{width:68vmin;max-width:200px;} }
+</style>
+</head>
+<body>
+<a href="javascript:history.back()" class="back">← 返回</a>
+<div class="bar"><span>过桥：<b id="score">0</b></span><span>最佳：<b id="best">0</b></span></div>
+<div class="stage" id="stage">
+  <canvas id="cv"></canvas>
+  <div class="over" id="over"><h2>掉下去了！</h2><p>过了 <b id="final">0</b> 座桥</p><button class="btn" id="again">再来一次</button></div>
+</div>
+<div class="hint">按住蓄力伸长木棍，松手搭桥过桥</div>
+
+<script>
+var cv=document.getElementById('cv'),ctx=cv.getContext('2d'),stage=document.getElementById('stage');
+var over=document.getElementById('over'),finalEl=document.getElementById('final');
+var W=0,H=0,DPR=Math.min(window.devicePixelRatio||1,2);
+var score=0,best=0,camera=0;
+var platforms=[],footX=0,stickLen=0,stickAngle=0;
+var state='wait'; // wait | grow | fall | walk | dead
+var heroX=0,heroY=0,fallY=0;
+var G=0.6;
+
+function resize(){
+  W=stage.clientWidth;H=Math.round(W*0.7);
+  cv.width=W*DPR;cv.height=H*DPR;cv.style.height=H+'px';ctx.setTransform(DPR,0,0,DPR,0,0);
+  if(!platforms.length)init();
+}
+function rand(a,b){return a+Math.random()*(b-a);}
+function init(){
+  score=0;document.getElementById('score').textContent='0';over.style.display='none';
+  platforms=[];
+  var pw=Math.max(54,W*0.16);
+  platforms.push({x:W*0.12,w:pw});
+  platforms.push({x:W*0.12+pw+rand(W*0.18,W*0.4),w:rand(pw*0.7,pw)});
+  camera=0;resetRound();
+}
+function resetRound(){
+  footX=platforms[0].x+platforms[0].w;
+  heroX=footX;heroY=H-60;fallY=0;
+  stickLen=0;stickAngle=0;state='wait';
+}
+function press(){
+  if(state==='wait')state='grow';
+}
+function release(){
+  if(state==='grow')state='fall';
+}
+cv.addEventListener('touchstart',function(e){e.preventDefault();press();});
+cv.addEventListener('touchend',function(e){e.preventDefault();release();});
+cv.addEventListener('mousedown',press);
+window.addEventListener('mouseup',release);
+
+function loop(){
+  ctx.clearRect(0,0,W,H);
+  // platforms
+  ctx.fillStyle='#2c2c4a';
+  platforms.forEach(function(p){
+    var sx=p.x-camera;
+    ctx.fillRect(sx,H-50,p.w,50);
+    ctx.fillStyle='#3a6b4a';ctx.fillRect(sx,H-50,p.w,5);ctx.fillStyle='#2c2c4a';
+  });
+  // stick
+  if(state!=='wait'&&stickLen>0){
+    var baseX=footX-camera;
+    ctx.save();ctx.translate(baseX,H-50);ctx.rotate(stickAngle*Math.PI/180);
+    ctx.fillStyle='#d8c89a';ctx.fillRect(0,-stickLen,4,stickLen);ctx.restore();
+  }
+  // hero
+  if(state!=='dead'){
+    var hx=heroX-camera;
+    ctx.fillStyle='#ffd27f';
+    ctx.beginPath();ctx.arc(hx,heroY-22,9,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle='#4a90d9';ctx.fillRect(hx-7,heroY-13,14,26);
+  }else{
+    var dx=heroX-camera;
+    ctx.fillStyle='#ffd27f';ctx.beginPath();ctx.arc(dx,heroY-22,9,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle='#4a90d9';ctx.fillRect(dx-7,heroY-13,14,26);
+  }
+  // physics
+  if(state==='grow')stickLen+=4;
+  else if(state==='fall'){
+    stickAngle+=8;
+    if(stickAngle>=90){
+      stickAngle=90;state='walk';
+    }
+  }else if(state==='walk'){
+    var targetEnd=footX+stickLen;
+    var targetPlat=platforms[1];
+    var platEnd=targetPlat.x+targetPlat.w;
+    var speed=3;
+    if(heroX<targetEnd){
+      heroX+=speed;
+      if(heroX>=targetEnd){
+        // 判定落点
+        var landX=footX+stickLen;
+        if(landX>=targetPlat.x && landX<=platEnd){
+          // 走到平台尽头
+          heroX=platEnd;
+          score++;document.getElementById('score').textContent=score;
+          if(score>best){best=score;document.getElementById('best').textContent=best;}
+          // 平移相机，下一轮
+          camera=targetPlat.x-W*0.12;
+          platforms.shift();
+          var last=platforms[platforms.length-1];
+          platforms.push({x:last.x+last.w+rand(W*0.18,W*0.4),w:rand(Math.max(40,W*0.1),W*0.16)});
+          resetRound();
+        }else{
+          state='dead';fallY=0;
+        }
+      }
+    }
+  }else if(state==='dead'){
+    fallY+=G;heroY+=fallY;
+    if(heroY>H+60){
+      over.style.display='flex';finalEl.textContent=score;state='over';
+    }
+  }
+  requestAnimationFrame(loop);
+}
+document.getElementById('again').addEventListener('click',function(){camera=0;init();});
+window.addEventListener('resize',resize);
+resize();loop();
+</script>
+</body>
+</html>

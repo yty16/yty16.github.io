@@ -29,7 +29,14 @@ const PRECACHE_URLS = [
     '/music/',
     '/watermelon/',
     '/main/',
-    '/image/'
+    '/image/',
+    '/watch/',
+    '/watch/index.html',
+    '/watch/manifest.json',
+    '/watch/draw.html',
+    '/watch/minesweeper.html',
+    '/watch/snake.html',
+    '/watch/suika.html'
 ];
 
 // 安装: 预缓存核心页面

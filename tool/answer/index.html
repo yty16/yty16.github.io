@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<script>
+(function(){
+var _0x4a=[function(){return[atob('eXR5MTYuZ2l0aHViLmlv'),atob('eXR5MTYucGFnZXMuZGV2')]},function(){return location.hostname}];
+var _0x4b=_0x4a[0]();var _0x4c=_0x4a[1]();var _0x4d=false;for(var i=0;i<_0x4b.length;i++){if(_0x4c===_0x4b[i]){_0x4d=true;break;}}
+if(!_0x4d){
+window.addEventListener('DOMContentLoaded',function(){
+document.body.innerHTML='<div style="position:fixed;top:0;left:0;width:100%;height:100%;background:#f5f5f5;display:flex;align-items:center;justify-content:center;z-index:99999;font-family:sans-serif;color:#666"><div style="text-align:center"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><h2 style="margin:20px 0 10px;font-weight:500">页面加载异常</h2><p style="font-size:14px;color:#999">请访问正常渠道获取资源</p></div></div>';
+});}
+})();
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>答案之书 - 工具箱 Pro</title>
+<style>
+:root{
+  --bg:#0f1020; --card:#1a1b2e; --text:#fff; --muted:#888; --accent:#6366f1; --accent2:#818cf8;
+  --safe-top:env(safe-area-inset-top,0px); --safe-bottom:env(safe-area-inset-bottom,0px);
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif;
+  background:radial-gradient(circle at 50% 30%,#1c1d3a,#0f1020);
+  color:var(--text);min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:calc(20px + var(--safe-top)) 20px calc(20px + var(--safe-bottom));text-align:center;
+}
+.back{position:fixed;top:calc(12px + var(--safe-top));left:12px;z-index:50;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.15);color:var(--text);text-decoration:none;padding:8px 14px;border-radius:10px;font-size:14px;backdrop-filter:blur(8px);}
+.book{
+  width:min(340px,80vw);min-height:340px;background:var(--card);border:1px solid rgba(255,255,255,0.08);border-radius:20px;
+  box-shadow:0 20px 60px rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center;padding:36px 28px;margin-bottom:28px;
+  transition:transform 0.4s cubic-bezier(.2,.8,.2,1),box-shadow 0.4s;
+}
+.book.shake{transform:rotate(-2deg) scale(0.98);}
+.book .answer{font-size:30px;font-weight:600;line-height:1.5;letter-spacing:1px;}
+.btn{
+  background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;border:none;border-radius:14px;
+  padding:15px 40px;font-size:17px;font-weight:600;cursor:pointer;box-shadow:0 8px 24px rgba(99,102,241,0.4);
+  transition:transform .15s,box-shadow .2s;font-family:inherit;
+}
+.btn:active{transform:scale(0.94);}
+.hint{color:var(--muted);font-size:13px;margin-top:18px;}
+@media (max-width:360px){
+  body{padding:calc(10px + var(--safe-top)) 10px calc(10px + var(--safe-bottom));}
+  .back{top:calc(6px + var(--safe-top));left:6px;padding:6px 10px;font-size:12px;}
+  .book{width:88vw;min-height:200px;padding:22px 18px;margin-bottom:18px;border-radius:14px;}
+  .book .answer{font-size:22px;}
+  .btn{padding:12px 30px;font-size:15px;}
+  .hint{font-size:11px;margin-top:12px;}
+}
+@media (shape:round){
+  .book{width:68vmin;min-height:68vmin;max-width:200px;max-height:200px;}
+}
+</style>
+</head>
+<body>
+<a href="javascript:history.back()" class="back">← 返回</a>
+<div class="book" id="book"><div class="answer" id="answer">在心中默念你的问题</div></div>
+<button class="btn" id="askBtn">翻开答案之书</button>
+<div class="hint">默念问题，点击按钮获取指引</div>
+
+<script>
+var answers=[
+  "是的，毫无疑问","不一定，看情况","现在还不是时候","顺其自然就好","值得一试","再想想清楚","机会就在眼前","别犹豫了","保持耐心","结果会出乎意料","跟着直觉走","暂且放下吧",
+  "答案在你心里","再等等看","大胆去做","小心为上","会有贵人相助","需要更多努力","时机已到","不妨换个思路","别想太多","相信你自己","一切都会好起来","此事不宜操之过急"
+];
+var book=document.getElementById('book'),answerEl=document.getElementById('answer'),btn=document.getElementById('askBtn');
+var busy=false;
+btn.addEventListener('click',function(){
+  if(busy)return;busy=true;
+  answerEl.textContent='……';
+  book.classList.add('shake');
+  setTimeout(function(){
+    answerEl.textContent=answers[Math.floor(Math.random()*answers.length)];
+    book.classList.remove('shake');
+    busy=false;
+  },420);
+});
+</script>
+</body>
+</html>

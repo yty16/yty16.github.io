@@ -2,7 +2,7 @@
 <html lang="zh">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0, user-scalable=no">
     <script>
         // init theme
         (function() {
@@ -37,10 +37,20 @@
                 });
             }
         })();
+
+        // 手表设备自动跳转到手表版
+        (function(){
+            var path = window.location.pathname;
+            if (path.indexOf('/watch') === 0) return;
+            var w = window.innerWidth || screen.width || 320;
+            var h = window.innerHeight || screen.height || 320;
+            if (w <= 400 && h <= 400) {
+                window.location.href = 'watch/';
+            }
+        })();
     </script>
     <title>工具箱 Pro</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- 字体使用系统字体栈，避免外部 CDN 在境内被墙导致页面阻塞 -->
     <style>
         /* 颜色变量 */
         :root {
@@ -130,7 +140,8 @@
             top: 0;
             left: 0;
             right: 0;
-            height: var(--header-height);
+            height: calc(var(--header-height) + env(safe-area-inset-top, 0px));
+            padding-top: env(safe-area-inset-top, 0px);
             background: var(--bg-header);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
@@ -394,6 +405,17 @@
             background: var(--accent);
             color: white;
             border-color: var(--accent);
+        }
+
+        .settings-btn.long-title {
+            font-size: 11px;
+            padding: 8px 14px;
+            width: 100%;
+            max-width: 100%;
+            white-space: normal;
+            word-break: break-all;
+            line-height: 1.5;
+            text-align: left;
         }
 
         .toggle-switch {
@@ -661,10 +683,10 @@
         /* 侧边栏 */
         .sidebar {
             position: fixed;
-            top: var(--header-height);
+            top: calc(var(--header-height) + env(safe-area-inset-top, 0px));
             left: 0;
             width: var(--sidebar-width);
-            height: calc(100vh - var(--header-height));
+            height: calc(100vh - var(--header-height) - env(safe-area-inset-top, 0px));
             background: var(--bg-sidebar);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
@@ -753,9 +775,9 @@
         /* 主内容区 */
         .main {
             margin-left: var(--sidebar-width);
-            margin-top: var(--header-height);
+            margin-top: calc(var(--header-height) + env(safe-area-inset-top, 0px));
             padding: 28px 32px 80px;
-            min-height: calc(100vh - var(--header-height));
+            min-height: calc(100vh - var(--header-height) - env(safe-area-inset-top, 0px));
             position: relative;
             z-index: 1;
         }
@@ -1067,6 +1089,17 @@
             border-color: var(--accent);
         }
 
+        .settings-btn.long-title {
+            font-size: 11px;
+            padding: 8px 14px;
+            width: 100%;
+            max-width: 100%;
+            white-space: normal;
+            word-break: break-all;
+            line-height: 1.5;
+            text-align: left;
+        }
+
         .toggle-switch {
             display: flex;
             align-items: center;
@@ -1136,6 +1169,17 @@
 
         .footer-text a:hover {
             text-decoration: underline;
+        }
+
+        .footer-signature {
+            height: 20px;
+            vertical-align: middle;
+            opacity: 0.75;
+            transition: opacity 0.2s, transform 0.2s;
+        }
+        .footer-signature:hover {
+            opacity: 1;
+            transform: scale(1.05);
         }
 
         /* 提示框 */
@@ -2809,6 +2853,115 @@
             background: rgba(255,0,0,0.12);
             color: #ff4444;
         }
+
+        /* iOS PWA 安装引导横幅 */
+        .ios-install-banner {
+            display: none;
+            position: fixed;
+            bottom: 16px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10000;
+            background: rgba(30, 30, 40, 0.95);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 18px;
+            padding: 16px 20px;
+            color: #fff;
+            box-shadow: 0 8px 40px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.1);
+            max-width: 380px;
+            width: calc(100% - 32px);
+            text-align: center;
+            animation: iosBannerSlide 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        @keyframes iosBannerSlide {
+            from { opacity: 0; transform: translateX(-50%) translateY(60px); }
+            to { opacity: 1; transform: translateX(-50%) translateY(0); }
+        }
+        .ios-install-banner.show {
+            display: block;
+        }
+        .ios-install-banner .banner-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            margin-bottom: 10px;
+        }
+        .ios-install-banner .banner-title {
+            font-size: 15px;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+        .ios-install-banner .banner-sub {
+            font-size: 12px;
+            color: rgba(255,255,255,0.6);
+            margin-bottom: 12px;
+        }
+        .ios-install-banner .banner-steps {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            font-size: 13px;
+            color: rgba(255,255,255,0.8);
+            margin-bottom: 14px;
+        }
+        .ios-install-banner .banner-step-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: #2563eb;
+            font-size: 12px;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+        .ios-install-banner .banner-arrow {
+            font-size: 14px;
+            margin: 0 2px;
+        }
+        .ios-install-banner .banner-btn {
+            display: inline-block;
+            padding: 8px 24px;
+            background: #2563eb;
+            color: #fff;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-right: 8px;
+            border: none;
+        }
+        .ios-install-banner .banner-dismiss {
+            display: inline-block;
+            padding: 8px 16px;
+            background: transparent;
+            color: rgba(255,255,255,0.5);
+            border-radius: 20px;
+            font-size: 13px;
+            cursor: pointer;
+            border: none;
+        }
+
+        /* iOS 安全区域适配（刘海屏、开孔摄像头等） */
+        @supports (padding: env(safe-area-inset-top)) {
+            body {
+                padding-left: env(safe-area-inset-left, 0px);
+                padding-right: env(safe-area-inset-right, 0px);
+                padding-bottom: env(safe-area-inset-bottom, 0px);
+            }
+            .sidebar {
+                padding-bottom: calc(16px + env(safe-area-inset-bottom)) !important;
+            }
+            .modal, .dialog {
+                padding-bottom: calc(20px + env(safe-area-inset-bottom)) !important;
+            }
+            .ios-install-banner {
+                bottom: calc(16px + env(safe-area-inset-bottom));
+            }
+        }
     </style>
     <link rel="manifest" href="/manifest.json">
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
@@ -2819,8 +2972,29 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Y的工具箱Pro">
+    <!-- iOS Safari 启动画面（Splash Screen）-->
+    <link rel="apple-touch-startup-image" media="screen and (device-width: 320px) and (device-height: 568px)" href="/splash-iphonese.png">
+    <link rel="apple-touch-startup-image" media="screen and (device-width: 375px) and (device-height: 667px)" href="/splash-iphone8.png">
+    <link rel="apple-touch-startup-image" media="screen and (device-width: 414px) and (device-height: 896px)" href="/splash-iphonex.png">
+    <link rel="apple-touch-startup-image" media="screen and (device-width: 390px) and (device-height: 844px)" href="/splash-iphone12.png">
+    <link rel="apple-touch-startup-image" media="screen and (device-width: 430px) and (device-height: 932px)" href="/splash-iphone15.png">
+    <link rel="apple-touch-startup-image" media="screen and (min-device-width: 768px) and (max-device-width: 1024px)" href="/splash-ipad.png">
+    <link rel="apple-touch-startup-image" media="screen and (min-device-width: 1024px) and (min-device-height: 1366px)" href="/splash-ipadpro.png">
 </head>
 <body>
+    <!-- iOS PWA 安装引导横幅 -->
+    <div class="ios-install-banner" id="iosInstallBanner">
+        <img src="/icon-192.png" class="banner-icon" alt="icon" width="48" height="48">
+        <div class="banner-title">安装 Y的工具箱Pro</div>
+        <div class="banner-sub">无需 App Store，添加到主屏幕即可使用</div>
+        <div class="banner-steps">
+            <span class="banner-step-icon">1</span> 点击分享
+            <span class="banner-arrow">→</span>
+            <span class="banner-step-icon">2</span> 添加到主屏幕
+        </div>
+        <button class="banner-btn" onclick="document.getElementById('iosInstallBanner').classList.remove('show');localStorage.setItem('ios_banner_hide','1');">知道了</button>
+        <button class="banner-dismiss" onclick="document.getElementById('iosInstallBanner').classList.remove('show');localStorage.setItem('ios_banner_hide','1');">不再提醒</button>
+    </div>
     
     <canvas id="particles"></canvas>
 
@@ -3366,6 +3540,7 @@
                         <button class="settings-btn active" onclick="changeTitle('工具箱 Pro')">工具箱 Pro</button>
                         <button class="settings-btn" onclick="changeTitle('百度一下，你就知道')">百度一下</button>
                         <button class="settings-btn" onclick="changeTitle('New Tab')">New Tab</button>
+                        <button class="settings-btn long-title" onclick="changeTitle(this.textContent)">工具箱Pro Max Ultra Turbo Hyper Mega Grand Advanced Giant Massive Prime Supreme Ultimate Apex Pinnacle Expert Master+ Super Xtreme Elite Legend Platinum Diamond Royal God Tier Omni Total Full Complete Maximum Dominant Invincible Celestial Cosmic Infinite Eternal Legendary Monarch Emperor Titan Colossal SupremePlus UltraMax TurboHyper MegaGrand AdvancedPro GiantMax MassiveUltimate ApexPrime PinnacleSupreme MasterUltra Godly Heavenly Galactic Boundless Limitless Absolute Perfect Flawless Champion Hero UltraPremium MegaElite GrandLegend</button>
                     </div>
                 </div>
                 <div class="settings-group">
@@ -3385,7 +3560,7 @@
             <p class="footer-text">
                 本网站已运营 <strong id="footerDays">--</strong> 天 &nbsp;|&nbsp;
                 Powered by <a href="https://pages.github.com" target="_blank">GitHub Pages</a> &nbsp;|&nbsp;
-                put forward by <a href="https://huzhonghe2011.github.io/" target="_blank">huzhonghe2011</a> | upgrade by <a href="https://github.com/yty16" target="_blank">yty7816</a>
+                put forward by <a href="https://huzhonghe2011.github.io/" target="_blank">huzhonghe2011</a> | upgrade by <a href="https://github.com/yty7816" target="_blank"><img src="images/yty7816-signature.png" alt="yty7816" class="footer-signature" /></a>
             </p>
         </footer>
     </main>
@@ -3468,7 +3643,7 @@
                     {
                         groupTitle: "小游戏",
                         buttons: [
-                            { link: "tictactoe/", line1: "井字棋 AI对战", line2: "三种难度AI", badge: "new" },
+                            { link: "tictactoe/", line1: "井字棋 人机对战", line2: "三种难度", badge: "new" },
                             { link: "minesweeper/", line1: "扫雷", line2: "经典扫雷三种难度", badge: "new" },
                             { link: "snake/", line1: "贪吃蛇", line2: "经典贪吃蛇", badge: "new" },
                             { link: "watermelon/", line1: "合成大西瓜", line2: "水果合成物理游戏", badge: "new" }
@@ -3633,8 +3808,11 @@
                         buttons: [
                             { link: "https://yty16.github.io/download/toolbox.apk", line1: "\uD83D\uDCF1 Android APK", line2: "Y\u7684\u5DE5\u5177\u7BB1Pro v1.4.1", badge: "new" },
                             { link: "https://yty16.pages.dev/download/toolbox.apk", line1: "\uD83D\uDCF1 Android APK", line2: "CloudFlare\u955C\u50CF\u4E0B\u8F7D" },
-                            { link: "https://yty16.github.io/download/toolbox-windows.exe", line1: "\uD83D\uDCBB Windows \u7248", line2: "Y\u7684\u5DE5\u5177\u7BB1Pro v1.0.0", badge: "new" },
-                            { link: "https://yty16.pages.dev/download/toolbox-windows.exe", line1: "\uD83D\uDCBB Windows \u7248", line2: "CloudFlare\u955C\u50CF\u4E0B\u8F7D" }
+                            { link: "https://github.com/yty16/yty16.github.io/releases/download/v1.0.0-windows/toolbox-windows.exe", line1: "\uD83D\uDCBB Windows \u7248", line2: "Y\u7684\u5DE5\u5177\u7BB1Pro v1.0.0", badge: "new" },
+                            { link: "https://yty16.pages.dev/download/toolbox-windows.exe", line1: "\uD83D\uDCBB Windows \u7248", line2: "CloudFlare\u955C\u50CF\u4E0B\u8F7D" },
+                            { link: "javascript:showIOSGuide()", line1: "\uD83C\uDF4E iOS \u5B89\u88C5", line2: "iPhone/iPad Safari\u6DFB\u52A0\u5230\u4E3B\u5C4F\u5E55", badge: "ios" },
+                            { link: "watch/", line1: "\u231A \u624B\u8868\u7248", line2: "WearOS/\u534E\u4E3AWatch 3/4 \u9002\u914D" },
+                            { link: "https://yty16.github.io/download/toolbox-watch.apk", line1: "\u231A \u624B\u8868\u7248 APK", line2: "Y\u7684\u5DE5\u5177\u7BB1\u00B7\u624B\u8868\u7248 v1.0.2", badge: "new" }
                         ]
                     }
                 ]
@@ -3688,12 +3866,13 @@
         updateThemeIcon();
         loadAppearance();
 
-                window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function(e) {
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function(e) {
             const saved = localStorage.getItem('theme');
-                        if (!saved) {
+            if (!saved) {
                 document.documentElement.setAttribute('data-theme', e.matches ? 'dark' : 'light');
                 updateThemeIcon();
-                                if (typeof updateParticleColors === 'function') updateParticleColors();
+                loadAppearance();
+                if (typeof updateParticleColors === 'function') updateParticleColors();
             }
         });
     }
@@ -3722,6 +3901,8 @@
             showToast('亮色模式');
         }
         updateThemeIcon();
+        loadAppearance();
+        if (typeof updateParticleColors === 'function') updateParticleColors();
     }
 
     function updateThemeIcon() {
@@ -5637,7 +5818,8 @@
     function changeTitle(title) {
         document.title = title;
         document.querySelectorAll('.settings-btn').forEach(btn => {
-            btn.classList.toggle('active', btn.textContent === title);
+            const btnTitle = btn.dataset.title || btn.textContent;
+            btn.classList.toggle('active', btnTitle === title);
         });
         showToast(`标题已更改为「${title}」`, '📝');
     }
@@ -5753,6 +5935,35 @@
         }
     }
 
+    function checkIOSInstallBanner() {
+        // 只在 iOS Safari 中显示
+        var ua = navigator.userAgent.toLowerCase();
+        var isIOS = /iphone|ipad|ipod/.test(ua);
+        var isSafari = /safari/.test(ua) && !/crios/.test(ua) && !/fxios/.test(ua) && !/opios/.test(ua);
+        if (!isIOS || !isSafari) return;
+
+        // 如果是 PWA standalone 模式（已安装），不显示
+        if (window.matchMedia('(display-mode: standalone)').matches || navigator.standalone) return;
+
+        // 如果用户之前关掉了，不再提示
+        if (localStorage.getItem('ios_banner_hide')) return;
+
+        // 显示横幅
+        var banner = document.getElementById('iosInstallBanner');
+        if (banner) banner.classList.add('show');
+    }
+
+    function showIOSGuide() {
+        // 强制显示 iOS 安装指导横幅（无视之前的隐藏设置）
+        localStorage.removeItem('ios_banner_hide');
+        var banner = document.getElementById('iosInstallBanner');
+        if (banner) {
+            banner.classList.add('show');
+            // 滚动到底部让用户看到
+            setTimeout(function() { banner.scrollIntoView({behavior:'smooth',block:'center'}); }, 300);
+        }
+    }
+
     // Init
     document.addEventListener('DOMContentLoaded', () => {
         // 访问统计
@@ -5791,10 +6002,15 @@
             else if (tool === 'pomodoro') openPomodoro();
         }, 500);
 
-        // 周年庆弹窗检测（每年7月1日弹出，每天只弹一次）
-        setTimeout(() => {
-            checkAnniversary();
-        }, 800);
+                        // 周年庆弹窗检测（每年7月1日弹出，每天只弹一次）
+                        setTimeout(() => {
+                            checkAnniversary();
+                        }, 800);
+
+                        // iOS PWA 安装引导横幅（仅在 iOS Safari 且非 PWA 模式下显示）
+                        setTimeout(() => {
+                            checkIOSInstallBanner();
+                        }, 1500);
         
         // Theme toggle
         document.getElementById('themeToggle').addEventListener('click', toggleTheme);

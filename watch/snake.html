@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#000000">
+    <title>贪吃蛇</title>
+    <style>
+        *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+        :root{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+            --safe-top:env(safe-area-inset-top,0px);--safe-bottom:env(safe-area-inset-bottom,0px);}
+        html,body{width:100%;height:100%;overflow:hidden;background:#000;touch-action:none;-webkit-user-select:none;user-select:none;}
+        .app{display:flex;flex-direction:column;align-items:center;height:100%;padding:calc(4px + var(--safe-top)) 6px calc(4px + var(--safe-bottom));}
+        @media (shape: round){
+            .app{padding:calc(18px + var(--safe-top)) 22px calc(18px + var(--safe-bottom));}
+        }
+        .header{display:flex;align-items:center;justify-content:space-between;width:100%;max-width:260px;padding:2px 0;flex-shrink:0;}
+        .back-btn{background:none;border:none;color:#2563eb;font-size:15px;cursor:pointer;padding:4px 8px;text-decoration:none;}
+        .title{font-size:14px;font-weight:600;color:#fff;}
+        .score{font-size:13px;color:#22c55e;font-weight:600;}
+        .best{font-size:11px;color:#999;margin-left:6px;}
+        .canvas-wrap{flex:1;display:flex;align-items:center;justify-content:center;width:100%;}
+        canvas{background:#111;border-radius:10px;border:1px solid #222;}
+        .controls{display:grid;grid-template-columns:repeat(3,42px);grid-template-rows:repeat(3,42px);gap:3px;padding:4px 0;flex-shrink:0;}
+        .ctrl-btn{background:#1a1a1a;border:1.5px solid #333;border-radius:12px;color:#fff;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.1s;-webkit-tap-highlight-color:transparent;}
+        .ctrl-btn:active{background:#2563eb;border-color:#3b82f6;transform:scale(0.9)}
+        .ctrl-btn.empty{background:transparent;border:none}
+        .game-over{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(0,0,0,0.9);border:1px solid #333;border-radius:14px;padding:16px 20px;text-align:center;z-index:10;display:none;color:#fff;}
+        .game-over.show{display:block}
+        .game-over h2{font-size:18px;margin-bottom:6px}
+        .game-over p{color:#999;font-size:13px;margin-bottom:10px}
+        .game-over button{background:#2563eb;border:none;color:#fff;padding:8px 20px;border-radius:12px;font-size:14px;cursor:pointer;}
+        @media (shape: round){
+            .header{max-width:200px;}
+            .title{font-size:13px;}
+            .controls{grid-template-columns:repeat(3,38px);grid-template-rows:repeat(3,38px);gap:3px;}
+            .ctrl-btn{font-size:16px;border-radius:10px;}
+        }
+        @media (max-height: 320px){
+            .controls{grid-template-columns:repeat(3,36px);grid-template-rows:repeat(3,36px);}
+        }
+    </style>
+</head>
+<body>
+<div class="app">
+    <div class="header">
+        <a class="back-btn" href="index.html">←</a>
+        <span class="title">🐍 贪吃蛇</span>
+        <div><span class="score" id="score">0</span><span class="best" id="best">最佳:0</span></div>
+    </div>
+    <div class="canvas-wrap">
+        <canvas id="canvas"></canvas>
+    </div>
+    <div class="controls">
+        <div class="ctrl-btn empty"></div>
+        <button class="ctrl-btn" data-dir="up">▲</button>
+        <div class="ctrl-btn empty"></div>
+        <button class="ctrl-btn" data-dir="left">◄</button>
+        <button class="ctrl-btn" style="font-size:15px" onclick="resetGame()">↻</button>
+        <button class="ctrl-btn" data-dir="right">►</button>
+        <div class="ctrl-btn empty"></div>
+        <button class="ctrl-btn" data-dir="down">▼</button>
+        <div class="ctrl-btn empty"></div>
+    </div>
+</div>
+<div class="game-over" id="gameOver">
+    <h2 id="goTitle">游戏结束</h2>
+    <p id="goMsg"></p>
+    <button onclick="resetGame()">重新开始</button>
+</div>
+<script>
+(function(){
+var hosts=['yty16.github.io','yty16.pages.dev'];
+if(hosts.indexOf(location.hostname)===-1){document.body.innerHTML='<div style="position:fixed;top:0;left:0;width:100%;height:100%;background:#000;display:flex;align-items:center;justify-content:center;color:#666;">页面无法显示</div>';return;}
+
+var canvas=document.getElementById('canvas'),ctx=canvas.getContext('2d');
+var gridSize=12,cellSize,tileCount;
+var snake=[],food={},dir={x:1,y:0},nextDir={x:1,y:0},score=0,best=0,gameOver=false,gameloop=null,speed=160;
+
+best=parseInt(localStorage.getItem('watch_snake_best')||'0');
+document.getElementById('best').textContent='最佳:'+best;
+
+function calcSize(){
+    var isRound=false;
+    try{isRound=window.matchMedia('(shape: round)').matches;}catch(e){}
+    var availH=window.innerHeight-120;
+    var availW=isRound?Math.min(window.innerWidth*0.62,180):Math.min(window.innerWidth-16,260);
+    var s=Math.floor(Math.min(availW,availH)/gridSize);
+    return Math.max(12,s);
+}
+
+function resize(){
+    cellSize=calcSize();
+    tileCount=gridSize;
+    canvas.width=cellSize*tileCount;canvas.height=cellSize*tileCount;
+}
+resize();
+window.addEventListener('resize',resize);
+
+function resetGame(){
+    clearInterval(gameloop);
+    resize();
+    var mid=Math.floor(tileCount/2);
+    snake=[{x:mid,y:mid},{x:mid-1,y:mid},{x:mid-2,y:mid}];
+    dir={x:1,y:0};nextDir={x:1,y:0};score=0;gameOver=false;
+    document.getElementById('score').textContent='0';
+    document.getElementById('gameOver').classList.remove('show');
+    spawnFood();gameloop=setInterval(gameTick,speed);
+}
+
+function spawnFood(){
+    var attempts=0;
+    do{food={x:Math.floor(Math.random()*tileCount),y:Math.floor(Math.random()*tileCount)};attempts++;}
+    while(attempts<50&&snake.some(function(s){return s.x===food.x&&s.y===food.y;}));
+}
+
+function gameTick(){
+    if(gameOver)return;
+    dir=nextDir;
+    var head={x:snake[0].x+dir.x,y:snake[0].y+dir.y};
+    if(head.x<0)head.x=tileCount-1;if(head.x>=tileCount)head.x=0;
+    if(head.y<0)head.y=tileCount-1;if(head.y>=tileCount)head.y=0;
+    if(snake.some(function(s){return s.x===head.x&&s.y===head.y;})){
+        endGame();return;
+    }
+    snake.unshift(head);
+    if(head.x===food.x&&head.y===food.y){score++;document.getElementById('score').textContent=score;spawnFood();}
+    else snake.pop();
+    draw();
+}
+
+function endGame(){
+    gameOver=true;clearInterval(gameloop);
+    if(score>best){best=score;localStorage.setItem('watch_snake_best',best);document.getElementById('best').textContent='最佳:'+best;}
+    document.getElementById('goTitle').textContent='游戏结束';
+    document.getElementById('goMsg').textContent='得分: '+score+' | 最佳: '+best;
+    document.getElementById('gameOver').classList.add('show');
+}
+
+function draw(){
+    ctx.fillStyle='#111';ctx.fillRect(0,0,canvas.width,canvas.height);
+    ctx.strokeStyle='#1a1a1a';ctx.lineWidth=0.5;
+    for(var i=0;i<=tileCount;i++){ctx.beginPath();ctx.moveTo(i*cellSize,0);ctx.lineTo(i*cellSize,canvas.height);ctx.stroke();ctx.beginPath();ctx.moveTo(0,i*cellSize);ctx.lineTo(canvas.width,i*cellSize);ctx.stroke();}
+    ctx.fillStyle='#ef4444';ctx.beginPath();ctx.arc(food.x*cellSize+cellSize/2,food.y*cellSize+cellSize/2,cellSize*0.4,0,Math.PI*2);ctx.fill();
+    for(var i=0;i<snake.length;i++){
+        var s=snake[i],alpha=1-i*0.02;
+        ctx.fillStyle=i===0?'rgba(37,99,235,1)':'rgba(37,99,235,'+Math.max(0.3,alpha)+')';
+        ctx.fillRect(s.x*cellSize+1,s.y*cellSize+1,cellSize-2,cellSize-2);
+    }
+}
+
+function changeDir(dx,dy){
+    if((dx!==0&&dx===-dir.x)||(dy!==0&&dy===-dir.y))return;
+    nextDir={x:dx,y:dy};
+}
+
+document.querySelector('.controls').addEventListener('click',function(e){
+    var btn=e.target.closest('button[data-dir]');if(!btn)return;
+    var d=btn.dataset.dir;
+    if(d==='up')changeDir(0,-1);
+    else if(d==='down')changeDir(0,1);
+    else if(d==='left')changeDir(-1,0);
+    else if(d==='right')changeDir(1,0);
+});
+
+var touchStartX=0,touchStartY=0;
+canvas.addEventListener('touchstart',function(e){touchStartX=e.touches[0].clientX;touchStartY=e.touches[0].clientY;e.preventDefault();},{passive:false});
+canvas.addEventListener('touchend',function(e){
+    var dx=e.changedTouches[0].clientX-touchStartX;
+    var dy=e.changedTouches[0].clientY-touchStartY;
+    if(Math.abs(dx)>Math.abs(dy)){if(dx>20)changeDir(1,0);else if(dx<-20)changeDir(-1,0);}
+    else{if(dy>20)changeDir(0,1);else if(dy<-20)changeDir(0,-1);}
+});
+
+window.resetGame=resetGame;
+draw();resetGame();
+})();
+</script>
+</body>
+</html>

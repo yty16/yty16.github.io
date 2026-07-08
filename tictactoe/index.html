@@ -12,7 +12,7 @@ document.body.innerHTML='<div style="position:fixed;top:0;left:0;width:100%;heig
 </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>❌⭕ 井字棋 AI对战</title>
+<title>❌⭕ 井字棋 人机对战</title>
 <script>
 (function(){var t=localStorage.getItem('theme');if(t==='dark'||(t!=='light'&&window.matchMedia('(prefers-color-scheme:dark)').matches))document.documentElement.setAttribute('data-theme','dark')})();
 </script>
@@ -23,70 +23,123 @@ document.body.innerHTML='<div style="position:fixed;top:0;left:0;width:100%;heig
 body{font-family:'Inter','Microsoft YaHei',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:20px;transition:background .3s,color .3s}
 .back-btn{align-self:flex-start;text-decoration:none;color:var(--text-secondary);font-size:15px;padding:6px 14px;border-radius:8px;background:var(--card-bg);backdrop-filter:blur(10px);border:1px solid var(--card-border);transition:all .2s;margin-bottom:16px}
 .back-btn:hover{color:var(--accent);transform:translateX(-3px)}
-.container{width:100%;max-width:440px}
-.title{text-align:center;font-size:28px;font-weight:700;margin-bottom:20px;letter-spacing:1px}
-.card{background:var(--card-bg);backdrop-filter:blur(16px);border:1px solid var(--card-border);border-radius:16px;padding:24px;margin-bottom:16px;box-shadow:0 8px 32px rgba(0,0,0,0.08);transition:background .3s}
-.difficulty-bar{display:flex;gap:8px;justify-content:center;margin-bottom:20px}
-.diff-btn{padding:8px 18px;border:2px solid var(--card-border);border-radius:10px;background:transparent;color:var(--text-secondary);font-size:14px;font-weight:600;cursor:pointer;transition:all .2s}
-.diff-btn:hover{border-color:var(--accent);color:var(--accent)}
-.diff-btn.active{background:var(--accent);color:#fff;border-color:var(--accent)}
-.turn-indicator{text-align:center;font-size:16px;font-weight:600;color:var(--text-secondary);margin-bottom:16px;min-height:24px;transition:color .2s}
+.container{width:100%;max-width:500px}
+.title{text-align:center;font-size:28px;font-weight:700;margin-bottom:6px;letter-spacing:1px}
+.subtitle{text-align:center;font-size:13px;color:var(--text-secondary);margin-bottom:16px}
+.card{background:var(--card-bg);backdrop-filter:blur(16px);border:1px solid var(--card-border);border-radius:16px;padding:20px;margin-bottom:16px;box-shadow:0 8px 32px rgba(0,0,0,0.08);transition:background .3s}
+
+/* 设置栏 */
+.settings-row{display:flex;gap:12px;justify-content:center;margin-bottom:14px;flex-wrap:wrap}
+.setting-group{display:flex;flex-direction:column;align-items:center;gap:6px}
+.setting-label{font-size:12px;color:var(--text-secondary);font-weight:600;letter-spacing:0.5px}
+.btn-group-sm{display:flex;gap:4px}
+.btn-sm{padding:6px 14px;border:2px solid var(--card-border);border-radius:8px;background:transparent;color:var(--text-secondary);font-size:13px;font-weight:600;cursor:pointer;transition:all .2s}
+.btn-sm:hover{border-color:var(--accent);color:var(--accent)}
+.btn-sm.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+
+/* 棋盘大小按钮特殊样式 */
+.size-btn{padding:6px 12px;font-size:12px}
+
+.turn-indicator{text-align:center;font-size:16px;font-weight:600;color:var(--text-secondary);margin-bottom:14px;min-height:24px;transition:color .2s}
 .turn-indicator.player-turn{color:#3498db}
-.turn-indicator.ai-turn{color:var(--danger)}
-.board{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;max-width:320px;margin:0 auto 16px}
-.cell{aspect-ratio:1;background:var(--grid-bg);backdrop-filter:blur(8px);border:2px solid var(--card-border);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:42px;font-weight:800;cursor:pointer;transition:all .15s;user-select:none;position:relative}
-.cell:hover:not(.taken){background:var(--cell-hover);transform:scale(1.03)}
+.turn-indicator.computer-turn{color:var(--danger)}
+
+.board{display:grid;gap:6px;max-width:360px;margin:0 auto 16px;justify-content:center}
+.board.size-3{grid-template-columns:repeat(3,90px);grid-template-rows:repeat(3,90px)}
+.board.size-4{grid-template-columns:repeat(4,72px);grid-template-rows:repeat(4,72px)}
+.board.size-5{grid-template-columns:repeat(5,62px);grid-template-rows:repeat(5,62px)}
+
+.cell{background:var(--grid-bg);backdrop-filter:blur(8px);border:2px solid var(--card-border);border-radius:10px;display:flex;align-items:center;justify-content:center;font-weight:800;cursor:pointer;transition:all .15s;user-select:none;position:relative}
+.board.size-3 .cell{font-size:36px}
+.board.size-4 .cell{font-size:26px}
+.board.size-5 .cell{font-size:20px}
+.cell:hover:not(.taken){background:var(--cell-hover);transform:scale(1.04)}
 .cell.taken{cursor:default}
 .cell .mark{opacity:0;transform:scale(0.3) rotate(-15deg);transition:all .25s cubic-bezier(0.34,1.56,0.64,1)}
 .cell .mark.show{opacity:1;transform:scale(1) rotate(0)}
 .cell.x-cell .mark{color:#3498db}
 .cell.o-cell .mark{color:var(--danger)}
 .cell.win-cell{animation:winPulse .6s ease infinite alternate;border-color:var(--success);background:rgba(46,204,113,0.1)}
-@keyframes winPulse{from{transform:scale(1)}to{transform:scale(1.05)}}
-.result{text-align:center;font-size:20px;font-weight:700;margin-bottom:16px;min-height:32px}
+@keyframes winPulse{from{transform:scale(1)}to{transform:scale(1.04)}}
+
+.result{text-align:center;font-size:20px;font-weight:700;margin-bottom:14px;min-height:32px}
 .scores{display:flex;justify-content:space-around;text-align:center}
 .score-item{display:flex;flex-direction:column;gap:4px}
 .score-label{font-size:12px;color:var(--text-secondary);text-transform:uppercase;letter-spacing:1px}
 .score-value{font-size:28px;font-weight:800}
 .score-player{color:#3498db}
-.score-ai{color:var(--danger)}
+.score-computer{color:var(--danger)}
 .score-draw{color:var(--warning)}
-.btn-row{display:flex;gap:10px;justify-content:center;margin-top:18px}
+.btn-row{display:flex;gap:10px;justify-content:center;margin-top:16px}
 .btn{padding:10px 22px;border:none;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;transition:all .2s}
 .btn-primary{background:var(--accent);color:#fff}
 .btn-primary:hover{opacity:.85;transform:translateY(-1px)}
 .btn-secondary{background:var(--grid-bg);color:var(--text-secondary);border:1px solid var(--card-border)}
 .btn-secondary:hover{color:var(--accent);border-color:var(--accent)}
+
+/* 胜利弹窗 */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:1000;align-items:center;justify-content:center}
+.modal-overlay.show{display:flex}
+.modal-box{background:var(--card-bg);backdrop-filter:blur(20px);border:1px solid var(--card-border);border-radius:20px;padding:32px 40px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.25);animation:modalIn .3s ease}
+@keyframes modalIn{from{opacity:0;transform:scale(0.9)}to{opacity:1;transform:scale(1)}}
+.modal-icon{font-size:48px;margin-bottom:10px}
+.modal-title{font-size:22px;font-weight:700;margin-bottom:6px}
+.modal-desc{font-size:14px;color:var(--text-secondary);margin-bottom:20px}
+.modal-btn{padding:10px 32px;border:none;border-radius:10px;background:var(--accent);color:#fff;font-size:15px;font-weight:600;cursor:pointer;transition:all .2s}
+.modal-btn:hover{opacity:.85}
+
 @media(max-width:480px){
   body{padding:12px}
   .container{max-width:100%}
   .title{font-size:22px}
-  .card{padding:16px}
-  .difficulty-bar{flex-wrap:wrap}
-  .board{max-width:280px}
-  .cell{font-size:34px}
-  .score-value{font-size:22px}
-  .btn-row{flex-wrap:wrap}
+  .card{padding:14px}
+  .board.size-3{grid-template-columns:repeat(3,80px);grid-template-rows:repeat(3,80px)}
+  .board.size-4{grid-template-columns:repeat(4,62px);grid-template-rows:repeat(4,62px)}
+  .board.size-5{grid-template-columns:repeat(5,52px);grid-template-rows:repeat(5,52px)}
 }
 </style>
 </head>
 <body>
 <a href="/" class="back-btn">← 返回</a>
 <div class="container">
-  <h1 class="title">❌⭕ 井字棋 AI对战</h1>
+  <h1 class="title">❌⭕ 井字棋 人机对战</h1>
+  <p class="subtitle">挑战电脑，支持 3×3 / 4×4 / 5×5 棋盘</p>
+
   <div class="card">
-    <div class="difficulty-bar">
-      <button class="diff-btn" data-diff="easy">简单</button>
-      <button class="diff-btn active" data-diff="medium">中等</button>
-      <button class="diff-btn" data-diff="hard">困难</button>
+    <!-- 设置栏 -->
+    <div class="settings-row">
+      <div class="setting-group">
+        <span class="setting-label">先手</span>
+        <div class="btn-group-sm">
+          <button class="btn-sm active" id="orderFirst" onclick="setOrder(true)">玩家先</button>
+          <button class="btn-sm" id="orderSecond" onclick="setOrder(false)">电脑先</button>
+        </div>
+      </div>
+      <div class="setting-group">
+        <span class="setting-label">棋盘</span>
+        <div class="btn-group-sm">
+          <button class="btn-sm size-btn active" id="size3" onclick="setSize(3)">3×3</button>
+          <button class="btn-sm size-btn" id="size4" onclick="setSize(4)">4×4</button>
+          <button class="btn-sm size-btn" id="size5" onclick="setSize(5)">5×5</button>
+        </div>
+      </div>
+      <div class="setting-group">
+        <span class="setting-label">难度</span>
+        <div class="btn-group-sm">
+          <button class="btn-sm" id="diffEasy" onclick="setDiff('easy')">简单</button>
+          <button class="btn-sm active" id="diffMedium" onclick="setDiff('medium')">中等</button>
+          <button class="btn-sm" id="diffHard" onclick="setDiff('hard')">困难</button>
+        </div>
+      </div>
     </div>
+
     <div class="turn-indicator" id="turnInfo">轮到你了 (X)</div>
-    <div class="board" id="board"></div>
+    <div class="board size-3" id="board"></div>
     <div class="result" id="result"></div>
     <div class="scores">
       <div class="score-item"><span class="score-label">玩家胜</span><span class="score-value score-player" id="sPlayer">0</span></div>
       <div class="score-item"><span class="score-label">平局</span><span class="score-value score-draw" id="sDraw">0</span></div>
-      <div class="score-item"><span class="score-label">AI胜</span><span class="score-value score-ai" id="sAI">0</span></div>
+      <div class="score-item"><span class="score-label">电脑胜</span><span class="score-value score-computer" id="sComputer">0</span></div>
     </div>
     <div class="btn-row">
       <button class="btn btn-primary" id="btnReset">重新开始</button>
@@ -94,33 +147,63 @@ body{font-family:'Inter','Microsoft YaHei',sans-serif;background:var(--bg);color
     </div>
   </div>
 </div>
+
+<!-- 胜利弹窗 -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal-box">
+    <div class="modal-icon" id="modalIcon">🎉</div>
+    <div class="modal-title" id="modalTitle">你赢了！</div>
+    <div class="modal-desc" id="modalDesc">太厉害了，击败了电脑！</div>
+    <button class="modal-btn" onclick="closeModal()">再来一局</button>
+  </div>
+</div>
+
 <script>
 (function(){
 const $=s=>document.querySelector(s);
 const $$=s=>document.querySelectorAll(s);
-let board,gameOver,currentPlayer,difficulty='medium';
-let scores={player:0,ai:0,draw:0};
-const winLines=[[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
+
+let boardSize=3;
+let board,gameOver,playerMark,computerMark,currentTurn,difficulty='medium';
+let scores={player:0,computer:0,draw:0};
+let playerIsFirst=true;
+
+// 生成赢线（N 子连珠）
+function getWinLines(n){
+  const lines=[];
+  for(let r=0;r<n;r++){const row=[];for(let c=0;c<n;c++)row.push(r*n+c);lines.push(row)}
+  for(let c=0;c<n;c++){const col=[];for(let r=0;r<n;r++)col.push(r*n+c);lines.push(col)}
+  const d1=[];for(let i=0;i<n;i++)d1.push(i*n+i);lines.push(d1);
+  const d2=[];for(let i=0;i<n;i++)d2.push(i*n+(n-1-i));lines.push(d2);
+  return lines;
+}
 
 function init(){
-  board=Array(9).fill(null);
+  board=Array(boardSize*boardSize).fill(null);
   gameOver=false;
-  currentPlayer='X';
-  $('#turnInfo').textContent='轮到你了 (X)';
-  $('#turnInfo').className='turn-indicator player-turn';
-  $('#result').textContent='';
+  playerMark=playerIsFirst?'X':'O';
+  computerMark=playerIsFirst?'O':'X';
+  currentTurn=playerIsFirst?'player':'computer';
   renderBoard();
+  updateTurnInfo();
+  $('#result').textContent='';
+  if(currentTurn==='computer'){
+    $('#turnInfo').textContent='电脑思考中...';
+    $('#turnInfo').className='turn-indicator computer-turn';
+    setTimeout(computerMove,400+Math.random()*300);
+  }
 }
 
 function renderBoard(){
   const el=$('#board');
   el.innerHTML='';
-  for(let i=0;i<9;i++){
+  el.className='board size-'+boardSize;
+  for(let i=0;i<boardSize*boardSize;i++){
     const cell=document.createElement('div');
-    cell.className='cell'+(board[i]?' taken':'');
+    cell.className='cell';
     cell.dataset.idx=i;
     if(board[i]){
-      cell.classList.add(board[i]==='X'?'x-cell':'o-cell');
+      cell.classList.add('taken',board[i]==='X'?'x-cell':'o-cell');
       const m=document.createElement('span');
       m.className='mark show';
       m.textContent=board[i];
@@ -131,14 +214,24 @@ function renderBoard(){
   }
 }
 
+function updateTurnInfo(){
+  if(gameOver)return;
+  if(currentTurn==='player'){
+    $('#turnInfo').textContent='轮到你了 ('+playerMark+')';
+    $('#turnInfo').className='turn-indicator player-turn';
+  }else{
+    $('#turnInfo').textContent='电脑思考中...';
+    $('#turnInfo').className='turn-indicator computer-turn';
+  }
+}
+
 function playerMove(i){
-  if(gameOver||board[i]||currentPlayer!=='X')return;
-  place(i,'X');
+  if(gameOver||currentTurn!=='player'||board[i])return;
+  place(i,playerMark);
   if(checkEnd())return;
-  currentPlayer='O';
-  $('#turnInfo').textContent='AI 思考中...';
-  $('#turnInfo').className='turn-indicator ai-turn';
-  setTimeout(aiMove,300+Math.random()*300);
+  currentTurn='computer';
+  updateTurnInfo();
+  setTimeout(computerMove,300+Math.random()*300);
 }
 
 function place(i,mark){
@@ -153,30 +246,37 @@ function place(i,mark){
   requestAnimationFrame(()=>requestAnimationFrame(()=>m.classList.add('show')));
 }
 
-function aiMove(){
+function computerMove(){
   if(gameOver)return;
   let move;
-  if(difficulty==='easy')move=randomMove();
-  else if(difficulty==='medium')move=Math.random()<0.6?bestMove():randomMove();
-  else move=bestMove();
+  if(boardSize===3){
+    // 3×3 用 minimax
+    if(difficulty==='easy')move=randomMove();
+    else if(difficulty==='medium')move=Math.random()<0.6?bestMove():randomMove();
+    else move=bestMove();
+  }else{
+    // 4×4 / 5×5 用启发式
+    move=smartMove();
+  }
   if(move===-1)return;
-  place(move,'O');
+  place(move,computerMark);
   if(checkEnd())return;
-  currentPlayer='X';
-  $('#turnInfo').textContent='轮到你了 (X)';
-  $('#turnInfo').className='turn-indicator player-turn';
+  currentTurn='player';
+  updateTurnInfo();
 }
 
 function randomMove(){
-  const empty=board.map((v,i)=>v===null?i:-1).filter(i=>i!==-1);
+  const empty=[];
+  for(let i=0;i<board.length;i++)if(!board[i])empty.push(i);
   return empty.length?empty[Math.floor(Math.random()*empty.length)]:-1;
 }
 
+// 3×3 minimax
 function bestMove(){
   let best=-Infinity,move=-1;
   for(let i=0;i<9;i++){
-    if(board[i]!==null)continue;
-    board[i]='O';
+    if(board[i])continue;
+    board[i]=computerMark;
     let s=minimax(board,0,false);
     board[i]=null;
     if(s>best){best=s;move=i}
@@ -185,47 +285,108 @@ function bestMove(){
 }
 
 function minimax(b,depth,isMax){
-  const w=winner(b);
-  if(w==='O')return 10-depth;
-  if(w==='X')return depth-10;
+  const w=getWinner(b,3);
+  if(w===computerMark)return 10-depth;
+  if(w===playerMark)return depth-10;
   if(b.every(v=>v!==null))return 0;
   if(isMax){
     let best=-Infinity;
-    for(let i=0;i<9;i++){if(b[i]!==null)continue;b[i]='O';best=Math.max(best,minimax(b,depth+1,false));b[i]=null}
+    for(let i=0;i<9;i++){if(b[i])continue;b[i]=computerMark;best=Math.max(best,minimax(b,depth+1,false));b[i]=null}
     return best;
   }else{
     let best=Infinity;
-    for(let i=0;i<9;i++){if(b[i]!==null)continue;b[i]='X';best=Math.min(best,minimax(b,depth+1,true));b[i]=null}
+    for(let i=0;i<9;i++){if(b[i])continue;b[i]=playerMark;best=Math.min(best,minimax(b,depth+1,true));b[i]=null}
     return best;
   }
 }
 
-function winner(b){
-  for(const[a,c,d]of winLines)if(b[a]&&b[a]===b[c]&&b[a]===b[d])return b[a];
+// 大棋盘启发式 AI
+function smartMove(){
+  const winLines=getWinLines(boardSize);
+  const empty=[];
+  for(let i=0;i<board.length;i++)if(!board[i])empty.push(i);
+  if(empty.length===0)return -1;
+
+  // 1. 能赢就赢
+  for(let line of winLines){
+    let marks=line.map(i=>board[i]);
+    let myCount=marks.filter(m=>m===computerMark).length;
+    let emptyCount=marks.filter(m=>!m).length;
+    if(myCount===boardSize-1&&emptyCount===1){
+      for(let i of line)if(!board[i])return i;
+    }
+  }
+  // 2. 堵玩家
+  for(let line of winLines){
+    let marks=line.map(i=>board[i]);
+    let pCount=marks.filter(m=>m===playerMark).length;
+    let emptyCount=marks.filter(m=>!m).length;
+    if(pCount===boardSize-1&&emptyCount===1){
+      for(let i of line)if(!board[i])return i;
+    }
+  }
+  // 3. 抢中心
+  const centerIdx=Math.floor(board.length/2);
+  if(!board[centerIdx])return centerIdx;
+  // 4. 抢角
+  const corners=[0,boardSize-1,(boardSize-1)*boardSize,board.length-1];
+  const emptyCorners=corners.filter(i=>!board[i]);
+  if(emptyCorners.length>0)return emptyCorners[Math.floor(Math.random()*emptyCorners.length)];
+  // 5. 随机
+  return empty[Math.floor(Math.random()*empty.length)];
+}
+
+function getWinner(b,n){
+  const winLines=getWinLines(n);
+  for(let line of winLines){
+    const first=b[line[0]];
+    if(!first)continue;
+    let win=true;
+    for(let i of line){if(b[i]!==first){win=false;break}}
+    if(win)return first;
+  }
   return null;
 }
 
 function checkEnd(){
-  const w=winner(board);
+  const w=getWinner(board,boardSize);
   if(w){
     gameOver=true;
     highlightWin(w);
-    if(w==='X'){scores.player++;$('#result').textContent='🎉 你赢了！';$('#result').style.color='var(--success)'}
-    else{scores.ai++;$('#result').textContent='😢 AI赢了！';$('#result').style.color='var(--danger)'}
-    updateScores();$('#turnInfo').textContent='';return true;
+    if(w===playerMark){
+      scores.player++;
+      showModal('win','🎉','你赢了！','太厉害了，击败了电脑！');
+      $('#result').textContent='🎉 你赢了！';$('#result').style.color='var(--success)';
+    }else{
+      scores.computer++;
+      showModal('lose','🤖','电脑赢了','再接再厉，下次一定行！');
+      $('#result').textContent='🤖 电脑赢了！';$('#result').style.color='var(--danger)';
+    }
+    updateScores();
+    $('#turnInfo').textContent='';
+    return true;
   }
   if(board.every(v=>v!==null)){
-    gameOver=true;scores.draw++;$('#result').textContent='🤝 平局！';$('#result').style.color='var(--warning)';
-    updateScores();$('#turnInfo').textContent='';return true;
+    gameOver=true;scores.draw++;
+    showModal('draw','🤝','平局！','势均力敌，不分胜负！');
+    $('#result').textContent='🤝 平局！';$('#result').style.color='var(--warning)';
+    updateScores();
+    $('#turnInfo').textContent='';
+    return true;
   }
   return false;
 }
 
-function highlightWin(w){
+function highlightWin(mark){
+  const winLines=getWinLines(boardSize);
   const cells=$$('.cell');
-  for(const[a,c,d]of winLines){
-    if(board[a]===w&&board[c]===w&&board[d]===w){
-      [a,c,d].forEach(i=>cells[i].classList.add('win-cell'));
+  for(let line of winLines){
+    const first=board[line[0]];
+    if(!first)continue;
+    let win=true;
+    for(let i of line){if(board[i]!==first){win=false;break}}
+    if(win){
+      for(let i of line)cells[i].classList.add('win-cell');
       return;
     }
   }
@@ -233,20 +394,47 @@ function highlightWin(w){
 
 function updateScores(){
   $('#sPlayer').textContent=scores.player;
-  $('#sAI').textContent=scores.ai;
+  $('#sComputer').textContent=scores.computer;
   $('#sDraw').textContent=scores.draw;
 }
 
-// difficulty buttons
-$$('.diff-btn').forEach(btn=>btn.addEventListener('click',()=>{
-  $$('.diff-btn').forEach(b=>b.classList.remove('active'));
-  btn.classList.add('active');
-  difficulty=btn.dataset.diff;
+function showModal(type,icon,title,desc){
+  $('#modalIcon').textContent=icon;
+  $('#modalTitle').textContent=title;
+  $('#modalDesc').textContent=desc;
+  $('#modalOverlay').classList.add('show');
+}
+
+window.closeModal=function(){
+  $('#modalOverlay').classList.remove('show');
   init();
-}));
+}
+
+window.setOrder=function(isFirst){
+  playerIsFirst=isFirst;
+  $('#orderFirst').classList.toggle('active',isFirst);
+  $('#orderSecond').classList.toggle('active',!isFirst);
+  init();
+};
+
+window.setSize=function(n){
+  boardSize=n;
+  $('#size3').classList.toggle('active',n===3);
+  $('#size4').classList.toggle('active',n===4);
+  $('#size5').classList.toggle('active',n===5);
+  init();
+};
+
+window.setDiff=function(d){
+  difficulty=d;
+  $('#diffEasy').classList.toggle('active',d==='easy');
+  $('#diffMedium').classList.toggle('active',d==='medium');
+  $('#diffHard').classList.toggle('active',d==='hard');
+  init();
+};
 
 $('#btnReset').addEventListener('click',init);
-$('#btnClearScores').addEventListener('click',()=>{scores={player:0,ai:0,draw:0};updateScores();init()});
+$('#btnClearScores').addEventListener('click',()=>{scores={player:0,computer:0,draw:0};updateScores();init()});
 
 init();
 })();

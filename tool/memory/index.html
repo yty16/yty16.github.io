@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<script>
+(function(){
+var _0x4a=[function(){return[atob('eXR5MTYuZ2l0aHViLmlv'),atob('eXR5MTYucGFnZXMuZGV2')]},function(){return location.hostname}];
+var _0x4b=_0x4a[0]();var _0x4c=_0x4a[1]();var _0x4d=false;for(var i=0;i<_0x4b.length;i++){if(_0x4c===_0x4b[i]){_0x4d=true;break;}}
+if(!_0x4d){
+window.addEventListener('DOMContentLoaded',function(){
+document.body.innerHTML='<div style="position:fixed;top:0;left:0;width:100%;height:100%;background:#f5f5f5;display:flex;align-items:center;justify-content:center;z-index:99999;font-family:sans-serif;color:#666"><div style="text-align:center"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><h2 style="margin:20px 0 10px;font-weight:500">页面加载异常</h2><p style="font-size:14px;color:#999">请访问正常渠道获取资源</p></div></div>';
+});}
+})();
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>记忆卡牌 - 工具箱 Pro</title>
+<style>
+:root{
+  --bg:#0f1020; --card:#1a1b2e; --text:#fff; --muted:#888; --accent:#6366f1; --accent2:#818cf8;
+  --safe-top:env(safe-area-inset-top,0px); --safe-bottom:env(safe-area-inset-bottom,0px);
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;user-select:none;}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif;
+  background:radial-gradient(circle at 50% 0%,#1c1d3a,#0f1020);color:var(--text);
+  min-height:100vh;padding:calc(20px + var(--safe-top)) 14px calc(20px + var(--safe-bottom));text-align:center;
+}
+.back{position:fixed;top:calc(12px + var(--safe-top));left:12px;z-index:50;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.15);color:var(--text);text-decoration:none;padding:8px 14px;border-radius:10px;font-size:14px;backdrop-filter:blur(8px);}
+h1{font-size:20px;font-weight:600;margin:10px 0 6px;}
+.bar{display:flex;justify-content:space-between;max-width:420px;margin:0 auto 14px;font-size:13px;color:var(--muted);}
+.bar b{color:var(--accent2);}
+.grid{display:grid;gap:8px;max-width:420px;margin:0 auto 16px;}
+.cell{aspect-ratio:1;border-radius:12px;background:linear-gradient(135deg,#2a2b50,#1a1b2e);border:1px solid rgba(255,255,255,0.08);
+  display:flex;align-items:center;justify-content:center;font-size:30px;cursor:pointer;transition:transform .25s,background .25s;position:relative;transform-style:preserve-3d;}
+.cell .face,.cell .back{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;border-radius:12px;backface-visibility:hidden;}
+.cell .back{background:linear-gradient(135deg,#3a3b6a,#26274a);transform:rotateY(180deg);}
+.cell.flipped{transform:rotateY(180deg);}
+.cell.matched{background:linear-gradient(135deg,#1f6b3a,#15512a);border-color:#2ecc71;color:#2ecc71;}
+.cell.matched .face{opacity:0;}
+.btn{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;border:none;border-radius:14px;padding:12px 30px;font-size:15px;font-weight:600;cursor:pointer;box-shadow:0 8px 24px rgba(99,102,241,0.4);font-family:inherit;}
+.btn:active{transform:scale(0.94);}
+@media (max-width:360px){
+  .back{top:calc(6px + var(--safe-top));left:6px;padding:6px 10px;font-size:12px;}
+  h1{font-size:16px;}
+  .grid{gap:5px;}
+  .cell{font-size:22px;border-radius:9px;}
+  .btn{padding:10px 24px;font-size:14px;}
+}
+@media (shape:round){
+  .grid{gap:4px;width:66vmin;max-width:200px;}
+  .cell{font-size:7vmin;}
+}
+</style>
+</head>
+<body>
+<a href="javascript:history.back()" class="back">← 返回</a>
+<h1>🃏 记忆卡牌</h1>
+<div class="bar"><span>步数：<b id="moves">0</b></span><span>用时：<b id="time">0</b>s</span></div>
+<div class="grid" id="grid"></div>
+<button class="btn" id="restart">重新开始</button>
+
+<script>
+var EMOJI=['🍎','🍌','🍇','🍉','🍓','🍒','🥝','🍑','🍍','🥥','🍐','🥭'];
+var grid=document.getElementById('grid'),movesEl=document.getElementById('moves'),timeEl=document.getElementById('time');
+var cols=4,first=null,lock=false,moves=0,matched=0,total=0,timer=null,sec=0,started=false;
+function shuffle(a){for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;}return a;}
+function setup(){
+  lock=false;first=null;moves=0;matched=0;sec=0;started=false;
+  movesEl.textContent='0';timeEl.textContent='0';
+  if(timer)clearInterval(timer);
+  // 根据宽度选列数
+  var w=Math.min(window.innerWidth,window.innerHeight);
+  cols=(w<360)?3:4;
+  var pairs=cols*2; // 6 or 8 pairs -> 12 or 16 cards
+  total=pairs*2;
+  var set=[];
+  for(var i=0;i<pairs;i++){set.push(EMOJI[i],EMOJI[i]);}
+  set=shuffle(set);
+  grid.style.gridTemplateColumns='repeat('+cols+',1fr)';
+  grid.innerHTML='';
+  set.forEach(function(e){
+    var c=document.createElement('div');c.className='cell';
+    c.innerHTML='<div class="back"></div><div class="face">'+e+'</div>';
+    c.dataset.v=e;c.addEventListener('click',function(){flip(c);});
+    grid.appendChild(c);
+  });
+}
+function startTimer(){if(started)return;started=true;timer=setInterval(function(){sec++;timeEl.textContent=sec;},1000);}
+function flip(c){
+  if(lock||c.classList.contains('flipped')||c.classList.contains('matched'))return;
+  startTimer();
+  c.classList.add('flipped');
+  if(!first){first=c;return;}
+  moves++;movesEl.textContent=moves;
+  if(first.dataset.v===c.dataset.v){
+    first.classList.add('matched');c.classList.add('matched');
+    matched+=2;first=null;
+    if(matched===total){clearInterval(timer);}
+  }else{
+    lock=true;
+    setTimeout(function(){first.classList.remove('flipped');c.classList.remove('flipped');first=null;lock=false;},700);
+  }
+}
+document.getElementById('restart').addEventListener('click',setup);
+setup();
+</script>
+</body>
+</html>

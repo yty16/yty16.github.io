@@ -13,7 +13,8 @@ document.body.innerHTML='<div style="position:fixed;top:0;left:0;width:100%;heig
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>打字速度测试 - 工具箱 Pro</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"></noscript>
 <style>
 :root{--bg:#f0f2f5;--card:rgba(255,255,255,0.85);--text:#1a1a2e;--muted:#a0aec0;--accent:#6366f1;--accent-hover:#4f46e5;--border:rgba(0,0,0,0.06);--shadow:0 4px 16px rgba(0,0,0,0.08)}
 [data-theme="dark"]{--bg:#0f0f1a;--card:rgba(30,30,50,0.85);--text:#e2e8f0;--muted:#718096;--accent:#818cf8;--border:rgba(255,255,255,0.06);--shadow:0 4px 16px rgba(0,0,0,0.3)}
@@ -151,7 +152,7 @@ const zhTexts = [
   "从前有座山，山里有座庙，庙里有个老和尚在给小和尚讲故事。讲的是从前有座山，山里有座庙，庙里有个老和尚在给小和尚讲故事。",
   "编程是一门需要不断学习和实践的技能。每天进步一点点，坚持下去就能看到显著的成果。代码的魅力在于它可以让计算机按照我们的想法去执行任务。",
   "春眠不觉晓，处处闻啼鸟。夜来风雨声，花落知多少。这首诗是唐代诗人孟浩然的作品，描写了春天清晨的美好景象。",
-  "科技的发展让我们的生活变得更加便利。人工智能、大数据、云计算等新技术正在深刻地改变着世界的面貌，也为我们带来了前所未有的机遇和挑战。",
+  "科技的发展让我们的生活变得更加便利。移动互联网、物联网、5G通信等新技术正在深刻地改变着世界的面貌，也为我们带来了前所未有的机遇和挑战。",
   "读书是一种享受，也是一种修行。在书的世界里，我们可以与古今中外的伟人对话，可以领略不同文化的魅力，可以开阔视野、增长见识。",
   "生命在于运动，健康的身体是革命的本钱。每天坚持锻炼，不仅可以增强体质，还能缓解压力、改善心情，让我们以更好的状态投入到工作和学习中去。"
 ];
@@ -160,7 +161,7 @@ const zhTexts = [
 const enTexts = [
   "The quick brown fox jumps over the lazy dog. This sentence contains all the letters of the English alphabet and is commonly used for typing practice around the world.",
   "Programming is the process of creating a set of instructions that tell a computer how to perform a task. It can be done using many programming languages.",
-  "Technology has transformed the way we live, work, and communicate. From smartphones to artificial intelligence, innovation continues to shape our future.",
+  "Technology has transformed the way we live, work, and communicate. From smartphones to cloud computing, innovation continues to shape our future.",
   "Practice makes perfect. The more you type, the faster and more accurate you will become. Consistent effort over time leads to remarkable improvement.",
   "The internet connects billions of devices worldwide, enabling instant communication and access to information. It has revolutionized every aspect of modern life.",
   "Learning a new skill requires patience, dedication, and regular practice. Every expert was once a beginner who refused to give up on their dreams."

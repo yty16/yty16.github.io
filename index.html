@@ -4356,6 +4356,14 @@
                         card.appendChild(badge);
                     }
 
+                    // 小游戏：点击先弹出课堂提醒
+                    if (group.groupTitle && group.groupTitle.indexOf('小游戏') !== -1 && !btn.disabled) {
+                        card.addEventListener('click', function(e) {
+                            e.preventDefault();
+                            showGameWarn(btn.link);
+                        });
+                    }
+
                     grid.appendChild(card);
                 });
 
@@ -6061,6 +6069,52 @@
             });
         });
     }
+    </script>
+
+    <!-- 小游戏课堂提醒弹窗 -->
+    <style>
+        .game-warn-card { max-width: 360px; text-align: center; padding: 28px 24px 18px; }
+        .game-warn-emoji { font-size: 44px; line-height: 1; margin-bottom: 14px; font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", "Android Emoji", sans-serif; }
+        .game-warn-title { font-size: 18px; font-weight: 700; color: var(--text-primary); margin-bottom: 10px; }
+        .game-warn-text { font-size: 15px; color: var(--text-secondary); line-height: 1.6; margin-bottom: 22px; }
+        .game-warn-actions { display: flex; gap: 12px; justify-content: center; }
+        .game-warn-btn { flex: 1; padding: 11px 0; border-radius: var(--radius-md); font-size: 14px; font-weight: 600; font-family: inherit; cursor: pointer; border: 1px solid transparent; transition: all var(--transition); }
+        .game-warn-btn.primary { background: var(--accent); color: #fff; }
+        .game-warn-btn.primary:hover { opacity: .9; }
+        .game-warn-btn.ghost { background: var(--bg-secondary); color: var(--text-secondary); border-color: var(--border); }
+        .game-warn-btn.ghost:hover { color: var(--text-primary); }
+        .game-warn-foot { margin-top: 18px; font-size: 12px; color: var(--text-muted); letter-spacing: 1px; }
+    </style>
+    <div class="tool-modal" id="gameWarnModal">
+        <div class="tool-card game-warn-card">
+            <div class="game-warn-emoji">🎮</div>
+            <div class="game-warn-title">温馨提示</div>
+            <div class="game-warn-text">不要在课堂上玩游戏哦～</div>
+            <div class="game-warn-actions">
+                <button class="game-warn-btn ghost" onclick="closeGameWarn()">返回</button>
+                <button class="game-warn-btn primary" onclick="enterGame()">我就是要玩</button>
+            </div>
+            <div class="game-warn-foot">好好学习，天天向上</div>
+        </div>
+    </div>
+    <script>
+        let _pendingGameHref = '';
+        function showGameWarn(href) {
+            _pendingGameHref = href;
+            document.getElementById('gameWarnModal').classList.add('active');
+        }
+        function closeGameWarn() {
+            document.getElementById('gameWarnModal').classList.remove('active');
+            _pendingGameHref = '';
+        }
+        function enterGame() {
+            const href = _pendingGameHref;
+            closeGameWarn();
+            if (href) window.location.href = href;
+        }
+        document.getElementById('gameWarnModal').addEventListener('click', function(e) {
+            if (e.target === this) closeGameWarn();
+        });
     </script>
 </body>
 </html>

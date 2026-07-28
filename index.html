@@ -149,6 +149,7 @@
             z-index: 100;
             display: flex;
             align-items: center;
+            justify-content: space-between;
             padding: 0 24px;
             transition: background var(--transition);
             overflow: visible;
@@ -221,20 +222,15 @@
         .logo-icon {
             width: 36px;
             height: 36px;
-            background: var(--gradient-1);
             border-radius: var(--radius-sm);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 18px;
-            font-weight: 700;
+            object-fit: contain;
+            display: block;
         }
 
         .header-center {
-            flex: 1;
+            flex: 0 1 480px;
+            width: 100%;
             max-width: 480px;
-            margin: 0 32px;
             min-width: 0;
         }
 
@@ -1472,7 +1468,6 @@
             .logo-icon {
                 width: 28px;
                 height: 28px;
-                font-size: 14px;
             }
 
             .header-right {
@@ -1590,7 +1585,6 @@
             .logo-icon {
                 width: 24px;
                 height: 24px;
-                font-size: 12px;
             }
 
             .header-right {
@@ -2171,7 +2165,6 @@
         }
 
         body.scifi-mode .logo-icon {
-            background: linear-gradient(135deg, #00f0ff, #00ff88) !important;
             box-shadow: 0 0 12px rgba(0, 240, 255, 0.4);
             animation: sci-fi-pulse 2s ease-in-out infinite;
         }
@@ -3367,7 +3360,7 @@
                 </svg>
             </button>
             <a href="#" class="logo">
-                <div class="logo-icon">Y</div>
+                <img src="/icon-192.png" class="logo-icon" alt="工具箱 Pro">
                 <span>工具箱 Pro</span>
             </a>
         </div>

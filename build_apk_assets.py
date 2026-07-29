@@ -25,8 +25,8 @@ DENY_DIRS = {'.git', 'build', 'node_modules', 'apk-build', 'watch-apk-build',
 DENY_EXT = {'.exe', '.zip', '.apk', '.bat', '.rar', '.7z', '.tar', '.gz',
             '.mp4', '.py', '.db', '.sh', '.log'}
 
-# OTA 产物，不是站点内容，不要打进 assets/www
-SKIP_FILES = {'version.json', 'app-bundle.zip'}
+# OTA 产物或图标源文件，不是站点内容，不要打进 assets/www
+SKIP_FILES = {'version.json', 'app-bundle.zip', 'icon-source.png'}
 
 PHONE_WWW = os.path.join(ROOT, 'apk-build', 'app', 'src', 'main', 'assets', 'www')
 WATCH_WWW = os.path.join(ROOT, 'watch-apk-build', 'app', 'src', 'main', 'assets', 'www')

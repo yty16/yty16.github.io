@@ -5964,7 +5964,7 @@
         var now = new Date();
         var dateStr = now.getFullYear() + '-' + String(now.getMonth() + 1).padStart(2, '0') + '-' + String(now.getDate()).padStart(2, '0');
         var timeStr = String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0');
-        var text = domain + ' | ' + dateStr + ' ' + timeStr;
+        var text = '元拓域 Toolbox | ' + domain + ' | ' + dateStr + ' ' + timeStr;
         var els = document.querySelectorAll('[data-wm="1"]');
         for (var i = 0; i < els.length; i++) {
             els[i].textContent = text;

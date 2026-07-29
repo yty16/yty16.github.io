@@ -1,4 +1,4 @@
-// Service Worker - 工具箱 Pro
+// Service Worker - 元拓域 Toolbox
 // 策略: network-first (在线时获取最新内容，离线时用缓存)
 const CACHE_NAME = 'toolbox-v1.0.0';
 const PRECACHE_URLS = [

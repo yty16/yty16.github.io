@@ -1,7 +1,21 @@
-nul
+# 依赖与构建输出（不应入库）
+apk-build/app/build/
+watch-apk-build/app/build/
+win-app/bin/
+win-app/obj/
+win-app/publish/
+*.log
+
+# 含敏感令牌的推送脚本（本地用，勿入库）
+push_*.sh
+push_*.py
+deploy.sh
+
+# 发布压缩包（体积过大，单独分发）
 *.zip
+
+# 杂项
 _tmp_site/
 1.exe
-deploy.sh
 github-404.html
 .workbuddy/

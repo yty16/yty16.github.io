@@ -54,7 +54,11 @@ namespace YToolboxWinApp
             settings.AreDefaultContextMenusEnabled = false;
             settings.AreDevToolsEnabled = false;
             settings.IsStatusBarEnabled = false;
-            settings.UserAgent = settings.UserAgent + " ToolboxApp/2.0";
+            settings.UserAgent = settings.UserAgent + " ToolboxWin/2.0";
+
+            // 接收网页发来的应用设置指令
+            webView.CoreWebView2.WebMessageReceived += OnWebMessageReceived;
+            webView.CoreWebView2.NavigationCompleted += OnNavigationCompleted;
 
             // 离线内核：拦截本站所有请求，改从本地资源读取
             webView.CoreWebView2.WebResourceRequested += OnResourceRequested;
@@ -98,6 +102,55 @@ namespace YToolboxWinApp
                     $"Content-Type: {mime}; charset=utf-8\r\nCache-Control: no-cache");
             }
             // 本地没有该文件：不设置 Response，WebView2 回落真实网络（离线则触发错误页）
+        }
+
+        private void OnNavigationCompleted(object sender, CoreWebView2NavigationCompletedEventArgs e)
+        {
+            // 向页面暴露 Windows 应用版本号
+            _ = webView.CoreWebView2.ExecuteScriptAsync("window.__toolboxVersion='2.0.0';");
+        }
+
+        private async void OnWebMessageReceived(object sender, CoreWebView2WebMessageReceivedEventArgs e)
+        {
+            var msg = e.WebMessageAsJson;
+            if (msg != null && msg.StartsWith("\"") && msg.EndsWith("\""))
+                msg = msg.Substring(1, msg.Length - 2);
+
+            switch (msg)
+            {
+                case "clearCache":
+                    try
+                    {
+                        await webView.CoreWebView2.Profile.ClearBrowsingDataAsync();
+                        await webView.CoreWebView2.ExecuteScriptAsync("showToast('缓存已清理，重启后生效','🧹');");
+                    }
+                    catch (Exception ex)
+                    {
+                        await webView.CoreWebView2.ExecuteScriptAsync($"showToast('清理缓存失败: {ex.Message}','⚠️');");
+                    }
+                    break;
+
+                case "checkUpdate":
+                    try
+                    {
+                        await webView.CoreWebView2.ExecuteScriptAsync("showToast('正在检查更新...','🔄');");
+                        await SiteUpdater.CheckAndUpdateAsync(_otaWww, _http);
+                        await webView.CoreWebView2.ExecuteScriptAsync("showToast('检查完成，如有更新将在下次启动时生效','✅');");
+                    }
+                    catch (Exception ex)
+                    {
+                        await webView.CoreWebView2.ExecuteScriptAsync($"showToast('检查更新失败: {ex.Message}','⚠️');");
+                    }
+                    break;
+
+                case "exitApp":
+                    Invoke(new Action(() => Application.Exit()));
+                    break;
+
+                case "getVersion":
+                    await webView.CoreWebView2.ExecuteScriptAsync("window.__toolboxVersion='2.0.0';");
+                    break;
+            }
         }
 
         private string MapLocal(string path)

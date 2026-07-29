@@ -515,6 +515,40 @@
             border-color: var(--accent);
         }
 
+        /* 应用设置按钮（仅在客户端显示） */
+        .app-settings-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 1px solid var(--border);
+            background: var(--bg-card);
+            color: var(--text-primary);
+            cursor: pointer;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            transition: all var(--transition);
+            backdrop-filter: blur(10px);
+        }
+
+        .app-settings-btn.visible {
+            display: flex;
+        }
+
+        .app-settings-btn:hover {
+            background: var(--accent-light);
+            border-color: var(--accent);
+            color: var(--accent);
+            transform: rotate(30deg);
+        }
+
+        .app-settings-btn.active {
+            background: var(--accent);
+            color: white;
+            border-color: var(--accent);
+            transform: rotate(90deg);
+        }
+
         /* 虚拟键盘 */
         .virtual-keyboard {
             position: fixed;
@@ -3402,6 +3436,12 @@
                     <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
                 </svg>
             </button>
+            <button class="app-settings-btn" id="appSettingsBtn" onclick="toggleAppSettings()" title="应用设置" aria-label="应用设置">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="3"/>
+                    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+                </svg>
+            </button>
         </div>
     </header>
 
@@ -3514,6 +3554,40 @@
                 <div class="loading-text">正在加载资源...</div>
             </div>
         </div>
+
+        <!-- 应用设置（仅在客户端应用内显示） -->
+        <section class="section section-hidden" id="section-app-settings">
+            <div class="section-header">
+                <div class="section-icon" style="background: var(--gradient-1);">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="3"/>
+                        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+                    </svg>
+                </div>
+                <div>
+                    <div class="section-title">应用设置</div>
+                    <div class="section-subtitle">客户端应用专属选项</div>
+                </div>
+            </div>
+            <div class="settings-panel">
+                <div class="settings-group">
+                    <div class="settings-label">应用信息</div>
+                    <div class="settings-options" style="flex-direction: column; align-items: flex-start; gap: 6px;">
+                        <div class="app-info-row">平台：<span id="appPlatformText">--</span></div>
+                        <div class="app-info-row">应用版本：<span id="appVersionText">--</span></div>
+                        <div class="app-info-row">站点版本：<span id="siteVersionText">--</span></div>
+                    </div>
+                </div>
+                <div class="settings-group">
+                    <div class="settings-label">操作</div>
+                    <div class="settings-options">
+                        <button class="settings-btn" onclick="appCheckUpdate()">检查更新</button>
+                        <button class="settings-btn" onclick="appClearCache()">清理缓存</button>
+                        <button class="settings-btn" onclick="appExit()">退出应用</button>
+                    </div>
+                </div>
+            </div>
+        </section>
 
         <!-- 网站设置（隐藏分区，输入指令解锁） -->
         <section class="section section-hidden" id="section-settings">
@@ -3855,6 +3929,30 @@
     const _p6 = _d(_pw[5]);
     const HIDDEN_SECTION_IDS = ['section-lab', 'section-settings'];
     let currentActiveSection = null;
+
+    // 客户端检测：网页运行在手机/手表/Windows 原生应用内时返回 true
+    function isApp() {
+        if (typeof window !== 'undefined' && window.AppBridge && typeof window.AppBridge.isApp === 'function') {
+            try { return window.AppBridge.isApp(); } catch (e) { return true; }
+        }
+        var ua = navigator.userAgent || '';
+        return /ToolboxApp|ToolboxWatch|ToolboxWin/i.test(ua);
+    }
+
+    function getAppPlatform() {
+        var ua = navigator.userAgent || '';
+        if (/ToolboxWatch/i.test(ua)) return 'watch';
+        if (/ToolboxApp/i.test(ua)) return 'android';
+        if (/ToolboxWin/i.test(ua)) return 'windows';
+        if (typeof window !== 'undefined' && window.AppBridge) return 'android';
+        return 'unknown';
+    }
+
+    function getAppVersion() {
+        var ua = navigator.userAgent || '';
+        var m = ua.match(/Toolbox(?:App|Watch|Win)\/([\d.]+)/);
+        return m ? m[1] : '--';
+    }
 
     // Theme
     var _0x5e = [String.fromCharCode(121,116,121,49,54,46,103,105,116,104,117,98,46,105,111),String.fromCharCode(121,116,121,49,54,46,112,97,103,101,115,46,100,101,118)];
@@ -4252,6 +4350,8 @@
 
         SITE_DATA.navItems.forEach((item, index) => {
             if (item.hidden && !_ul) return;
+            // 在客户端应用内不渲染"网站设置"，统一使用右上角"应用设置"
+            if (isApp() && item.targetId === 'section-settings') return;
 
             const a = document.createElement('a');
             a.className = 'nav-item';
@@ -4528,6 +4628,8 @@
 
     function unlockHiddenSections() {
         HIDDEN_SECTION_IDS.forEach(id => {
+            // 在客户端应用内，网站设置分区永远不显示，改由右上角应用设置接管
+            if (id === 'section-settings' && isApp()) return;
             const section = document.getElementById(id);
             if (section) {
                 section.classList.remove('section-hidden');
@@ -4542,6 +4644,90 @@
         }
         showToast('隐藏区域已解锁!', '🔓');
         addLog('解锁隐藏区域', '指令1');
+    }
+
+    // 应用设置：右上角入口与面板控制
+    function initAppSettings() {
+        const btn = document.getElementById('appSettingsBtn');
+        if (!btn) return;
+        if (isApp()) {
+            btn.classList.add('visible');
+            document.body.classList.add('in-app');
+            // 刷新应用信息
+            const platformMap = { android: 'Android 应用', watch: '手表应用', windows: 'Windows 应用', unknown: '未知客户端' };
+            const platformText = document.getElementById('appPlatformText');
+            const versionText = document.getElementById('appVersionText');
+            const siteVersionText = document.getElementById('siteVersionText');
+            if (platformText) platformText.textContent = platformMap[getAppPlatform()] || '未知客户端';
+            if (versionText) {
+                var bridgeVer = null;
+                try {
+                    if (window.AppBridge && typeof window.AppBridge.getAppVersion === 'function') {
+                        bridgeVer = window.AppBridge.getAppVersion();
+                    }
+                } catch (e) {}
+                versionText.textContent = bridgeVer || getAppVersion() || '--';
+            }
+            if (siteVersionText) {
+                siteVersionText.textContent = '检测中...';
+                try {
+                    if (window.AppBridge && typeof window.AppBridge.siteVersion === 'function') {
+                        siteVersionText.textContent = window.AppBridge.siteVersion();
+                    } else {
+                        siteVersionText.textContent = '--';
+                    }
+                } catch (e) {
+                    siteVersionText.textContent = '--';
+                }
+            }
+        }
+    }
+
+    function toggleAppSettings() {
+        const section = document.getElementById('section-app-settings');
+        const btn = document.getElementById('appSettingsBtn');
+        if (!section) return;
+        const isHidden = section.classList.contains('section-hidden');
+        if (isHidden) {
+            section.classList.remove('section-hidden');
+            section.classList.add('visible');
+            section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            if (btn) btn.classList.add('active');
+        } else {
+            section.classList.add('section-hidden');
+            section.classList.remove('visible');
+            if (btn) btn.classList.remove('active');
+        }
+    }
+
+    function appSendMessage(action) {
+        var platform = getAppPlatform();
+        if (platform === 'android' || platform === 'watch') {
+            if (window.AppBridge && typeof window.AppBridge[action] === 'function') {
+                try { return window.AppBridge[action](); } catch (e) { console.error(e); }
+            }
+        } else if (platform === 'windows') {
+            if (window.chrome && window.chrome.webview && typeof window.chrome.webview.postMessage === 'function') {
+                try { window.chrome.webview.postMessage(action); } catch (e) { console.error(e); }
+            }
+        }
+    }
+
+    function appCheckUpdate() {
+        showToast('正在检查更新...', '🔄');
+        appSendMessage('checkUpdate');
+    }
+
+    function appClearCache() {
+        if (confirm('确定要清理应用缓存吗？清理后需要重新加载离线资源。')) {
+            appSendMessage('clearCache');
+        }
+    }
+
+    function appExit() {
+        if (confirm('确定要退出应用吗？')) {
+            appSendMessage('exitApp');
+        }
     }
 
     // 科幻模式
@@ -5999,6 +6185,7 @@
         }
         renderNavbar();
         renderSections();
+        initAppSettings();
         initSearch();
         initScrollTracking();
         initMobileSidebar();

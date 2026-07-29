@@ -1,6 +1,8 @@
 # 依赖与构建输出（不应入库）
 apk-build/app/build/
+apk-build/.gradle/
 watch-apk-build/app/build/
+watch-apk-build/.gradle/
 win-app/bin/
 win-app/obj/
 win-app/publish/

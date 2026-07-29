@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script>
+(function(){
+var _0x4a=[function(){return[atob('eXR5MTYuZ2l0aHViLmlv'),atob('eXR5MTYucGFnZXMuZGV2')]},function(){return location.hostname}];
+var _0x4b=_0x4a[0]();var _0x4c=_0x4a[1]();var _0x4d=false;for(var i=0;i<_0x4b.length;i++){if(_0x4c===_0x4b[i]){_0x4d=true;break;}}
+if(!_0x4d){
+window.addEventListener('DOMContentLoaded',function(){
+document.body.innerHTML='<div style="position:fixed;top:0;left:0;width:100%;height:100%;background:#f5f5f5;display:flex;align-items:center;justify-content:center;z-index:99999;font-family:sans-serif;color:#666"><div style="text-align:center"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><h2 style="margin:20px 0 10px;font-weight:500">页面加载异常</h2><p style="font-size:14px;color:#999">请访问正常渠道获取资源</p></div></div>';
+});}
+})();
+</script>
+    <title>文本加密/解密</title>
+    <style>
+        :root {
+            --bg: #f0f2f5;
+            --card-bg: rgba(255, 255, 255, 0.7);
+            --card-border: rgba(255, 255, 255, 0.3);
+            --text: #1a1a2e;
+            --text-secondary: #666;
+            --accent: #6c5ce7;
+            --accent-light: #a29bfe;
+        }
+        [data-theme="dark"] {
+            --bg: #1a1a2e;
+            --card-bg: rgba(255, 255, 255, 0.05);
+            --card-border: rgba(255, 255, 255, 0.1);
+            --text: #eee;
+            --text-secondary: #aaa;
+            --accent: #a29bfe;
+            --accent-light: #6c5ce7;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', 'Microsoft YaHei', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            padding: 20px;
+            transition: background 0.3s, color 0.3s;
+        }
+        .container { max-width: 800px; margin: 0 auto; }
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--accent);
+            text-decoration: none;
+            font-size: 14px;
+            margin-bottom: 20px;
+            padding: 8px 16px;
+            border-radius: 8px;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            backdrop-filter: blur(10px);
+            transition: all 0.2s;
+        }
+        .back-btn:hover { background: var(--accent); color: white; }
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 20px;
+            backdrop-filter: blur(20px);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+        }
+        h1 { font-size: 28px; margin-bottom: 20px; }
+        .tabs { display: flex; gap: 10px; margin-bottom: 20px; }
+        .tab {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid var(--accent);
+            background: transparent;
+            color: var(--accent);
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+        .tab.active { background: var(--accent); color: white; }
+        .tab:hover { background: var(--accent-light); color: white; }
+        label { display: block; margin-bottom: 8px; font-weight: 500; color: var(--text-secondary); }
+        select, input, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--card-border);
+            border-radius: 10px;
+            background: var(--card-bg);
+            color: var(--text);
+            font-size: 14px;
+            font-family: inherit;
+            margin-bottom: 16px;
+            backdrop-filter: blur(10px);
+        }
+        textarea { min-height: 120px; resize: vertical; }
+        .btn {
+            padding: 12px 24px;
+            background: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.2s;
+            width: 100%;
+            margin-bottom: 12px;
+        }
+        .btn:hover { background: var(--accent-light); transform: translateY(-2px); box-shadow: 0 4px 12px rgba(108,92,231,0.4); }
+        .output-area {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 10px;
+            padding: 16px;
+            min-height: 100px;
+            word-break: break-all;
+            white-space: pre-wrap;
+            margin-bottom: 12px;
+            backdrop-filter: blur(10px);
+        }
+        .copy-btn {
+            padding: 8px 16px;
+            background: transparent;
+            color: var(--accent);
+            border: 1px solid var(--accent);
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+        .copy-btn:hover { background: var(--accent); color: white; }
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: var(--accent);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 10px;
+            font-size: 14px;
+            opacity: 0;
+            transition: all 0.3s;
+            z-index: 1000;
+        }
+        .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+        .shift-group { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+        .shift-group input { width: 80px; margin-bottom: 0; }
+
+        @media (max-width: 600px) {
+            body { padding: 12px; }
+            h1 { font-size: 22px; }
+            .card { padding: 16px; }
+            .tab { padding: 10px; font-size: 14px; }
+            .btn { padding: 10px 20px; font-size: 14px; }
+        }
+
+        @media (max-width: 400px) {
+            .shift-group { flex-direction: column; gap: 8px; }
+            .shift-group input { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+    <script>
+        (function() {
+            const theme = localStorage.getItem('theme');
+            if (theme) {
+                document.documentElement.setAttribute('data-theme', theme);
+            } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                document.documentElement.setAttribute('data-theme', 'dark');
+            }
+        })();
+    </script>
+    <div class="container">
+        <a href="/" class="back-btn">← 返回</a>
+        <div class="card">
+            <h1>🔒 文本加密/解密</h1>
+            <div class="tabs">
+                <button class="tab active" onclick="switchMode('encrypt', this)">加密</button>
+                <button class="tab" onclick="switchMode('decrypt', this)">解密</button>
+            </div>
+            <label>算法选择</label>
+            <select id="algorithm" onchange="togglePasswordField()">
+                <option value="aes">AES-256 (需要密码)</option>
+                <option value="base64">Base64</option>
+                <option value="rot13">ROT13</option>
+                <option value="reverse">反转文本</option>
+                <option value="caesar">凯撒密码</option>
+            </select>
+            <div id="password-group">
+                <label>密码/密钥</label>
+                <div style="display:flex;gap:8px;">
+                    <input type="password" id="password" placeholder="输入加密密码..." style="flex:1;margin-bottom:0;" />
+                    <button class="copy-btn" onclick="togglePasswordVisibility()" style="padding:8px 12px;font-size:13px;white-space:nowrap;" id="pwdToggleBtn">👁 显示</button>
+                </div>
+            </div>
+            <div id="shift-group" style="display:none;">
+                <label>移位值</label>
+                <div class="shift-group">
+                    <input type="number" id="shift" value="3" min="1" max="25" />
+                    <span style="color:var(--text-secondary);">(1-25)</span>
+                </div>
+            </div>
+            <label>输入文本</label>
+            <textarea id="inputText" placeholder="输入要处理的文本..."></textarea>
+            <button class="btn" onclick="processText()" id="processBtn">处理</button>
+            <label>输出结果</label>
+            <div class="output-area" id="output"></div>
+            <button class="copy-btn" onclick="copyOutput()">复制结果</button>
+        </div>
+    </div>
+    <div class="toast" id="toast"></div>
+
+    <script>
+        let currentMode = 'encrypt';
+
+        function switchMode(mode, btn) {
+            currentMode = mode;
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            btn.classList.add('active');
+        }
+
+        function togglePasswordField() {
+            const algo = document.getElementById('algorithm').value;
+            document.getElementById('password-group').style.display = algo === 'aes' ? 'block' : 'none';
+            document.getElementById('shift-group').style.display = algo === 'caesar' ? 'block' : 'none';
+        }
+
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            toast.textContent = msg;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 2000);
+        }
+
+        function togglePasswordVisibility() {
+            const pwd = document.getElementById('password');
+            const btn = document.getElementById('pwdToggleBtn');
+            if (pwd.type === 'password') {
+                pwd.type = 'text';
+                btn.textContent = '🙈 隐藏';
+            } else {
+                pwd.type = 'password';
+                btn.textContent = '👁 显示';
+            }
+        }
+
+        function copyOutput() {
+            const output = document.getElementById('output').textContent;
+            if (!output) return showToast('没有可复制的内容');
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(output).then(() => showToast('已复制到剪贴板')).catch(() => fallbackCopy(output));
+            } else {
+                fallbackCopy(output);
+            }
+        }
+
+        function fallbackCopy(text) {
+            const textarea = document.createElement('textarea');
+            textarea.value = text;
+            textarea.style.position = 'fixed';
+            textarea.style.opacity = '0';
+            document.body.appendChild(textarea);
+            textarea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textarea);
+            showToast('已复制到剪贴板');
+        }
+
+        // Base64
+        function base64Encode(str) { return btoa(unescape(encodeURIComponent(str))); }
+        function base64Decode(str) { return decodeURIComponent(escape(atob(str))); }
+
+        // ROT13
+        function rot13(str) {
+            return str.replace(/[a-zA-Z]/g, c => {
+                const base = c <= 'Z' ? 65 : 97;
+                return String.fromCharCode(((c.charCodeAt(0) - base + 13) % 26) + base);
+            });
+        }
+
+        // Caesar cipher
+        function caesar(str, shift, decrypt = false) {
+            if (decrypt) shift = (26 - shift) % 26;
+            return str.replace(/[a-zA-Z]/g, c => {
+                const base = c <= 'Z' ? 65 : 97;
+                return String.fromCharCode(((c.charCodeAt(0) - base + shift) % 26) + base);
+            });
+        }
+
+        // AES-256 using Web Crypto API
+        async function aesEncrypt(text, password) {
+            const salt = crypto.getRandomValues(new Uint8Array(16));
+            const keyMaterial = await crypto.subtle.importKey('raw', new TextEncoder().encode(password), 'PBKDF2', false, ['deriveKey']);
+            const key = await crypto.subtle.deriveKey(
+                { name: 'PBKDF2', salt, iterations: 100000, hash: 'SHA-256' },
+                keyMaterial,
+                { name: 'AES-GCM', length: 256 },
+                false,
+                ['encrypt', 'decrypt']
+            );
+            const iv = crypto.getRandomValues(new Uint8Array(12));
+            const encrypted = await crypto.subtle.encrypt({ name: 'AES-GCM', iv }, key, new TextEncoder().encode(text));
+            const combined = new Uint8Array(salt.length + iv.length + encrypted.byteLength);
+            combined.set(salt);
+            combined.set(iv, salt.length);
+            combined.set(new Uint8Array(encrypted), salt.length + iv.length);
+            var binary = '';
+            for (var i = 0; i < combined.length; i++) {
+                binary += String.fromCharCode(combined[i]);
+            }
+            return btoa(binary);
+        }
+
+        async function aesDecrypt(data, password) {
+            const combined = Uint8Array.from(atob(data), c => c.charCodeAt(0));
+            const salt = combined.slice(0, 16);
+            const iv = combined.slice(16, 28);
+            const encrypted = combined.slice(28);
+            const keyMaterial = await crypto.subtle.importKey('raw', new TextEncoder().encode(password), 'PBKDF2', false, ['deriveKey']);
+            const key = await crypto.subtle.deriveKey(
+                { name: 'PBKDF2', salt, iterations: 100000, hash: 'SHA-256' },
+                keyMaterial,
+                { name: 'AES-GCM', length: 256 },
+                false,
+                ['encrypt', 'decrypt']
+            );
+            const decrypted = await crypto.subtle.decrypt({ name: 'AES-GCM', iv }, key, encrypted);
+            return new TextDecoder().decode(decrypted);
+        }
+
+        async function processText() {
+            const algo = document.getElementById('algorithm').value;
+            const text = document.getElementById('inputText').value;
+            const password = document.getElementById('password').value;
+            const shift = parseInt(document.getElementById('shift').value) || 3;
+            const output = document.getElementById('output');
+
+            if (!text) return showToast('请输入文本');
+
+            const btn = document.getElementById('processBtn');
+            try {
+                let result = '';
+                if (algo === 'aes') {
+                    if (!password) return showToast('请输入密码');
+                    btn.textContent = '处理中...';
+                    btn.disabled = true;
+                    result = currentMode === 'encrypt' ? await aesEncrypt(text, password) : await aesDecrypt(text, password);
+                } else if (algo === 'base64') {
+                    result = currentMode === 'encrypt' ? base64Encode(text) : base64Decode(text);
+                } else if (algo === 'rot13') {
+                    result = rot13(text);
+                } else if (algo === 'reverse') {
+                    result = text.split('').reverse().join('');
+                } else if (algo === 'caesar') {
+                    result = caesar(text, shift, currentMode === 'decrypt');
+                }
+                output.textContent = result;
+                showToast('处理成功');
+            } catch (e) {
+                output.textContent = '错误: ' + e.message;
+                showToast('处理失败');
+            } finally {
+                btn.textContent = '处理';
+                btn.disabled = false;
+            }
+        }
+    </script>
+</body>
+</html>

@@ -14,7 +14,6 @@ import android.view.View;
 import android.view.WindowManager;
 import android.webkit.CookieManager;
 import android.webkit.DownloadListener;
-import android.webkit.JavascriptInterface;
 import android.webkit.URLUtil;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
@@ -29,17 +28,13 @@ public class LauncherActivity extends Activity {
     private ProgressBar progressBar;
     private String currentLoadingUrl = "";
     private PowerManager.WakeLock wakeLock;
-
-    public class AppBridge {
-        @JavascriptInterface
-        public boolean isApp() { return true; }
-    }
+    private boolean siteOriginLoaded = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // Fullscreen immersive mode — essential for small watch screens
+        // 全屏沉浸模式——小屏手表必备
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             getWindow().setDecorFitsSystemWindows(false);
         } else {
@@ -54,15 +49,12 @@ public class LauncherActivity extends Activity {
         }
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
-        // Pure black for OLED watch screens (save battery)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             getWindow().setStatusBarColor(0xFF000000);
-        }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             getWindow().setNavigationBarColor(0xFF000000);
         }
 
-        // Acquire partial wake lock to prevent CPU sleep during stopwatch/timer
+        // 部分唤醒锁，计时器/秒表类工具运行时不熄屏
         PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
         if (pm != null) {
             wakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "ToolboxWatch::WakeLock");
@@ -75,7 +67,6 @@ public class LauncherActivity extends Activity {
 
         setupWebView();
 
-        // Load URL: default to watch page, with in_app marker so web app knows it's inside native APK
         Intent intent = getIntent();
         String url = intent.getStringExtra("shortcut_url");
         if (url == null || url.isEmpty()) {
@@ -85,6 +76,17 @@ public class LauncherActivity extends Activity {
             url = "https://yty16.github.io/watch/?in_app=1";
         }
         webView.loadUrl(url);
+
+        // 后台与网站同步（OTA）
+        SiteUpdater.checkAndUpdate(this, (status, newVersion) -> {
+            if (status == SiteUpdater.STATUS_UPDATED) {
+                runOnUiThread(() -> {
+                    if (siteOriginLoaded && webView != null) {
+                        webView.reload();
+                    }
+                });
+            }
+        });
     }
 
     private void setupWebView() {
@@ -97,25 +99,25 @@ public class LauncherActivity extends Activity {
         settings.setAllowContentAccess(true);
         settings.setMediaPlaybackRequiresUserGesture(false);
 
-        // User agent: keep default Chrome UA and append a marker so the web app can detect native APK
         String ua = settings.getUserAgentString();
-        settings.setUserAgentString(ua.replace("Version/4.0", "") + " ToolboxWatch/1.0");
-
-        // Responsive viewport for watch screens
+        settings.setUserAgentString(ua.replace("Version/4.0", "") + " ToolboxWatch/2.0");
         settings.setUseWideViewPort(true);
         settings.setLoadWithOverviewMode(true);
-        // Disable pinch zoom on watch — single-tap navigation only
+        // 手表禁缩放，单点导航
         settings.setSupportZoom(false);
         settings.setBuiltInZoomControls(false);
         settings.setDisplayZoomControls(false);
 
-        webView.addJavascriptInterface(new AppBridge(), "AppBridge");
+        webView.addJavascriptInterface(new AppBridge(this), "AppBridge");
 
-        webView.setWebViewClient(new WebViewClient() {
+        webView.setWebViewClient(new LocalSiteWebViewClient(this) {
             @Override
             public void onPageStarted(WebView view, String url, Bitmap favicon) {
                 super.onPageStarted(view, url, favicon);
                 currentLoadingUrl = url;
+                if (url != null && url.contains("yty16.github.io")) {
+                    siteOriginLoaded = true;
+                }
                 progressBar.setVisibility(View.VISIBLE);
             }
 
@@ -128,8 +130,6 @@ public class LauncherActivity extends Activity {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
                 if (url == null) return false;
-
-                // Let system handle special protocols
                 if (url.startsWith("tel:") || url.startsWith("mailto:") ||
                     url.startsWith("sms:") || url.startsWith("geo:") ||
                     url.startsWith("intent://") || url.startsWith("market://")) {
@@ -143,7 +143,6 @@ public class LauncherActivity extends Activity {
                     return true;
                 }
 
-                // Intercept downloadable file extensions
                 String lowerUrl = url.toLowerCase();
                 if (lowerUrl.endsWith(".apk") || lowerUrl.endsWith(".zip") ||
                     lowerUrl.endsWith(".exe") || lowerUrl.endsWith(".mp4") ||
@@ -159,8 +158,6 @@ public class LauncherActivity extends Activity {
                     startDownload(url, null, null);
                     return true;
                 }
-
-                // Navigate to main site? Open in WebView too (all http/https in-app)
                 return false;
             }
 
@@ -172,13 +169,8 @@ public class LauncherActivity extends Activity {
             }
         });
 
-        // Handle file downloads triggered by server Content-Disposition header
-        webView.setDownloadListener(new DownloadListener() {
-            @Override
-            public void onDownloadStart(String url, String userAgent, String contentDisposition, String mimeType, long contentLength) {
-                startDownload(url, contentDisposition, mimeType);
-            }
-        });
+        webView.setDownloadListener((url, userAgent, contentDisposition, mimeType, contentLength) ->
+                startDownload(url, contentDisposition, mimeType));
 
         webView.setWebChromeClient(new WebChromeClient() {
             @Override
@@ -250,7 +242,6 @@ public class LauncherActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
-        // Re-apply immersive mode
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             getWindow().setDecorFitsSystemWindows(false);
         } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
@@ -264,7 +255,7 @@ public class LauncherActivity extends Activity {
             );
         }
         if (wakeLock != null && !wakeLock.isHeld()) {
-            wakeLock.acquire(30 * 60 * 1000L); // 30 min max
+            wakeLock.acquire(30 * 60 * 1000L);
         }
         webView.onResume();
     }

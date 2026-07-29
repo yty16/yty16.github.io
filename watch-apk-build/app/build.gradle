@@ -9,16 +9,16 @@ android {
         applicationId "io.github.yty16.toolbox.watch"
         minSdkVersion 25
         targetSdkVersion 35
-        versionCode 3
-        versionName "1.0.2"
+        versionCode 4
+        versionName "2.0.0"
 
-        resValue "string", "appName", "Y的工具箱·手表版"
-        resValue "string", "launcherName", "工具箱手表"
+        resValue "string", "appName", "元拓域 Toolbox · 手表版"
+        resValue "string", "launcherName", "元拓域手表"
         resValue "color", "backgroundColor", "#000000"
     }
     buildTypes {
         release {
-            minifyEnabled true
+            minifyEnabled false
             signingConfig signingConfigs.create("release") {
                 storeFile file("C:\\Users\\Yin\\WorkBuddy\\2026-06-12-10-40-19\\apk-build\\android.keystore")
                 storePassword "android"

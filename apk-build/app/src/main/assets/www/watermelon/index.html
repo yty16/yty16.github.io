@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head><script>
+(function(){
+var _0x4a=[function(){return[atob('eXR5MTYuZ2l0aHViLmlv'),atob('eXR5MTYucGFnZXMuZGV2')]},function(){return location.hostname}];
+var _0x4b=_0x4a[0]();var _0x4c=_0x4a[1]();var _0x4d=false;for(var i=0;i<_0x4b.length;i++){if(_0x4c===_0x4b[i]){_0x4d=true;break;}}
+if(!_0x4d){
+window.addEventListener('DOMContentLoaded',function(){
+document.body.innerHTML='<div style="position:fixed;top:0;left:0;width:100%;height:100%;background:#f5f5f5;display:flex;align-items:center;justify-content:center;z-index:99999;font-family:sans-serif;color:#666"><div style="text-align:center"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><h2 style="margin:20px 0 10px;font-weight:500">页面加载异常</h2><p style="font-size:14px;color:#999">请访问正常渠道获取资源</p></div></div>';
+});}
+})();
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>🍉 合成大西瓜</title>
+<script>
+(function(){var t=localStorage.getItem('theme');if(t==='dark'||(t!=='light'&&window.matchMedia('(prefers-color-scheme:dark)').matches))document.documentElement.setAttribute('data-theme','dark')})();
+</script>
+<style>
+:root{--bg:#f0f0f5;--card-bg:rgba(255,255,255,0.85);--card-border:rgba(255,255,255,0.3);--text:#2d2d2d;--text-secondary:#666;--accent:#6c5ce7;--success:#2ecc71;--danger:#e74c3c;--warning:#f39c12;--game-bg:#fefefe}
+[data-theme="dark"]{--bg:#1a1a2e;--card-bg:rgba(30,30,50,0.85);--card-border:rgba(255,255,255,0.08);--text:#e0e0e0;--text-secondary:#a0a0a0;--accent:#a29bfe;--success:#2ecc71;--danger:#ff6b6b;--warning:#fdcb6e;--game-bg:#22223a}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter','Microsoft YaHei',sans-serif;background:var(--bg);min-height:100vh;display:flex;justify-content:center;align-items:center;color:var(--text);transition:background .3s,color .3s;overflow:hidden}
+.container{background:var(--card-bg);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid var(--card-border);border-radius:24px;padding:16px 20px;box-shadow:0 8px 40px rgba(0,0,0,.1);text-align:center;max-width:440px;width:95%}
+.back-btn{display:inline-block;text-decoration:none;color:var(--accent);font-size:14px;margin-bottom:4px;padding:6px 16px;border-radius:8px;background:var(--card-bg);border:1px solid var(--card-border);transition:all .2s}
+.back-btn:hover{opacity:.8}
+h1{font-size:24px;margin-bottom:2px;font-weight:700}
+.top-bar{display:flex;justify-content:space-between;align-items:center;margin:4px 0 2px;font-size:15px;color:var(--text-secondary)}
+.top-bar span{font-weight:600;color:var(--accent)}
+.next-preview{display:flex;align-items:center;gap:6px;font-size:14px}
+.next-preview canvas{border-radius:8px;border:1px solid var(--card-border)}
+canvas#gameCanvas{border-radius:12px;display:block;margin:0 auto;cursor:pointer;background:var(--game-bg)}
+.overlay{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;pointer-events:none;background:var(--card-bg);backdrop-filter:blur(12px);border:1px solid var(--card-border);border-radius:16px;padding:24px 32px;z-index:10}
+.overlay h2{font-size:28px;margin-bottom:8px;color:var(--text)}
+.overlay p{font-size:15px;color:var(--text-secondary);margin-bottom:12px}
+.overlay button{pointer-events:auto;padding:10px 28px;font-size:16px;border:none;border-radius:10px;background:var(--accent);color:#fff;cursor:pointer;font-family:inherit;transition:transform .15s}
+.overlay button:hover{transform:scale(1.05)}
+.canvas-wrapper{position:relative;display:inline-block}
+.hint{font-size:13px;color:var(--text-secondary);margin-top:4px}
+.merge-effect{position:absolute;border-radius:50%;background:rgba(255,255,255,.6);transform:scale(0);animation:mergePop .4s ease-out forwards;pointer-events:none}
+@keyframes mergePop{0%{transform:scale(0);opacity:1}60%{transform:scale(1.5);opacity:.5}100%{transform:scale(2);opacity:0}}
+@media(max-width:480px){
+  .container{padding:10px 12px;border-radius:16px}
+  h1{font-size:20px}
+  .top-bar{font-size:13px}
+  .hint{font-size:12px}
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <a href="/" class="back-btn">&larr; 返回</a>
+  <h1>🍉 合成大西瓜</h1>
+  <div class="top-bar">
+    <div>得分: <span id="score">0</span></div>
+    <div class="next-preview">下一个: <canvas id="previewCanvas" width="36" height="36"></canvas></div>
+    <div>最高分: <span id="highScore">0</span></div>
+  </div>
+  <div class="canvas-wrapper" id="canvasWrapper">
+    <canvas id="gameCanvas"></canvas>
+    <div class="overlay" id="overlay">
+      <h2 id="overlayTitle">🍉 合成大西瓜</h2>
+      <p id="overlayMsg">点击画布投放水果</p>
+      <button id="overlayBtn" onclick="window._startGame()">开始游戏</button>
+    </div>
+  </div>
+  <div class="hint">滑动选择位置，点击释放水果 · 相同水果碰撞合成更高级水果</div>
+</div>
+<script>
+(function(){
+var gameCanvas=document.getElementById('gameCanvas');
+var gctx=gameCanvas.getContext('2d');
+var previewCanvas=document.getElementById('previewCanvas');
+var pctx=previewCanvas.getContext('2d');
+var canvasWrapper=document.getElementById('canvasWrapper');
+var scoreEl=document.getElementById('score');
+var highScoreEl=document.getElementById('highScore');
+var overlay=document.getElementById('overlay');
+var overlayTitle=document.getElementById('overlayTitle');
+var overlayMsg=document.getElementById('overlayMsg');
+var overlayBtn=document.getElementById('overlayBtn');
+var isDark=document.documentElement.getAttribute('data-theme')==='dark';
+
+// Fruit definitions - realistic sizes proportional to real Suika game
+var fruits=[
+  {name:'葡萄',  color:'#8e44ad', r:13, inner:'#9b59b6', stripe:'#7d3c98'},
+  {name:'樱桃',  color:'#c0392b', r:17, inner:'#e74c3c', stripe:'#a93226'},
+  {name:'橘子',  color:'#d35400', r:22, inner:'#f39c12', stripe:'#ba4a00'},
+  {name:'柠檬',  color:'#f1c40f', r:27, inner:'#f7dc6f', stripe:'#d4ac0d'},
+  {name:'橙子',  color:'#e67e22', r:32, inner:'#f0b27a', stripe:'#ca6f1e'},
+  {name:'苹果',  color:'#cb4335', r:37, inner:'#ec7063', stripe:'#a93226'},
+  {name:'梨子',  color:'#82e0aa', r:42, inner:'#a9dfbf', stripe:'#6ab04c'},
+  {name:'桃子',  color:'#f8b9a0', r:47, inner:'#fadbd8', stripe:'#e59896'},
+  {name:'菠萝',  color:'#f3c623', r:53, inner:'#f9e154', stripe:'#d4ac0d'},
+  {name:'哈密瓜',color:'#a0d878', r:59, inner:'#c8e6c9', stripe:'#6ab04c'},
+  {name:'西瓜',  color:'#27ae60', r:65, inner:'#2ecc71', stripe:'#1e8449'}
+];
+
+var GRAVITY=1200;
+var CANVAS_W=380, CANVAS_H=600;
+var WALL_LEFT=0, WALL_RIGHT=CANVAS_W, FLOOR=CANVAS_H;
+var DANGER_LINE_Y=55;
+var FRICTION=0.98;
+var BOUNCE=0.3;
+var SUB_STEPS=3;
+
+var balls=[];
+var currentLevel=-1;
+var nextLevel=-1;
+var pendingBall=null; // ball waiting to be dropped (follows cursor)
+var gameState='waiting';
+var score=0, highScore=parseInt(localStorage.getItem('watermelonHighScore'))||0;
+var lastTime=0, animId;
+var ctxW, ctxH, scaleFactor;
+var dropCooldown=0;
+
+highScoreEl.textContent=highScore;
+
+function resize(){
+  var maxW=Math.min(380, window.innerWidth-50);
+  scaleFactor=maxW/CANVAS_W;
+  gameCanvas.width=maxW;
+  gameCanvas.height=maxW*(CANVAS_H/CANVAS_W);
+  ctxW=gameCanvas.width;
+  ctxH=gameCanvas.height;
+  drawPreview();
+}
+
+function scaledRadius(level){
+  return fruits[level].r*scaleFactor;
+}
+
+function randomSmallLevel(){
+  return Math.floor(Math.random()*3);
+}
+
+function createBall(level,x,y,vx,vy){
+  var r=scaledRadius(level);
+  return{level,x,y,vx:vx||0,vy:vy||0,radius:r,
+    color:fruits[level].color,inner:fruits[level].inner,stripe:fruits[level].stripe,
+    name:fruits[level].name,merged:false,sleepFrames:0};
+}
+
+function startGame(){
+  balls=[];pendingBall=null;currentLevel=-1;nextLevel=-1;
+  score=0;gameState='playing';dropCooldown=0;
+  scoreEl.textContent='0';
+  overlay.style.display='none';
+  currentLevel=randomSmallLevel();
+  nextLevel=randomSmallLevel();
+  spawnPending();
+  lastTime=performance.now();
+  if(animId)cancelAnimationFrame(animId);
+  animId=requestAnimationFrame(loop);
+}
+
+function spawnPending(){
+  var r=scaledRadius(currentLevel);
+  var startY=DANGER_LINE_Y*scaleFactor+r+5;
+  pendingBall=createBall(currentLevel, ctxW/2, startY, 0, 0);
+  pendingBall.pending=true;
+}
+
+function dropBall(x){
+  if(gameState!=='playing'||!pendingBall)return;
+  if(dropCooldown>0)return;
+  var clamped=Math.max(pendingBall.radius+2, Math.min(ctxW-pendingBall.radius-2, x));
+  pendingBall.x=clamped;
+  pendingBall.pending=false;
+  pendingBall.vy=50*scaleFactor;
+  balls.push(pendingBall);
+  pendingBall=null;
+  dropCooldown=15; // frames before next spawn
+  currentLevel=nextLevel;
+  nextLevel=randomSmallLevel();
+  drawPreview();
+}
+
+// Physics simulation
+function simulate(dt){
+  if(dt>0.033)dt=0.033;
+  var subDt=dt/SUB_STEPS;
+  var grav=GRAVITY*scaleFactor;
+
+  for(var step=0;step<SUB_STEPS;step++){
+    // Apply gravity and integrate
+    for(var i=0;i<balls.length;i++){
+      var b=balls[i];
+      if(b.merged)continue;
+      b.vy+=grav*subDt;
+      b.vx*=FRICTION;
+      b.vy*=FRICTION;
+      b.x+=b.vx*subDt;
+      b.y+=b.vy*subDt;
+    }
+
+    // Wall collisions
+    for(var i=0;i<balls.length;i++){
+      var b=balls[i];
+      if(b.merged)continue;
+      // Left wall
+      if(b.x-b.radius<0){b.x=b.radius;b.vx=Math.abs(b.vx)*BOUNCE}
+      // Right wall
+      if(b.x+b.radius>ctxW){b.x=ctxW-b.radius;b.vx=-Math.abs(b.vx)*BOUNCE}
+      // Floor
+      if(b.y+b.radius>ctxH){b.y=ctxH-b.radius;b.vy=-Math.abs(b.vy)*BOUNCE}
+    }
+
+    // Ball-ball collisions with proper elastic response
+    for(var i=0;i<balls.length;i++){
+      var a=balls[i];
+      if(a.merged)continue;
+      for(var j=i+1;j<balls.length;j++){
+        var b=balls[j];
+        if(b.merged)continue;
+        var dx=a.x-b.x, dy=a.y-b.y;
+        var distSq=dx*dx+dy*dy;
+        var minDist=a.radius+b.radius;
+        if(distSq<minDist*minDist && distSq>0.01){
+          var dist=Math.sqrt(distSq);
+          var overlap=minDist-dist;
+          var nx=dx/dist, ny=dy/dist;
+          // Separate balls proportionally to mass (radius ~ mass)
+          var totalR=a.radius+b.radius;
+          var ratioA=b.radius/totalR;
+          var ratioB=a.radius/totalR;
+          a.x+=nx*overlap*ratioA;
+          a.y+=ny*overlap*ratioA;
+          b.x-=nx*overlap*ratioB;
+          b.y-=ny*overlap*ratioB;
+          // Elastic impulse
+          var dvx=a.vx-b.vx, dvy=a.vy-b.vy;
+          var dvDotN=dvx*nx+dvy*ny;
+          if(dvDotN>0){
+            var impulse=dvDotN*(1+BOUNCE)/2;
+            a.vx-=impulse*nx*ratioA;
+            a.vy-=impulse*ny*ratioA;
+            b.vx+=impulse*nx*ratioB;
+            b.vy+=impulse*ny*ratioB;
+          }
+        }
+      }
+    }
+  }
+
+  // Sleep detection - balls that are nearly stationary go to sleep
+  for(var i=0;i<balls.length;i++){
+    var b=balls[i];
+    if(b.merged)continue;
+    var speed=Math.sqrt(b.vx*b.vx+b.vy*b.vy);
+    if(speed<3*scaleFactor && b.y+b.radius>=ctxH-2*scaleFactor){
+      b.vx=0;b.vy=0;
+      b.sleepFrames++;
+    }else if(speed<5*scaleFactor){
+      b.sleepFrames=Math.max(0,b.sleepFrames-1);
+    }else{
+      b.sleepFrames=0;
+    }
+  }
+
+  // Wake sleeping balls if hit by moving ball
+  for(var i=0;i<balls.length;i++){
+    if(balls[i].sleepFrames>10){
+      for(var j=0;j<balls.length;j++){
+        if(j===i||balls[j].sleepFrames<=10)continue;
+        var dx=balls[i].x-balls[j].x,dy=balls[i].y-balls[j].y;
+        var dist=Math.sqrt(dx*dx+dy*dy);
+        if(dist<balls[i].radius+balls[j].radius+5*scaleFactor){
+          var speed=Math.sqrt(balls[j].vx*balls[j].vx+balls[j].vy*balls[j].vy);
+          if(speed>20*scaleFactor){
+            balls[i].sleepFrames=0;
+            balls[i].vx=balls[j].vx*0.1;
+            balls[i].vy=balls[j].vy*0.1;
+          }
+        }
+      }
+    }
+  }
+}
+
+// Merge detection
+function checkMerges(){
+  var mergedAny=false;
+  var i,j;
+  // Reset merged flags
+  for(i=0;i<balls.length;i++)balls[i].merged=false;
+
+  // Find merge pairs (same level, touching)
+  var mergePairs=[];
+  for(i=0;i<balls.length;i++){
+    if(balls[i].merged)continue;
+    for(j=i+1;j<balls.length;j++){
+      if(balls[j].merged)continue;
+      if(balls[i].level===balls[j].level){
+        var dx=balls[i].x-balls[j].x,dy=balls[i].y-balls[j].y;
+        var dist=Math.sqrt(dx*dx+dy*dy);
+        if(dist<(balls[i].radius+balls[j].radius)*1.05){
+          mergePairs.push([i,j]);
+          balls[i].merged=true;
+          balls[j].merged=true;
+          break; // each ball only merges once per frame
+        }
+      }
+    }
+  }
+
+  // Process merges
+  for(var k=0;k<mergePairs.length;k++){
+    var ai=mergePairs[k][0], bi=mergePairs[k][1];
+    var a=balls[ai], b=balls[bi];
+    var newLevel=a.level+1;
+    if(newLevel>=fruits.length){
+      // Two watermelons merge → big score, disappear
+      score+=100;
+    }else{
+      var newX=(a.x+b.x)/2;
+      var newY=(a.y+b.y)/2;
+      var nb=createBall(newLevel, newX, newY, 0, 0);
+      nb.sleepFrames=0;
+      balls.push(nb);
+      score+=(newLevel+1)*10;
+    }
+    mergedAny=true;
+  }
+
+  // Remove merged balls
+  if(mergedAny){
+    var kept=[];
+    for(i=0;i<balls.length;i++){
+      if(!balls[i].merged)kept.push(balls[i]);
+    }
+    balls=kept;
+    scoreEl.textContent=score;
+  }
+  return mergedAny;
+}
+
+function checkGameOver(){
+  // Game over if any settled ball is above danger line
+  for(var i=0;i<balls.length;i++){
+    if(balls[i].sleepFrames>5 && balls[i].y-balls[i].radius<DANGER_LINE_Y*scaleFactor){
+      endGame();
+      return;
+    }
+  }
+}
+
+function endGame(){
+  gameState='gameover';
+  if(score>highScore){
+    highScore=score;
+    localStorage.setItem('watermelonHighScore',highScore);
+    highScoreEl.textContent=highScore;
+  }
+  overlayTitle.textContent='游戏结束';
+  overlayMsg.innerHTML='得分: '+score+'<br>最高分: '+highScore;
+  overlayBtn.textContent='再来一局';
+  overlay.style.display='block';
+}
+
+function loop(timestamp){
+  if(gameState!=='playing'){
+    return;
+  }
+  animId=requestAnimationFrame(loop);
+
+  if(!lastTime)lastTime=timestamp;
+  var dt=(timestamp-lastTime)/1000;
+  lastTime=timestamp;
+
+  // Drop cooldown
+  if(dropCooldown>0)dropCooldown--;
+
+  // Physics
+  simulate(dt);
+
+  // Merge (multiple passes for chain reactions)
+  for(var iter=0;iter<10;iter++){
+    if(!checkMerges())break;
+  }
+
+  // Spawn next ball when cooldown is done and no pending
+  if(!pendingBall && dropCooldown<=0 && gameState==='playing'){
+    spawnPending();
+  }
+
+  // Game over check
+  if(!pendingBall || dropCooldown<=0){
+    checkGameOver();
+  }
+
+  draw();
+}
+
+function draw(){
+  gctx.clearRect(0,0,ctxW,ctxH);
+
+  // Background
+  var bg=isDark?'#22223a':'#fefefe';
+  gctx.fillStyle=bg;
+  gctx.fillRect(0,0,ctxW,ctxH);
+
+  // Container walls (visual)
+  gctx.strokeStyle=isDark?'rgba(255,255,255,.12)':'rgba(0,0,0,.08)';
+  gctx.lineWidth=2*scaleFactor;
+  gctx.beginPath();
+  gctx.moveTo(0,0);gctx.lineTo(0,ctxH);gctx.lineTo(ctxW,ctxH);gctx.lineTo(ctxW,0);
+  gctx.stroke();
+
+  // Danger line
+  var lineY=DANGER_LINE_Y*scaleFactor;
+  gctx.strokeStyle=isDark?'rgba(255,107,107,.5)':'rgba(231,76,60,.3)';
+  gctx.setLineDash([6*scaleFactor,4*scaleFactor]);
+  gctx.lineWidth=1.5*scaleFactor;
+  gctx.beginPath();
+  gctx.moveTo(0,lineY);gctx.lineTo(ctxW,lineY);
+  gctx.stroke();
+  gctx.setLineDash([]);
+
+  // Drop guide line (when pending ball follows cursor)
+  if(pendingBall){
+    gctx.strokeStyle=isDark?'rgba(255,255,255,.15)':'rgba(0,0,0,.1)';
+    gctx.lineWidth=1*scaleFactor;
+    gctx.beginPath();
+    gctx.moveTo(pendingBall.x,pendingBall.y+pendingBall.radius);
+    gctx.lineTo(pendingBall.x,ctxH);
+    gctx.stroke();
+  }
+
+  // Draw all settled/moving balls
+  for(var i=0;i<balls.length;i++){
+    drawFruit(balls[i]);
+  }
+
+  // Draw pending ball
+  if(pendingBall){
+    gctx.globalAlpha=0.9;
+    drawFruit(pendingBall);
+    gctx.globalAlpha=1;
+  }
+}
+
+function drawFruit(b){
+  var r=b.radius;
+  var x=b.x, y=b.y;
+
+  // Shadow
+  gctx.beginPath();
+  gctx.arc(x+r*0.1,y+r*0.15,r*0.95,0,Math.PI*2);
+  gctx.fillStyle='rgba(0,0,0,0.18)';
+  gctx.fill();
+
+  // Main body - gradient
+  var grad=gctx.createRadialGradient(x-r*0.25,y-r*0.3,r*0.05,x,y+r*0.1,r);
+  grad.addColorStop(0,b.inner);
+  grad.addColorStop(0.7,b.color);
+  grad.addColorStop(1,b.stripe);
+  gctx.beginPath();
+  gctx.arc(x,y,r,0,Math.PI*2);
+  gctx.fillStyle=grad;
+  gctx.fill();
+
+  // Highlight shine
+  var shine=gctx.createRadialGradient(x-r*0.35,y-r*0.35,r*0.02,x-r*0.2,y-r*0.2,r*0.5);
+  shine.addColorStop(0,'rgba(255,255,255,0.7)');
+  shine.addColorStop(1,'rgba(255,255,255,0)');
+  gctx.beginPath();
+  gctx.arc(x,y,r,0,Math.PI*2);
+  gctx.fillStyle=shine;
+  gctx.fill();
+
+  // Border
+  gctx.strokeStyle='rgba(0,0,0,0.25)';
+  gctx.lineWidth=1.5*scaleFactor;
+  gctx.beginPath();
+  gctx.arc(x,y,r,0,Math.PI*2);
+  gctx.stroke();
+
+  // Fruit level number (small, for visual feedback)
+  if(r>20*scaleFactor){
+    gctx.fillStyle='rgba(255,255,255,0.9)';
+    gctx.font=Math.round(r*0.45)+'px Inter,Microsoft YaHei,sans-serif';
+    gctx.textAlign='center';
+    gctx.textBaseline='middle';
+    gctx.fillText(b.name,x,y+r*0.05);
+  }
+}
+
+function drawPreview(){
+  pctx.clearRect(0,0,36,36);
+  if(nextLevel>=0){
+    var f=fruits[nextLevel];
+    var grad=pctx.createRadialGradient(14,12,2,18,18,14);
+    grad.addColorStop(0,f.inner);
+    grad.addColorStop(0.7,f.color);
+    grad.addColorStop(1,f.stripe);
+    pctx.beginPath();
+    pctx.arc(18,18,14,0,Math.PI*2);
+    pctx.fillStyle=grad;
+    pctx.fill();
+    pctx.strokeStyle='rgba(0,0,0,.2)';
+    pctx.lineWidth=1;
+    pctx.stroke();
+  }
+}
+
+// Input handling
+var mouseX=ctxW/2;
+
+gameCanvas.addEventListener('mousemove',function(e){
+  if(!pendingBall)return;
+  var rect=gameCanvas.getBoundingClientRect();
+  mouseX=(e.clientX-rect.left)*(ctxW/rect.width);
+  mouseX=Math.max(pendingBall.radius+2,Math.min(ctxW-pendingBall.radius-2,mouseX));
+  pendingBall.x=mouseX;
+});
+
+gameCanvas.addEventListener('click',function(e){
+  if(gameState!=='playing')return;
+  if(!pendingBall)return;
+  var rect=gameCanvas.getBoundingClientRect();
+  var x=(e.clientX-rect.left)*(ctxW/rect.width);
+  dropBall(x);
+});
+
+gameCanvas.addEventListener('touchmove',function(e){
+  if(!pendingBall)return;
+  e.preventDefault();
+  var rect=gameCanvas.getBoundingClientRect();
+  mouseX=(e.touches[0].clientX-rect.left)*(ctxW/rect.width);
+  mouseX=Math.max(pendingBall.radius+2,Math.min(ctxW-pendingBall.radius-2,mouseX));
+  pendingBall.x=mouseX;
+},{passive:false});
+
+gameCanvas.addEventListener('touchend',function(e){
+  if(gameState!=='playing'||!pendingBall)return;
+  e.preventDefault();
+  var rect=gameCanvas.getBoundingClientRect();
+  var x=(e.changedTouches[0].clientX-rect.left)*(ctxW/rect.width);
+  dropBall(x);
+},{passive:false});
+
+window._startGame=startGame;
+
+// Observe theme changes
+var themeObs=new MutationObserver(function(){
+  isDark=document.documentElement.getAttribute('data-theme')==='dark';
+  if(gameState==='waiting')draw();
+});
+themeObs.observe(document.documentElement,{attributes:true,attributeFilter:['data-theme']});
+
+resize();
+draw();
+window.addEventListener('resize',function(){resize();if(gameState==='waiting')draw()});
+})();
+</script>
+</body>
+</html>

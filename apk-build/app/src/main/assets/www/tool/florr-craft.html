@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head><script>
+(function(){
+var _0x4a=[function(){return[atob('eXR5MTYuZ2l0aHViLmlv'),atob('eXR5MTYucGFnZXMuZGV2')]},function(){return location.hostname}];
+var _0x4b=_0x4a[0]();var _0x4c=_0x4a[1]();var _0x4d=false;for(var i=0;i<_0x4b.length;i++){if(_0x4c===_0x4b[i]){_0x4d=true;break;}}
+if(!_0x4d){
+window.addEventListener('DOMContentLoaded',function(){
+document.body.innerHTML='<div style="position:fixed;top:0;left:0;width:100%;height:100%;background:#f5f5f5;display:flex;align-items:center;justify-content:center;z-index:99999;font-family:sans-serif;color:#666"><div style="text-align:center"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><h2 style="margin:20px 0 10px;font-weight:500">页面加载异常</h2><p style="font-size:14px;color:#999">请访问正常渠道获取资源</p></div></div>';
+});}
+})();
+</script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>florr合卡模拟</title>
+</head>
+<body>
+    <p>此过程为模拟完成，并非纯计算，可能会与实际略有误差</p>
+    
+    <label for="n">输入个数:</label>
+    <input type="number" id="n" value="1000">
+    <br>
+
+    <label for="lv">输入初始等级 (1=C合Un, 2=Un合R, 以此类推, 7=Ul合S):</label>
+    <input type="number" id="lv" min="1" max="7" value="1">
+    <br>
+
+    <label for="a">输入模拟次数倍率 (越高越精确,但越慢,不建议超过5):</label>
+    <input type="number" id="a" value="1">
+    <br>
+
+    <button onclick="startSimulation()">开始模拟</button>
+    <h2 id="progress"></h2>
+    <div id="results"></div>
+
+    <script>
+        const per = [0, 64, 32, 16, 8, 4, 2, 1];
+
+        function pd(a, b) {
+            let cnt = 0;
+            while (a >= 5) {
+                let t = Math.floor(Math.random() * 100);
+                if (t < per[b]) {
+                    cnt++;
+                    a -= 5;
+                } else {
+                    a -= Math.floor(Math.random() * 4) + 1;
+                }
+            }
+            return cnt;
+        }
+
+        function startSimulation() {
+            const n = parseInt(document.getElementById("n").value);
+            const lv = parseInt(document.getElementById("lv").value);
+            const a = parseInt(document.getElementById("a").value);
+
+            if (n > 100000) {
+                alert("数据过大,误差可能略大");
+                return;
+            }
+            if (lv < 1 || lv > 7) {
+                alert("输入不合法");
+                return;
+            }
+
+            let maxx = -1;
+            let minn = 2147483647;
+            let cs = Math.floor(10000000 / (n / 5) * a);
+            let ans = new Array(Math.floor(n / 5) + 10).fill(0);
+
+            for (let i = 1; i <= cs; i++) {
+                let cnt = pd(n, lv);
+                if (cnt > maxx) maxx = cnt;
+                if (cnt < minn) minn = cnt;
+                ans[cnt]++;
+                if (i % Math.floor(cs / 20) === 0) {
+                    document.getElementById("progress").innerText = `模拟进度: ${Math.floor(i * 100 / cs)}%`;
+                }
+            }
+
+            displayResults(ans, cs, maxx, minn);
+        }
+
+        function displayResults(ans, cs, maxx, minn) {
+            let resultsDiv = document.getElementById("results");
+            resultsDiv.innerHTML = ""; // 清空之前的结果
+
+            for (let i = minn; i <= maxx; i++) {
+                let t = (ans[i] / cs * 100).toFixed(7);
+                resultsDiv.innerHTML += `${i} : ${t} %<br>`;
+            }
+        }
+    </script>
+</body>
+</html>

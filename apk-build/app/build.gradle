@@ -1,0 +1,50 @@
+plugins {
+    id 'com.android.application'
+}
+
+android {
+    compileSdk 36
+    namespace "io.github.yty16.toolbox"
+    defaultConfig {
+        applicationId "io.github.yty16.toolbox"
+        minSdkVersion 21
+        targetSdkVersion 35
+        versionCode 8
+        versionName "2.0.0"
+
+        resValue "string", "appName", "元拓域 Toolbox"
+        resValue "string", "launcherName", "元拓域"
+        resValue "color", "backgroundColor", "#0D1117"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            signingConfig signingConfigs.create("release") {
+                storeFile file("C:\\Users\\Yin\\WorkBuddy\\2026-06-12-10-40-19\\apk-build\\android.keystore")
+                storePassword "android"
+                keyAlias "android"
+                keyPassword "android"
+            }
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+        debug {
+            minifyEnabled false
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+    lintOptions {
+        checkReleaseBuilds false
+        abortOnError false
+    }
+}
+
+repositories {
+    google()
+    mavenCentral()
+}
+
+dependencies {
+}

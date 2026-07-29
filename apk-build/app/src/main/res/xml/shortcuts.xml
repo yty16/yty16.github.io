@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shortcuts xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <shortcut
+        android:shortcutId="calculator"
+        android:enabled="true"
+        android:icon="@mipmap/ic_launcher"
+        android:shortcutShortLabel="@string/shortcut_calc"
+        android:shortcutLongLabel="@string/shortcut_calc_full">
+        <intent
+            android:action="android.intent.action.MAIN"
+            android:targetPackage="io.github.yty16.toolbox"
+            android:targetClass=".LauncherActivity">
+            <extra android:name="shortcut_url" android:value="https://yty16.github.io/?tool=calculator" />
+        </intent>
+    </shortcut>
+
+    <shortcut
+        android:shortcutId="notepad"
+        android:enabled="true"
+        android:icon="@mipmap/ic_launcher"
+        android:shortcutShortLabel="@string/shortcut_note"
+        android:shortcutLongLabel="@string/shortcut_note_full">
+        <intent
+            android:action="android.intent.action.MAIN"
+            android:targetPackage="io.github.yty16.toolbox"
+            android:targetClass=".LauncherActivity">
+            <extra android:name="shortcut_url" android:value="https://yty16.github.io/?tool=notepad" />
+        </intent>
+    </shortcut>
+
+    <shortcut
+        android:shortcutId="pomodoro"
+        android:enabled="true"
+        android:icon="@mipmap/ic_launcher"
+        android:shortcutShortLabel="@string/shortcut_pomodoro"
+        android:shortcutLongLabel="@string/shortcut_pomodoro_full">
+        <intent
+            android:action="android.intent.action.MAIN"
+            android:targetPackage="io.github.yty16.toolbox"
+            android:targetClass=".LauncherActivity">
+            <extra android:name="shortcut_url" android:value="https://yty16.github.io/?tool=pomodoro" />
+        </intent>
+    </shortcut>
+
+    <shortcut
+        android:shortcutId="games"
+        android:enabled="true"
+        android:icon="@mipmap/ic_launcher"
+        android:shortcutShortLabel="@string/shortcut_games"
+        android:shortcutLongLabel="@string/shortcut_games_full">
+        <intent
+            android:action="android.intent.action.MAIN"
+            android:targetPackage="io.github.yty16.toolbox"
+            android:targetClass=".LauncherActivity">
+            <extra android:name="shortcut_url" android:value="https://yty16.github.io/games.html" />
+        </intent>
+    </shortcut>
+
+</shortcuts>

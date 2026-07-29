@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head><script>
+(function(){
+var _0x4a=[function(){return[atob('eXR5MTYuZ2l0aHViLmlv'),atob('eXR5MTYucGFnZXMuZGV2')]},function(){return location.hostname}];
+var _0x4b=_0x4a[0]();var _0x4c=_0x4a[1]();var _0x4d=false;for(var i=0;i<_0x4b.length;i++){if(_0x4c===_0x4b[i]){_0x4d=true;break;}}
+if(!_0x4d){
+window.addEventListener('DOMContentLoaded',function(){
+document.body.innerHTML='<div style="position:fixed;top:0;left:0;width:100%;height:100%;background:#f5f5f5;display:flex;align-items:center;justify-content:center;z-index:99999;font-family:sans-serif;color:#666"><div style="text-align:center"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><h2 style="margin:20px 0 10px;font-weight:500">页面加载异常</h2><p style="font-size:14px;color:#999">请访问正常渠道获取资源</p></div></div>';
+});}
+})();
+</script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>10000个复选框</title>
+    <style>
+        /* 背景渐变保持不变，已移除噪声相关样式 */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            background: linear-gradient(to bottom,#A9D6F1,#B5F0B5,#F4F800,#FFB3B3,#FF9A5F,#FF6666,#FF66CC,#D9A7FF,#A9D6F1,#B5F0B5,#F4F800,#FFB3B3,#FF9A5F,#FF6666,#FF66CC,#D9A7FF,#A9D6F1,#B5F0B5,#F4F800,#FFB3B3,#FF9A5F,#FF6666,#FF66CC,#D9A7FF);
+        }
+
+        #status {
+            margin-bottom: 20px;
+            font-size: 18px;
+            display: inline-block;
+            padding: 10px;
+        }
+
+        #status span {
+            font-weight: bold;
+        }
+
+        #checkbox-container {
+            display: grid;
+            gap: 20px;
+            grid-template-columns: repeat(20, 1fr); /* 每行20个 */
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+        }
+
+        input[type="checkbox"] {
+            width: 30px;
+            height: 30px;
+        }
+
+        .content {
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        @media (max-width: 600px) {
+            #checkbox-container {
+                grid-template-columns: repeat(10, 1fr);
+                gap: 10px;
+            }
+            input[type="checkbox"] {
+                width: 24px;
+                height: 24px;
+            }
+        }
+
+        @media (max-width: 400px) {
+            #checkbox-container {
+                grid-template-columns: repeat(8, 1fr);
+                gap: 6px;
+            }
+            input[type="checkbox"] {
+                width: 20px;
+                height: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="content">
+        <h1>10000个复选框</h1>
+        <div id="status">
+            已勾选的个数: <span id="checkedCount">0</span>
+        </div>
+        <p>注:不同的设备复选框样式不一定相同</p>
+
+        <div id="checkbox-container"></div>
+
+        <script>
+            (function() {
+                const totalCheckboxes = 10000;
+                const checkedCountElem = document.getElementById('checkedCount');
+                const checkboxContainer = document.getElementById('checkbox-container');
+                const STORAGE_KEY = 'checkbox';  // 统一存储的键名
+
+                // 初始化所有复选框
+                function initCheckboxes() {
+                    let checkedCount = 0;
+                    checkboxContainer.innerHTML = '';
+
+                    // 从统一存储中读取已勾选的序号（分号分隔的字符串）
+                    const stored = localStorage.getItem(STORAGE_KEY);
+                    let checkedSet = new Set();
+                    if (stored) {
+                        // 分割字符串，过滤掉空项（例如空字符串导致的结果）
+                        const items = stored.split(';').filter(s => s.trim() !== '');
+                        checkedSet = new Set(items);  // 集合中元素为字符串形式，如 "0"
+                    }
+
+                    for (let i = 0; i < totalCheckboxes; i++) {
+                        const checkboxId = 'checkbox_' + i;
+                        const checkbox = document.createElement('input');
+                        checkbox.type = 'checkbox';
+                        checkbox.id = checkboxId;
+
+                        // 如果当前序号在已勾选集合中，则勾选并计数
+                        if (checkedSet.has(String(i))) {
+                            checkbox.checked = true;
+                            checkedCount++;
+                        }
+
+                        // 监听变化，更新统一存储
+                        checkbox.addEventListener('change', function() {
+                            // 从 id 中提取序号（例如 "checkbox_0" -> "0"）
+                            const idParts = this.id.split('_');
+                            if (idParts.length < 2) return;
+                            const indexStr = idParts[1];  // 字符串形式的序号
+
+                            // 获取当前存储的字符串，并解析为数组
+                            let currentStored = localStorage.getItem(STORAGE_KEY) || '';
+                            let items = currentStored ? currentStored.split(';').filter(s => s !== '') : [];
+
+                            if (this.checked) {
+                                // 勾选：如果序号不在数组中则添加
+                                if (!items.includes(indexStr)) {
+                                    items.push(indexStr);
+                                }
+                            } else {
+                                // 取消勾选：移除该序号
+                                items = items.filter(item => item !== indexStr);
+                            }
+
+                            // 将数组重新拼接为分号分隔的字符串并保存
+                            localStorage.setItem(STORAGE_KEY, items.join(';'));
+
+                            // 更新页面计数（利用闭包中的 checkedCount 变量）
+                            if (this.checked) {
+                                checkedCount++;
+                            } else {
+                                checkedCount--;
+                            }
+                            checkedCountElem.textContent = checkedCount;
+                        });
+
+                        const wrapper = document.createElement('div');
+                        wrapper.className = 'checkbox-item';
+                        wrapper.appendChild(checkbox);
+                        checkboxContainer.appendChild(wrapper);
+                    }
+
+                    // 设置初始计数显示
+                    checkedCountElem.textContent = checkedCount;
+                }
+
+                // 页面加载时初始化
+                window.onload = initCheckboxes;
+            })();
+        </script>
+    </div>
+</body>
+</html>

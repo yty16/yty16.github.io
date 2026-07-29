@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head><script>
+(function(){
+var _0x4a=[function(){return[atob('eXR5MTYuZ2l0aHViLmlv'),atob('eXR5MTYucGFnZXMuZGV2')]},function(){return location.hostname}];
+var _0x4b=_0x4a[0]();var _0x4c=_0x4a[1]();var _0x4d=false;for(var i=0;i<_0x4b.length;i++){if(_0x4c===_0x4b[i]){_0x4d=true;break;}}
+if(!_0x4d){
+window.addEventListener('DOMContentLoaded',function(){
+document.body.innerHTML='<div style="position:fixed;top:0;left:0;width:100%;height:100%;background:#f5f5f5;display:flex;align-items:center;justify-content:center;z-index:99999;font-family:sans-serif;color:#666"><div style="text-align:center"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><h2 style="margin:20px 0 10px;font-weight:500">页面加载异常</h2><p style="font-size:14px;color:#999">请访问正常渠道获取资源</p></div></div>';
+});}
+})();
+</script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>你是人机</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            height: 5000px;  /* 让页面有足够的长度，可以滚动 */
+            margin: 0;
+            background-color: #f4f4f4;
+        }
+        .verification-container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 300px;
+            max-width: 90vw;
+            text-align: center;
+            position: fixed;  /* 固定在页面顶部 */
+            top: 20px;  /* 距离顶部20px */
+            left: 50%;  /* 居中 */
+            transform: translateX(-50%);  /* 完全居中 */
+            z-index: 10;  /* 确保它在最上层 */
+        }
+        .verification-container h2 {
+            margin-bottom: 20px;
+            font-size: 18px;
+            color: #333;
+        }
+        .verification-container .checkbox-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        .verification-container input[type="checkbox"] {
+            transform: scale(1.5); /* 增大复选框大小 */
+            margin-right: 10px;
+        }
+        .verification-container .verify-button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .verification-container .verify-button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+        .error-message {
+            color: red;
+            font-size: 16px;
+            margin-top: 10px;
+            display: none; /* 初始时隐藏错误消息 */
+        }
+
+        /* 按钮刚加载时位置在页面底部下方，向下滚动才能看到 */
+        .not-robot-btn {
+            padding: 10px 20px;
+            background-color: #ff5722;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            bottom: -4500px;  /* 初始时按钮在屏幕下方 */
+        }
+
+        
+    </style>
+</head>
+<body>
+    <div class="verification-container">
+        <h2>请完成以下操作，验证您是真人</h2>
+        <div class="checkbox-wrapper">
+            <input type="checkbox" id="humanVerification">
+            <label for="humanVerification">我是真人</label>
+        </div>
+        <button class="verify-button" id="verifyBtn" disabled>确认</button>
+        <p id="errorMessage" class="error-message">疑似人机，请再试一次</p>
+    </div>
+
+    
+    <button class="not-robot-btn" id="notRobotBtn" onclick="window.location.href='../'">
+        我不是人机
+    </button>
+    <script src="../nof12.js"></script>
+    <script>
+        // 获取复选框、按钮和错误消息元素
+        const checkbox = document.getElementById('humanVerification');
+        const verifyBtn = document.getElementById('verifyBtn');
+        const errorMessage = document.getElementById('errorMessage');
+        const notRobotBtn = document.getElementById('notRobotBtn');
+
+        // 监听复选框的变化
+        checkbox.addEventListener('change', function() {
+            if (checkbox.checked) {
+                verifyBtn.disabled = false;  // 复选框选中时，启用按钮
+            } else {
+                verifyBtn.disabled = true;   // 复选框未选中时，禁用按钮
+            }
+        });
+
+        // 处理点击确认按钮的事件
+        verifyBtn.addEventListener('click', function() {
+            // 显示错误消息
+            errorMessage.style.display = 'block';
+        });
+
+        // 页面滚动事件监听
+        window.addEventListener('scroll', function() {
+            if (window.scrollY > 1000) {  // 滚动超过500px时，按钮显示
+                notRobotBtn.classList.add('visible');
+            } else {
+                notRobotBtn.classList.remove('visible');
+            }
+        });
+    </script>
+</body>
+</html>

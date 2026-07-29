@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<script>
+(function(){
+var _0x4a=[function(){return[atob('eXR5MTYuZ2l0aHViLmlv'),atob('eXR5MTYucGFnZXMuZGV2')]},function(){return location.hostname}];
+var _0x4b=_0x4a[0]();var _0x4c=_0x4a[1]();var _0x4d=false;for(var i=0;i<_0x4b.length;i++){if(_0x4c===_0x4b[i]){_0x4d=true;break;}}
+if(!_0x4d){
+window.addEventListener('DOMContentLoaded',function(){
+document.body.innerHTML='<div style="position:fixed;top:0;left:0;width:100%;height:100%;background:#f5f5f5;display:flex;align-items:center;justify-content:center;z-index:99999;font-family:sans-serif;color:#666"><div style="text-align:center"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><h2 style="margin:20px 0 10px;font-weight:500">页面加载异常</h2><p style="font-size:14px;color:#999">请访问正常渠道获取资源</p></div></div>';
+});}
+})();
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>射球游戏 - 工具箱 Pro</title>
+<style>
+:root{
+  --bg:#0f1020; --text:#fff; --muted:#888; --accent:#f59e0b;
+  --safe-top:env(safe-area-inset-top,0px); --safe-bottom:env(safe-area-inset-bottom,0px);
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;user-select:none;}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif;
+  background:radial-gradient(circle at 50% 0%,#1a2a4a,#0a0e1c);color:var(--text);
+  min-height:100vh;padding:calc(16px + var(--safe-top)) 12px calc(16px + var(--safe-bottom));text-align:center;
+}
+.back{position:fixed;top:calc(12px + var(--safe-top));left:12px;z-index:50;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.15);color:var(--text);text-decoration:none;padding:8px 14px;border-radius:10px;font-size:14px;backdrop-filter:blur(8px);}
+.bar{display:flex;justify-content:space-around;max-width:420px;margin:6px auto 10px;font-size:15px;}
+.bar b{color:var(--accent);font-size:20px;}
+.stage{position:relative;max-width:460px;margin:0 auto;border-radius:16px;overflow:hidden;background:linear-gradient(#1e3a6b,#0e1c38);box-shadow:0 10px 30px rgba(0,0,0,0.4);}
+canvas{display:block;width:100%;touch-action:none;}
+.hint{color:var(--muted);font-size:13px;margin-top:12px;}
+@media (max-width:360px){
+  .back{top:calc(6px + var(--safe-top));left:6px;padding:6px 10px;font-size:12px;}
+  .bar{font-size:13px;}.bar b{font-size:17px;}
+  .hint{font-size:11px;}
+}
+@media (shape:round){ .stage{width:68vmin;max-width:200px;} }
+</style>
+</head>
+<body>
+<a href="javascript:history.back()" class="back">← 返回</a>
+<div class="bar"><span>得分：<b id="score">0</b></span><span>最佳：<b id="best">0</b></span></div>
+<div class="stage" id="stage"><canvas id="cv"></canvas></div>
+<div class="hint">拖动瞄准，松手投篮（方向+力度）</div>
+
+<script>
+var cv=document.getElementById('cv'),ctx=cv.getContext('2d');
+var stage=document.getElementById('stage');
+var W=0,H=0,DPR=Math.min(window.devicePixelRatio||1,2);
+var score=0,best=0;
+var ball={x:0,y:0,r:14,vx:0,vy:0,flying:false};
+var hoop={x:0,y:0,w:46,h:8};
+var dragging=false,aimX=0,aimY=0;
+var G=0.45;
+
+function resize(){
+  W=stage.clientWidth;H=Math.round(W*0.75);
+  cv.width=W*DPR;cv.height=H*DPR;cv.style.height=H+'px';ctx.setTransform(DPR,0,0,DPR,0,0);
+  ball.x=W*0.16;ball.y=H-40;ball.r=Math.max(11,W*0.035);
+  hoop.x=W*0.74;hoop.y=H*0.34;hoop.w=Math.max(38,W*0.12);hoop.h=7;
+}
+function reset(){
+  ball.x=W*0.16;ball.y=H-40;ball.vx=0;ball.vy=0;ball.flying=false;
+}
+function aimStart(x,y){if(ball.flying)return;dragging=true;aimX=x;aimY=y;}
+function aimMove(x,y){if(dragging)aimX=x;aimY=y;}
+function aimEnd(){
+  if(!dragging)return;dragging=false;
+  var dx=aimX-ball.x,dy=aimY-ball.y;
+  var dist=Math.min(Math.hypot(dx,dy),220);
+  if(dist<10)return;
+  var ang=Math.atan2(dy,dx);
+  var power=dist*0.16;
+  ball.vx=Math.cos(ang)*power;ball.vy=Math.sin(ang)*power;ball.flying=true;
+}
+function loop(){
+  ctx.clearRect(0,0,W,H);
+  // hoop
+  ctx.fillStyle='#e8e8e8';
+  ctx.fillRect(hoop.x,hoop.y,hoop.w,hoop.h);
+  ctx.strokeStyle='rgba(255,255,255,0.5)';ctx.lineWidth=2;
+  ctx.beginPath();ctx.moveTo(hoop.x,hoop.y);ctx.lineTo(hoop.x-6,hoop.y+14);
+  ctx.moveTo(hoop.x+hoop.w,hoop.y);ctx.lineTo(hoop.x+hoop.w+6,hoop.y+14);ctx.stroke();
+  // ball
+  ctx.fillStyle='#f59e0b';
+  ctx.beginPath();ctx.arc(ball.x,ball.y,ball.r,0,Math.PI*2);ctx.fill();
+  ctx.strokeStyle='rgba(0,0,0,0.3)';ctx.lineWidth=1.5;
+  ctx.beginPath();ctx.moveTo(ball.x-ball.r,ball.y);ctx.lineTo(ball.x+ball.r,ball.y);
+  ctx.moveTo(ball.x,ball.y-ball.r);ctx.lineTo(ball.x,ball.y+ball.r);ctx.stroke();
+  // aim
+  if(dragging){
+    ctx.strokeStyle='rgba(255,255,255,0.4)';ctx.lineWidth=2;ctx.setLineDash([6,6]);
+    ctx.beginPath();ctx.moveTo(ball.x,ball.y);ctx.lineTo(aimX,aimY);ctx.stroke();ctx.setLineDash([]);
+  }
+  if(ball.flying){
+    ball.vy+=G;ball.x+=ball.vx;ball.y+=ball.vy;
+    // score check: through hoop descending
+    if(ball.vy>0 && ball.x>hoop.x && ball.x<hoop.x+hoop.w && Math.abs(ball.y-hoop.y)<ball.r+4){
+      score++;document.getElementById('score').textContent=score;
+      if(score>best){best=score;document.getElementById('best').textContent=best;}
+      ball.flying=false;setTimeout(reset,200);
+    }
+    if(ball.x>W+40||ball.y>H+40||ball.x<-40){ball.flying=false;setTimeout(reset,150);}
+  }
+  requestAnimationFrame(loop);
+}
+cv.addEventListener('touchstart',function(e){e.preventDefault();var r=cv.getBoundingClientRect();var t=e.touches[0];aimStart(t.clientX-r.left,t.clientY-r.top);});
+cv.addEventListener('touchmove',function(e){e.preventDefault();var r=cv.getBoundingClientRect();var t=e.touches[0];aimMove(t.clientX-r.left,t.clientY-r.top);});
+cv.addEventListener('touchend',function(e){e.preventDefault();aimEnd();});
+cv.addEventListener('mousedown',function(e){var r=cv.getBoundingClientRect();aimStart(e.clientX-r.left,e.clientY-r.top);});
+cv.addEventListener('mousemove',function(e){var r=cv.getBoundingClientRect();aimMove(e.clientX-r.left,e.clientY-r.top);});
+window.addEventListener('mouseup',aimEnd);
+window.addEventListener('resize',resize);
+resize();loop();
+</script>
+</body>
+</html>

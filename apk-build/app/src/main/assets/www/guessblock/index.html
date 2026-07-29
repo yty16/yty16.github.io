@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head><script>
+(function(){
+var _0x4a=[function(){return[atob('eXR5MTYuZ2l0aHViLmlv'),atob('eXR5MTYucGFnZXMuZGV2')]},function(){return location.hostname}];
+var _0x4b=_0x4a[0]();var _0x4c=_0x4a[1]();var _0x4d=false;for(var i=0;i<_0x4b.length;i++){if(_0x4c===_0x4b[i]){_0x4d=true;break;}}
+if(!_0x4d){
+window.addEventListener('DOMContentLoaded',function(){
+document.body.innerHTML='<div style="position:fixed;top:0;left:0;width:100%;height:100%;background:#f5f5f5;display:flex;align-items:center;justify-content:center;z-index:99999;font-family:sans-serif;color:#666"><div style="text-align:center"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><h2 style="margin:20px 0 10px;font-weight:500">页面加载异常</h2><p style="font-size:14px;color:#999">请访问正常渠道获取资源</p></div></div>';
+});}
+})();
+</script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MC猜方块&生物</title>
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap"></noscript>
+    <script>
+        // 主题检测
+        (function(){
+            var s=localStorage.getItem('theme');
+            var d=s==='dark'||s==='light'?s:(window.matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');
+            document.documentElement.setAttribute('data-theme',d);
+        })();
+    </script>
+    <style>
+        :root {
+            --bg: #f0f2f5;
+            --card-bg: rgba(255,255,255,0.7);
+            --card-border: rgba(255,255,255,0.3);
+            --text: #1a1a2e;
+            --text-secondary: #666;
+            --accent: #6c5ce7;
+            --accent2: #a29bfe;
+            --success: #2ecc71;
+            --danger: #e74c3c;
+            --warning: #f39c12;
+            --shadow: rgba(0,0,0,0.1);
+        }
+        [data-theme="dark"] {
+            --bg: #0f0f1a;
+            --card-bg: rgba(30,30,50,0.7);
+            --card-border: rgba(255,255,255,0.1);
+            --text: #e0e0e0;
+            --text-secondary: #888;
+            --accent: #a29bfe;
+            --accent2: #6c5ce7;
+            --success: #2ecc71;
+            --danger: #e74c3c;
+            --warning: #f39c12;
+            --shadow: rgba(0,0,0,0.3);
+        }
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body {
+            font-family: 'Inter', 'Microsoft YaHei', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 15px;
+            transition: background 0.3s, color 0.3s;
+        }
+        .container::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #3498db, #2ecc71, #e74c3c, #f39c12, #9b59b6);
+        }
+        .container {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            backdrop-filter: blur(20px);
+            box-shadow: 0 8px 32px var(--shadow);
+            padding: 30px;
+            width: 100%;
+            max-width: 700px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            min-height: 500px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .back-btn {
+            position: absolute;
+            top: 15px; left: 15px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 1.2rem;
+            transition: color 0.3s;
+            z-index: 10;
+        }
+        .back-btn:hover { color: var(--accent); }
+        h1 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            background: linear-gradient(45deg, var(--accent), var(--success));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 10px;
+        }
+        .subtitle {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+        }
+        #info {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 10px;
+            padding: 10px;
+            margin: 10px 0;
+            font-size: 0.95rem;
+        }
+        #info a {
+            color: var(--accent);
+            text-decoration: none;
+            padding: 2px 6px;
+            border-radius: 5px;
+            background: rgba(108,92,231,0.1);
+            transition: all 0.3s;
+        }
+        #info a:hover { background: rgba(108,92,231,0.3); }
+        .content-box {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 25px;
+            margin: 15px 0;
+            backdrop-filter: blur(10px);
+        }
+        #loading {
+            font-size: 1.1rem;
+            padding: 15px;
+            color: var(--text-secondary);
+        }
+        .spinner {
+            width: 36px; height: 36px;
+            margin: 12px auto;
+            border: 3px solid var(--card-border);
+            border-top-color: var(--accent);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .question {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin: 15px 0;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text);
+        }
+        .candidates-info {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin: 5px 0;
+        }
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: var(--card-border);
+            border-radius: 3px;
+            margin: 15px 0 10px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent), var(--success));
+            border-radius: 3px;
+            transition: width 0.3s;
+        }
+        .btn-container {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin: 20px 0;
+        }
+        .btn {
+            padding: 12px 30px;
+            font-size: 1.1rem;
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            min-width: 100px;
+            transition: all 0.2s;
+            box-shadow: 0 4px 12px var(--shadow);
+        }
+        .btn:hover { transform: translateY(-2px); }
+        .btn:active { transform: translateY(1px); }
+        .btn-yes {
+            background: linear-gradient(to bottom, var(--success), #27ae60);
+            color: white;
+        }
+        .btn-no {
+            background: linear-gradient(to bottom, var(--danger), #c0392b);
+            color: white;
+        }
+        .btn-block {
+            background: linear-gradient(to bottom, #3498db, #2980b9);
+            color: white;
+        }
+        .btn-mob {
+            background: linear-gradient(to bottom, #e74c3c, #c0392b);
+            color: white;
+        }
+        .btn-skip {
+            background: linear-gradient(to bottom, var(--text-secondary), #555);
+            color: white;
+            font-size: 0.9rem;
+            padding: 8px 20px;
+        }
+        @media (max-width: 480px) {
+            .btn-skip { padding: 8px 14px; font-size: 0.85rem; }
+        }
+        .btn-dk {
+            background: linear-gradient(to bottom, #9b59b6, #8e44ad);
+            color: white;
+        }
+        #result {
+            font-size: 1.6rem;
+            margin: 20px 0;
+            padding: 20px;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            min-height: 80px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        .result-title { font-size: 1.6rem; font-weight: 700; margin-bottom: 10px; }
+        .result-content {
+            font-size: 2rem;
+            padding: 15px;
+            background: rgba(108,92,231,0.1);
+            border-radius: 8px;
+            font-weight: 700;
+        }
+        .result-type {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-top: 5px;
+        }
+        .result-emoji {
+            font-size: 3rem;
+            margin-bottom: 5px;
+        }
+        #restartButton {
+            background: linear-gradient(to bottom, var(--warning), #e67e22);
+            color: white;
+            margin-top: 15px;
+        }
+        .hidden { display: none; }
+        .footer {
+            margin-top: 15px;
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+        }
+        @media (max-width: 768px) {
+            h1 { font-size: 1.8rem; }
+            .question { font-size: 1.3rem; }
+            .btn { padding: 10px 25px; font-size: 1rem; }
+            .container { padding: 20px; min-height: 420px; }
+        }
+        @media (max-width: 480px) {
+            h1 { font-size: 1.5rem; }
+            .question { font-size: 1.1rem; }
+            .btn-container { gap: 12px; }
+            .btn { padding: 10px 18px; font-size: 0.95rem; min-width: 80px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="/" class="back-btn">← 返回</a>
+        <h1>🧱 MC猜方块&生物</h1>
+        <div class="subtitle">V3.0 以网易基岩版为准，想一个方块或生物我来猜</div>
+        <div id="info" class="hidden"></div>
+        <div id="loading">
+            <div class="spinner"></div>
+            正在加载数据...
+        </div>
+        <div id="gameContainer" class="hidden">
+            <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+            <div class="candidates-info" id="candidatesInfo"></div>
+            <div class="content-box">
+                <div id="questionContainer" class="question"></div>
+            </div>
+            <div class="btn-container" id="btnContainer">
+                <button id="yesButton" class="btn btn-yes" onclick="answerQuestion(1)">是</button>
+                <button id="noButton" class="btn btn-no" onclick="answerQuestion(0)">否</button>
+                <button id="skipButton" class="btn btn-skip" onclick="skipQuestion()">跳过</button>
+            </div>
+            <div id="result" class="hidden"></div>
+        </div>
+        <div class="footer">数据仅供参考</div>
+    </div>
+
+    <script>
+        // 游戏状态
+        var questions = [];
+        var items = [];
+        var data = [];
+        var candidates = [];      // 当前候选集（索引）
+        var askedQuestions = [];   // 已问过的问题索引
+        var totalCandidates = 191;
+        var questionsAsked = 0;
+        var currentQuestionIdx = -1; // 当前问题索引
+
+        // 特殊问题索引映射
+        var FIRST_Q = 0;  // "是方块还是生物？"
+
+        function loadData() {
+            fetch('data.txt')
+                .then(function(r) { return r.text(); })
+                .then(function(text) {
+                    parseData(text);
+                    updateInfo();
+                    document.getElementById('loading').classList.add('hidden');
+                    document.getElementById('gameContainer').classList.remove('hidden');
+                    document.getElementById('info').classList.remove('hidden');
+                    startGame();
+                })
+                .catch(function(err) {
+                    document.getElementById('loading').innerHTML = '数据加载失败 😢';
+                });
+        }
+
+        function updateInfo() {
+            var blockCount = data.filter(function(d) { return d[0] === '1'; }).length;
+            var mobCount = data.filter(function(d) { return d[0] === '0'; }).length;
+            document.getElementById("info").innerHTML =
+                '已收录 <b>' + blockCount + '</b> 个方块 + <b>' + mobCount + '</b> 个生物，' +
+                '<a href="view.html" target="_blank">查看全部</a>';
+        }
+
+        function parseData(text) {
+            var lines = text.trim().split('\n');
+            var section = 0;
+            for (var i = 0; i < lines.length; i++) {
+                var line = lines[i].trim();
+                if (line === '-1') { section++; continue; }
+                if (section === 0) {
+                    if (line) questions.push(line);
+                } else if (section === 1) {
+                    var parts = line.split(' ');
+                    if (parts.length >= 2) {
+                        items.push(parts[0]);
+                        data.push(parts[1]);
+                    }
+                }
+            }
+            totalCandidates = items.length;
+        }
+
+        function startGame() {
+            candidates = [];
+            for (var i = 0; i < items.length; i++) candidates.push(i);
+            askedQuestions = [];
+            questionsAsked = 0;
+            document.getElementById("result").classList.add("hidden");
+            document.querySelector(".content-box").classList.remove("hidden");
+            document.getElementById("btnContainer").classList.remove("hidden");
+            document.getElementById("skipButton").classList.add("hidden"); // 初始隐藏跳过按钮
+            var rb = document.getElementById("restartButton");
+            if (rb) rb.remove();
+            updateProgress();
+            updateCandidatesInfo();
+            askNextQuestion();
+        }
+
+        function updateProgress() {
+            // 进度基于已问问题数
+            var pct = Math.min(questionsAsked / 15 * 100, 100); // 约15问算完成
+            document.getElementById('progressFill').style.width = pct + '%';
+        }
+
+        function updateCandidatesInfo() {
+            var el = document.getElementById('candidatesInfo');
+            if (candidates.length > 0) {
+                el.textContent = '剩余候选: ' + candidates.length + ' 个';
+            } else {
+                el.textContent = '';
+            }
+        }
+
+        // === 自适应问题选择算法 ===
+        // 每次选择能最均匀分裂当前候选集的问题
+        function findBestQuestion() {
+            var bestIdx = -1;
+            var bestScore = -1;
+
+            for (var q = 0; q < questions.length; q++) {
+                if (askedQuestions.indexOf(q) !== -1) continue; // 已问过
+
+                // 计算该问题对当前候选集的分裂效果
+                var yesCount = 0;
+                var noCount = 0;
+                for (var i = 0; i < candidates.length; i++) {
+                    if (data[candidates[i]][q] === '1') yesCount++;
+                    else noCount++;
+                }
+
+                // 如果所有候选答案相同，跳过（无用问题）
+                if (yesCount === 0 || noCount === 0) continue;
+
+                // 分裂评分：越接近50/50越好
+                // 使用信息熵: -p*log2(p) - (1-p)*log2(1-p)
+                var p = yesCount / candidates.length;
+                var score = 0;
+                if (p > 0 && p < 1) {
+                    score = -p * Math.log2(p) - (1-p) * Math.log2(1-p);
+                }
+
+                // 第一个问题（方块/生物）加权，因为它自然分裂最均匀
+                if (q === FIRST_Q && askedQuestions.length === 0) {
+                    score += 2; // 优先问第一个问题
+                }
+
+                if (score > bestScore) {
+                    bestScore = score;
+                    bestIdx = q;
+                }
+            }
+
+            return bestIdx;
+        }
+
+        function askNextQuestion() {
+            // 如果只剩1个候选，直接出结果
+            if (candidates.length === 1) {
+                showResult(candidates[0]);
+                return;
+            }
+
+            // 如果没有候选了，出失败结果
+            if (candidates.length === 0) {
+                showResult(-1);
+                return;
+            }
+
+            // 找最佳问题
+            var qIdx = findBestQuestion();
+
+            if (qIdx === -1) {
+                // 所有问题都问完了或都无用，但还有多个候选
+                // 可能是因为跳过了太多问题导致无法区分
+                showResult(-2, candidates);
+                return;
+            }
+
+            // 显示问题
+            var qText = questions[qIdx];
+            currentQuestionIdx = qIdx;
+            document.getElementById("questionContainer").textContent = qText;
+
+            // 根据问题类型设置按钮
+            var yesBtn = document.getElementById("yesButton");
+            var noBtn = document.getElementById("noButton");
+            var skipBtn = document.getElementById("skipButton");
+
+            if (qIdx === FIRST_Q) {
+                yesBtn.className = 'btn btn-block';
+                yesBtn.textContent = '🧱 方块';
+                yesBtn.onclick = function() { answerQuestion(1, qIdx); };
+                noBtn.className = 'btn btn-mob';
+                noBtn.textContent = '🐷 生物';
+                noBtn.onclick = function() { answerQuestion(0, qIdx); };
+                skipBtn.classList.add('hidden'); // 第一个问题不允许跳过
+            } else {
+                yesBtn.className = 'btn btn-yes';
+                yesBtn.textContent = '是';
+                yesBtn.onclick = function() { answerQuestion(1, qIdx); };
+                noBtn.className = 'btn btn-no';
+                noBtn.textContent = '否';
+                noBtn.onclick = function() { answerQuestion(0, qIdx); };
+                skipBtn.classList.remove('hidden'); // 其他问题可以跳过
+            }
+        }
+
+        function answerQuestion(answer, qIdx) {
+            // 过滤候选集
+            var next = [];
+            for (var i = 0; i < candidates.length; i++) {
+                if (data[candidates[i]][qIdx] === String(answer)) {
+                    next.push(candidates[i]);
+                }
+            }
+            candidates = next;
+            askedQuestions.push(qIdx);
+            questionsAsked++;
+            updateProgress();
+            updateCandidatesInfo();
+            askNextQuestion();
+        }
+
+        function skipQuestion() {
+            // 跳过：不过滤候选集（保留所有），但标记该问题已问过
+            askedQuestions.push(currentQuestionIdx);
+            questionsAsked++;
+            updateProgress();
+            // 剩余候选不变，提示跳过
+            var info = document.getElementById('candidatesInfo');
+            info.textContent = '剩余候选: ' + candidates.length + ' 个 (已跳过)';
+            setTimeout(function() { updateCandidatesInfo(); }, 1500);
+            askNextQuestion();
+        }
+
+        function showResult(idx, multiCandidates) {
+            var el = document.getElementById("result");
+            el.innerHTML = '';
+
+            var title = document.createElement('div');
+            title.className = 'result-title';
+            var content = document.createElement('div');
+            content.className = 'result-content';
+            var typeInfo = document.createElement('div');
+            typeInfo.className = 'result-type';
+            var emoji = document.createElement('div');
+            emoji.className = 'result-emoji';
+
+            if (idx >= 0) {
+                var isBlock = data[idx][0] === '1';
+                emoji.textContent = isBlock ? '🧱' : '🐷';
+                title.textContent = '🎯 你想的是：';
+                content.innerHTML = '<strong>' + items[idx] + '</strong>';
+                typeInfo.textContent = isBlock ? '（方块）' : '（生物）';
+            } else if (idx === -2 && multiCandidates && multiCandidates.length > 1) {
+                // 多个候选无法区分（可能因为跳过了太多问题）
+                emoji.textContent = '🤷';
+                title.textContent = '无法精确确定，可能是以下之一：';
+                var names = multiCandidates.map(function(c) { return items[c]; });
+                content.innerHTML = names.join('、');
+                typeInfo.textContent = '（跳过了太多问题，建议少跳过一些）';
+            } else {
+                emoji.textContent = '🤔';
+                title.textContent = '数据库中没找到匹配';
+                content.textContent = '';
+            }
+
+            el.appendChild(emoji);
+            el.appendChild(title);
+            if (idx >= 0 || (idx === -2 && multiCandidates)) {
+                el.appendChild(content);
+                el.appendChild(typeInfo);
+            }
+            el.classList.remove("hidden");
+            document.querySelector(".content-box").classList.add("hidden");
+            document.getElementById("btnContainer").classList.add("hidden");
+            document.getElementById('candidatesInfo').textContent = '';
+
+            var rb = document.createElement('button');
+            rb.textContent = '再来一次';
+            rb.id = "restartButton";
+            rb.className = 'btn';
+            rb.onclick = startGame;
+            el.insertAdjacentElement('afterend', rb);
+
+            updateProgress(); // 完成进度
+        }
+
+        window.onload = loadData;
+    </script>
+</body>
+</html>

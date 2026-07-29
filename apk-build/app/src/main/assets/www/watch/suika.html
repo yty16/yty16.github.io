@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#000000">
+    <title>合成大西瓜</title>
+    <style>
+        *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+        :root{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+            --safe-top:env(safe-area-inset-top,0px);--safe-bottom:env(safe-area-inset-bottom,0px);}
+        html,body{width:100%;height:100%;overflow:hidden;background:#000;touch-action:none;-webkit-user-select:none;user-select:none;}
+        .app{display:flex;flex-direction:column;align-items:center;height:100%;padding:calc(4px + var(--safe-top)) 6px calc(4px + var(--safe-bottom));}
+        @media (shape: round){
+            .app{padding:calc(18px + var(--safe-top)) 22px calc(18px + var(--safe-bottom));}
+        }
+        .header{display:flex;align-items:center;justify-content:space-between;width:100%;max-width:280px;padding:2px 0;flex-shrink:0;}
+        .back-btn{background:none;border:none;color:#2563eb;font-size:15px;cursor:pointer;padding:4px 8px;text-decoration:none;}
+        .title{font-size:14px;font-weight:600;color:#fff;}
+        .score{font-size:13px;color:#22c55e;font-weight:600;}
+        .canvas-wrap{flex:1;display:flex;align-items:center;justify-content:center;width:100%;position:relative;}
+        canvas{background:#111;border-radius:10px;border:1px solid #222;}
+        .bottom-bar{display:flex;align-items:center;gap:8px;padding:4px 0;flex-shrink:0;}
+        .btn{background:#1a1a1a;border:1.5px solid #333;color:#fff;padding:6px 12px;border-radius:12px;font-size:13px;cursor:pointer;font-family:inherit;-webkit-tap-highlight-color:transparent;}
+        .btn:active{background:#2563eb}
+        .next-preview{font-size:20px;color:#999;}
+        .game-over{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(0,0,0,0.9);border:1px solid #333;border-radius:14px;padding:16px 20px;text-align:center;z-index:10;display:none;color:#fff;}
+        .game-over.show{display:block}
+        .game-over h2{font-size:18px;margin-bottom:6px}
+        .game-over p{color:#999;margin-bottom:10px;font-size:13px;}
+        .game-over button{background:#2563eb;border:none;color:#fff;padding:8px 20px;border-radius:12px;font-size:14px;cursor:pointer;}
+        @media (shape: round){
+            .header{max-width:210px;}
+            .title{font-size:13px;}
+            .btn{padding:5px 10px;font-size:12px;}
+        }
+    </style>
+</head>
+<body>
+<div class="app">
+    <div class="header">
+        <a class="back-btn" href="index.html">←</a>
+        <span class="title">🍉 合成大西瓜</span>
+        <div class="score" id="score">0</div>
+    </div>
+    <div class="canvas-wrap">
+        <canvas id="canvas"></canvas>
+    </div>
+    <div class="bottom-bar">
+        <span class="next-preview" id="nextPreview">🫐</span>
+        <button class="btn" onclick="dropFruit()">▼ 放下</button>
+        <button class="btn" onclick="resetGame()">🔄 重来</button>
+    </div>
+</div>
+<div class="game-over" id="gameOver">
+    <h2>游戏结束</h2>
+    <p id="goMsg"></p>
+    <button onclick="resetGame()">重新开始</button>
+</div>
+<script>
+(function(){
+var hosts=['yty16.github.io','yty16.pages.dev'];
+if(hosts.indexOf(location.hostname)===-1){document.body.innerHTML='<div style="position:fixed;top:0;left:0;width:100%;height:100%;background:#000;display:flex;align-items:center;justify-content:center;color:#666;">页面无法显示</div>';return;}
+
+var canvas=document.getElementById('canvas'),ctx=canvas.getContext('2d');
+var W=240,H=340,fruits=[],nextType=0,score=0,bestScore=0,gameRunning=true,dropping=false;
+var dropX=120,animId=null,dropCooldown=0;
+
+var TYPES=[
+    {rad:10,color:'#7c3aed',emoji:'🫐',score:1},
+    {rad:15,color:'#ef4444',emoji:'🍒',score:2},
+    {rad:20,color:'#f59e0b',emoji:'🍊',score:4},
+    {rad:26,color:'#eab308',emoji:'🍋',score:8},
+    {rad:32,color:'#22c55e',emoji:'🥝',score:16},
+    {rad:38,color:'#f97316',emoji:'🍑',score:32},
+    {rad:44,color:'#dc2626',emoji:'🍎',score:64},
+    {rad:50,color:'#84cc16',emoji:'🍈',score:128},
+    {rad:58,color:'#16a34a',emoji:'🍉',score:256}
+];
+
+bestScore=parseInt(localStorage.getItem('watch_suika_best')||'0');
+
+function calcSize(){
+    var isRound=false;
+    try{isRound=window.matchMedia('(shape: round)').matches;}catch(e){}
+    var availH=window.innerHeight-100;
+    var availW=isRound?Math.min(window.innerWidth*0.62,200):Math.min(window.innerWidth-16,260);
+    return {w:Math.min(availW,260),h:Math.min(availH,360)};
+}
+
+function resize(){
+    var s=calcSize();
+    W=s.w;H=s.h;
+    canvas.width=W;canvas.height=H;
+    dropX=W/2;
+}
+resize();
+window.addEventListener('resize',resize);
+
+function rndType(){return Math.floor(Math.random()*4);}
+
+function resetGame(){
+    fruits=[];score=0;gameRunning=true;dropping=false;dropCooldown=0;
+    nextType=rndType();dropX=W/2;
+    document.getElementById('score').textContent='0';
+    document.getElementById('gameOver').classList.remove('show');
+    updatePreview();
+    if(animId)cancelAnimationFrame(animId);
+    animate();
+}
+
+function updatePreview(){
+    document.getElementById('nextPreview').textContent=TYPES[nextType].emoji;
+}
+
+function dropFruit(){
+    if(!gameRunning||dropping||dropCooldown>0)return;
+    var ft=TYPES[nextType];
+    var fx=Math.max(ft.rad+2,Math.min(W-ft.rad-2,dropX));
+    fruits.push({x:fx,y:ft.rad+2,vx:0,vy:0,type:nextType,merged:false});
+    nextType=rndType();
+    updatePreview();
+    dropCooldown=30;
+    dropping=true;
+}
+
+function animate(){
+    update();
+    draw();
+    animId=requestAnimationFrame(animate);
+}
+
+function update(){
+    if(dropCooldown>0)dropCooldown--;
+    if(dropCooldown===0)dropping=false;
+
+    var gravity=0.4,damping=0.7;
+
+    for(var i=0;i<fruits.length;i++){
+        var f=fruits[i];
+        f.vy+=gravity;
+        f.x+=f.vx;
+        f.y+=f.vy;
+        var ft=TYPES[f.type];
+        if(f.x-ft.rad<0){f.x=ft.rad;f.vx=-f.vx*damping;}
+        if(f.x+ft.rad>W){f.x=W-ft.rad;f.vx=-f.vx*damping;}
+        if(f.y+ft.rad>H){f.y=H-ft.rad;f.vy=-f.vy*damping;f.vx*=0.9;}
+    }
+
+    // Collision resolution
+    for(var i=0;i<fruits.length;i++){
+        for(var j=i+1;j<fruits.length;j++){
+            var a=fruits[i],b=fruits[j];
+            var at=TYPES[a.type],bt=TYPES[b.type];
+            var dx=b.x-a.x,dy=b.y-a.y;
+            var dist=Math.sqrt(dx*dx+dy*dy);
+            var minDist=at.rad+bt.rad;
+            if(dist<minDist&&dist>0){
+                // Merge same type
+                if(a.type===b.type&&a.type<TYPES.length-1&&!a.merged&&!b.merged){
+                    a.merged=true;b.merged=true;
+                    var newType=a.type+1;
+                    var nx=(a.x+b.x)/2,ny=(a.y+b.y)/2;
+                    score+=TYPES[newType].score;
+                    document.getElementById('score').textContent=score;
+                    fruits.push({x:nx,y:ny,vx:0,vy:-2,type:newType,merged:false});
+                    continue;
+                }
+                var overlap=minDist-dist;
+                var nx=dx/dist,ny=dy/dist;
+                a.x-=nx*overlap*0.5;a.y-=ny*overlap*0.5;
+                b.x+=nx*overlap*0.5;b.y+=ny*overlap*0.5;
+                var dvx=b.vx-a.vx,dvy=b.vy-a.vy;
+                var dot=dvx*nx+dvy*ny;
+                if(dot<0){
+                    var impulse=dot*0.5;
+                    a.vx+=impulse*nx;a.vy+=impulse*ny;
+                    b.vx-=impulse*nx;b.vy-=impulse*ny;
+                }
+            }
+        }
+    }
+
+    // Remove merged fruits
+    fruits=fruits.filter(function(f){return !f.merged;});
+
+    // Game over check
+    for(var i=0;i<fruits.length;i++){
+        if(fruits[i].y-TYPES[fruits[i].type].rad<5&&Math.abs(fruits[i].vy)<1){
+            gameRunning=false;
+            if(score>bestScore){bestScore=score;localStorage.setItem('watch_suika_best',bestScore);}
+            document.getElementById('goMsg').textContent='得分: '+score+' | 最佳: '+bestScore;
+            document.getElementById('gameOver').classList.add('show');
+            cancelAnimationFrame(animId);
+            animId=null;
+            break;
+        }
+    }
+}
+
+function draw(){
+    ctx.fillStyle='#111';ctx.fillRect(0,0,W,H);
+    // Dropped fruits
+    for(var i=0;i<fruits.length;i++){
+        var f=fruits[i],ft=TYPES[f.type];
+        ctx.beginPath();ctx.arc(f.x,f.y,ft.rad,0,Math.PI*2);
+        ctx.fillStyle=ft.color;ctx.fill();
+        ctx.font=(ft.rad*0.8)+'px sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';
+        ctx.fillText(ft.emoji,f.x,f.y);
+    }
+    // Ghost preview
+    if(gameRunning&&dropCooldown<=0){
+        var nf=TYPES[nextType];
+        ctx.beginPath();ctx.arc(dropX,nf.rad+2,nf.rad,0,Math.PI*2);
+        ctx.fillStyle='rgba(255,255,255,0.15)';ctx.fill();
+        ctx.font=(nf.rad*0.8)+'px sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';
+        ctx.fillText(nf.emoji,dropX,nf.rad+2);
+        // Guide line
+        ctx.strokeStyle='rgba(255,255,255,0.1)';ctx.lineWidth=1;
+        ctx.beginPath();ctx.moveTo(dropX,nf.rad*2+4);ctx.lineTo(dropX,H);ctx.stroke();
+    }
+}
+
+// Touch control: move drop position
+var touchActive=false;
+canvas.addEventListener('touchstart',function(e){
+    e.preventDefault();
+    if(!gameRunning)return;
+    touchActive=true;
+    var rect=canvas.getBoundingClientRect();
+    dropX=Math.max(10,Math.min(W-10,e.touches[0].clientX-rect.left));
+},{passive:false});
+canvas.addEventListener('touchmove',function(e){
+    e.preventDefault();
+    if(!gameRunning||!touchActive)return;
+    var rect=canvas.getBoundingClientRect();
+    dropX=Math.max(10,Math.min(W-10,e.touches[0].clientX-rect.left));
+},{passive:false});
+canvas.addEventListener('touchend',function(e){
+    e.preventDefault();
+    if(!gameRunning)return;
+    touchActive=false;
+    dropFruit();
+},{passive:false});
+
+// Mouse support
+canvas.addEventListener('mousemove',function(e){
+    if(!gameRunning)return;
+    var rect=canvas.getBoundingClientRect();
+    dropX=Math.max(10,Math.min(W-10,e.clientX-rect.left));
+});
+canvas.addEventListener('click',function(e){
+    if(!gameRunning)return;
+    var rect=canvas.getBoundingClientRect();
+    dropX=Math.max(10,Math.min(W-10,e.clientX-rect.left));
+    dropFruit();
+});
+
+window.dropFruit=dropFruit;
+window.resetGame=resetGame;
+updatePreview();
+resetGame();
+})();
+</script>
+</body>
+</html>

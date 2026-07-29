@@ -1,0 +1,66 @@
+{
+  "packageId": "io.github.yty16.toolbox",
+  "host": "yty16.github.io",
+  "name": "元拓域 Toolbox",
+  "launcherName": "元拓域",
+  "display": "standalone",
+  "themeColor": "#2563EB",
+  "themeColorDark": "#000000",
+  "navigationColor": "#000000",
+  "navigationColorDark": "#000000",
+  "navigationDividerColor": "#000000",
+  "navigationDividerColorDark": "#000000",
+  "backgroundColor": "#0D1117",
+  "enableNotifications": true,
+  "startUrl": "/",
+  "iconUrl": "http://localhost:8899/icon-512.png",
+  "maskableIconUrl": "http://localhost:8899/icon-maskable.png",
+  "splashScreenFadeOutDuration": 300,
+  "signingKey": {
+    "path": "C:\\Users\\Yin\\WorkBuddy\\2026-06-12-10-40-19\\apk-build\\android.keystore",
+    "alias": "android"
+  },
+  "appVersionName": "1.0.0",
+  "appVersionCode": 1,
+  "shortcuts": [
+    {
+      "name": "文字加密",
+      "shortName": "加密",
+      "url": "https://yty16.github.io/encrypt/",
+      "chosenIconUrl": "http://localhost:8899/icon-192.png"
+    },
+    {
+      "name": "摩斯电码",
+      "shortName": "摩斯",
+      "url": "https://yty16.github.io/morse/",
+      "chosenIconUrl": "http://localhost:8899/icon-192.png"
+    },
+    {
+      "name": "密码生成",
+      "shortName": "密码",
+      "url": "https://yty16.github.io/password/",
+      "chosenIconUrl": "http://localhost:8899/icon-192.png"
+    }
+  ],
+  "generatorApp": "bubblewrap-cli",
+  "webManifestUrl": "http://localhost:8899/manifest-local.json",
+  "fallbackType": "customtabs",
+  "features": {},
+  "alphaDependencies": {
+    "enabled": false
+  },
+  "enableSiteSettingsShortcut": true,
+  "isChromeOSOnly": false,
+  "isMetaQuest": false,
+  "fullScopeUrl": "https://yty16.github.io/",
+  "minSdkVersion": 21,
+  "orientation": "portrait",
+  "fingerprints": [],
+  "additionalTrustedOrigins": [],
+  "retainedBundles": [],
+  "protocolHandlers": [],
+  "fileHandlers": [],
+  "launchHandlerClientMode": "",
+  "displayOverride": [],
+  "appVersion": "1"
+}

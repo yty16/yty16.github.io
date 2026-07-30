@@ -30,9 +30,10 @@ def crop_white_border(src, threshold=240):
 def resize(src, size, maskable=False):
     """缩放图标，裁剪白边后按设定比例居中填充到目标尺寸。"""
     img = crop_white_border(src)
-    # 普通图标内容占画布 98%，在浏览器 favicon 里最大化显示；
+    # 普通图标内容占画布 100%（贴边），在浏览器 favicon 里最大化显示；
+    # 浏览器标签页通常还会对 favicon 加圆角，100% 能抵消视觉白边。
     # maskable 图标仍需留出安全边距，保持 82%。
-    fill_ratio = 0.82 if maskable else 0.98
+    fill_ratio = 0.82 if maskable else 1.0
     if maskable:
         safe_size = int(size * 0.8)
         content_size = int(safe_size * fill_ratio)

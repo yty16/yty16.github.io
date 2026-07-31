@@ -44,6 +44,7 @@ h1 { font-size: 26px; font-weight: 700; text-align: center; }
 .pcard.got { outline: 2px solid var(--accent); }
 .pcard.got::after { content: "✓"; position: absolute; top: 6px; right: 8px; color: var(--accent); font-size: 13px; font-weight: 700; }
 .pcard.miss { opacity: 0.45; }
+.pcard.box { background: linear-gradient(135deg, rgba(99,102,241,0.14), var(--card)); }
 .note { font-size: 12px; color: var(--muted); text-align: center; margin-top: 22px; line-height: 1.7; }
 @media (max-width: 600px) { h1 { font-size: 22px; } .wrap { padding: 70px 14px 40px; } .grid { grid-template-columns: repeat(auto-fill, minmax(70px, 1fr)); gap: 9px; } }
 </style>
@@ -91,7 +92,7 @@ var SUITS = [
 var RANKS = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"];
 var STORE_KEY = "df_poker_collection_v1";
 
-// 构建 54 张（52 普通 + 两张特殊牌）
+// 构建 55 张（52 普通 + 大小王 + 牌盒），牌盒纳入收藏完成度统计
 var CARDS = [];
 SUITS.forEach(function (su) {
   RANKS.forEach(function (rk) {
@@ -100,6 +101,8 @@ SUITS.forEach(function (su) {
 });
 CARDS.push({ id: "JOKER_A", s: "★", rk: "小", color: "red", special: true });
 CARDS.push({ id: "JOKER_B", s: "☆", rk: "大", color: "black", special: true });
+// 牌盒：与扑克牌同属一套收藏，纳入完成度统计
+CARDS.push({ id: "BOX", s: "📦", rk: "牌盒", color: "black", box: true });
 
 var saved = {};
 try { saved = JSON.parse(localStorage.getItem(STORE_KEY) || "{}"); } catch (e) { saved = {}; }
@@ -108,12 +111,18 @@ var grid = document.getElementById('grid');
 
 function makeCard(c) {
   var el = document.createElement('div');
-  el.className = 'pcard ' + c.color + (saved[c.id] ? ' got' : ' miss');
+  var base = c.box ? 'box' : c.color;
+  el.className = 'pcard ' + base + (saved[c.id] ? ' got' : ' miss');
   el.dataset.id = c.id;
-  var center = c.special ? c.s : c.s;
-  el.innerHTML = '<div class="corner">' + c.rk + c.s + '</div>' +
-    '<div class="center">' + center + '</div>' +
-    '<div class="corner" style="align-self:flex-end;transform:rotate(180deg)">' + c.rk + c.s + '</div>';
+  if (c.box) {
+    el.innerHTML = '<div class="center" style="font-size:34px;display:flex;align-items:center;justify-content:center;height:100%">📦</div>' +
+      '<div class="corner" style="align-self:flex-end">牌盒</div>';
+  } else {
+    var center = c.s;
+    el.innerHTML = '<div class="corner">' + c.rk + c.s + '</div>' +
+      '<div class="center">' + center + '</div>' +
+      '<div class="corner" style="align-self:flex-end;transform:rotate(180deg)">' + c.rk + c.s + '</div>';
+  }
   el.onclick = function () { toggle(c.id, el); };
   return el;
 }

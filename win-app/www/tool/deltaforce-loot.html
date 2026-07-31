@@ -32,11 +32,8 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,"Apple Color Emoji","S
 .ct-card{background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden;box-shadow:var(--shadow);transition:transform .2s,border-color .2s;display:flex;flex-direction:column}
 .ct-card:hover{transform:translateY(-3px);border-color:var(--accent)}
 .ct-header{padding:12px 14px;border-bottom:1px solid var(--border);font-size:15px;font-weight:700;display:flex;align-items:center;gap:8px}
-.ct-body{padding:14px;flex:1;display:flex;flex-direction:column;gap:10px}
-.ct-img{width:64px;height:64px;object-fit:contain;align-self:center;background:rgba(0,0,0,0.04);border-radius:8px}
-.ct-info{font-size:12px;color:var(--muted);line-height:1.7}
-.ct-info p{margin:2px 0}
-.ct-info .tag{display:inline-block;background:var(--bg);border:1px solid var(--border);border-radius:4px;padding:1px 6px;margin:2px 4px 2px 0}
+.ct-body{padding:14px;flex:1;display:flex;flex-direction:column;align-items:center;gap:10px}
+.ct-img{width:64px;height:64px;object-fit:contain;background:rgba(0,0,0,0.04);border-radius:8px}
 .ct-footer{padding:10px 14px;border-top:1px solid var(--border);display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
 .btn{padding:7px 12px;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;transition:all .15s}
 .btn-primary{background:var(--accent);color:#fff}
@@ -46,41 +43,66 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,"Apple Color Emoji","S
 
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);backdrop-filter:blur(4px);z-index:200;display:none;align-items:center;justify-content:center;padding:16px}
 .modal-overlay.show{display:flex}
-.modal{background:#1e2328;border:1px solid rgba(255,255,255,.1);border-radius:12px;width:100%;max-width:520px;max-height:90vh;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.6)}
+.modal{background:#1e2328;border:1px solid rgba(255,255,255,.1);border-radius:12px;width:100%;max-width:900px;max-height:92vh;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.6)}
+.result-modal{max-width:980px}
 .modal-header{padding:14px 16px;background:linear-gradient(90deg,rgba(120,25,30,.85),rgba(120,25,30,.35));display:flex;align-items:center;justify-content:space-between;gap:10px}
 .modal-header h3{color:#fff;font-size:16px;font-weight:700;display:flex;align-items:center;gap:8px;margin:0}
 .modal-header .close{color:rgba(255,255,255,.7);background:none;border:none;font-size:22px;cursor:pointer}
 .modal-header .close:hover{color:#fff}
-.modal-body{padding:16px;overflow:auto;display:flex;justify-content:center;background:radial-gradient(900px 500px at 30% 15%,rgba(60,90,80,.2),transparent),linear-gradient(180deg,rgba(0,0,0,.1),rgba(0,0,0,.6))}
+.modal-body{padding:16px;overflow:auto;background:radial-gradient(900px 500px at 30% 15%,rgba(60,90,80,.2),transparent),linear-gradient(180deg,rgba(0,0,0,.1),rgba(0,0,0,.6))}
+.result-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px;justify-content:center}
+.mini-ct{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:10px;overflow:hidden;display:flex;flex-direction:column}
+.mini-ct-header{padding:10px 12px;background:rgba(0,0,0,.25);border-bottom:1px solid rgba(255,255,255,.08);display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:13px;color:#fff}
+.mini-ct-header .total{color:#ffd700;font-weight:700;display:flex;align-items:center;gap:4px}
+.mini-ct-header .total::before{content:"";display:inline-block;width:12px;height:12px;background:url(./deltaforce-loot-assets/items/swat_gold_icon.webp) center/contain no-repeat}
+.mini-ct-body{padding:10px;display:flex;justify-content:center}
 .grid-frame{position:relative;display:grid;gap:2px;background:rgba(255,255,255,.06);padding:4px;border-radius:6px}
-.grid-cell{width:48px;height:48px;background:rgba(255,255,255,.04);border-radius:3px}
+.grid-cell{width:38px;height:38px;background:rgba(255,255,255,.04);border-radius:3px}
 .item-layer{position:absolute;inset:4px;display:grid;gap:2px;pointer-events:none}
 .item-node{position:relative;border-radius:4px;overflow:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center;animation:popIn .25s ease}
 @keyframes popIn{from{opacity:0;transform:scale(.85)}to{opacity:1;transform:scale(1)}}
 .item-node .thumb-bg{position:absolute;inset:0;opacity:.25}
-.item-node .thumb{position:absolute;inset:4px;background-repeat:no-repeat;background-position:center;background-size:contain;z-index:1}
-.item-node .label{position:absolute;bottom:1px;left:2px;right:2px;font-size:10px;color:#fff;text-shadow:0 1px 2px rgba(0,0,0,.9);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;z-index:3;text-align:center}
-.item-node .price{position:absolute;top:2px;right:2px;font-size:10px;color:#ffd700;font-weight:700;text-shadow:0 1px 2px rgba(0,0,0,.9);z-index:3;display:flex;align-items:center;gap:2px}
-.item-node .price::before{content:"";display:inline-block;width:10px;height:10px;background:url(./deltaforce-loot-assets/items/swat_gold_icon.webp) center/contain no-repeat}
-.item-node .cover{position:absolute;inset:0;background:linear-gradient(135deg,#3a4348,#262c30);z-index:5;display:flex;align-items:center;justify-content:center;transition:opacity .3s}
-.item-node .cover::after{content:"?";font-size:20px;color:rgba(255,255,255,.4);font-weight:700}
-.item-node.revealed .cover{opacity:0;pointer-events:none}
-.scan-magnifier{position:absolute;width:42px;height:42px;z-index:10;display:none;pointer-events:none}
-.scan-magnifier.show{display:block}
-.scan-magnifier .lens{width:100%;height:100%;border:2px solid rgba(100,200,255,.8);border-radius:50%;background:radial-gradient(circle at 30% 30%,rgba(150,220,255,.25),transparent 60%);box-shadow:0 0 20px rgba(100,200,255,.4);animation:breathe 1.2s ease-in-out infinite}
-@keyframes breathe{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}
-.modal-footer{padding:12px 16px;border-top:1px solid rgba(255,255,255,.08);display:flex;gap:10px;justify-content:center}
-.modal-footer .btn{min-width:80px}
+.item-node .thumb{position:absolute;inset:3px;background-repeat:no-repeat;background-position:center;background-size:contain;z-index:1}
+.item-node .label{position:absolute;bottom:1px;left:2px;right:2px;font-size:9px;color:#fff;text-shadow:0 1px 2px rgba(0,0,0,.9);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;z-index:3;text-align:center}
+.item-node .price{position:absolute;top:1px;right:2px;font-size:9px;color:#ffd700;font-weight:700;text-shadow:0 1px 2px rgba(0,0,0,.9);z-index:3;display:flex;align-items:center;gap:2px}
+.item-node .price::before{content:"";display:inline-block;width:9px;height:9px;background:url(./deltaforce-loot-assets/items/swat_gold_icon.webp) center/contain no-repeat}
+.item-node.rare{box-shadow:0 0 0 2px rgba(245,158,11,.75),0 0 14px rgba(245,158,11,.5)}
+.item-node.legend{box-shadow:0 0 0 2px rgba(239,68,68,.85),0 0 18px rgba(239,68,68,.6)}
 
-@media(max-width:600px){.header h1{font-size:22px}.container-grid{grid-template-columns:1fr}.ct-footer{justify-content:center}.modal{max-height:95vh}}
+.summary-bar{padding:10px 16px;background:rgba(0,0,0,.35);border-top:1px solid rgba(255,255,255,.08);display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.summary-pill{font-size:13px;color:#fff;padding:5px 12px;border-radius:20px;background:rgba(255,255,255,.08);display:flex;align-items:center;gap:5px}
+.summary-pill .dot{width:8px;height:8px;border-radius:50%}
+.summary-pill.red .dot{background:var(--r6)}
+.summary-pill.gold .dot{background:var(--r5)}
+.summary-pill.purple .dot{background:var(--r4)}
+.summary-pill.blue .dot{background:var(--r3)}
+.summary-pill.green .dot{background:var(--r2)}
 
-  .item-node.rare{ box-shadow:0 0 0 2px rgba(245,158,11,.75),0 0 14px rgba(245,158,11,.5);}
-  .item-node.legend{ box-shadow:0 0 0 2px rgba(239,68,68,.85),0 0 18px rgba(239,68,68,.6);}
+.modal-footer{padding:12px 16px;border-top:1px solid rgba(255,255,255,.08);display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.modal-footer .btn{min-width:100px}
+.modal-footer .accum{font-size:12px;color:rgba(255,255,255,.6);display:flex;align-items:center;gap:4px}
+
+.fortune-content{padding:20px;color:#e2e8f0}
+.fortune-title{text-align:center;font-size:20px;font-weight:700;margin-bottom:16px;color:#5eead4}
+.fortune-level{text-align:center;font-size:32px;font-weight:800;margin-bottom:8px}
+.fortune-level.great{color:#f87171}
+.fortune-level.good{color:#fbbf24}
+.fortune-level.normal{color:#94a3b8}
+.fortune-level.bad{color:#60a5fa}
+.fortune-level.terrible{color:#a78bfa}
+.fortune-meta{font-size:13px;color:#94a3b8;text-align:center;margin-bottom:16px}
+.fortune-row{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.08)}
+.fortune-row .k{color:#94a3b8}
+.fortune-row .v{font-weight:700;color:#fff}
+.fortune-row .v.gold{color:#ffd700}
+.fortune-advice{margin-top:16px;padding:12px;background:rgba(94,234,212,.08);border-left:3px solid #5eead4;border-radius:6px;font-size:14px;line-height:1.6}
+
+@media(max-width:600px){.header h1{font-size:22px}.container-grid{grid-template-columns:1fr}.ct-footer{justify-content:center}.modal{max-height:95vh}.result-grid{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
 <script>
-(function(){var s=localStorage.getItem('theme');if(s==='light'||s==='dark'){document.documentElement.setAttribute('data-theme',s)}else{var d=window.matchMedia('(prefers-color-scheme:dark)').matches;document.documentElement.setAttribute('data-theme',d?'dark':'light')}})();
+(function(){var s=localStorage.getItem('theme');if(s==='light'||s==='dark'){document.documentElement.setAttribute('data-theme',s)}else{var d=window.matchMedia('(prefers-color-scheme:dark)').matches;document.documentElement.setAttribute('data-theme',d?'dark':'light'}})();
 </script>
 
 <a href="./deltaforce.html" class="back-btn">← 返回</a>
@@ -99,84 +121,59 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,"Apple Color Emoji","S
 
 <div class="container-grid" id="containerGrid"></div>
 
-<div class="modal-overlay" id="modal">
-  <div class="modal">
+<div class="modal-overlay" id="resultModal">
+  <div class="modal result-modal">
     <div class="modal-header">
-      <h3 id="modalTitle">正在搜索物资</h3>
-      <button class="close" id="modalClose">×</button>
+      <h3 id="resultTitle">正在搜索物资</h3>
+      <button class="close" id="resultClose">×</button>
     </div>
     <div class="modal-body">
-      <div class="grid-frame" id="gridFrame">
-        <div class="item-layer" id="itemLayer"></div>
-        <div class="scan-magnifier" id="scanner"><div class="lens"></div></div>
-      </div>
+      <div class="result-grid" id="resultGrid"></div>
     </div>
+    <div class="summary-bar" id="summaryBar"></div>
     <div class="modal-footer">
-      <button class="btn btn-primary" id="againBtn">再搜一次</button>
+      <button class="btn btn-primary" id="againBtn">再来一次</button>
+      <button class="btn btn-sm" id="fortuneBtn">今日运势</button>
       <button class="btn btn-sm" id="closeBtn2">关闭</button>
     </div>
   </div>
 </div>
 
+<div class="modal-overlay" id="fortuneModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>今日运势 · 解签</h3>
+      <button class="close" id="fortuneClose">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="fortune-content" id="fortuneContent"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-sm" id="fortuneCloseBtn">关闭</button>
+    </div>
+  </div>
+</div>
+
 <script>
-var CONTAINERS = [{"id": "bxg", "name": "保险柜", "pic": "./deltaforce-loot-assets/containers/bxg.webp", "types": ["工艺藏品", "非洲之心"], "real": "3*3、2*2(普通极小概率出绿)、1*3、1*4", "maybe": "2*3、3*2、1*1、1*2、2*1", "none": "无", "cols": 4, "rows": 6}, {"id": "xbxx", "name": "小保险箱", "pic": "./deltaforce-loot-assets/containers/xbxx.webp", "types": ["非洲之心", "工艺藏品", "电子物品"], "real": "3*3、2*2、1*3", "maybe": "2*3、3*2、1*1、1*2、2*1", "none": "无", "cols": 4, "rows": 6}, {"id": "fwq", "name": "服务器", "pic": "./deltaforce-loot-assets/containers/fwq.webp", "types": ["电子物品"], "real": "4*3、3*4、3*3、2*3、1*2", "maybe": "1*1", "none": "2*2", "cols": 4, "rows": 6}, {"id": "dnjx", "name": "电脑机箱", "pic": "./deltaforce-loot-assets/containers/dnjx.webp", "types": ["资料情报", "电子物品"], "real": "3*3", "maybe": "1*2", "none": "2*2", "cols": 4, "rows": 6}, {"id": "dwqx", "name": "大武器箱", "pic": "./deltaforce-loot-assets/containers/dwqx.webp", "types": ["高级咖啡豆", "武器", "配件", "哈机密", "工具材料", "电子物品"], "real": "3*3", "maybe": "2*3、3*2、2*2、1*1", "none": "1*2", "cols": 4, "rows": 6}, {"id": "dyx", "name": "弹药箱", "pic": "./deltaforce-loot-assets/containers/dyx.webp", "types": ["子弹", "能源燃料", "工具材料"], "real": "3*3、3*2", "maybe": "2*3", "none": "无", "cols": 4, "rows": 6}, {"id": "ctg", "name": "抽屉柜", "pic": "./deltaforce-loot-assets/containers/ctg.webp", "types": ["资料情报", "医疗道具", "家居物品", "工艺藏品"], "real": "1*4、3*3、3*2", "maybe": "无", "none": "无", "cols": 4, "rows": 4}, {"id": "syf", "name": "实验服", "pic": "./deltaforce-loot-assets/containers/syf.webp", "types": ["资料情报", "钥匙卡", "工艺藏品", "电子物品", "家居物品", "医疗道具"], "real": "无", "maybe": "1*2、2*1、1*1", "none": "无", "cols": 4, "rows": 4}, {"id": "yf", "name": "衣服", "pic": "./deltaforce-loot-assets/containers/yf.webp", "types": ["资料情报", "钥匙卡", "工艺藏品", "电子物品", "家居物品", "医疗道具"], "real": "无", "maybe": "1*2、2*1、1*1", "none": "无", "cols": 4, "rows": 4}, {"id": "ylwzd", "name": "医疗物资堆", "pic": "./deltaforce-loot-assets/containers/ylwzd.webp", "types": ["药品", "针剂", "医疗道具"], "real": "3*3、3*2", "maybe": "2*2、1*1", "none": "无", "cols": 4, "rows": 6}, {"id": "lxd", "name": "旅行袋", "pic": "./deltaforce-loot-assets/containers/lxd.webp", "types": ["家居物品", "工具材料", "资料情报", "医疗道具"], "real": "3*3", "maybe": "1*2、1*1", "none": "无", "cols": 4, "rows": 6}, {"id": "stx", "name": "手提箱", "pic": "./deltaforce-loot-assets/containers/stx.webp", "types": ["资料情报", "工艺藏品"], "real": "3*3", "maybe": "无", "none": "无", "cols": 4, "rows": 4}, {"id": "gjcwx", "name": "高级储物箱", "pic": "./deltaforce-loot-assets/containers/gjcwx.webp", "types": ["家居物品", "医疗道具", "电子物品", "资料情报", "能源燃料"], "real": "3*3、4*3", "maybe": "2*2、3*2、2*3", "none": "无", "cols": 4, "rows": 6}, {"id": "gjg", "name": "工具柜", "pic": "./deltaforce-loot-assets/containers/gjg.webp", "types": ["工具材料", "医疗道具", "能源燃料"], "real": "无", "maybe": "无", "none": "无", "cols": 4, "rows": 4}, {"id": "kdx", "name": "快递箱", "pic": "./deltaforce-loot-assets/containers/kdx.webp", "types": ["能源燃料", "医疗道具", "工具材料", "家居物品"], "real": "无", "maybe": "无", "none": "无", "cols": 4, "rows": 4}, {"id": "hkcwx", "name": "航空储物箱", "pic": "./deltaforce-loot-assets/containers/hkcwx.webp", "types": ["高级咖啡豆", "哈机密", "装备", "家居物品", "维修套件", "资料情报", "医疗道具", "工具材料", "电子物品", "能源燃料"], "real": "3*4", "maybe": "4*3、3*3、2*3、3*2、2*2、1*2", "none": "2*4", "cols": 4, "rows": 6}, {"id": "ljx", "name": "垃圾箱", "pic": "./deltaforce-loot-assets/containers/ljx.webp", "types": ["资料情报", "工艺藏品", "工具材料", "家居物品", "医疗道具", "能源燃料"], "real": "无", "maybe": "无", "none": "无", "cols": 4, "rows": 4}, {"id": "ywwzx", "name": "野外物资箱", "pic": "./deltaforce-loot-assets/containers/ywwzx.webp", "types": ["装备", "能源燃料", "医疗道具", "工具材料", "电子物品"], "real": "无", "maybe": "3*3", "none": "无", "cols": 4, "rows": 4}, {"id": "nw", "name": "鸟窝", "pic": "./deltaforce-loot-assets/containers/nw.webp", "types": ["非洲之心", "资料情报", "能源燃料", "医疗道具", "工具材料", "工艺藏品", "家居物品", "电子物品"], "real": "只产出四格以下红色物品", "maybe": "只产出四格以下红色物品", "none": "只产出四格以下红色物品", "cols": 4, "rows": 4}, {"id": "cnw", "name": "藏匿物(井盖)", "pic": "./deltaforce-loot-assets/containers/cnw.webp", "types": ["资料情报", "能源燃料", "医疗道具", "工具材料", "工艺藏品", "家居物品", "电子物品"], "real": "4*3、3*4、3*3", "maybe": "无", "none": "无", "cols": 4, "rows": 4}, {"id": "gjlxx", "name": "高级旅行箱", "pic": "./deltaforce-loot-assets/containers/gjlxl.webp", "types": ["工艺藏品", "家居物品"], "real": "3*3、3*2", "maybe": "1*2", "none": "无", "cols": 4, "rows": 6}, {"id": "fsxcwx", "name": "放射性储物箱", "pic": "./deltaforce-loot-assets/containers/fsxcwx.webp", "types": ["装备", "家居物品", "维修套件", "医疗道具", "工具材料", "电子物品", "能源燃料"], "real": "暂无数据", "maybe": "暂无数据", "none": "暂无数据", "cols": 4, "rows": 4}, {"id": "gyjscwx", "name": "工业金属储物箱", "pic": "./deltaforce-loot-assets/containers/gyjscwx.webp", "types": ["暂无数据"], "real": "暂无数据", "maybe": "暂无数据", "none": "暂无数据", "cols": 4, "rows": 4}, {"id": "hrlbb", "name": "核燃料背包", "pic": "./deltaforce-loot-assets/containers/hrlbb.webp", "types": ["暂无数据"], "real": "暂无数据", "maybe": "暂无数据", "none": "暂无数据", "cols": 4, "rows": 4}];
-var ITEM_POOL = [{"n": "图腾箭矢", "g": 4, "w": 1, "h": 1, "img": "./deltaforce-loot-assets/items/15080050139.webp", "p": 14792}, {"n": "发条八音盒", "g": 5, "w": 1, "h": 1, "img": "./deltaforce-loot-assets/items/15080050137.webp", "p": 59277}, {"n": "金枝桂冠", "g": 5, "w": 2, "h": 1, "img": "./deltaforce-loot-assets/items/15080050138.webp", "p": 85856}, {"n": "后妃耳环", "g": 4, "w": 1, "h": 1, "img": "./deltaforce-loot-assets/items/15080050001.webp", "p": 15121}, {"n": "腕带", "g": 3, "w": 1, "h": 1, "img": "./deltaforce-loot-assets/items/15080050194.webp", "p": 10395}, {"n": "阿萨拉特色酒杯", "g": 5, "w": 1, "h": 1, "img": "./deltaforce-loot-assets/items/15080050015.webp", "p": 63296}, {"n": "古怪的海盗银币", "g": 3, "w": 1, "h": 1, "img": "./deltaforce-loot-assets/items/15080050008.webp", "p": 9775}, {"n": "荷美尔陶俑", "g": 5, "w": 1, "h": 2, "img": "./deltaforce-loot-assets/items/15080050135.webp", "p": 91550}, {"n": "功绩勋章", "g": 5, "w": 1, "h": 1, "img": "./deltaforce-loot-assets/items/15080050004.webp", "p": 82213}, {"n": "初级子弹生产零件", "g": 3, "w": 1, "h": 2, "img": "./deltaforce-loot-assets/items/15080050023.webp", "p": 21598}, {"n": "典雅咖啡杯", "g": 4, "w": 1, "h": 1, "img": "./deltaforce-loot-assets/items/15080050182.webp", "p": 15108}, {"n": "“起舞的女郎”挂饰", "g": 3, "w": 1, "h": 2, "img": "./deltaforce-loot-assets/items/15080050012.webp", "p": 15922}, {"n": "继电器", "g": 3, "w": 1, "h": 1, "img": "./deltaforce-loot-assets/items/15020050008.webp", "p": 11091}, {"n": "存储卡", "g": 3, "w": 1, "h": 1, "img": "./deltaforce-loot-assets/items/15070010002.webp", "p": 9961}, {"n": "电源", "g": 2, "w": 2, "h": 2, "img": "./deltaforce-loot-assets/items/15030010011.webp", "p": 5991}, {"n": "脑机头戴设备", "g": 5, "w": 2, "h": 2, "img": "./deltaforce-loot-assets/items/15080050189.webp", "p": 207076}, {"n": "超高频读卡器", "g": 2, "w": 1, "h": 1, "img": "./deltaforce-loot-assets/items/15030040011.webp", "p": 2687}, {"n": "电子干扰器", "g": 4, "w": 1, "h": 1, "img": "./deltaforce-loot-assets/items/15030040014.webp", "p": 13025}, {"n": "间谍笔", "g": 4, "w": 1, "h": 1, "img": "./deltaforce-loot-assets/items/15040010015.webp", "p": 21331}, {"n": "内存条", "g": 4, "w": 1, "h": 1, "img": "./deltaforce-loot-assets/items/15030040006.webp", "p": 28356}, {"n": "U盘", "g": 3, "w": 1, "h": 1, "img": "./deltaforce-loot-assets/items/15070010001.webp", "p": 12200}, {"n": "液晶显示屏", "g": 3, "w": 2, "h": 2, "img": "./deltaforce-loot-assets/items/15030040010.webp", "p": 25434}, {"n": "三角洲特种部队：刺刀特遣队", "g": 3, "w": 1, "h": 1, "img": "./deltaforce-loot-assets/items/15080050027.webp", "p": 11535}, {"n": "蜂网遮光罩", "g": 4, "w": 1, "h": 1, "img": "./deltaforce-loot-assets/items/13370000001.webp", "p": 18517}, {"n": "S12K扩容10发弹匣", "g": 2, "w": 1, "h": 2, "img": "./deltaforce-loot-assets/items/13120000289.webp", "p": 6125}, {"n": "95长弓平台套件", "g": 4, "w": 1, "h": 1, "img": "./deltaforce-loot-assets/items/13220000001.webp", "p": 27157}, {"n": "M870扩容枪管", "g": 2, "w": 2, "h": 1, "img": "./deltaforce-loot-assets/items/13020000494.webp", "p": 4191}, {"n": "沙鹰13发弹匣", "g": 2, "w": 1, "h": 2, "img": "./deltaforce-loot-assets/items/13120000296.webp", "p": 4444}, {"n": "5.56*45 30发聚合物弹匣", "g": 2, "w": 1, "h": 2, "img": "./deltaforce-loot-assets/items/13120000030.webp", "p": 6719}, {"n": "耀斑战术手电", "g": 4, "w": 1, "h": 1, "img": "./deltaforce-loot-assets/items/13160000007.webp", "p": 31242}, {"n": "特种钢", "g": 4, "w": 2, "h": 1, "img": "./deltaforce-loot-assets/items/15020050005.webp", "p": 22412}, {"n": ".357左轮逐风者长枪管", "g": 2, "w": 2, "h": 1, "img": "./deltaforce-loot-assets/items/13020000485.webp", "p": 20646}, {"n": "竞赛阻手器", "g": 4, "w": 1, "h": 1, "img": "./deltaforce-loot-assets/items/13140000024.webp", "p": 25077}, {"n": "全景红点瞄准镜", "g": 3, "w": 1, "h": 1, "img": "./deltaforce-loot-assets/items/13110000043.webp", "p": 33929}, {"n": "93R实用轻枪管", "g": 2, "w": 2, "h": 1, "img": "./deltaforce-loot-assets/items/13020000466.webp", "p": 3041}, {"n": ".45 ACP HS", "g": 1, "w": 1, "h": 1, "img": "./deltaforce-loot-assets/items/45-ACP.webp", "p": 43}, {"n": "5.7x28mm SS198LF", "g": 1, "w": 1, "h": 1, "img": "./deltaforce-loot-assets/items/5.7x28.webp", "p": 38}, {"n": "5.56x45mm RRLP", "g": 1, "w": 1, "h": 1, "img": "./deltaforce-loot-assets/items/5.56x45mm.webp", "p": 35}, {"n": "12 Gauge独头 GT", "g": 2, "w": 1, "h": 1, "img": "./deltaforce-loot-assets/items/12-Gauge.webp", "p": 65}, {"n": "9x19mm PSO", "g": 1, "w": 1, "h": 1, "img": "./deltaforce-loot-assets/items/9x19.webp", "p": 32}, {"n": "扑克牌-Q", "g": 1, "w": 1, "h": 1, "img": "./deltaforce-loot-assets/items/15040010008.webp", "p": 1612}, {"n": "建筑图纸1号", "g": 2, "w": 2, "h": 1, "img": "./deltaforce-loot-assets/items/15070010005.webp", "p": 3122}, {"n": "建筑图纸2号", "g": 2, "w": 2, "h": 1, "img": "./deltaforce-loot-assets/items/15070010006.webp", "p": 3960}, {"n": "电子温度计", "g": 3, "w": 2, "h": 2, "img": "./deltaforce-loot-assets/items/15080050039.webp", "p": 18200}, {"n": "情报文件", "g": 3, "w": 1, "h": 2, "img": "./deltaforce-loot-assets/items/15070050003.webp", "p": 16045}, {"n": "手机电池", "g": 2, "w": 1, "h": 1, "img": "./deltaforce-loot-assets/items/15030010002.webp", "p": 2272}, {"n": "无糖缓释能量棒", "g": 2, "w": 1, "h": 1, "img": "./deltaforce-loot-assets/items/15060080004.webp", "p": 2027}, {"n": "咖啡", "g": 5, "w": 1, "h": 1, "img": "./deltaforce-loot-assets/items/15060080014.webp", "p": 72533}, {"n": "锈迹斑斑的海盗铜币", "g": 2, "w": 1, "h": 1, "img": "./deltaforce-loot-assets/items/15080050007.webp", "p": 2566}, {"n": "维生素泡腾片", "g": 3, "w": 1, "h": 1, "img": "./deltaforce-loot-assets/items/15080050073.webp", "p": 10576}, {"n": "残弹挂坠", "g": 2, "w": 1, "h": 1, "img": "./deltaforce-loot-assets/items/15080040004.webp", "p": 3490}, {"n": "扑克牌-8", "g": 1, "w": 1, "h": 1, "img": "./deltaforce-loot-assets/items/15080050048.webp", "p": 15008}, {"n": "输液工具", "g": 2, "w": 1, "h": 1, "img": "./deltaforce-loot-assets/items/15060010012.webp", "p": 2371}, {"n": "扑克牌-2", "g": 1, "w": 1, "h": 1, "img": "./deltaforce-loot-assets/items/15080050054.webp", "p": 902}, {"n": "战术快拆手术包", "g": 2, "w": 2, "h": 1, "img": "./deltaforce-loot-assets/items/14030000002.webp", "p": 8943}, {"n": "人工膝关节", "g": 4, "w": 1, "h": 2, "img": "./deltaforce-loot-assets/items/15080050114.webp", "p": 24434}, {"n": "强效注射器", "g": 2, "w": 1, "h": 1, "img": "./deltaforce-loot-assets/items/14020000003.webp", "p": 7465}, {"n": "DVE止疼片", "g": 4, "w": 1, "h": 1, "img": "./deltaforce-loot-assets/items/14050000003.webp", "p": 24326}, {"n": "野战急救包", "g": 3, "w": 2, "h": 1, "img": "./deltaforce-loot-assets/items/14020000004.webp", "p": 13486}, {"n": "听诊器", "g": 3, "w": 1, "h": 2, "img": "./deltaforce-loot-assets/items/15060010006.webp", "p": 17816}, {"n": "音频播放器", "g": 3, "w": 1, "h": 1, "img": "./deltaforce-loot-assets/items/15030010008.webp", "p": 10723}, {"n": "手术镊子", "g": 2, "w": 1, "h": 1, "img": "./deltaforce-loot-assets/items/15060010002.webp", "p": 2448}, {"n": "印刷电路板", "g": 2, "w": 1, "h": 1, "img": "./deltaforce-loot-assets/items/15030010013.webp", "p": 2596}, {"n": "资料：商业文件", "g": 3, "w": 1, "h": 1, "img": "./deltaforce-loot-assets/items/15070040002.webp", "p": 8361}, {"n": "个人信笺", "g": 2, "w": 2, "h": 1, "img": "./deltaforce-loot-assets/items/15090910023.webp", "p": 3286}, {"n": "鳄鱼蛋", "g": 4, "w": 1, "h": 1, "img": "./deltaforce-loot-assets/items/15080050136.webp", "p": 23089}, {"n": "建筑图纸5号", "g": 2, "w": 2, "h": 1, "img": "./deltaforce-loot-assets/items/15070010009.webp", "p": 3308}, {"n": "低级燃料", "g": 3, "w": 1, "h": 1, "img": "./deltaforce-loot-assets/items/15020010034.webp", "p": 14912}, {"n": "9V电池", "g": 2, "w": 1, "h": 1, "img": "./deltaforce-loot-assets/items/15080050111.webp", "p": 2883}, {"n": "一桶油漆", "g": 3, "w": 2, "h": 2, "img": "./deltaforce-loot-assets/items/15020010016.webp", "p": 25179}, {"n": "盒装蜡烛", "g": 1, "w": 2, "h": 2, "img": "./deltaforce-loot-assets/items/15080050112.webp", "p": 2264}, {"n": "阿萨拉时尚周刊", "g": 3, "w": 2, "h": 2, "img": "./deltaforce-loot-assets/items/15080050021.webp", "p": 18748}, {"n": "火药", "g": 3, "w": 1, "h": 2, "img": "./deltaforce-loot-assets/items/15040010017.webp", "p": 23250}, {"n": "便携生存套组", "g": 4, "w": 2, "h": 1, "img": "./deltaforce-loot-assets/items/15080050106.webp", "p": 24350}, {"n": "机械破障锤", "g": 3, "w": 2, "h": 2, "img": "./deltaforce-loot-assets/items/15020010018.webp", "p": 41195}, {"n": "转换插座", "g": 3, "w": 1, "h": 1, "img": "./deltaforce-loot-assets/items/15040010022.webp", "p": 10667}, {"n": "轻型户外炉具", "g": 3, "w": 2, "h": 2, "img": "./deltaforce-loot-assets/items/15080050109.webp", "p": 24376}, {"n": "石工锤", "g": 2, "w": 3, "h": 1, "img": "./deltaforce-loot-assets/items/15080050084.webp", "p": 12949}, {"n": "电动车电池", "g": 4, "w": 3, "h": 2, "img": "./deltaforce-loot-assets/items/15040040007.webp", "p": 85578}, {"n": "芳纶纤维", "g": 3, "w": 2, "h": 1, "img": "./deltaforce-loot-assets/items/15020040002.webp", "p": 24595}, {"n": "水平仪", "g": 2, "w": 1, "h": 2, "img": "./deltaforce-loot-assets/items/15020040004.webp", "p": 4236}, {"n": "便携液压扳手", "g": 2, "w": 1, "h": 1, "img": "./deltaforce-loot-assets/items/15020010017.webp", "p": 2258}, {"n": "电笔", "g": 2, "w": 1, "h": 1, "img": "./deltaforce-loot-assets/items/15020010020.webp", "p": 2486}, {"n": "狩猎火柴", "g": 3, "w": 1, "h": 1, "img": "./deltaforce-loot-assets/items/15080050107.webp", "p": 98800}, {"n": "电线", "g": 2, "w": 1, "h": 1, "img": "./deltaforce-loot-assets/items/15020010012.webp", "p": 2377}, {"n": "喷漆", "g": 2, "w": 1, "h": 2, "img": "./deltaforce-loot-assets/items/15020010030.webp", "p": 3739}, {"n": "插座", "g": 2, "w": 1, "h": 1, "img": "./deltaforce-loot-assets/items/15040010012.webp", "p": 2278}, {"n": "摩卡咖啡壶", "g": 3, "w": 1, "h": 2, "img": "./deltaforce-loot-assets/items/15080050072.webp", "p": 17244}, {"n": "迷你氢电池", "g": 2, "w": 1, "h": 1, "img": "./deltaforce-loot-assets/items/15010010015.webp", "p": 2562}, {"n": "建筑图纸3号", "g": 2, "w": 2, "h": 1, "img": "./deltaforce-loot-assets/items/15070010007.webp", "p": 3735}, {"n": "枪械零件", "g": 3, "w": 2, "h": 1, "img": "./deltaforce-loot-assets/items/15040010021.webp", "p": 17654}, {"n": "精密工具组", "g": 1, "w": 1, "h": 1, "img": "./deltaforce-loot-assets/items/15020010001.webp", "p": 1086}, {"n": "手锯", "g": 2, "w": 3, "h": 1, "img": "./deltaforce-loot-assets/items/15080050087.webp", "p": 12136}, {"n": "原木木板", "g": 2, "w": 2, "h": 1, "img": "./deltaforce-loot-assets/items/15020010008.webp", "p": 4200}, {"n": "阿萨拉新闻周刊", "g": 2, "w": 2, "h": 2, "img": "./deltaforce-loot-assets/items/15080050020.webp", "p": 5818}, {"n": "酒店宣传海报", "g": 2, "w": 2, "h": 2, "img": "./deltaforce-loot-assets/items/15080050019.webp", "p": 4739}, {"n": "太阳能板", "g": 3, "w": 4, "h": 2, "img": "./deltaforce-loot-assets/items/15030050016.webp", "p": 33720}, {"n": "可编程处理器", "g": 5, "w": 1, "h": 1, "img": "./deltaforce-loot-assets/items/15030050003.webp", "p": 72219}, {"n": "LED灯管", "g": 2, "w": 2, "h": 1, "img": "./deltaforce-loot-assets/items/15020010032.webp", "p": 3329}, {"n": "压力计", "g": 2, "w": 1, "h": 2, "img": "./deltaforce-loot-assets/items/15020040003.webp", "p": 4124}, {"n": "军情录音", "g": 3, "w": 1, "h": 3, "img": "./deltaforce-loot-assets/items/15080050096.webp", "p": 28655}, {"n": "无菌敷料包", "g": 4, "w": 1, "h": 2, "img": "./deltaforce-loot-assets/items/15080050057.webp", "p": 50945}, {"n": "键盘", "g": 2, "w": 2, "h": 1, "img": "./deltaforce-loot-assets/items/15030010014.webp", "p": 3059}, {"n": "胡椒瓶", "g": 1, "w": 1, "h": 1, "img": "./deltaforce-loot-assets/items/15080050081.webp", "p": 1770}, {"n": "含氟牙膏", "g": 1, "w": 1, "h": 2, "img": "./deltaforce-loot-assets/items/15010010004.webp", "p": 2264}, {"n": "阿萨拉特色陶瓷", "g": 2, "w": 2, "h": 2, "img": "./deltaforce-loot-assets/items/15080050017.webp", "p": 5858}, {"n": "物流信息单", "g": 1, "w": 1, "h": 1, "img": "./deltaforce-loot-assets/items/15090910019.webp", "p": 1039}, {"n": "扑克牌-10", "g": 1, "w": 1, "h": 1, "img": "./deltaforce-loot-assets/items/15080050046.webp", "p": 910}, {"n": "手术剪刀", "g": 1, "w": 1, "h": 1, "img": "./deltaforce-loot-assets/items/15060010008.webp", "p": 1012}, {"n": "防水胶布", "g": 1, "w": 1, "h": 1, "img": "./deltaforce-loot-assets/items/15020010002.webp", "p": 1077}, {"n": "电容", "g": 2, "w": 1, "h": 1, "img": "./deltaforce-loot-assets/items/15020050007.webp", "p": 2639}, {"n": "高出力粉碎钳", "g": 4, "w": 1, "h": 2, "img": "./deltaforce-loot-assets/items/15020010024.webp", "p": 41548}, {"n": "波纹软管", "g": 2, "w": 1, "h": 1, "img": "./deltaforce-loot-assets/items/15020010026.webp", "p": 2373}, {"n": "直角尺", "g": 1, "w": 1, "h": 2, "img": "./deltaforce-loot-assets/items/15020010014.webp", "p": 2590}, {"n": "香喷喷炒面", "g": 3, "w": 1, "h": 1, "img": "./deltaforce-loot-assets/items/15060080010.webp", "p": 10292}, {"n": "火柴", "g": 1, "w": 1, "h": 1, "img": "./deltaforce-loot-assets/items/15010010008.webp", "p": 1069}, {"n": "注射器", "g": 2, "w": 1, "h": 1, "img": "./deltaforce-loot-assets/items/15060010010.webp", "p": 2249}, {"n": "盐溶液", "g": 2, "w": 1, "h": 1, "img": "./deltaforce-loot-assets/items/15060010001.webp", "p": 2258}, {"n": "电火机", "g": 2, "w": 1, "h": 1, "img": "./deltaforce-loot-assets/items/15010010013.webp", "p": 2668}, {"n": "非洲鼓", "g": 2, "w": 1, "h": 2, "img": "./deltaforce-loot-assets/items/15080010003.webp", "p": 4276}, {"n": "黄金饰章", "g": 4, "w": 1, "h": 2, "img": "./deltaforce-loot-assets/items/15080050018.webp", "p": 23440}, {"n": "电动爆破锤", "g": 2, "w": 2, "h": 1, "img": "./deltaforce-loot-assets/items/15020010007.webp", "p": 4198}, {"n": "医用酒精", "g": 3, "w": 1, "h": 1, "img": "./deltaforce-loot-assets/items/15060010007.webp", "p": 10508}, {"n": "螺丝刀", "g": 2, "w": 1, "h": 1, "img": "./deltaforce-loot-assets/items/15020010005.webp", "p": 2861}, {"n": "非洲木雕", "g": 2, "w": 1, "h": 2, "img": "./deltaforce-loot-assets/items/15080040005.webp", "p": 4366}, {"n": "苹果", "g": 2, "w": 1, "h": 1, "img": "./deltaforce-loot-assets/items/15060080001.webp", "p": 2783}, {"n": "残缺的档案", "g": 4, "w": 1, "h": 2, "img": "./deltaforce-loot-assets/items/15080050181.webp", "p": 25060}, {"n": "酸奶", "g": 1, "w": 1, "h": 1, "img": "./deltaforce-loot-assets/items/15060080002.webp", "p": 945}, {"n": "当地小报", "g": 1, "w": 2, "h": 1, "img": "./deltaforce-loot-assets/items/15090910016.webp", "p": 1945}, {"n": "鼠标", "g": 1, "w": 1, "h": 1, "img": "./deltaforce-loot-assets/items/15030010009.webp", "p": 922}, {"n": "充电电池组", "g": 2, "w": 1, "h": 1, "img": "./deltaforce-loot-assets/items/15080050110.webp", "p": 3908}, {"n": "糖三角", "g": 3, "w": 1, "h": 1, "img": "./deltaforce-loot-assets/items/15080050076.webp", "p": 12558}, {"n": "生津柠檬茶", "g": 4, "w": 1, "h": 1, "img": "./deltaforce-loot-assets/items/15060080005.webp", "p": 19189}, {"n": "三角洲特种部队：黑鹰坠落-战队之刃", "g": 3, "w": 1, "h": 1, "img": "./deltaforce-loot-assets/items/15080050026.webp", "p": 11302}, {"n": "木雕烟斗", "g": 3, "w": 2, "h": 1, "img": "./deltaforce-loot-assets/items/15080050075.webp", "p": 198612}, {"n": "自制护甲维修包", "g": 3, "w": 2, "h": 1, "img": "./deltaforce-loot-assets/items/14060000008.webp", "p": 21290}, {"n": "专业声卡", "g": 4, "w": 2, "h": 1, "img": "./deltaforce-loot-assets/items/15080050038.webp", "p": 35086}, {"n": "微型燃料棒", "g": 5, "w": 2, "h": 1, "img": "./deltaforce-loot-assets/items/15080050223.webp", "p": 105393}, {"n": "阿萨拉娱乐月刊", "g": 2, "w": 2, "h": 2, "img": "./deltaforce-loot-assets/items/15080050022.webp", "p": 5205}, {"n": "便携燃料瓶", "g": 3, "w": 1, "h": 1, "img": "./deltaforce-loot-assets/items/15080050228.webp", "p": 9958}, {"n": "E型滤毒罐", "g": 5, "w": 1, "h": 1, "img": "./deltaforce-loot-assets/items/15040010019.webp", "p": 88921}, {"n": "工具刀", "g": 1, "w": 2, "h": 1, "img": "./deltaforce-loot-assets/items/15020010006.webp", "p": 2293}, {"n": "盒装挂耳咖啡", "g": 5, "w": 1, "h": 2, "img": "./deltaforce-loot-assets/items/15080050071.webp", "p": 368252}, {"n": "燃气罐", "g": 3, "w": 2, "h": 2, "img": "./deltaforce-loot-assets/items/15020010037.webp", "p": 24420}, {"n": "军用露营灯", "g": 4, "w": 1, "h": 3, "img": "./deltaforce-loot-assets/items/15080050105.webp", "p": 48728}, {"n": "私密笔记簿", "g": 2, "w": 1, "h": 2, "img": "./deltaforce-loot-assets/items/15090910017.webp", "p": 5323}, {"n": "小糖人姜饼人", "g": 4, "w": 1, "h": 2, "img": "./deltaforce-loot-assets/items/15080050183.webp", "p": 24635}, {"n": "部队饰章", "g": 3, "w": 1, "h": 1, "img": "./deltaforce-loot-assets/items/15080050229.webp", "p": 8480}, {"n": "无线耳机", "g": 3, "w": 1, "h": 1, "img": "./deltaforce-loot-assets/items/15080050217.webp", "p": 9330}, {"n": "额温枪", "g": 3, "w": 1, "h": 1, "img": "./deltaforce-loot-assets/items/15060010004.webp", "p": 11561}, {"n": "血氧仪", "g": 5, "w": 1, "h": 1, "img": "./deltaforce-loot-assets/items/15060040003.webp", "p": 63279},
-{"n": "海洋之泪", "g": 6, "w": 1, "h": 1, "img": "", "p": 29923013},
-  {"n": "非洲之心", "g": 6, "w": 1, "h": 1, "img": "", "p": 13141314},
-  {"n": "电子脚镣", "g": 6, "w": 1, "h": 1, "img": "", "p": 1692738},
-  {"n": "装甲车电池", "g": 6, "w": 3, "h": 2, "img": "", "p": 4136832},
-  {"n": "复苏呼吸机", "g": 6, "w": 3, "h": 3, "img": "", "p": 5513736},
-  {"n": "笔记本电脑", "g": 6, "w": 3, "h": 2, "img": "", "p": 3123361},
-  {"n": "微型反应炉", "g": 6, "w": 3, "h": 3, "img": "", "p": 4058384},
-  {"n": "万金泪冠", "g": 6, "w": 3, "h": 3, "img": "", "p": 3514357},
-  {"n": "纵横", "g": 6, "w": 3, "h": 3, "img": "", "p": 3324872},
-  {"n": "飞行记录仪", "g": 6, "w": 3, "h": 2, "img": "", "p": 2038735},
-  {"n": "黄金瞪羚", "g": 6, "w": 2, "h": 2, "img": "", "p": 432780},
-  {"n": "主战坦克模型", "g": 6, "w": 3, "h": 3, "img": "", "p": 2117465},
-  {"n": "曼德尔超算单元", "g": 6, "w": 3, "h": 3, "img": "", "p": 2029029},
-  {"n": "便携军用雷达", "g": 6, "w": 3, "h": 3, "img": "", "p": 2154765},
-  {"n": "军用电台", "g": 6, "w": 2, "h": 2, "img": "", "p": 1063816},
-  {"n": "克劳狄乌斯半身像", "g": 6, "w": 3, "h": 3, "img": "", "p": 1326548},
-  {"n": "步战车模型", "g": 6, "w": 3, "h": 3, "img": "", "p": 1317112},
-  {"n": "绝密服务器", "g": 6, "w": 3, "h": 3, "img": "", "p": 2080379},
-  {"n": "高速磁盘阵列", "g": 6, "w": 3, "h": 2, "img": "", "p": 1559329},
-  {"n": "刀片服务器", "g": 6, "w": 3, "h": 4, "img": "", "p": 1440240},
-  {"n": "ECMO", "g": 6, "w": 3, "h": 3, "img": "", "p": 2373262},
-  {"n": "强化碳纤维板", "g": 6, "w": 3, "h": 3, "img": "", "p": 2264311},
-  {"n": "航天冷却剂", "g": 5, "w": 2, "h": 1, "img": "", "p": 566673},
-  {"n": "镜头", "g": 5, "w": 1, "h": 1, "img": "", "p": 267691},
-  {"n": "渡鸦项坠", "g": 5, "w": 1, "h": 1, "img": "", "p": 139671},
-  {"n": "格赫罗斯的审判", "g": 5, "w": 1, "h": 1, "img": "", "p": 97941},
-  {"n": "哮喘吸入器", "g": 5, "w": 1, "h": 1, "img": "", "p": 90093},
-  {"n": "静脉定位器", "g": 5, "w": 1, "h": 1, "img": "", "p": 82856},
-  {"n": "雷斯的乐谱本", "g": 5, "w": 2, "h": 1, "img": "", "p": 151645},
-  {"n": "高速固态硬盘", "g": 5, "w": 1, "h": 1, "img": "", "p": 75568},
-  {"n": "万足金条", "g": 5, "w": 1, "h": 2, "img": "", "p": 333903},
-  {"n": "名贵机械表", "g": 5, "w": 1, "h": 1, "img": "", "p": 212469},
-  {"n": "赛伊德的怀表", "g": 5, "w": 1, "h": 1, "img": "", "p": 216831},
-  {"n": "显卡", "g": 5, "w": 2, "h": 1, "img": "", "p": 335213},
-  {"n": "军用无人机", "g": 5, "w": 2, "h": 1, "img": "", "p": 551235},
-  {"n": "军用信息终端", "g": 5, "w": 2, "h": 1, "img": "", "p": 905135},
-  {"n": "印象派名画", "g": 5, "w": 3, "h": 3, "img": "", "p": 2055651},
-  {"n": "黄金鳄鱼头雕像", "g": 5, "w": 2, "h": 2, "img": "", "p": 509063},
-  {"n": "名窑瓷器", "g": 5, "w": 3, "h": 3, "img": "", "p": 1463706},
-  {"n": "吴彦祖之镜", "g": 5, "w": 1, "h": 1, "img": "", "p": 200000},
-];
+var CONTAINERS = [{"id": "bxg", "name": "保险柜", "pic": "./deltaforce-loot-assets/containers/bxg.webp", "types": ["工艺藏品", "非洲之心"], "real": "3*3、2*2(普通极小概率出绿)、1*3、1*4", "maybe": "2*3、3*2、1*1、1*2、2*1", "none": "无", "cols": 4, "rows": 6}, {"id": "xbxx", "name": "小保险箱", "pic": "./deltaforce-loot-assets/containers/xbxx.webp", "types": ["非洲之心", "工艺藏品", "电子物品"], "real": "3*3、2*2、1*3", "maybe": "2*3、3*2、1*1、1*2、2*1", "none": "无", "cols": 4, "rows": 6}, {"id": "fwq", "name": "服务器", "pic": "./deltaforce-loot-assets/containers/fwq.webp", "types": ["电子物品"], "real": "4*3、3*4、3*3、2*3、1*2", "maybe": "1*1", "none": "2*2", "cols": 4, "rows": 6}, {"id": "dnjx", "name": "电脑机箱", "pic": "./deltaforce-loot-assets/containers/dnjx.webp", "types": ["资料情报", "电子物品"], "real": "3*3", "maybe": "1*2", "none": "2*2", "cols": 4, "rows": 6}, {"id": "dwqx", "name": "大武器箱", "pic": "./deltaforce-loot-assets/containers/dwqx.webp", "types": ["高级咖啡豆", "武器", "配件", "哈机密", "工具材料", "电子物品"], "real": "3*3", "maybe": "2*3、3*2、2*2、1*1", "none": "1*2", "cols": 4, "rows": 6}, {"id": "dyx", "name": "弹药箱", "pic": "./deltaforce-loot-assets/containers/dyx.webp", "types": ["子弹", "能源燃料", "工具材料"], "real": "3*3、3*2", "maybe": "2*3", "none": "无", "cols": 4, "rows": 6}, {"id": "ctg", "name": "抽屉柜", "pic": "./deltaforce-loot-assets/containers/ctg.webp", "types": ["资料情报", "医疗道具", "家居物品", "工艺藏品"], "real": "1*4、3*3、3*2", "maybe": "无", "none": "无", "cols": 4, "rows": 4}, {"id": "syf", "name": "实验服", "pic": "./deltaforce-loot-assets/containers/syf.webp", "types": ["资料情报", "钥匙卡", "工艺藏品", "电子物品", "家居物品", "医疗道具"], "real": "无", "maybe": "1*2、2*1、1*1", "none": "无", "cols": 4, "rows": 4}, {"id": "yf", "name": "衣服", "pic": "./deltaforce-loot-assets/containers/yf.webp", "types": ["资料情报", "钥匙卡", "工艺藏品", "电子物品", "家居物品", "医疗道具"], "real": "无", "maybe": "1*2、2*1、1*1", "none": "无", "cols": 4, "rows": 4}, {"id": "ylwzd", "name": "医疗物资堆", "pic": "./deltaforce-loot-assets/containers/ylwzd.webp", "types": ["药品", "针剂", "医疗道具"], "real": "3*3、3*2", "maybe": "2*3", "none": "无", "cols": 4, "rows": 6}];
+var ITEM_POOL = [{"n": "图腾箭矢", "g": 4, "w": 1, "h": 1, "img": "./deltaforce-loot-assets/items/15080050139.webp", "p": 14792}, {"n": "发条八音盒", "g": 5, "w": 1, "h": 1, "img": "./deltaforce-loot-assets/items/15080050137.webp", "p": 59277}, {"n": "金枝桂冠", "g": 5, "w": 2, "h": 1, "img": "./deltaforce-loot-assets/items/15080050138.webp", "p": 85856}, {"n": "后妃耳环", "g": 4, "w": 1, "h": 1, "img": "./deltaforce-loot-assets/items/15080050001.webp", "p": 15121}, {"n": "腕带", "g": 3, "w": 1, "h": 1, "img": "./deltaforce-loot-assets/items/15080050194.webp", "p": 10395}, {"n": "阿萨拉特色酒杯", "g": 5, "w": 1, "h": 1, "img": "./deltaforce-loot-assets/items/15080050015.webp", "p": 63296}, {"n": "古怪的海盗银币", "g": 3, "w": 1, "h": 1, "img": "./deltaforce-loot-assets/items/15080050008.webp", "p": 9775}, {"n": "荷美尔陶俑", "g": 5, "w": 1, "h": 2, "img": "./deltaforce-loot-assets/items/15080050135.webp", "p": 91550}, {"n": "功绩勋章", "g": 5, "w": 1, "h": 1, "img": "./deltaforce-loot-assets/items/15080050004.webp", "p": 82213}, {"n": "初级子弹生产零件", "g": 3, "w": 1, "h": 2, "img": "./deltaforce-loot-assets/items/15080050023.webp", "p": 21598}, {"n": "典雅咖啡杯", "g": 4, "w": 1, "h": 1, "img": "./deltaforce-loot-assets/items/15080050182.webp", "p": 15108}, {"n": "“起舞的女郎”挂饰", "g": 3, "w": 1, "h": 2, "img": "./deltaforce-loot-assets/items/15080050012.webp", "p": 15922}, {"n": "继电器", "g": 3, "w": 1, "h": 1, "img": "./deltaforce-loot-assets/items/15020050008.webp", "p": 11091}, {"n": "存储卡", "g": 3, "w": 1, "h": 1, "img": "./deltaforce-loot-assets/items/15070010002.webp", "p": 9961}, {"n": "电源", "g": 2, "w": 2, "h": 2, "img": "./deltaforce-loot-assets/items/15030010011.webp", "p": 5991}, {"n": "脑机头戴设备", "g": 5, "w": 2, "h": 2, "img": "./deltaforce-loot-assets/items/15080050189.webp", "p": 207076}, {"n": "超高频读卡器", "g": 2, "w": 1, "h": 1, "img": "./deltaforce-loot-assets/items/15030040011.webp", "p": 2687}, {"n": "电子干扰器", "g": 4, "w": 1, "h": 1, "img": "./deltaforce-loot-assets/items/15030040014.webp", "p": 13025}, {"n": "离心机", "g": 3, "w": 2, "h": 2, "img": "./deltaforce-loot-assets/items/15070010010.webp", "p": 20051}, {"n": "特色高尔夫球具", "g": 3, "w": 2, "h": 1, "img": "./deltaforce-loot-assets/items/15080050195.webp", "p": 11605}, {"n": "盒装挂耳咖啡", "g": 3, "w": 1, "h": 1, "img": "./deltaforce-loot-assets/items/15080050007.webp", "p": 10091}, {"n": "电子显微镜", "g": 4, "w": 2, "h": 1, "img": "./deltaforce-loot-assets/items/15070010012.webp", "p": 14874}, {"n": "盒装挂耳咖啡", "g": 1, "w": 1, "h": 1, "img": "./deltaforce-loot-assets/items/15010050005.webp", "p": 1477}, {"n": "CPU", "g": 3, "w": 1, "h": 1, "img": "./deltaforce-loot-assets/items/15030010004.webp", "p": 10786}, {"n": "燃料电池", "g": 4, "w": 2, "h": 2, "img": "./deltaforce-loot-assets/items/15030020002.webp", "p": 15853}, {"n": "瓶装直饮水", "g": 1, "w": 1, "h": 2, "img": "./deltaforce-loot-assets/items/15010050002.webp", "p": 264}, {"n": "转接器", "g": 2, "w": 1, "h": 1, "img": "./deltaforce-loot-assets/items/15020050005.webp", "p": 4998}, {"n": "信号干扰器", "g": 3, "w": 2, "h": 1, "img": "./deltaforce-loot-assets/items/15030040012.webp", "p": 10914}, {"n": "工具箱", "g": 2, "w": 2, "h": 2, "img": "./deltaforce-loot-assets/items/15050010006.webp", "p": 4855}, {"n": "军用炸药", "g": 3, "w": 2, "h": 1, "img": "./deltaforce-loot-assets/items/15020020006.webp", "p": 10481}, {"n": "钢琴", "g": 3, "w": 2, "h": 2, "img": "./deltaforce-loot-assets/items/15080050009.webp", "p": 18874}, {"n": "平板电脑", "g": 3, "w": 1, "h": 2, "img": "./deltaforce-loot-assets/items/15030010002.webp", "p": 9808}, {"n": "强力胶", "g": 1, "w": 1, "h": 1, "img": "./deltaforce-loot-assets/items/15050010001.webp", "p": 1139}, {"n": "阿萨拉特色酒壶", "g": 5, "w": 1, "h": 2, "img": "./deltaforce-loot-assets/items/15080050016.webp", "p": 91808}, {"n": "荣誉勋章", "g": 4, "w": 1, "h": 1, "img": "./deltaforce-loot-assets/items/15080050002.webp", "p": 14620}, {"n": "名贵钢笔", "g": 3, "w": 1, "h": 1, "img": "./deltaforce-loot-assets/items/15080050190.webp", "p": 9803}, {"n": "固态硬盘", "g": 3, "w": 1, "h": 1, "img": "./deltaforce-loot-assets/items/15030010003.webp", "p": 10217}, {"n": "手机", "g": 2, "w": 1, "h": 1, "img": "./deltaforce-loot-assets/items/15030010001.webp", "p": 3936}, {"n": "冲锋手枪", "g": 2, "w": 2, "h": 1, "img": "./deltaforce-loot-assets/items/15020020003.webp", "p": 6873}, {"n": "海盗弯刀", "g": 3, "w": 1, "h": 3, "img": "./deltaforce-loot-assets/items/15080050017.webp", "p": 26113}, {"n": "高级咖啡豆", "g": 2, "w": 1, "h": 1, "img": "./deltaforce-loot-assets/items/15010050008.webp", "p": 4608}, {"n": "镜头", "g": 3, "w": 1, "h": 1, "img": "./deltaforce-loot-assets/items/15030010005.webp", "p": 10226}, {"n": "显卡", "g": 4, "w": 2, "h": 1, "img": "./deltaforce-loot-assets/items/15030010006.webp", "p": 15197}, {"n": "袋装咖啡豆", "g": 1, "w": 1, "h": 1, "img": "./deltaforce-loot-assets/items/15010050007.webp", "p": 1464}, {"n": "气垫船模型", "g": 4, "w": 1, "h": 2, "img": "./deltaforce-loot-assets/items/15080050003.webp", "p": 14714}, {"n": "袋装蛋黄酱", "g": 1, "w": 1, "h": 1, "img": "./deltaforce-loot-assets/items/15010050013.webp", "p": 360}, {"n": "特种钢", "g": 2, "w": 2, "h": 1, "img": "./deltaforce-loot-assets/items/15050010004.webp", "p": 5728}, {"n": "电子温度计", "g": 2, "w": 1, "h": 1, "img": "./deltaforce-loot-assets/items/15070010007.webp", "p": 5200}, {"n": "蓄电池", "g": 3, "w": 1, "h": 2, "img": "./deltaforce-loot-assets/items/15030020003.webp", "p": 9911}, {"n": "可编程处理器", "g": 3, "w": 1, "h": 1, "img": "./deltaforce-loot-assets/items/15030040005.webp", "p": 10474}, {"n": "工具零件", "g": 1, "w": 1, "h": 1, "img": "./deltaforce-loot-assets/items/15050010002.webp", "p": 1274}, {"n": "燃气喷灯", "g": 2, "w": 2, "h": 1, "img": "./deltaforce-loot-assets/items/15050010005.webp", "p": 5297}, {"n": "激光指示器", "g": 3, "w": 1, "h": 1, "img": "./deltaforce-loot-assets/items/15020050011.webp", "p": 10644}, {"n": "瓶装阿萨拉瓦卡", "g": 1, "w": 1, "h": 2, "img": "./deltaforce-loot-assets/items/15010050004.webp", "p": 405}, {"n": "本地特色首饰", "g": 4, "w": 1, "h": 1, "img": "./deltaforce-loot-assets/items/15080050191.webp", "p": 14891}, {"n": "座钟", "g": 4, "w": 1, "h": 2, "img": "./deltaforce-loot-assets/items/15080050013.webp", "p": 14528}, {"n": "电缆", "g": 2, "w": 1, "h": 2, "img": "./deltaforce-loot-assets/items/15020050004.webp", "p": 4866}, {"n": "燃料电池", "g": 3, "w": 2, "h": 1, "img": "./deltaforce-loot-assets/items/15030020001.webp", "p": 10583}, {"n": "高尔基奖券", "g": 3, "w": 1, "h": 1, "img": "./deltaforce-loot-assets/items/15080050192.webp", "p": 9864}, {"n": "标准军用罐", "g": 2, "w": 1, "h": 1, "img": "./deltaforce-loot-assets/items/15010050012.webp", "p": 3862}, {"n": "游戏机等", "g": 3, "w": 2, "h": 1, "img": "./deltaforce-loot-assets/items/15070010003.webp", "p": 9996}, {"n": "信号接收器", "g": 3, "w": 2, "h": 2, "img": "./deltaforce-loot-assets/items/15030040008.webp", "p": 20120}, {"n": "气钻", "g": 2, "w": 2, "h": 1, "img": "./deltaforce-loot-assets/items/15050010007.webp", "p": 5563}, {"n": "高级子弹零件", "g": 3, "w": 1, "h": 1, "img": "./deltaforce-loot-assets/items/15020050009.webp", "p": 9981}, {"n": "军用炮弹", "g": 3, "w": 1, "h": 3, "img": "./deltaforce-loot-assets/items/15020020005.webp", "p": 26886}, {"n": "实木相框", "g": 2, "w": 1, "h": 2, "img": "./deltaforce-loot-assets/items/15080050018.webp", "p": 5834}, {"n": "电钻", "g": 2, "w": 2, "h": 1, "img": "./deltaforce-loot-assets/items/15050010008.webp", "p": 5321}, {"n": "对讲机", "g": 2, "w": 1, "h": 1, "img": "./deltaforce-loot-assets/items/15030040001.webp", "p": 3876}, {"n": "咖啡包", "g": 1, "w": 1, "h": 1, "img": "./deltaforce-loot-assets/items/15010050006.webp", "p": 1848}, {"n": "血压仪", "g": 2, "w": 1, "h": 1, "img": "./deltaforce-loot-assets/items/15070010006.webp", "p": 4256}, {"n": "军用无人机", "g": 5, "w": 2, "h": 1, "img": "./deltaforce-loot-assets/items/15030040015.webp", "p": 551235}, {"n": "燃料电池组", "g": 4, "w": 2, "h": 2, "img": "./deltaforce-loot-assets/items/15030020004.webp", "p": 15561}, {"n": "惯性测量仪", "g": 3, "w": 1, "h": 1, "img": "./deltaforce-loot-assets/items/15030040010.webp", "p": 10043}, {"n": "静脉定位器", "g": 5, "w": 1, "h": 1, "img": "./deltaforce-loot-assets/items/15070010013.webp", "p": 82856}, {"n": "名窑瓷器", "g": 5, "w": 3, "h": 3, "img": "./deltaforce-loot-assets/items/15080050010.webp", "p": 1463706}, {"n": "步战车模型", "g": 6, "w": 3, "h": 3, "img": "", "p": 1317112}, {"n": "强化碳纤维板", "g": 6, "w": 3, "h": 3, "img": "", "p": 2264311}, {"n": "阿萨拉特色酒杯", "g": 5, "w": 1, "h": 1, "img": "./deltaforce-loot-assets/items/15080050014.webp", "p": 63296}, {"n": "非洲之心", "g": 6, "w": 1, "h": 1, "img": "", "p": 13141314}, {"n": "电子脚镣", "g": 6, "w": 1, "h": 1, "img": "", "p": 1692738}, {"n": "装甲车电池", "g": 6, "w": 3, "h": 2, "img": "", "p": 4136832}, {"n": "复苏呼吸机", "g": 6, "w": 3, "h": 3, "img": "", "p": 5513736}, {"n": "笔记本电脑", "g": 6, "w": 3, "h": 2, "img": "", "p": 3123361}, {"n": "微型反应炉", "g": 6, "w": 3, "h": 3, "img": "", "p": 4058384}, {"n": "万金泪冠", "g": 6, "w": 3, "h": 3, "img": "", "p": 3514357}, {"n": "纵横", "g": 6, "w": 3, "h": 3, "img": "", "p": 3324872}, {"n": "飞行记录仪", "g": 6, "w": 3, "h": 2, "img": "", "p": 2038735}, {"n": "黄金瞪羚", "g": 6, "w": 2, "h": 2, "img": "", "p": 432780}, {"n": "主战坦克模型", "g": 6, "w": 3, "h": 3, "img": "", "p": 2117465}, {"n": "曼德尔超算单元", "g": 6, "w": 3, "h": 3, "img": "", "p": 2029029}, {"n": "便携军用雷达", "g": 6, "w": 3, "h": 3, "img": "", "p": 2154765}, {"n": "军用电台", "g": 6, "w": 2, "h": 2, "img": "", "p": 1063816}, {"n": "克劳狄乌斯半身像", "g": 6, "w": 3, "h": 3, "img": "", "p": 1326548}, {"n": "绝密服务器", "g": 6, "w": 3, "h": 3, "img": "", "p": 2080379}, {"n": "高速磁盘阵列", "g": 6, "w": 3, "h": 2, "img": "", "p": 1559329}, {"n": "刀片服务器", "g": 6, "w": 3, "h": 4, "img": "", "p": 1440240}, {"n": "ECMO", "g": 6, "w": 3, "h": 3, "img": "", "p": 2373262}, {"n": "航天冷却剂", "g": 5, "w": 2, "h": 1, "img": "", "p": 566673}, {"n": "渡鸦项坠", "g": 5, "w": 1, "h": 1, "img": "", "p": 139671}, {"n": "格赫罗斯的审判", "g": 5, "w": 1, "h": 1, "img": "", "p": 97941}, {"n": "哮喘吸入器", "g": 5, "w": 1, "h": 1, "img": "", "p": 90093}, {"n": "雷斯的乐谱本", "g": 5, "w": 2, "h": 1, "img": "", "p": 151645}, {"n": "高速固态硬盘", "g": 5, "w": 1, "h": 1, "img": "", "p": 75568}, {"n": "万足金条", "g": 5, "w": 1, "h": 2, "img": "", "p": 333903}, {"n": "名贵机械表", "g": 5, "w": 1, "h": 1, "img": "", "p": 212469}, {"n": "赛伊德的怀表", "g": 5, "w": 1, "h": 1, "img": "", "p": 216831}, {"n": "显卡", "g": 5, "w": 2, "h": 1, "img": "", "p": 335213}, {"n": "军用信息终端", "g": 5, "w": 2, "h": 1, "img": "", "p": 905135}, {"n": "印象派名画", "g": 5, "w": 3, "h": 3, "img": "", "p": 2055651}, {"n": "黄金鳄鱼头雕像", "g": 5, "w": 2, "h": 2, "img": "", "p": 509063}, {"n": "吴彦祖之镜", "g": 5, "w": 1, "h": 1, "img": "", "p": 200000}, {"n": "海洋之泪", "g": 6, "w": 1, "h": 1, "img": "", "p": 29923013}];
 var GRADE_WEIGHT = {1:60,2:30,3:10,4:3,5:4,6:2};
 var GRADE_COLOR = {1:'var(--r1)',2:'var(--r2)',3:'var(--r3)',4:'var(--r4)',5:'var(--r5)',6:'var(--r6)'};
-  var GRADE_NAME = {1:'普通',2:'精良',3:'稀有',4:'史诗',5:'传说·金',6:'神话·红'};
+var GRADE_NAME = {1:'普通',2:'精良',3:'稀有',4:'史诗',5:'传说·金',6:'神话·红'};
 var stats = {search:0,items:0,value:0,rare:0};
-var scanning = false;
-
-function fixContainerPic(pic){
-  return pic;
-}
+var currentSearch = {cid:null, count:0, c:null};
+var lastResult = null;
 
 function formatPrice(n){
   if(!isFinite(n)||n<=0) return '0';
   if(n<1000) return String(Math.round(n));
   if(n<1000000) return (n/1000).toFixed(1)+'K';
   return (n/1000000).toFixed(1)+'M';
+}
+
+function getContainer(id){
+  for(var i=0;i<CONTAINERS.length;i++){if(CONTAINERS[i].id===id) return CONTAINERS[i];}
+  return null;
 }
 
 function renderContainers(){
@@ -195,18 +192,10 @@ function renderContainers(){
     var body = document.createElement('div');
     body.className = 'ct-body';
     var img = document.createElement('img');
-    img.src = fixContainerPic(c.pic);
+    img.src = c.pic;
     img.className = 'ct-img';
     img.alt = c.name;
     body.appendChild(img);
-    var info = document.createElement('div');
-    info.className = 'ct-info';
-    var types = (c.types||[]).map(function(t){return '<span class="tag">'+escapeHtml(t)+'</span>';}).join('');
-    info.innerHTML = '<p><b>主要产物：</b>'+types+'</p>'+
-      '<p><b>必出格式：</b>'+escapeHtml(c.real||'无')+'</p>'+
-      '<p><b>可能格式：</b>'+escapeHtml(c.maybe||'无')+'</p>'+
-      '<p><b>不出格式：</b>'+escapeHtml(c.none||'无')+'</p>';
-    body.appendChild(info);
     card.appendChild(body);
 
     var footer = document.createElement('div');
@@ -223,10 +212,6 @@ function renderContainers(){
     card.appendChild(footer);
     grid.appendChild(card);
   }
-}
-
-function escapeHtml(s){
-  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 }
 
 function rollItem(){
@@ -290,30 +275,17 @@ function layoutItems(items,cols,rows){
   return placements;
 }
 
-function openSearch(containerId,drawCount){
-  if(scanning) return;
-  var c = null;
-  for(var i=0;i<CONTAINERS.length;i++){if(CONTAINERS[i].id===containerId){c=CONTAINERS[i];break;}}
-  if(!c) return;
-
+function searchOneContainer(c){
+  var slots = (c.cols||4)*(c.rows||4);
+  // 每个容器产出 2~6 件物品，容器越大上限越高
+  var minItems = 2;
+  var maxItems = Math.min(6, Math.max(3, Math.floor(slots/4)));
+  var count = minItems + Math.floor(Math.random()*(maxItems-minItems+1));
   var items = [];
-  for(var i=0;i<drawCount;i++){
-    items.push(rollItem());
-  }
-
-  stats.search++;
-  stats.items += items.length;
-  var totalValue = 0;
-  var rare = 0;
-  for(var i=0;i<items.length;i++){
-    totalValue += items[i].p||0;
-    if(items[i].g>=4) rare++;
-  }
-  stats.value += totalValue;
-  stats.rare += rare;
-  updateStats();
-
-  showResult(c,items,totalValue);
+  for(var i=0;i<count;i++) items.push(rollItem());
+  var placements = layoutItems(items,c.cols||4,c.rows||4);
+  var value = items.reduce(function(a,it){return a+(it.p||0);},0);
+  return {c:c, items:items, placements:placements, value:value};
 }
 
 function updateStats(){
@@ -323,41 +295,43 @@ function updateStats(){
   document.getElementById('stRare').textContent = stats.rare;
 }
 
-function showResult(c,items,totalValue){
-  var modal = document.getElementById('modal');
-  var title = document.getElementById('modalTitle');
-  var gridFrame = document.getElementById('gridFrame');
-  var itemLayer = document.getElementById('itemLayer');
-  var scanner = document.getElementById('scanner');
-
-  title.textContent = c.name + ' 搜索中...';
-  modal.classList.add('show');
-  scanning = true;
-
+function renderMiniContainer(result, index, revealDelay){
+  var c = result.c;
   var cols = c.cols||4, rows = c.rows||4;
-  gridFrame.style.gridTemplateColumns = 'repeat('+cols+',48px)';
-  gridFrame.style.gridTemplateRows = 'repeat('+rows+',48px)';
+  var card = document.createElement('div');
+  card.className = 'mini-ct';
 
-  // Build cells
-  var cellsHtml = '';
-  for(var i=0;i<cols*rows;i++) cellsHtml += '<div class="grid-cell"></div>';
-  // replace existing cells but keep itemLayer and scanner
-  gridFrame.innerHTML = cellsHtml + itemLayer.outerHTML + scanner.outerHTML;
-  // rebind references after rebuilding
-  itemLayer = document.getElementById('itemLayer');
-  scanner = document.getElementById('scanner');
+  var header = document.createElement('div');
+  header.className = 'mini-ct-header';
+  header.innerHTML = '<span>'+c.name+'</span><span class="total">'+formatPrice(result.value)+'</span>';
+  card.appendChild(header);
 
-  var placements = layoutItems(items,cols,rows);
+  var body = document.createElement('div');
+  body.className = 'mini-ct-body';
 
-  // Build item nodes
-  itemLayer.innerHTML = '';
+  var frame = document.createElement('div');
+  frame.className = 'grid-frame';
+  frame.style.gridTemplateColumns = 'repeat('+cols+',38px)';
+  frame.style.gridTemplateRows = 'repeat('+rows+',38px)';
+
+  for(var i=0;i<cols*rows;i++){
+    var cell = document.createElement('div');
+    cell.className = 'grid-cell';
+    frame.appendChild(cell);
+  }
+
+  var layer = document.createElement('div');
+  layer.className = 'item-layer';
+  layer.style.gridTemplateColumns = 'repeat('+cols+',38px)';
+  layer.style.gridTemplateRows = 'repeat('+rows+',38px)';
+
   var nodes = [];
-  for(var i=0;i<placements.length;i++){
-    var p = placements[i];
+  for(var i=0;i<result.placements.length;i++){
+    var p = result.placements[i];
     var it = p.item;
     var node = document.createElement('div');
     var rcls = it.g>=6 ? ' legend' : (it.g>=5 ? ' rare' : '');
-  node.className = 'item-node' + rcls;
+    node.className = 'item-node' + rcls;
     node.style.gridColumn = (p.c+1)+' / span '+p.w;
     node.style.gridRow = (p.r+1)+' / span '+p.h;
 
@@ -381,57 +355,143 @@ function showResult(c,items,totalValue){
     price.textContent = formatPrice(it.p||0);
     node.appendChild(price);
 
-    var cover = document.createElement('div');
-    cover.className = 'cover';
-    node.appendChild(cover);
-
-    itemLayer.appendChild(node);
+    layer.appendChild(node);
     nodes.push(node);
   }
 
-  // Scan animation
-  var idx = 0;
-  function scanNext(){
-    if(idx>=nodes.length){
-      scanner.classList.remove('show');
-      title.innerHTML = escapeHtml(c.name)+'（总价值：<span style="color:#ffd700">'+formatPrice(totalValue)+'</span>）';
-      scanning = false;
-      return;
+  frame.appendChild(layer);
+  body.appendChild(frame);
+  card.appendChild(body);
+
+  // stagger reveal
+  if(revealDelay!==undefined){
+    for(var i=0;i<nodes.length;i++){
+      (function(n,idx){
+        setTimeout(function(){ n.style.opacity='1'; n.style.transform='scale(1)'; }, revealDelay + idx*80);
+      })(nodes[i],i);
+      nodes[i].style.opacity='0';
+      nodes[i].style.transform='scale(0.85)';
+      nodes[i].style.transition='all .2s ease';
     }
-    var node = nodes[idx];
-    var rect = node.getBoundingClientRect();
-    var frameRect = gridFrame.getBoundingClientRect();
-    scanner.style.left = (rect.left - frameRect.left + rect.width/2 - 21)+'px';
-    scanner.style.top = (rect.top - frameRect.top + rect.height/2 - 21)+'px';
-    scanner.classList.add('show');
-    setTimeout(function(){
-      node.classList.add('revealed');
-      idx++;
-      setTimeout(scanNext,220);
-    },350);
   }
-  setTimeout(scanNext,200);
+
+  return card;
 }
 
-function closeModal(){
-  document.getElementById('modal').classList.remove('show');
-  scanning = false;
+function openSearch(cid, count){
+  var c = getContainer(cid);
+  if(!c) return;
+  currentSearch = {cid:cid, count:count, c:c};
+
+  var results = [];
+  for(var i=0;i<count;i++){
+    results.push(searchOneContainer(c));
+  }
+
+  var totalValue = 0;
+  var gradeCount = {1:0,2:0,3:0,4:0,5:0,6:0};
+  var totalItems = 0;
+  var rare = 0;
+  for(var i=0;i<results.length;i++){
+    var r = results[i];
+    totalValue += r.value;
+    totalItems += r.items.length;
+    for(var j=0;j<r.items.length;j++){
+      gradeCount[r.items[j].g] = (gradeCount[r.items[j].g]||0)+1;
+      if(r.items[j].g>=4) rare++;
+    }
+  }
+
+  stats.search += count;
+  stats.items += totalItems;
+  stats.value += totalValue;
+  stats.rare += rare;
+  updateStats();
+
+  lastResult = {c:c, count:count, results:results, totalValue:totalValue, gradeCount:gradeCount, totalItems:totalItems};
+  showResult(lastResult);
 }
 
-document.getElementById('modalClose').onclick = closeModal;
-document.getElementById('closeBtn2').onclick = closeModal;
-document.getElementById('modal').onclick = function(e){if(e.target===this) closeModal();};
+function showResult(data){
+  var modal = document.getElementById('resultModal');
+  var title = document.getElementById('resultTitle');
+  var grid = document.getElementById('resultGrid');
+  var summary = document.getElementById('summaryBar');
+
+  title.textContent = '模拟容器搜索（'+data.count+'连抽）';
+  modal.classList.add('show');
+
+  grid.innerHTML = '';
+  for(var i=0;i<data.results.length;i++){
+    var card = renderMiniContainer(data.results[i], i, i*120);
+    grid.appendChild(card);
+  }
+
+  summary.innerHTML = '';
+  var pills = [
+    {cls:'red', label:'红', g:6},
+    {cls:'gold', label:'金', g:5},
+    {cls:'purple', label:'紫', g:4},
+    {cls:'blue', label:'蓝', g:3},
+    {cls:'green', label:'绿', g:2}
+  ];
+  for(var i=0;i<pills.length;i++){
+    var p = pills[i];
+    var n = data.gradeCount[p.g]||0;
+    var el = document.createElement('div');
+    el.className = 'summary-pill '+p.cls;
+    el.innerHTML = '<span class="dot"></span><span>'+p.label+'：'+n+'</span>';
+    summary.appendChild(el);
+  }
+
+  document.getElementById('againBtn').textContent = '再来一次（累计 '+formatPrice(stats.value)+'）';
+}
+
+function closeResult(){ document.getElementById('resultModal').classList.remove('show'); }
+function closeFortune(){ document.getElementById('fortuneModal').classList.remove('show'); }
+
+function showFortune(){
+  if(!lastResult) return;
+  var data = lastResult;
+  var c = data.c;
+  var slots = (c.cols||4)*(c.rows||4);
+  // 单容器期望 = 格子数 * 12000 * (0.85~1.15)
+  var base = slots * 12000;
+  var expected = data.count * base * (0.85 + Math.random()*0.3);
+  var ratio = data.totalValue / expected;
+  var level, levelText, levelClass, advice;
+  if(ratio>=1.2){ level='大吉'; levelText='上上签'; levelClass='great'; advice='今日欧气爆棚，爆率极高，建议多开高级容器，见好就收亦可。'; }
+  else if(ratio>=1.05){ level='吉'; levelText='中上签'; levelClass='good'; advice='运势不错，收益略高于预期，适合继续搜索。'; }
+  else if(ratio>=0.95){ level='平'; levelText='中签'; levelClass='normal'; advice='运势在正常波动范围内，别指望爆，也别灰心。'; }
+  else if(ratio>=0.8){ level='小凶'; levelText='中下签'; levelClass='bad'; advice='略低于预期，可能是脸黑期，建议换个容器或休息一下。'; }
+  else { level='凶'; levelText='下下签'; levelClass='terrible'; advice='今日脸黑，建议洗把脸再来，或者换个时间开搜。'; }
+
+  var now = new Date();
+  var timeStr = now.getFullYear()+'/'+(now.getMonth()+1).toString().padStart(2,'0')+'/'+now.getDate().toString().padStart(2,'0')+' '+now.getHours().toString().padStart(2,'0')+':'+now.getMinutes().toString().padStart(2,'0')+':'+now.getSeconds().toString().padStart(2,'0');
+
+  var html = '<div class="fortune-title">'+levelText+'</div>'+
+    '<div class="fortune-level '+levelClass+'">今日运势：'+level+'</div>'+
+    '<div class="fortune-meta">时间：'+timeStr+' · 容器：'+c.name+' · 本次开箱次数：'+data.count+'</div>'+
+    '<div class="fortune-row"><span class="k">本次总收益</span><span class="v gold">'+formatPrice(data.totalValue)+'</span></div>'+
+    '<div class="fortune-row"><span class="k">期望收益（参考值）</span><span class="v">'+formatPrice(expected)+'</span></div>'+
+    '<div class="fortune-row"><span class="k">本次收益 / 期望收益</span><span class="v">'+(ratio*100).toFixed(1)+'%</span></div>'+
+    '<div class="fortune-advice"><b>解签：</b>'+advice+'</div>';
+
+  document.getElementById('fortuneContent').innerHTML = html;
+  document.getElementById('fortuneModal').classList.add('show');
+}
+
+document.getElementById('resultClose').onclick = closeResult;
+document.getElementById('closeBtn2').onclick = closeResult;
+document.getElementById('resultModal').onclick = function(e){if(e.target===this) closeResult();};
 document.getElementById('againBtn').onclick = function(){
-  // Re-open same container with draw count 1
-  var title = document.getElementById('modalTitle').textContent;
-  var m = title.match(/^(.+?)(?:\s|（)/);
-  if(m){
-    var name = m[1];
-    for(var i=0;i<CONTAINERS.length;i++){
-      if(CONTAINERS[i].name===name){openSearch(CONTAINERS[i].id,1);return;}
-    }
-  }
+  if(currentSearch.cid) openSearch(currentSearch.cid, currentSearch.count);
 };
+document.getElementById('fortuneBtn').onclick = showFortune;
+
+document.getElementById('fortuneClose').onclick = closeFortune;
+document.getElementById('fortuneCloseBtn').onclick = closeFortune;
+document.getElementById('fortuneModal').onclick = function(e){if(e.target===this) closeFortune();};
 
 renderContainers();
 </script>

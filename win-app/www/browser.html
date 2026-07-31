@@ -52,7 +52,7 @@
             <button class="home-btn" onclick="goHome()" title="返回工具箱">⌂</button>
         </div>
         <div class="frame-wrap">
-            <div class="status-msg" id="statusMsg">输入关键词搜索，或直接输入网址<br>（如 example.com）</div>
+            <div class="status-msg" id="statusMsg">输入关键词搜索，或直接输入网址<br>（如 <span id="siteExample">example.com</span>）</div>
             <iframe id="frame" src="about:blank" referrerpolicy="no-referrer" sandbox="allow-same-origin allow-scripts allow-forms allow-popups allow-popups-to-escape-sandbox" style="display:none;"></iframe>
         </div>
         <div class="hint">部分网站禁止内嵌，会自动整页打开 · <span class="open-ext" onclick="openExternal()">整页打开当前页</span></div>
@@ -68,6 +68,8 @@
 
         var frame = document.getElementById('frame');
         var statusMsg = document.getElementById('statusMsg');
+        var siteExample = document.getElementById('siteExample');
+        if (siteExample) siteExample.textContent = window.location.hostname;
         var engines = {
             ddg:    { mode: 'iframe', url: function(q){ return 'https://html.duckduckgo.com/html/?q=' + encodeURIComponent(q); } },
             baidu:  { mode: 'page',   url: function(q){ return 'https://www.baidu.com/s?wd=' + encodeURIComponent(q); } },

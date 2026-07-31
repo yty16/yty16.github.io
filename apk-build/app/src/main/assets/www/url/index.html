@@ -129,7 +129,7 @@ document.body.innerHTML='<div style="position:fixed;top:0;left:0;width:100%;heig
       <button id="loadBtn">确认</button>
     </div>
     <div class="quick-links">
-      <button type="button" id="fillMainSite">https://yty16.github.io/</button>
+      <button type="button" id="fillMainSite">填充当前站点</button>
       <button type="button" id="fillBilibili">https://www.bilibili.com/</button>
     </div>
     <div class="message" id="message"></div>
@@ -145,6 +145,9 @@ document.body.innerHTML='<div style="position:fixed;top:0;left:0;width:100%;heig
     const loadBtn = document.getElementById("loadBtn");
     const fillMainSite = document.getElementById("fillMainSite");
     const fillBilibili = document.getElementById("fillBilibili");
+
+    const siteRoot = location.protocol + "//" + location.hostname + "/";
+    fillMainSite.textContent = siteRoot;
 
     const urlParams = new URLSearchParams(window.location.search);
     const urlFromParams = urlParams.get("url");
@@ -200,7 +203,7 @@ document.body.innerHTML='<div style="position:fixed;top:0;left:0;width:100%;heig
     });
 
     fillMainSite.addEventListener("click", function () {
-      urlInput.value = "https://yty16.github.io/";
+      urlInput.value = siteRoot;
     });
 
     fillBilibili.addEventListener("click", function () {

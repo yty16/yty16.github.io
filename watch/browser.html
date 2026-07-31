@@ -24,6 +24,9 @@
         .browser-shell { display: flex; flex-direction: column; height: 100%; padding: var(--safe-top) var(--safe-right) var(--safe-bottom) var(--safe-left); }
         @media (shape: round) {
             .browser-shell { border-radius: 50%; overflow: hidden; }
+            .bar { padding: 10px 14px 6px; }
+            .frame-wrap { border-radius: 18px; overflow: hidden; margin: 0 8px; }
+            .hint { padding: 8px 14px; }
         }
         .bar { display: flex; gap: 6px; padding: 6px; align-items: center; flex-shrink: 0; background: var(--surface); border-bottom: 1px solid var(--surface2); }
         .search-input { flex: 1; min-width: 0; background: var(--bg); border: 1.5px solid var(--surface2); border-radius: 18px; color: var(--text); font-size: 14px; padding: 9px 14px; outline: none; font-family: inherit; -webkit-user-select: text; user-select: text; }

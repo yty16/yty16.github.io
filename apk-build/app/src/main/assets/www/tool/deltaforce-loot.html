@@ -66,8 +66,23 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,"Apple Color Emoji","S
 .item-node .label{position:absolute;bottom:1px;left:2px;right:2px;font-size:9px;color:#fff;text-shadow:0 1px 2px rgba(0,0,0,.9);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;z-index:3;text-align:center}
 .item-node .price{position:absolute;top:1px;right:2px;font-size:9px;color:#ffd700;font-weight:700;text-shadow:0 1px 2px rgba(0,0,0,.9);z-index:3;display:flex;align-items:center;gap:2px}
 .item-node .price::before{content:"";display:inline-block;width:9px;height:9px;background:url(./deltaforce-loot-assets/items/swat_gold_icon.webp) center/contain no-repeat}
-.item-node.rare{box-shadow:0 0 0 2px rgba(245,158,11,.75),0 0 14px rgba(245,158,11,.5)}
-.item-node.legend{box-shadow:0 0 0 2px rgba(239,68,68,.85),0 0 18px rgba(239,68,68,.6)}
+.item-node.revealed.rare{box-shadow:0 0 0 2px rgba(245,158,11,.75),0 0 14px rgba(245,158,11,.5)}
+.item-node.revealed.legend{box-shadow:0 0 0 2px rgba(239,68,68,.85),0 0 18px rgba(239,68,68,.6)}
+.item-node.revealed .inner{opacity:1;transform:scale(1)}
+.item-node.revealed .cover{opacity:0;pointer-events:none}
+.item-node .cover{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;color:rgba(255,255,255,.35);background:rgba(255,255,255,.06);border-radius:4px;z-index:5;transition:opacity .2s ease}
+.item-node .inner{position:absolute;inset:0;opacity:0;transform:scale(.85);transition:all .25s ease}
+.item-node.mark-purple .cover{box-shadow:inset 0 0 0 2px rgba(168,85,247,.75)}
+.item-node.mark-gold .cover{box-shadow:inset 0 0 0 2px rgba(245,158,11,.75)}
+.item-node.mark-red .cover{box-shadow:inset 0 0 0 2px rgba(239,68,68,.75)}
+
+.controls{display:flex;gap:16px;justify-content:center;margin:0 auto 24px;padding:0 16px;flex-wrap:wrap}
+.switch-label{display:flex;align-items:center;gap:8px;cursor:pointer;font-size:14px;color:var(--text);user-select:none}
+.switch-label input{display:none}
+.switch{width:40px;height:22px;background:var(--border);border-radius:11px;position:relative;transition:.2s}
+.switch::before{content:"";position:absolute;top:2px;left:2px;width:18px;height:18px;background:#fff;border-radius:50%;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.2)}
+.switch-label input:checked+.switch{background:var(--accent)}
+.switch-label input:checked+.switch::before{left:20px}
 
 .summary-bar{padding:10px 16px;background:rgba(0,0,0,.35);border-top:1px solid rgba(255,255,255,.08);display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
 .summary-pill{font-size:13px;color:#fff;padding:5px 12px;border-radius:20px;background:rgba(255,255,255,.08);display:flex;align-items:center;gap:5px}
@@ -117,6 +132,11 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,"Apple Color Emoji","S
   <div class="stat"><div class="n" id="stItems">0</div><div class="l">获得物品</div></div>
   <div class="stat"><div class="n" id="stValue">0</div><div class="l">总价值</div></div>
   <div class="stat"><div class="n" id="stRare">0</div><div class="l">稀有及以上</div></div>
+</div>
+
+<div class="controls" id="controls">
+  <label class="switch-label"><input type="checkbox" id="fastToggle"><span class="switch"></span>快速搜索</label>
+  <label class="switch-label"><input type="checkbox" id="markToggle"><span class="switch"></span>提前标记特殊品质</label>
 </div>
 
 <div class="container-grid" id="containerGrid"></div>
@@ -295,7 +315,10 @@ function updateStats(){
   document.getElementById('stRare').textContent = stats.rare;
 }
 
-function renderMiniContainer(result, index, revealDelay){
+function renderMiniContainer(result, index, options){
+  options = options || {};
+  var fast = !!options.fast;
+  var mark = !!options.mark;
   var c = result.c;
   var cols = c.cols||4, rows = c.rows||4;
   var card = document.createElement('div');
@@ -325,7 +348,7 @@ function renderMiniContainer(result, index, revealDelay){
   layer.style.gridTemplateColumns = 'repeat('+cols+',38px)';
   layer.style.gridTemplateRows = 'repeat('+rows+',38px)';
 
-  var nodes = [];
+  var revealNodes = [];
   for(var i=0;i<result.placements.length;i++){
     var p = result.placements[i];
     var it = p.item;
@@ -335,44 +358,57 @@ function renderMiniContainer(result, index, revealDelay){
     node.style.gridColumn = (p.c+1)+' / span '+p.w;
     node.style.gridRow = (p.r+1)+' / span '+p.h;
 
+    if(mark && it.g>=4){
+      node.classList.add(it.g>=6?'mark-red':(it.g>=5?'mark-gold':'mark-purple'));
+    }
+
+    var cover = document.createElement('div');
+    cover.className = 'cover';
+    cover.textContent = '?';
+    node.appendChild(cover);
+
+    var inner = document.createElement('div');
+    inner.className = 'inner';
+
     var bg = document.createElement('div');
     bg.className = 'thumb-bg';
     bg.style.backgroundColor = GRADE_COLOR[it.g]||GRADE_COLOR[1];
-    node.appendChild(bg);
+    inner.appendChild(bg);
 
     var thumb = document.createElement('div');
     thumb.className = 'thumb';
     if(it.img){ thumb.style.backgroundImage = "url("+it.img+")"; }
-    node.appendChild(thumb);
+    inner.appendChild(thumb);
 
     var label = document.createElement('div');
     label.className = 'label';
     label.textContent = it.n;
-    node.appendChild(label);
+    inner.appendChild(label);
 
     var price = document.createElement('div');
     price.className = 'price';
     price.textContent = formatPrice(it.p||0);
-    node.appendChild(price);
+    inner.appendChild(price);
 
+    node.appendChild(inner);
     layer.appendChild(node);
-    nodes.push(node);
+    revealNodes.push(node);
   }
 
   frame.appendChild(layer);
   body.appendChild(frame);
   card.appendChild(body);
 
-  // stagger reveal
-  if(revealDelay!==undefined){
-    for(var i=0;i<nodes.length;i++){
-      (function(n,idx){
-        setTimeout(function(){ n.style.opacity='1'; n.style.transform='scale(1)'; }, revealDelay + idx*80);
-      })(nodes[i],i);
-      nodes[i].style.opacity='0';
-      nodes[i].style.transform='scale(0.85)';
-      nodes[i].style.transition='all .2s ease';
+  // reveal logic
+  function revealNode(n, idx){
+    if(fast){
+      n.classList.add('revealed');
+    } else {
+      setTimeout(function(){ n.classList.add('revealed'); }, (options.baseDelay||0) + idx*80);
     }
+  }
+  for(var i=0;i<revealNodes.length;i++){
+    revealNode(revealNodes[i], i);
   }
 
   return card;
@@ -418,14 +454,21 @@ function showResult(data){
   var grid = document.getElementById('resultGrid');
   var summary = document.getElementById('summaryBar');
 
-  title.textContent = '模拟容器搜索（'+data.count+'连抽）';
+  var fast = document.getElementById('fastToggle').checked;
+  var mark = document.getElementById('markToggle').checked;
+
+  title.textContent = data.c.name+' 搜索中...';
   modal.classList.add('show');
 
   grid.innerHTML = '';
   for(var i=0;i<data.results.length;i++){
-    var card = renderMiniContainer(data.results[i], i, i*120);
+    var card = renderMiniContainer(data.results[i], i, {fast:fast, mark:mark, baseDelay:i*120});
     grid.appendChild(card);
   }
+
+  // update title after reveal animation
+  var revealMs = fast ? 50 : (data.results.length*120 + data.results.reduce(function(a,r){return a+r.placements.length;},0)*80 + 200);
+  setTimeout(function(){ title.textContent = '模拟容器搜索（'+data.count+'连抽）'; }, revealMs);
 
   summary.innerHTML = '';
   var pills = [
@@ -492,6 +535,16 @@ document.getElementById('fortuneBtn').onclick = showFortune;
 document.getElementById('fortuneClose').onclick = closeFortune;
 document.getElementById('fortuneCloseBtn').onclick = closeFortune;
 document.getElementById('fortuneModal').onclick = function(e){if(e.target===this) closeFortune();};
+
+(function(){
+  var fastToggle = document.getElementById('fastToggle');
+  var markToggle = document.getElementById('markToggle');
+  if(!fastToggle || !markToggle) return;
+  fastToggle.checked = localStorage.getItem('deltaforce_loot_fast') === '1';
+  markToggle.checked = localStorage.getItem('deltaforce_loot_mark') === '1';
+  fastToggle.onchange = function(){ localStorage.setItem('deltaforce_loot_fast', this.checked?'1':'0'); };
+  markToggle.onchange = function(){ localStorage.setItem('deltaforce_loot_mark', this.checked?'1':'0'); };
+})();
 
 renderContainers();
 </script>

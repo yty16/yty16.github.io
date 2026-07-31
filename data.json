@@ -175,8 +175,7 @@
           {
             "groupTitle": "florr.io相关",
             "buttons": [
-              { "link": "/tool/florr-craft.html", "line1": "合卡计算器", "line2": "自制" },
-              { "link": "https://betterflorr.top/", "line1": "betterflorr", "line2": "更好的florr" }
+              { "link": "/tool/florr-craft.html", "line1": "合卡计算器", "line2": "自制" }
             ]
           }
         ]

@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<script>
+(function(){
+var _0x4a=[function(){return[atob('eXR5MTYuZ2l0aHViLmlv'),atob('eXR5MTYucGFnZXMuZGV2')]},function(){return location.hostname}];
+var _0x4b=_0x4a[0]();var _0x4c=_0x4a[1]();var _0x4d=false;for(var i=0;i<_0x4b.length;i++){if(_0x4c===_0x4b[i]){_0x4d=true;break;}}
+if(!_0x4d){
+window.addEventListener('DOMContentLoaded',function(){
+document.body.innerHTML='<div style="position:fixed;top:0;left:0;width:100%;height:100%;background:#f5f5f5;display:flex;align-items:center;justify-content:center;z-index:99999;font-family:sans-serif;color:#666"><div style="text-align:center"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><h2 style="margin:20px 0 10px;font-weight:500">页面加载异常</h2><p style="font-size:14px;color:#999">请访问正常渠道获取资源</p></div></div>';
+});}
+})();
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>战场人格测试 - 元拓域 Toolbox</title>
+<style>
+:root{--bg:#f0f2f5;--card:rgba(255,255,255,0.85);--text:#1a1a2e;--muted:#a0aec0;--accent:#6366f1;--accent-hover:#4f46e5;--border:rgba(0,0,0,0.06);--shadow:0 4px 16px rgba(0,0,0,0.08)}
+[data-theme="dark"]{--bg:#0f0f1a;--card:rgba(30,30,50,0.85);--text:#e2e8f0;--muted:#718096;--accent:#818cf8;--border:rgba(255,255,255,0.06);--shadow:0 4px 16px rgba(0,0,0,0.3)}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; transition: background 0.3s, color 0.3s; }
+.back-btn { position: fixed; top: 20px; left: 20px; z-index: 100; display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; background: var(--card); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid var(--border); border-radius: 10px; color: var(--text); text-decoration: none; font-size: 14px; font-weight: 500; box-shadow: var(--shadow); transition: all 0.2s; }
+.back-btn:hover { background: var(--accent); color: #fff; }
+.wrap { max-width: 640px; margin: 0 auto; padding: 80px 20px 60px; text-align: center; }
+h1 { font-size: 28px; font-weight: 700; letter-spacing: -0.5px; }
+.sub { font-size: 15px; color: var(--muted); margin-top: 10px; }
+.intro { margin: 28px 0; font-size: 14px; color: var(--muted); line-height: 1.8; }
+.primary-btn { display: inline-block; padding: 13px 36px; background: var(--accent); color: #fff; border: none; border-radius: 12px; font-size: 16px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+.primary-btn:hover { background: var(--accent-hover); transform: translateY(-2px); }
+.progress { height: 6px; background: var(--border); border-radius: 4px; overflow: hidden; margin: 24px 0 8px; }
+.progress > span { display: block; height: 100%; background: var(--accent); width: 0; transition: width 0.3s; }
+.q-count { font-size: 13px; color: var(--muted); }
+.q-text { font-size: 19px; font-weight: 600; margin: 26px 0 22px; line-height: 1.6; }
+.opts { display: flex; flex-direction: column; gap: 12px; }
+.opt { padding: 16px 18px; background: var(--card); border: 1px solid var(--border); border-radius: 14px; text-align: left; font-size: 15px; cursor: pointer; transition: all 0.2s; box-shadow: var(--shadow); }
+.opt:hover { border-color: var(--accent); transform: translateY(-2px); }
+.result-card { background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 34px 26px; box-shadow: var(--shadow); margin-top: 20px; }
+.result-emoji { font-size: 56px; }
+.result-name { font-size: 26px; font-weight: 700; margin: 12px 0 6px; }
+.result-tag { display: inline-block; padding: 4px 14px; border-radius: 20px; background: var(--accent); color: #fff; font-size: 13px; margin-bottom: 16px; }
+.result-desc { font-size: 15px; color: var(--muted); line-height: 1.9; text-align: left; }
+.bars { margin: 22px 0 6px; text-align: left; }
+.bar-row { display: flex; align-items: center; gap: 10px; margin: 8px 0; font-size: 13px; }
+.bar-row .lab { width: 76px; color: var(--muted); flex-shrink: 0; }
+.bar-row .track { flex: 1; height: 10px; background: var(--border); border-radius: 6px; overflow: hidden; }
+.bar-row .fill { height: 100%; background: var(--accent); border-radius: 6px; }
+.bar-row .val { width: 34px; text-align: right; color: var(--muted); }
+.hidden { display: none; }
+.note { font-size: 12px; color: var(--muted); margin-top: 22px; }
+@media (max-width: 600px) { h1 { font-size: 22px; } .wrap { padding: 70px 16px 40px; } }
+</style>
+</head>
+<body>
+
+<script>
+(function(){var s=localStorage.getItem('theme');if(s==='light'||s==='dark'){document.documentElement.setAttribute('data-theme',s)}else{var d=window.matchMedia('(prefers-color-scheme:dark)').matches;document.documentElement.setAttribute('data-theme',d?'dark':'light')}})();
+</script>
+
+<a href="./deltaforce.html" class="back-btn">← 返回</a>
+
+<div class="wrap">
+
+  <!-- 开始页 -->
+  <div id="startView">
+    <h1>🎯 战场人格测试</h1>
+    <p class="sub">在硝烟里，你究竟是什么类型的战士？</p>
+    <div class="intro">
+      20 道战场情境选择题，没有标准答案。<br>
+      通关后解锁你的专属作战人格档案，看看你更偏向哪一种作战风格。
+    </div>
+    <button class="primary-btn" id="startBtn">开始测试 →</button>
+    <p class="note">本测试为原创趣味测评，结果与任何官方设定无关，仅供娱乐。</p>
+  </div>
+
+  <!-- 答题页 -->
+  <div id="quizView" class="hidden">
+    <div class="progress"><span id="progBar"></span></div>
+    <div class="q-count" id="qCount"></div>
+    <div class="q-text" id="qText"></div>
+    <div class="opts" id="opts"></div>
+  </div>
+
+  <!-- 结果页 -->
+  <div id="resultView" class="hidden">
+    <div class="result-card">
+      <div class="result-emoji" id="rEmoji"></div>
+      <div class="result-name" id="rName"></div>
+      <span class="result-tag" id="rTag"></span>
+      <div class="result-desc" id="rDesc"></div>
+      <div class="bars" id="rBars"></div>
+    </div>
+    <button class="primary-btn" id="againBtn" style="margin-top:24px">再测一次</button>
+    <p class="note">原创趣味测评，数据仅保存在本机，不上传服务器。</p>
+  </div>
+
+</div>
+
+<script>
+var QUESTIONS = [
+  { q: "行动前夜，你更关心哪件事？", o: ["突破点与推进路线", "敌方视野与盲区分布", "队友补给与状态", "整体节奏与撤离方案"], d: 0 },
+  { q: "听到不远处交火声，你的第一反应？", o: ["立刻压上去接管战斗", "先找制高点观察", "为队友架枪补位", "判断局势再决定介入"], d: 1 },
+  { q: "你更钟爱的作战节奏是？", o: ["高速突进、速战速决", "潜行渗透、伺机而动", "稳扎稳打、相互掩护", "统筹全局、随机应变"], d: 2 },
+  { q: "面对一个未知房间，你会？", o: ["破门直接清场", "投弹/窥探后再进", "让前哨先探", "等情报确认再行动"], d: 3 },
+  { q: "队伍缺人时，你最愿意补哪个位置？", o: ["尖兵突破手", "侦察狙击手", "火力支援手", "指挥协调者"], d: 4 },
+  { q: "武器配置上你偏向？", o: ["高机动步枪/冲锋枪", "精准射手步枪", "重火力压制枪", "全能均衡型"], d: 5 },
+  { q: "捡到稀有配件，你优先给？", o: ["自己的主武器", "留给需要的队友", "按战局分配", "由指挥统一调度"], d: 6 },
+  { q: "发现敌人侧翼暴露，你？", o: ["马上包抄收割", "标记后等时机", "通知队友集火", "报告指挥定方案"], d: 7 },
+  { q: "撤离点被堵，你的选择？", o: ["强行开路冲出去", "找隐蔽路线绕行", "掩护大家分批走", "重新规划集结点"], d: 8 },
+  { q: "你眼里的“胜利”更像是？", o: ["最快清空战场", "零伤亡完成任务", "全队默契配合", "计划完美落地"], d: 9 },
+  { q: "新手向你请教，你会？", o: ["带他冲一把练手感", "教他观察与走位", "陪他打靶补基础", "给他讲战术思路"], d: 10 },
+  { q: "夜战里你更喜欢？", o: ["借着夜色强攻", "利用黑暗隐蔽接近", "守在点位等敌人", "用信号弹调度队伍"], d: 11 },
+  { q: "弹药将尽时你？", o: ["换枪继续压", "省着点打要害", "向队友借补", "后撤重新整备"], d: 12 },
+  { q: "你更享受哪种高光时刻？", o: ["一穿多的残局", "关键信息的发现", "救下濒死队友", "逆风翻盘的指挥"], d: 13 },
+  { q: "任务简报你最先看？", o: ["目标与突破口", "地形与敌情", "装备与补给", "时间表与分工"], d: 14 },
+  { q: "遭遇伏击，第一动作？", o: ["反打抢占主动", "找掩体回敬", "拉队友一起撤", "呼叫支援稳住"], d: 15 },
+  { q: "你觉得团队最不能缺的是？", o: ["敢打敢冲的猛人", "眼睛雪亮的侦察", "靠谱的火力后盾", "清醒的脑子"], d: 16 },
+  { q: "赛季冲分你更看重？", o: ["个人战绩", "有效信息", "团队贡献", "胜率本身"], d: 17 },
+  { q: "空闲时你更可能？", o: ["练枪法身法", "研究地图点位", "帮人做配装", "写战术笔记"], d: 18 },
+  { q: "如果只能带一句话上战场，是？", o: ["冲就完了", "看清再动", "我在你身后", "听我指挥"], d: 19 }
+];
+
+var DIM = [
+  { key: "突击", color: "#ef4444" },
+  { key: "侦察", color: "#3b82f6" },
+  { key: "支援", color: "#10b981" },
+  { key: "指挥", color: "#f59e0b" }
+];
+
+var PROFILES = {
+  突击: { emoji: "🔥", name: "破阵先锋", tag: "主战型 · 突击", desc: "你天生为突破而生。枪线就是你的语言，见到缺口就想撕开它。冲动但可靠，残局里最让人安心的总是你那句“我上了”。提醒：偶尔慢半拍，队友会更喜欢你。" },
+  侦察: { emoji: "🛰️", name: "暗影斥候", tag: "感知型 · 侦察", desc: "你有一双停不下来的眼睛。别人看热闹，你看点位、看视野、看敌人的破绽。沉默却关键，队伍里最值钱的信息往往来自你。提醒：别光看，偶尔也要扣扳机。" },
+  支援: { emoji: "🛡️", name: "铁壁卫士", tag: "守护型 · 支援", desc: "你把“背后交给我”当真。补位、架枪、递弹药，你让所有人打得更有底气。团队里最稳的那块地基，就是你。提醒：别把自己燃尽了，你也值得被护着。" },
+  指挥: { emoji: "🧠", name: "运筹统帅", tag: "谋略型 · 指挥", desc: "你习惯先想三步再动手。局势乱成一团时，你反而最清醒。大家乱枪中听到的那句“听我指挥”，多半来自你。提醒：别想太多耽误了出手时机。" }
+};
+
+var cur = 0;
+var score = [0, 0, 0, 0];
+
+var startView = document.getElementById('startView');
+var quizView = document.getElementById('quizView');
+var resultView = document.getElementById('resultView');
+
+function startQuiz() {
+  cur = 0; score = [0, 0, 0, 0];
+  startView.classList.add('hidden');
+  resultView.classList.add('hidden');
+  quizView.classList.remove('hidden');
+  renderQ();
+}
+
+function renderQ() {
+  var item = QUESTIONS[cur];
+  document.getElementById('qCount').textContent = '第 ' + (cur + 1) + ' / ' + QUESTIONS.length + ' 题';
+  document.getElementById('progBar').style.width = ((cur / QUESTIONS.length) * 100) + '%';
+  document.getElementById('qText').textContent = item.q;
+  var box = document.getElementById('opts');
+  box.innerHTML = '';
+  item.o.forEach(function (text, i) {
+    var b = document.createElement('button');
+    b.className = 'opt';
+    b.textContent = text;
+    b.onclick = function () { pick(i); };
+    box.appendChild(b);
+  });
+}
+
+function pick(optIdx) {
+  // 每题 4 个选项依次对应 突击/侦察/支援/指挥
+  score[optIdx % 4]++;
+  cur++;
+  if (cur >= QUESTIONS.length) {
+    document.getElementById('progBar').style.width = '100%';
+    showResult();
+  } else {
+    renderQ();
+  }
+}
+
+function showResult() {
+  quizView.classList.add('hidden');
+  resultView.classList.remove('hidden');
+  var max = 0;
+  for (var i = 1; i < 4; i++) { if (score[i] > score[max]) max = i; }
+  var total = score[0] + score[1] + score[2] + score[3];
+  var p = PROFILES[DIM[max].key];
+  document.getElementById('rEmoji').textContent = p.emoji;
+  document.getElementById('rName').textContent = p.name;
+  document.getElementById('rTag').textContent = p.tag;
+  document.getElementById('rDesc').textContent = p.desc;
+  var bars = document.getElementById('rBars');
+  bars.innerHTML = '';
+  DIM.forEach(function (d, i) {
+    var pct = Math.round((score[i] / total) * 100);
+    var row = document.createElement('div');
+    row.className = 'bar-row';
+    row.innerHTML = '<span class="lab">' + d.key + '</span>' +
+      '<span class="track"><span class="fill" style="width:' + pct + '%;background:' + d.color + '"></span></span>' +
+      '<span class="val">' + pct + '%</span>';
+    bars.appendChild(row);
+  });
+}
+
+document.getElementById('startBtn').onclick = startQuiz;
+document.getElementById('againBtn').onclick = function () {
+  resultView.classList.add('hidden');
+  startView.classList.remove('hidden');
+};
+</script>
+
+</body>
+</html>

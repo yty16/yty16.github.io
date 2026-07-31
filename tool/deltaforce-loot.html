@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<script>
+(function(){
+var _0x4a=[function(){return[atob('eXR5MTYuZ2l0aHViLmlv'),atob('eXR5MTYucGFnZXMuZGV2')]},function(){return location.hostname}];
+var _0x4b=_0x4a[0]();var _0x4c=_0x4a[1]();var _0x4d=false;for(var i=0;i<_0x4b.length;i++){if(_0x4c===_0x4b[i]){_0x4d=true;break;}}
+if(!_0x4d){
+window.addEventListener('DOMContentLoaded',function(){
+document.body.innerHTML='<div style="position:fixed;top:0;left:0;width:100%;height:100%;background:#f5f5f5;display:flex;align-items:center;justify-content:center;z-index:99999;font-family:sans-serif;color:#666"><div style="text-align:center"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><h2 style="margin:20px 0 10px;font-weight:500">页面加载异常</h2><p style="font-size:14px;color:#999">请访问正常渠道获取资源</p></div></div>';
+});}
+})();
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>容器搜索模拟 - 元拓域 Toolbox</title>
+<style>
+:root{--bg:#f0f2f5;--card:rgba(255,255,255,0.85);--text:#1a1a2e;--muted:#a0aec0;--accent:#6366f1;--accent-hover:#4f46e5;--border:rgba(0,0,0,0.06);--shadow:0 4px 16px rgba(0,0,0,0.08)}
+[data-theme="dark"]{--bg:#0f0f1a;--card:rgba(30,30,50,0.85);--text:#e2e8f0;--muted:#718096;--accent:#818cf8;--border:rgba(255,255,255,0.06);--shadow:0 4px 16px rgba(0,0,0,0.3)}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; transition: background 0.3s, color 0.3s; }
+.back-btn { position: fixed; top: 20px; left: 20px; z-index: 100; display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; background: var(--card); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid var(--border); border-radius: 10px; color: var(--text); text-decoration: none; font-size: 14px; font-weight: 500; box-shadow: var(--shadow); transition: all 0.2s; }
+.back-btn:hover { background: var(--accent); color: #fff; }
+.wrap { max-width: 640px; margin: 0 auto; padding: 80px 20px 60px; text-align: center; }
+h1 { font-size: 28px; font-weight: 700; letter-spacing: -0.5px; }
+.sub { font-size: 15px; color: var(--muted); margin-top: 10px; }
+.primary-btn { display: inline-block; padding: 13px 36px; background: var(--accent); color: #fff; border: none; border-radius: 12px; font-size: 16px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+.primary-btn:hover { background: var(--accent-hover); transform: translateY(-2px); }
+.ghost-btn { display: inline-block; padding: 10px 22px; background: var(--card); color: var(--text); border: 1px solid var(--border); border-radius: 12px; font-size: 14px; font-weight: 500; cursor: pointer; transition: all 0.2s; margin-left: 10px; }
+.ghost-btn:hover { border-color: var(--accent); }
+.stat-row { display: flex; gap: 12px; justify-content: center; margin: 26px 0; flex-wrap: wrap; }
+.stat { flex: 1; min-width: 120px; background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 16px; box-shadow: var(--shadow); }
+.stat .n { font-size: 24px; font-weight: 700; }
+.stat .l { font-size: 13px; color: var(--muted); margin-top: 4px; }
+.loot-list { text-align: left; margin-top: 10px; display: flex; flex-direction: column; gap: 10px; }
+.loot-item { display: flex; align-items: center; gap: 12px; background: var(--card); border: 1px solid var(--border); border-left-width: 4px; border-radius: 12px; padding: 12px 16px; box-shadow: var(--shadow); animation: pop .25s ease; }
+@keyframes pop { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+.loot-item .ico { font-size: 26px; }
+.loot-item .nm { font-size: 15px; font-weight: 600; flex: 1; }
+.loot-item .qt { font-size: 13px; color: var(--muted); }
+.q-tip { font-size: 12px; color: var(--muted); margin-top: 18px; line-height: 1.7; }
+.empty { color: var(--muted); font-size: 14px; margin-top: 20px; }
+.hidden { display: none; }
+@media (max-width: 600px) { h1 { font-size: 22px; } .wrap { padding: 70px 16px 40px; } }
+</style>
+</head>
+<body>
+
+<script>
+(function(){var s=localStorage.getItem('theme');if(s==='light'||s==='dark'){document.documentElement.setAttribute('data-theme',s)}else{var d=window.matchMedia('(prefers-color-scheme:dark)').matches;document.documentElement.setAttribute('data-theme',d?'dark':'light')}})();
+</script>
+
+<a href="./deltaforce.html" class="back-btn">← 返回</a>
+
+<div class="wrap">
+  <h1>📦 容器搜索模拟</h1>
+  <p class="sub">点一下，看看这次能从容器里翻出什么</p>
+
+  <div class="stat-row">
+    <div class="stat"><div class="n" id="sSearch">0</div><div class="l">搜索次数</div></div>
+    <div class="stat"><div class="n" id="sItems">0</div><div class="l">获得物品</div></div>
+    <div class="stat"><div class="n" id="sRare">0</div><div class="l">稀有及以上</div></div>
+  </div>
+
+  <button class="primary-btn" id="searchBtn">🔍 搜索一次</button>
+  <button class="ghost-btn" id="resetBtn">重置</button>
+
+  <div class="loot-list" id="lootList">
+    <div class="empty" id="emptyTip">还没有翻到东西，点上面的按钮试试手气～</div>
+  </div>
+
+  <p class="q-tip">
+    概率与物品均为本工具原创虚构设定，仅用于模拟体验，不代表任何游戏内真实数据。<br>
+    每次搜索随机产出 1–3 件物品，品质越高越稀有。
+  </p>
+</div>
+
+<script>
+// 原创物品池：品质分级 + 权重（权重越大越常见）
+var POOL = [
+  { ico: "🧰", nm: "战术补给包", q: "普通", color: "#9ca3af", w: 30 },
+  { ico: "🔧", nm: "通用配件", q: "普通", color: "#9ca3af", w: 26 },
+  { ico: "💊", nm: "急救绷带", q: "普通", color: "#9ca3af", w: 20 },
+  { ico: "🪙", nm: "战区货币", q: "精良", color: "#22c55e", w: 14 },
+  { ico: "🎯", nm: "校准模块", q: "精良", color: "#22c55e", w: 10 },
+  { ico: "🔋", nm: "高能电池", q: "精良", color: "#22c55e", w: 8 },
+  { ico: "🗝️", nm: "加密钥匙", q: "稀有", color: "#3b82f6", w: 5 },
+  { ico: "📡", nm: "侦察信标", q: "稀有", color: "#3b82f6", w: 4 },
+  { ico: "💎", nm: "晶体核心", q: "史诗", color: "#a855f7", w: 2 },
+  { ico: "🛡️", nm: "防护装甲片", q: "史诗", color: "#a855f7", w: 1.5 },
+  { ico: "📜", nm: "机密档案", q: "传说", color: "#f59e0b", w: 0.6 },
+  { ico: "🛰️", nm: "战略终端", q: "传说", color: "#f59e0b", w: 0.4 }
+];
+
+var RARE_TIERS = ["稀有", "史诗", "传说"];
+
+var totalW = POOL.reduce(function (s, it) { return s + it.w; }, 0);
+var stats = { search: 0, items: 0, rare: 0 };
+var lootList = document.getElementById('lootList');
+var emptyTip = document.getElementById('emptyTip');
+
+function roll() {
+  var r = Math.random() * totalW;
+  var acc = 0;
+  for (var i = 0; i < POOL.length; i++) {
+    acc += POOL[i].w;
+    if (r <= acc) return POOL[i];
+  }
+  return POOL[0];
+}
+
+function doSearch() {
+  if (emptyTip) { emptyTip.remove(); emptyTip = null; }
+  stats.search++;
+  var count = 1 + Math.floor(Math.random() * 3); // 1~3 件
+  for (var i = 0; i < count; i++) {
+    var it = roll();
+    stats.items++;
+    if (RARE_TIERS.indexOf(it.q) !== -1) stats.rare++;
+    var el = document.createElement('div');
+    el.className = 'loot-item';
+    el.style.borderLeftColor = it.color;
+    el.innerHTML = '<span class="ico">' + it.ico + '</span>' +
+      '<span class="nm">' + it.nm + '</span>' +
+      '<span class="qt" style="color:' + it.color + '">' + it.q + '</span>';
+    lootList.insertBefore(el, lootList.firstChild);
+  }
+  document.getElementById('sSearch').textContent = stats.search;
+  document.getElementById('sItems').textContent = stats.items;
+  document.getElementById('sRare').textContent = stats.rare;
+}
+
+function resetAll() {
+  stats = { search: 0, items: 0, rare: 0 };
+  document.getElementById('sSearch').textContent = 0;
+  document.getElementById('sItems').textContent = 0;
+  document.getElementById('sRare').textContent = 0;
+  lootList.innerHTML = '<div class="empty" id="emptyTip">还没有翻到东西，点上面的按钮试试手气～</div>';
+  emptyTip = document.getElementById('emptyTip');
+}
+
+document.getElementById('searchBtn').onclick = doSearch;
+document.getElementById('resetBtn').onclick = resetAll;
+</script>
+
+</body>
+</html>

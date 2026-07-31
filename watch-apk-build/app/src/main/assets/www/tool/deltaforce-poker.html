@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<script>
+(function(){
+var _0x4a=[function(){return[atob('eXR5MTYuZ2l0aHViLmlv'),atob('eXR5MTYucGFnZXMuZGV2')]},function(){return location.hostname}];
+var _0x4b=_0x4a[0]();var _0x4c=_0x4a[1]();var _0x4d=false;for(var i=0;i<_0x4b.length;i++){if(_0x4c===_0x4b[i]){_0x4d=true;break;}}
+if(!_0x4d){
+window.addEventListener('DOMContentLoaded',function(){
+document.body.innerHTML='<div style="position:fixed;top:0;left:0;width:100%;height:100%;background:#f5f5f5;display:flex;align-items:center;justify-content:center;z-index:99999;font-family:sans-serif;color:#666"><div style="text-align:center"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><h2 style="margin:20px 0 10px;font-weight:500">页面加载异常</h2><p style="font-size:14px;color:#999">请访问正常渠道获取资源</p></div></div>';
+});}
+})();
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>阿萨拉卡牌收藏册 - 元拓域 Toolbox</title>
+<style>
+:root{--bg:#f0f2f5;--card:rgba(255,255,255,0.85);--text:#1a1a2e;--muted:#a0aec0;--accent:#6366f1;--accent-hover:#4f46e5;--border:rgba(0,0,0,0.06);--shadow:0 4px 16px rgba(0,0,0,0.08)}
+[data-theme="dark"]{--bg:#0f0f1a;--card:rgba(30,30,50,0.85);--text:#e2e8f0;--muted:#718096;--accent:#818cf8;--border:rgba(255,255,255,0.06);--shadow:0 4px 16px rgba(0,0,0,0.3)}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; transition: background 0.3s, color 0.3s; }
+.back-btn { position: fixed; top: 20px; left: 20px; z-index: 100; display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; background: var(--card); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid var(--border); border-radius: 10px; color: var(--text); text-decoration: none; font-size: 14px; font-weight: 500; box-shadow: var(--shadow); transition: all 0.2s; }
+.back-btn:hover { background: var(--accent); color: #fff; }
+.wrap { max-width: 880px; margin: 0 auto; padding: 80px 20px 60px; }
+h1 { font-size: 26px; font-weight: 700; text-align: center; }
+.sub { font-size: 14px; color: var(--muted); text-align: center; margin-top: 8px; }
+.summary { display: flex; gap: 12px; justify-content: center; margin: 24px 0; flex-wrap: wrap; }
+.sum { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 14px 18px; min-width: 110px; text-align: center; box-shadow: var(--shadow); }
+.sum .n { font-size: 22px; font-weight: 700; }
+.sum .l { font-size: 12px; color: var(--muted); margin-top: 4px; }
+.bar { height: 8px; background: var(--border); border-radius: 6px; overflow: hidden; margin: 6px 0 20px; }
+.bar > span { display: block; height: 100%; background: var(--accent); width: 0; transition: width .3s; }
+.actions { text-align: center; margin-bottom: 22px; }
+.ghost-btn { display: inline-block; padding: 9px 20px; background: var(--card); color: var(--text); border: 1px solid var(--border); border-radius: 12px; font-size: 14px; font-weight: 500; cursor: pointer; transition: all 0.2s; margin: 0 6px; }
+.ghost-btn:hover { border-color: var(--accent); }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(84px, 1fr)); gap: 12px; }
+.pcard { aspect-ratio: 2.5/3.5; border-radius: 12px; border: 1px solid var(--border); background: var(--card); box-shadow: var(--shadow); display: flex; flex-direction: column; justify-content: space-between; padding: 8px; cursor: pointer; transition: all 0.18s; position: relative; user-select: none; }
+.pcard:hover { transform: translateY(-3px); border-color: var(--accent); }
+.pcard .corner { font-size: 15px; font-weight: 700; line-height: 1; }
+.pcard .center { font-size: 26px; text-align: center; }
+.pcard.red .corner, .pcard.red .center { color: #ef4444; }
+.pcard.black .corner, .pcard.black .center { color: #1a1a2e; }
+[data-theme="dark"] .pcard.black .corner, [data-theme="dark"] .pcard.black .center { color: #e2e8f0; }
+.pcard.got { outline: 2px solid var(--accent); }
+.pcard.got::after { content: "✓"; position: absolute; top: 6px; right: 8px; color: var(--accent); font-size: 13px; font-weight: 700; }
+.pcard.miss { opacity: 0.45; }
+.note { font-size: 12px; color: var(--muted); text-align: center; margin-top: 22px; line-height: 1.7; }
+@media (max-width: 600px) { h1 { font-size: 22px; } .wrap { padding: 70px 14px 40px; } .grid { grid-template-columns: repeat(auto-fill, minmax(70px, 1fr)); gap: 9px; } }
+</style>
+</head>
+<body>
+
+<script>
+(function(){var s=localStorage.getItem('theme');if(s==='light'||s==='dark'){document.documentElement.setAttribute('data-theme',s)}else{var d=window.matchMedia('(prefers-color-scheme:dark)').matches;document.documentElement.setAttribute('data-theme',d?'dark':'light')}})();
+</script>
+
+<a href="./deltaforce.html" class="back-btn">← 返回</a>
+
+<div class="wrap">
+  <h1>🃏 阿萨拉卡牌收藏册</h1>
+  <p class="sub">点一下卡片切换「已收集 / 未收集」，进度自动保存在本机</p>
+
+  <div class="summary">
+    <div class="sum"><div class="n" id="totalN">0</div><div class="l">总数量</div></div>
+    <div class="sum"><div class="n" id="gotN">0</div><div class="l">已收集</div></div>
+    <div class="sum"><div class="n" id="missN">0</div><div class="l">未收集</div></div>
+    <div class="sum"><div class="n" id="pctN">0%</div><div class="l">完成度</div></div>
+  </div>
+  <div class="bar"><span id="progBar"></span></div>
+
+  <div class="actions">
+    <button class="ghost-btn" id="allBtn">全部标记已收集</button>
+    <button class="ghost-btn" id="resetBtn">重置本地记录</button>
+  </div>
+
+  <div class="grid" id="grid"></div>
+
+  <p class="note">
+    本收藏册为原创的收集进度追踪工具，卡面为通用扑克牌样式，与任何游戏内美术资源无关。<br>
+    数据仅保存在你当前浏览器，清除缓存会丢失记录。
+  </p>
+</div>
+
+<script>
+var SUITS = [
+  { s: "♠", name: "黑桃", color: "black" },
+  { s: "♥", name: "红心", color: "red" },
+  { s: "♣", name: "梅花", color: "black" },
+  { s: "♦", name: "方块", color: "red" }
+];
+var RANKS = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"];
+var STORE_KEY = "df_poker_collection_v1";
+
+// 构建 54 张（52 普通 + 两张特殊牌）
+var CARDS = [];
+SUITS.forEach(function (su) {
+  RANKS.forEach(function (rk) {
+    CARDS.push({ id: su.s + rk, s: su.s, rk: rk, color: su.color, special: false });
+  });
+});
+CARDS.push({ id: "JOKER_A", s: "★", rk: "小", color: "red", special: true });
+CARDS.push({ id: "JOKER_B", s: "☆", rk: "大", color: "black", special: true });
+
+var saved = {};
+try { saved = JSON.parse(localStorage.getItem(STORE_KEY) || "{}"); } catch (e) { saved = {}; }
+
+var grid = document.getElementById('grid');
+
+function makeCard(c) {
+  var el = document.createElement('div');
+  el.className = 'pcard ' + c.color + (saved[c.id] ? ' got' : ' miss');
+  el.dataset.id = c.id;
+  var center = c.special ? c.s : c.s;
+  el.innerHTML = '<div class="corner">' + c.rk + c.s + '</div>' +
+    '<div class="center">' + center + '</div>' +
+    '<div class="corner" style="align-self:flex-end;transform:rotate(180deg)">' + c.rk + c.s + '</div>';
+  el.onclick = function () { toggle(c.id, el); };
+  return el;
+}
+
+function toggle(id, el) {
+  if (saved[id]) { delete saved[id]; el.classList.remove('got'); el.classList.add('miss'); }
+  else { saved[id] = 1; el.classList.add('got'); el.classList.remove('miss'); }
+  persist();
+  refresh();
+}
+
+function persist() {
+  try { localStorage.setItem(STORE_KEY, JSON.stringify(saved)); } catch (e) {}
+}
+
+function refresh() {
+  var total = CARDS.length;
+  var got = 0;
+  CARDS.forEach(function (c) { if (saved[c.id]) got++; });
+  var miss = total - got;
+  var pct = Math.round((got / total) * 100);
+  document.getElementById('totalN').textContent = total;
+  document.getElementById('gotN').textContent = got;
+  document.getElementById('missN').textContent = miss;
+  document.getElementById('pctN').textContent = pct + '%';
+  document.getElementById('progBar').style.width = pct + '%';
+}
+
+document.getElementById('allBtn').onclick = function () {
+  CARDS.forEach(function (c) { saved[c.id] = 1; });
+  persist();
+  Array.prototype.forEach.call(grid.children, function (el) {
+    el.classList.add('got'); el.classList.remove('miss');
+  });
+  refresh();
+};
+
+document.getElementById('resetBtn').onclick = function () {
+  saved = {};
+  persist();
+  Array.prototype.forEach.call(grid.children, function (el) {
+    el.classList.remove('got'); el.classList.add('miss');
+  });
+  refresh();
+};
+
+CARDS.forEach(function (c) { grid.appendChild(makeCard(c)); });
+refresh();
+</script>
+
+</body>
+</html>

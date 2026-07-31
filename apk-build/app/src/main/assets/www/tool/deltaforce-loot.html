@@ -15,150 +15,380 @@ document.body.innerHTML='<div style="position:fixed;top:0;left:0;width:100%;heig
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>容器搜索模拟 - 元拓域 Toolbox</title>
 <style>
-:root{--bg:#f0f2f5;--card:rgba(255,255,255,0.85);--text:#1a1a2e;--muted:#a0aec0;--accent:#6366f1;--accent-hover:#4f46e5;--border:rgba(0,0,0,0.06);--shadow:0 4px 16px rgba(0,0,0,0.08)}
-[data-theme="dark"]{--bg:#0f0f1a;--card:rgba(30,30,50,0.85);--text:#e2e8f0;--muted:#718096;--accent:#818cf8;--border:rgba(255,255,255,0.06);--shadow:0 4px 16px rgba(0,0,0,0.3)}
-* { margin: 0; padding: 0; box-sizing: border-box; }
-body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; transition: background 0.3s, color 0.3s; }
-.back-btn { position: fixed; top: 20px; left: 20px; z-index: 100; display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; background: var(--card); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid var(--border); border-radius: 10px; color: var(--text); text-decoration: none; font-size: 14px; font-weight: 500; box-shadow: var(--shadow); transition: all 0.2s; }
-.back-btn:hover { background: var(--accent); color: #fff; }
-.wrap { max-width: 640px; margin: 0 auto; padding: 80px 20px 60px; text-align: center; }
-h1 { font-size: 28px; font-weight: 700; letter-spacing: -0.5px; }
-.sub { font-size: 15px; color: var(--muted); margin-top: 10px; }
-.primary-btn { display: inline-block; padding: 13px 36px; background: var(--accent); color: #fff; border: none; border-radius: 12px; font-size: 16px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
-.primary-btn:hover { background: var(--accent-hover); transform: translateY(-2px); }
-.ghost-btn { display: inline-block; padding: 10px 22px; background: var(--card); color: var(--text); border: 1px solid var(--border); border-radius: 12px; font-size: 14px; font-weight: 500; cursor: pointer; transition: all 0.2s; margin-left: 10px; }
-.ghost-btn:hover { border-color: var(--accent); }
-.stat-row { display: flex; gap: 12px; justify-content: center; margin: 26px 0; flex-wrap: wrap; }
-.stat { flex: 1; min-width: 120px; background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 16px; box-shadow: var(--shadow); }
-.stat .n { font-size: 24px; font-weight: 700; }
-.stat .l { font-size: 13px; color: var(--muted); margin-top: 4px; }
-.loot-list { text-align: left; margin-top: 10px; display: flex; flex-direction: column; gap: 10px; }
-.loot-item { display: flex; align-items: center; gap: 12px; background: var(--card); border: 1px solid var(--border); border-left-width: 4px; border-radius: 12px; padding: 12px 16px; box-shadow: var(--shadow); animation: pop .25s ease; }
-@keyframes pop { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
-.loot-item .ico { font-size: 26px; }
-.loot-item .nm { font-size: 15px; font-weight: 600; flex: 1; }
-.loot-item .qt { font-size: 13px; color: var(--muted); }
-.q-tip { font-size: 12px; color: var(--muted); margin-top: 18px; line-height: 1.7; }
-.empty { color: var(--muted); font-size: 14px; margin-top: 20px; }
-.hidden { display: none; }
-@media (max-width: 600px) { h1 { font-size: 22px; } .wrap { padding: 70px 16px 40px; } }
+:root{--bg:#f0f2f5;--card:rgba(255,255,255,0.9);--text:#1a1a2e;--muted:#6b7280;--accent:#6366f1;--accent-hover:#4f46e5;--border:rgba(0,0,0,0.08);--shadow:0 4px 16px rgba(0,0,0,0.08);--r1:#9ca3af;--r2:#22c55e;--r3:#3b82f6;--r4:#a855f7;--r5:#f59e0b}
+[data-theme="dark"]{--bg:#0f0f1a;--card:rgba(30,30,50,0.9);--text:#e2e8f0;--muted:#9ca3af;--accent:#818cf8;--accent-hover:#6366f1;--border:rgba(255,255,255,0.08);--shadow:0 4px 16px rgba(0,0,0,0.3);--r1:#6b7280;--r2:#4ade80;--r3:#60a5fa;--r4:#c084fc;--r5:#fbbf24}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',-apple-system,BlinkMacSystemFont,"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif;background:var(--bg);color:var(--text);min-height:100vh;transition:background .3s,color .3s}
+.back-btn{position:fixed;top:18px;left:18px;z-index:100;display:inline-flex;align-items:center;gap:6px;padding:8px 16px;background:var(--card);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1px solid var(--border);border-radius:10px;color:var(--text);text-decoration:none;font-size:14px;font-weight:500;box-shadow:var(--shadow);transition:all .2s}
+.back-btn:hover{background:var(--accent);color:#fff}
+.header{text-align:center;padding:56px 16px 22px}
+.header h1{font-size:26px;font-weight:700;letter-spacing:-.5px}
+.header p{font-size:14px;color:var(--muted);margin-top:8px}
+.stats{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;max-width:720px;margin:0 auto 24px;padding:0 16px}
+.stat{flex:1;min-width:110px;max-width:160px;background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px;text-align:center;box-shadow:var(--shadow)}
+.stat .n{font-size:22px;font-weight:700;color:var(--accent)}
+.stat .l{font-size:12px;color:var(--muted);margin-top:4px}
+.container-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;max-width:1200px;margin:0 auto;padding:0 16px 60px}
+.ct-card{background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden;box-shadow:var(--shadow);transition:transform .2s,border-color .2s;display:flex;flex-direction:column}
+.ct-card:hover{transform:translateY(-3px);border-color:var(--accent)}
+.ct-header{padding:12px 14px;border-bottom:1px solid var(--border);font-size:15px;font-weight:700;display:flex;align-items:center;gap:8px}
+.ct-body{padding:14px;flex:1;display:flex;flex-direction:column;gap:10px}
+.ct-img{width:64px;height:64px;object-fit:contain;align-self:center;background:rgba(0,0,0,0.04);border-radius:8px}
+.ct-info{font-size:12px;color:var(--muted);line-height:1.7}
+.ct-info p{margin:2px 0}
+.ct-info .tag{display:inline-block;background:var(--bg);border:1px solid var(--border);border-radius:4px;padding:1px 6px;margin:2px 4px 2px 0}
+.ct-footer{padding:10px 14px;border-top:1px solid var(--border);display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+.btn{padding:7px 12px;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;transition:all .15s}
+.btn-primary{background:var(--accent);color:#fff}
+.btn-primary:hover{background:var(--accent-hover)}
+.btn-sm{background:var(--bg);color:var(--text);border:1px solid var(--border)}
+.btn-sm:hover{border-color:var(--accent);color:var(--accent)}
+
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);backdrop-filter:blur(4px);z-index:200;display:none;align-items:center;justify-content:center;padding:16px}
+.modal-overlay.show{display:flex}
+.modal{background:#1e2328;border:1px solid rgba(255,255,255,.1);border-radius:12px;width:100%;max-width:520px;max-height:90vh;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.6)}
+.modal-header{padding:14px 16px;background:linear-gradient(90deg,rgba(120,25,30,.85),rgba(120,25,30,.35));display:flex;align-items:center;justify-content:space-between;gap:10px}
+.modal-header h3{color:#fff;font-size:16px;font-weight:700;display:flex;align-items:center;gap:8px;margin:0}
+.modal-header .close{color:rgba(255,255,255,.7);background:none;border:none;font-size:22px;cursor:pointer}
+.modal-header .close:hover{color:#fff}
+.modal-body{padding:16px;overflow:auto;display:flex;justify-content:center;background:radial-gradient(900px 500px at 30% 15%,rgba(60,90,80,.2),transparent),linear-gradient(180deg,rgba(0,0,0,.1),rgba(0,0,0,.6))}
+.grid-frame{position:relative;display:grid;gap:2px;background:rgba(255,255,255,.06);padding:4px;border-radius:6px}
+.grid-cell{width:48px;height:48px;background:rgba(255,255,255,.04);border-radius:3px}
+.item-layer{position:absolute;inset:4px;display:grid;gap:2px;pointer-events:none}
+.item-node{position:relative;border-radius:4px;overflow:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center;animation:popIn .25s ease}
+@keyframes popIn{from{opacity:0;transform:scale(.85)}to{opacity:1;transform:scale(1)}}
+.item-node .thumb-bg{position:absolute;inset:0;opacity:.25}
+.item-node .thumb{position:absolute;inset:4px;background-repeat:no-repeat;background-position:center;background-size:contain;z-index:1}
+.item-node .label{position:absolute;bottom:1px;left:2px;right:2px;font-size:10px;color:#fff;text-shadow:0 1px 2px rgba(0,0,0,.9);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;z-index:3;text-align:center}
+.item-node .price{position:absolute;top:2px;right:2px;font-size:10px;color:#ffd700;font-weight:700;text-shadow:0 1px 2px rgba(0,0,0,.9);z-index:3;display:flex;align-items:center;gap:2px}
+.item-node .price::before{content:"";display:inline-block;width:10px;height:10px;background:url(//game.gtimg.cn/images/dfm/cp/a20240807community/swat/swat_gold_icon.png) center/contain no-repeat}
+.item-node .cover{position:absolute;inset:0;background:linear-gradient(135deg,#3a4348,#262c30);z-index:5;display:flex;align-items:center;justify-content:center;transition:opacity .3s}
+.item-node .cover::after{content:"?";font-size:20px;color:rgba(255,255,255,.4);font-weight:700}
+.item-node.revealed .cover{opacity:0;pointer-events:none}
+.scan-magnifier{position:absolute;width:42px;height:42px;z-index:10;display:none;pointer-events:none}
+.scan-magnifier.show{display:block}
+.scan-magnifier .lens{width:100%;height:100%;border:2px solid rgba(100,200,255,.8);border-radius:50%;background:radial-gradient(circle at 30% 30%,rgba(150,220,255,.25),transparent 60%);box-shadow:0 0 20px rgba(100,200,255,.4);animation:breathe 1.2s ease-in-out infinite}
+@keyframes breathe{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}
+.modal-footer{padding:12px 16px;border-top:1px solid rgba(255,255,255,.08);display:flex;gap:10px;justify-content:center}
+.modal-footer .btn{min-width:80px}
+
+@media(max-width:600px){.header h1{font-size:22px}.container-grid{grid-template-columns:1fr}.ct-footer{justify-content:center}.modal{max-height:95vh}}
 </style>
 </head>
 <body>
-
 <script>
 (function(){var s=localStorage.getItem('theme');if(s==='light'||s==='dark'){document.documentElement.setAttribute('data-theme',s)}else{var d=window.matchMedia('(prefers-color-scheme:dark)').matches;document.documentElement.setAttribute('data-theme',d?'dark':'light')}})();
 </script>
 
 <a href="./deltaforce.html" class="back-btn">← 返回</a>
 
-<div class="wrap">
+<div class="header">
   <h1>📦 容器搜索模拟</h1>
-  <p class="sub">点一下，看看这次能从容器里翻出什么</p>
+  <p>模拟参考 kkrb 容器搜索页面布局 · 使用三角洲行动真实容器与物品数据</p>
+</div>
 
-  <div class="stat-row">
-    <div class="stat"><div class="n" id="sSearch">0</div><div class="l">搜索次数</div></div>
-    <div class="stat"><div class="n" id="sItems">0</div><div class="l">获得物品</div></div>
-    <div class="stat"><div class="n" id="sRare">0</div><div class="l">稀有及以上</div></div>
+<div class="stats">
+  <div class="stat"><div class="n" id="stSearch">0</div><div class="l">搜索次数</div></div>
+  <div class="stat"><div class="n" id="stItems">0</div><div class="l">获得物品</div></div>
+  <div class="stat"><div class="n" id="stValue">0</div><div class="l">总价值</div></div>
+  <div class="stat"><div class="n" id="stRare">0</div><div class="l">稀有及以上</div></div>
+</div>
+
+<div class="container-grid" id="containerGrid"></div>
+
+<div class="modal-overlay" id="modal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 id="modalTitle">正在搜索物资</h3>
+      <button class="close" id="modalClose">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="grid-frame" id="gridFrame">
+        <div class="item-layer" id="itemLayer"></div>
+        <div class="scan-magnifier" id="scanner"><div class="lens"></div></div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-primary" id="againBtn">再搜一次</button>
+      <button class="btn btn-sm" id="closeBtn2">关闭</button>
+    </div>
   </div>
-
-  <button class="primary-btn" id="searchBtn">🔍 搜索一次</button>
-  <button class="ghost-btn" id="resetBtn">重置</button>
-
-  <div class="loot-list" id="lootList">
-    <div class="empty" id="emptyTip">还没有翻到东西，点上面的按钮试试手气～</div>
-  </div>
-
-  <p class="q-tip">
-    物品图标与名称为本工具原创绘制；爆率权重参考社区爆率测试（如 B站阿豪爆率测试 / kkrb 一图流）的大致量级，<b>非官方数据、随版本变动</b>，仅供娱乐模拟，不代表任何游戏内真实数据。<br>
-    每次搜索随机产出 1–3 件物品，品质越高越稀有。
-  </p>
 </div>
 
 <script>
-// 原创线性图标（全部手绘 SVG，不复制任何游戏内美术素材）
-var ICON = {
-  gun: '<svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h12l3 3v2h-3l-2 3h-3l-1-3H3z"/><path d="M3 11h6"/><path d="M9 14v3"/></svg>',
-  gear: '<svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3.2"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.5 5.5l2 2M16.5 16.5l2 2M18.5 5.5l-2 2M7.5 16.5l-2 2"/></svg>',
-  med: '<svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M12 8.5v7M8.5 12h7"/></svg>',
-  ammo: '<svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="7" width="16" height="12" rx="1.5"/><path d="M4 11h16M8 7v12M12 7v12"/></svg>',
-  shield: '<svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v5c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6z"/><path d="M9 12l2 2 4-4"/></svg>',
-  helmet: '<svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 14a8 8 0 0 1 16 0z"/><path d="M4 14h16M12 6v2"/></svg>',
-  keycard: '<svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="12" rx="2"/><circle cx="8" cy="12" r="1.6"/><path d="M13 12h5"/></svg>',
-  beacon: '<svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21V8M8 8h8M12 4v4"/><path d="M9 12l3-4 3 4"/></svg>',
-  crystal: '<svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l5 6-5 12-5-12z"/><path d="M7 9h10"/></svg>',
-  file: '<svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4M9 12h6M9 16h6"/></svg>',
-  terminal: '<svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M6 9l3 2-3 2M12 15h5M3 21h18"/></svg>',
-  trophy: '<svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M7 4h10v4a5 5 0 0 1-10 0z"/><path d="M7 5H4v2a3 3 0 0 0 3 3M17 5h3v2a3 3 0 0 1-3 3M9 18h6M12 13v5"/></svg>'
+var CONTAINERS = [{"id": "bxg", "name": "保险柜", "pic": "https://www.kkrb.net/image/icon/container/bxg.webp", "types": ["工艺藏品", "非洲之心"], "real": "3*3、2*2(普通极小概率出绿)、1*3、1*4", "maybe": "2*3、3*2、1*1、1*2、2*1", "none": "无", "cols": 4, "rows": 6}, {"id": "xbxx", "name": "小保险箱", "pic": "https://www.kkrb.net/image/icon/container/xbxx.webp", "types": ["非洲之心", "工艺藏品", "电子物品"], "real": "3*3、2*2、1*3", "maybe": "2*3、3*2、1*1、1*2、2*1", "none": "无", "cols": 4, "rows": 6}, {"id": "fwq", "name": "服务器", "pic": "https://www.kkrb.net/image/icon/container/fwq.webp", "types": ["电子物品"], "real": "4*3、3*4、3*3、2*3、1*2", "maybe": "1*1", "none": "2*2", "cols": 4, "rows": 6}, {"id": "dnjx", "name": "电脑机箱", "pic": "https://www.kkrb.net/image/icon/container/dnjx.webp", "types": ["资料情报", "电子物品"], "real": "3*3", "maybe": "1*2", "none": "2*2", "cols": 4, "rows": 6}, {"id": "dwqx", "name": "大武器箱", "pic": "https://www.kkrb.net/image/icon/container/dwqx.webp", "types": ["高级咖啡豆", "武器", "配件", "哈机密", "工具材料", "电子物品"], "real": "3*3", "maybe": "2*3、3*2、2*2、1*1", "none": "1*2", "cols": 4, "rows": 6}, {"id": "dyx", "name": "弹药箱", "pic": "https://www.kkrb.net/image/icon/container/dyx.webp", "types": ["子弹", "能源燃料", "工具材料"], "real": "3*3、3*2", "maybe": "2*3", "none": "无", "cols": 4, "rows": 6}, {"id": "ctg", "name": "抽屉柜", "pic": "https://www.kkrb.net/image/icon/container/ctg.webp", "types": ["资料情报", "医疗道具", "家居物品", "工艺藏品"], "real": "1*4、3*3、3*2", "maybe": "无", "none": "无", "cols": 4, "rows": 4}, {"id": "syf", "name": "实验服", "pic": "https://www.kkrb.net/image/icon/container/syf.webp", "types": ["资料情报", "钥匙卡", "工艺藏品", "电子物品", "家居物品", "医疗道具"], "real": "无", "maybe": "1*2、2*1、1*1", "none": "无", "cols": 4, "rows": 4}, {"id": "yf", "name": "衣服", "pic": "https://www.kkrb.net/image/icon/container/yf.webp", "types": ["资料情报", "钥匙卡", "工艺藏品", "电子物品", "家居物品", "医疗道具"], "real": "无", "maybe": "1*2、2*1、1*1", "none": "无", "cols": 4, "rows": 4}, {"id": "ylwzd", "name": "医疗物资堆", "pic": "https://www.kkrb.net/image/icon/container/ylwzd.webp", "types": ["药品", "针剂", "医疗道具"], "real": "3*3、3*2", "maybe": "2*2、1*1", "none": "无", "cols": 4, "rows": 6}, {"id": "lxd", "name": "旅行袋", "pic": "https://www.kkrb.net/image/icon/container/lxd.webp", "types": ["家居物品", "工具材料", "资料情报", "医疗道具"], "real": "3*3", "maybe": "1*2、1*1", "none": "无", "cols": 4, "rows": 6}, {"id": "stx", "name": "手提箱", "pic": "https://www.kkrb.net/image/icon/container/stx.webp", "types": ["资料情报", "工艺藏品"], "real": "3*3", "maybe": "无", "none": "无", "cols": 4, "rows": 4}, {"id": "gjcwx", "name": "高级储物箱", "pic": "https://www.kkrb.net/image/icon/container/gjcwx.webp", "types": ["家居物品", "医疗道具", "电子物品", "资料情报", "能源燃料"], "real": "3*3、4*3", "maybe": "2*2、3*2、2*3", "none": "无", "cols": 4, "rows": 6}, {"id": "gjg", "name": "工具柜", "pic": "https://www.kkrb.net/image/icon/container/gjg.webp", "types": ["工具材料", "医疗道具", "能源燃料"], "real": "无", "maybe": "无", "none": "无", "cols": 4, "rows": 4}, {"id": "kdx", "name": "快递箱", "pic": "https://www.kkrb.net/image/icon/container/kdx.webp", "types": ["能源燃料", "医疗道具", "工具材料", "家居物品"], "real": "无", "maybe": "无", "none": "无", "cols": 4, "rows": 4}, {"id": "hkcwx", "name": "航空储物箱", "pic": "https://www.kkrb.net/image/icon/container/hkcwx.webp", "types": ["高级咖啡豆", "哈机密", "装备", "家居物品", "维修套件", "资料情报", "医疗道具", "工具材料", "电子物品", "能源燃料"], "real": "3*4", "maybe": "4*3、3*3、2*3、3*2、2*2、1*2", "none": "2*4", "cols": 4, "rows": 6}, {"id": "ljx", "name": "垃圾箱", "pic": "https://www.kkrb.net/image/icon/container/ljx.webp", "types": ["资料情报", "工艺藏品", "工具材料", "家居物品", "医疗道具", "能源燃料"], "real": "无", "maybe": "无", "none": "无", "cols": 4, "rows": 4}, {"id": "ywwzx", "name": "野外物资箱", "pic": "https://www.kkrb.net/image/icon/container/ywwzx.webp", "types": ["装备", "能源燃料", "医疗道具", "工具材料", "电子物品"], "real": "无", "maybe": "3*3", "none": "无", "cols": 4, "rows": 4}, {"id": "nw", "name": "鸟窝", "pic": "https://www.kkrb.net/image/icon/container/nw.webp", "types": ["非洲之心", "资料情报", "能源燃料", "医疗道具", "工具材料", "工艺藏品", "家居物品", "电子物品"], "real": "只产出四格以下红色物品", "maybe": "只产出四格以下红色物品", "none": "只产出四格以下红色物品", "cols": 4, "rows": 4}, {"id": "cnw", "name": "藏匿物(井盖)", "pic": "https://www.kkrb.net/image/icon/container/cnw.webp", "types": ["资料情报", "能源燃料", "医疗道具", "工具材料", "工艺藏品", "家居物品", "电子物品"], "real": "4*3、3*4、3*3", "maybe": "无", "none": "无", "cols": 4, "rows": 4}, {"id": "gjlxx", "name": "高级旅行箱", "pic": "https://www.kkrb.net/image/icon/container/gjlxl.webp", "types": ["工艺藏品", "家居物品"], "real": "3*3、3*2", "maybe": "1*2", "none": "无", "cols": 4, "rows": 6}, {"id": "fsxcwx", "name": "放射性储物箱", "pic": "https://www.kkrb.net/image/icon/big_map_tool/container_point/fsxcwx.webp", "types": ["装备", "家居物品", "维修套件", "医疗道具", "工具材料", "电子物品", "能源燃料"], "real": "暂无数据", "maybe": "暂无数据", "none": "暂无数据", "cols": 4, "rows": 4}, {"id": "gyjscwx", "name": "工业金属储物箱", "pic": "https://www.kkrb.net/image/icon/big_map_tool/container_point/gyjscwx.webp", "types": ["暂无数据"], "real": "暂无数据", "maybe": "暂无数据", "none": "暂无数据", "cols": 4, "rows": 4}, {"id": "hrlbb", "name": "核燃料背包", "pic": "https://www.kkrb.net/image/icon/big_map_tool/container_point/hrlbb.webp", "types": ["暂无数据"], "real": "暂无数据", "maybe": "暂无数据", "none": "暂无数据", "cols": 4, "rows": 4}];
+var ITEM_POOL = [{"n": "图腾箭矢", "g": 4, "w": 1, "h": 1, "img": "https://playerhub.df.qq.com/playerhub/60004/object/15080050139.png", "p": 14792}, {"n": "发条八音盒", "g": 5, "w": 1, "h": 1, "img": "https://playerhub.df.qq.com/playerhub/60004/object/15080050137.png", "p": 59277}, {"n": "金枝桂冠", "g": 5, "w": 2, "h": 1, "img": "https://playerhub.df.qq.com/playerhub/60004/object/15080050138.png", "p": 85856}, {"n": "后妃耳环", "g": 4, "w": 1, "h": 1, "img": "https://playerhub.df.qq.com/playerhub/60004/object/15080050001.png", "p": 15121}, {"n": "腕带", "g": 3, "w": 1, "h": 1, "img": "https://playerhub.df.qq.com/playerhub/60004/object/15080050194.png", "p": 10395}, {"n": "阿萨拉特色酒杯", "g": 5, "w": 1, "h": 1, "img": "https://playerhub.df.qq.com/playerhub/60004/object/15080050015.png", "p": 63296}, {"n": "古怪的海盗银币", "g": 3, "w": 1, "h": 1, "img": "https://playerhub.df.qq.com/playerhub/60004/object/15080050008.png", "p": 9775}, {"n": "荷美尔陶俑", "g": 5, "w": 1, "h": 2, "img": "https://playerhub.df.qq.com/playerhub/60004/object/15080050135.png", "p": 91550}, {"n": "功绩勋章", "g": 5, "w": 1, "h": 1, "img": "https://playerhub.df.qq.com/playerhub/60004/object/15080050004.png", "p": 82213}, {"n": "初级子弹生产零件", "g": 3, "w": 1, "h": 2, "img": "https://playerhub.df.qq.com/playerhub/60004/object/15080050023.png", "p": 21598}, {"n": "典雅咖啡杯", "g": 4, "w": 1, "h": 1, "img": "https://playerhub.df.qq.com/playerhub/60004/object/15080050182.png", "p": 15108}, {"n": "“起舞的女郎”挂饰", "g": 3, "w": 1, "h": 2, "img": "https://playerhub.df.qq.com/playerhub/60004/object/15080050012.png", "p": 15922}, {"n": "继电器", "g": 3, "w": 1, "h": 1, "img": "https://playerhub.df.qq.com/playerhub/60004/object/15020050008.png", "p": 11091}, {"n": "存储卡", "g": 3, "w": 1, "h": 1, "img": "https://playerhub.df.qq.com/playerhub/60004/object/15070010002.png", "p": 9961}, {"n": "电源", "g": 2, "w": 2, "h": 2, "img": "https://playerhub.df.qq.com/playerhub/60004/object/15030010011.png", "p": 5991}, {"n": "脑机头戴设备", "g": 5, "w": 2, "h": 2, "img": "https://playerhub.df.qq.com/playerhub/60004/object/15080050189.png", "p": 207076}, {"n": "超高频读卡器", "g": 2, "w": 1, "h": 1, "img": "https://playerhub.df.qq.com/playerhub/60004/object/15030040011.png", "p": 2687}, {"n": "电子干扰器", "g": 4, "w": 1, "h": 1, "img": "https://playerhub.df.qq.com/playerhub/60004/object/15030040014.png", "p": 13025}, {"n": "间谍笔", "g": 4, "w": 1, "h": 1, "img": "https://playerhub.df.qq.com/playerhub/60004/object/15040010015.png", "p": 21331}, {"n": "内存条", "g": 4, "w": 1, "h": 1, "img": "https://playerhub.df.qq.com/playerhub/60004/object/15030040006.png", "p": 28356}, {"n": "U盘", "g": 3, "w": 1, "h": 1, "img": "https://playerhub.df.qq.com/playerhub/60004/object/15070010001.png", "p": 12200}, {"n": "液晶显示屏", "g": 3, "w": 2, "h": 2, "img": "https://playerhub.df.qq.com/playerhub/60004/object/15030040010.png", "p": 25434}, {"n": "三角洲特种部队：刺刀特遣队", "g": 3, "w": 1, "h": 1, "img": "https://playerhub.df.qq.com/playerhub/60004/object/15080050027.png", "p": 11535}, {"n": "蜂网遮光罩", "g": 4, "w": 1, "h": 1, "img": "https://playerhub.df.qq.com/playerhub/60004/object/13370000001.png", "p": 18517}, {"n": "S12K扩容10发弹匣", "g": 2, "w": 1, "h": 2, "img": "https://playerhub.df.qq.com/playerhub/60004/object/13120000289.png", "p": 6125}, {"n": "95长弓平台套件", "g": 4, "w": 1, "h": 1, "img": "https://playerhub.df.qq.com/playerhub/60004/object/13220000001.png", "p": 27157}, {"n": "M870扩容枪管", "g": 2, "w": 2, "h": 1, "img": "https://playerhub.df.qq.com/playerhub/60004/object/13020000494.png", "p": 4191}, {"n": "沙鹰13发弹匣", "g": 2, "w": 1, "h": 2, "img": "https://playerhub.df.qq.com/playerhub/60004/object/13120000296.png", "p": 4444}, {"n": "5.56*45 30发聚合物弹匣", "g": 2, "w": 1, "h": 2, "img": "https://playerhub.df.qq.com/playerhub/60004/object/13120000030.png", "p": 6719}, {"n": "耀斑战术手电", "g": 4, "w": 1, "h": 1, "img": "https://playerhub.df.qq.com/playerhub/60004/object/13160000007.png", "p": 31242}, {"n": "特种钢", "g": 4, "w": 2, "h": 1, "img": "https://images.kkrb.net/playerhub/60004/object/15020050005.png", "p": 22412}, {"n": ".357左轮逐风者长枪管", "g": 2, "w": 2, "h": 1, "img": "https://playerhub.df.qq.com/playerhub/60004/object/13020000485.png", "p": 20646}, {"n": "竞赛阻手器", "g": 4, "w": 1, "h": 1, "img": "https://playerhub.df.qq.com/playerhub/60004/object/13140000024.png", "p": 25077}, {"n": "全景红点瞄准镜", "g": 3, "w": 1, "h": 1, "img": "https://playerhub.df.qq.com/playerhub/60004/object/13110000043.png", "p": 33929}, {"n": "93R实用轻枪管", "g": 2, "w": 2, "h": 1, "img": "https://playerhub.df.qq.com/playerhub/60004/object/13020000466.png", "p": 3041}, {"n": ".45 ACP HS", "g": 1, "w": 1, "h": 1, "img": "https://playerhub.df.qq.com/playerhub/60004/object/gun/ammo/45-ACP.png", "p": 43}, {"n": "5.7x28mm SS198LF", "g": 1, "w": 1, "h": 1, "img": "https://playerhub.df.qq.com/playerhub/60004/object/gun/ammo/5.7x28.png", "p": 38}, {"n": "5.56x45mm RRLP", "g": 1, "w": 1, "h": 1, "img": "https://playerhub.df.qq.com/playerhub/60004/object/gun/ammo/5.56x45mm.png", "p": 35}, {"n": "12 Gauge独头 GT", "g": 2, "w": 1, "h": 1, "img": "https://playerhub.df.qq.com/playerhub/60004/object/gun/ammo/12-Gauge.png", "p": 65}, {"n": "9x19mm PSO", "g": 1, "w": 1, "h": 1, "img": "https://playerhub.df.qq.com/playerhub/60004/object/gun/ammo/9x19.png", "p": 32}, {"n": "扑克牌-Q", "g": 1, "w": 1, "h": 1, "img": "https://playerhub.df.qq.com/playerhub/60004/object/15040010008.png", "p": 1612}, {"n": "建筑图纸1号", "g": 2, "w": 2, "h": 1, "img": "https://playerhub.df.qq.com/playerhub/60004/object/15070010005.png", "p": 3122}, {"n": "建筑图纸2号", "g": 2, "w": 2, "h": 1, "img": "https://playerhub.df.qq.com/playerhub/60004/object/15070010006.png", "p": 3960}, {"n": "电子温度计", "g": 3, "w": 2, "h": 2, "img": "https://playerhub.df.qq.com/playerhub/60004/object/15080050039.png", "p": 18200}, {"n": "情报文件", "g": 3, "w": 1, "h": 2, "img": "https://playerhub.df.qq.com/playerhub/60004/object/15070050003.png", "p": 16045}, {"n": "手机电池", "g": 2, "w": 1, "h": 1, "img": "https://playerhub.df.qq.com/playerhub/60004/object/15030010002.png", "p": 2272}, {"n": "无糖缓释能量棒", "g": 2, "w": 1, "h": 1, "img": "https://playerhub.df.qq.com/playerhub/60004/object/15060080004.png", "p": 2027}, {"n": "咖啡", "g": 5, "w": 1, "h": 1, "img": "https://playerhub.df.qq.com/playerhub/60004/object/15060080014.png", "p": 72533}, {"n": "锈迹斑斑的海盗铜币", "g": 2, "w": 1, "h": 1, "img": "https://playerhub.df.qq.com/playerhub/60004/object/15080050007.png", "p": 2566}, {"n": "维生素泡腾片", "g": 3, "w": 1, "h": 1, "img": "https://playerhub.df.qq.com/playerhub/60004/object/15080050073.png", "p": 10576}, {"n": "残弹挂坠", "g": 2, "w": 1, "h": 1, "img": "https://playerhub.df.qq.com/playerhub/60004/object/15080040004.png", "p": 3490}, {"n": "扑克牌-8", "g": 1, "w": 1, "h": 1, "img": "https://playerhub.df.qq.com/playerhub/60004/object/15080050048.png", "p": 15008}, {"n": "输液工具", "g": 2, "w": 1, "h": 1, "img": "https://images.kkrb.net/playerhub/60004/object/15060010012.png", "p": 2371}, {"n": "扑克牌-2", "g": 1, "w": 1, "h": 1, "img": "https://playerhub.df.qq.com/playerhub/60004/object/15080050054.png", "p": 902}, {"n": "战术快拆手术包", "g": 2, "w": 2, "h": 1, "img": "https://playerhub.df.qq.com/playerhub/60004/object/14030000002.png", "p": 8943}, {"n": "人工膝关节", "g": 4, "w": 1, "h": 2, "img": "https://playerhub.df.qq.com/playerhub/60004/object/15080050114.png", "p": 24434}, {"n": "强效注射器", "g": 2, "w": 1, "h": 1, "img": "https://playerhub.df.qq.com/playerhub/60004/object/14020000003.png", "p": 7465}, {"n": "DVE止疼片", "g": 4, "w": 1, "h": 1, "img": "https://playerhub.df.qq.com/playerhub/60004/object/14050000003.png", "p": 24326}, {"n": "野战急救包", "g": 3, "w": 2, "h": 1, "img": "https://playerhub.df.qq.com/playerhub/60004/object/14020000004.png", "p": 13486}, {"n": "听诊器", "g": 3, "w": 1, "h": 2, "img": "https://playerhub.df.qq.com/playerhub/60004/object/15060010006.png", "p": 17816}, {"n": "音频播放器", "g": 3, "w": 1, "h": 1, "img": "https://playerhub.df.qq.com/playerhub/60004/object/15030010008.png", "p": 10723}, {"n": "手术镊子", "g": 2, "w": 1, "h": 1, "img": "https://playerhub.df.qq.com/playerhub/60004/object/15060010002.png", "p": 2448}, {"n": "印刷电路板", "g": 2, "w": 1, "h": 1, "img": "https://playerhub.df.qq.com/playerhub/60004/object/15030010013.png", "p": 2596}, {"n": "资料：商业文件", "g": 3, "w": 1, "h": 1, "img": "https://playerhub.df.qq.com/playerhub/60004/object/15070040002.png", "p": 8361}, {"n": "个人信笺", "g": 2, "w": 2, "h": 1, "img": "https://playerhub.df.qq.com/playerhub/60004/object/15090910023.png", "p": 3286}, {"n": "鳄鱼蛋", "g": 4, "w": 1, "h": 1, "img": "https://playerhub.df.qq.com/playerhub/60004/object/15080050136.png", "p": 23089}, {"n": "建筑图纸5号", "g": 2, "w": 2, "h": 1, "img": "https://playerhub.df.qq.com/playerhub/60004/object/15070010009.png", "p": 3308}, {"n": "低级燃料", "g": 3, "w": 1, "h": 1, "img": "https://playerhub.df.qq.com/playerhub/60004/object/15020010034.png", "p": 14912}, {"n": "9V电池", "g": 2, "w": 1, "h": 1, "img": "https://playerhub.df.qq.com/playerhub/60004/object/15080050111.png", "p": 2883}, {"n": "一桶油漆", "g": 3, "w": 2, "h": 2, "img": "https://playerhub.df.qq.com/playerhub/60004/object/15020010016.png", "p": 25179}, {"n": "盒装蜡烛", "g": 1, "w": 2, "h": 2, "img": "https://playerhub.df.qq.com/playerhub/60004/object/15080050112.png", "p": 2264}, {"n": "阿萨拉时尚周刊", "g": 3, "w": 2, "h": 2, "img": "https://playerhub.df.qq.com/playerhub/60004/object/15080050021.png", "p": 18748}, {"n": "火药", "g": 3, "w": 1, "h": 2, "img": "https://playerhub.df.qq.com/playerhub/60004/object/15040010017.png", "p": 23250}, {"n": "便携生存套组", "g": 4, "w": 2, "h": 1, "img": "https://playerhub.df.qq.com/playerhub/60004/object/15080050106.png", "p": 24350}, {"n": "机械破障锤", "g": 3, "w": 2, "h": 2, "img": "https://playerhub.df.qq.com/playerhub/60004/object/15020010018.png", "p": 41195}, {"n": "转换插座", "g": 3, "w": 1, "h": 1, "img": "https://playerhub.df.qq.com/playerhub/60004/object/15040010022.png", "p": 10667}, {"n": "轻型户外炉具", "g": 3, "w": 2, "h": 2, "img": "https://playerhub.df.qq.com/playerhub/60004/object/15080050109.png", "p": 24376}, {"n": "石工锤", "g": 2, "w": 3, "h": 1, "img": "https://playerhub.df.qq.com/playerhub/60004/object/15080050084.png", "p": 12949}, {"n": "电动车电池", "g": 4, "w": 3, "h": 2, "img": "https://playerhub.df.qq.com/playerhub/60004/object/15040040007.png", "p": 85578}, {"n": "芳纶纤维", "g": 3, "w": 2, "h": 1, "img": "https://images.kkrb.net/playerhub/60004/object/15020040002.png", "p": 24595}, {"n": "水平仪", "g": 2, "w": 1, "h": 2, "img": "https://playerhub.df.qq.com/playerhub/60004/object/15020040004.png", "p": 4236}, {"n": "便携液压扳手", "g": 2, "w": 1, "h": 1, "img": "https://playerhub.df.qq.com/playerhub/60004/object/15020010017.png", "p": 2258}, {"n": "电笔", "g": 2, "w": 1, "h": 1, "img": "https://playerhub.df.qq.com/playerhub/60004/object/15020010020.png", "p": 2486}, {"n": "狩猎火柴", "g": 3, "w": 1, "h": 1, "img": "https://playerhub.df.qq.com/playerhub/60004/object/15080050107.png", "p": 98800}, {"n": "电线", "g": 2, "w": 1, "h": 1, "img": "https://playerhub.df.qq.com/playerhub/60004/object/15020010012.png", "p": 2377}, {"n": "喷漆", "g": 2, "w": 1, "h": 2, "img": "https://playerhub.df.qq.com/playerhub/60004/object/15020010030.png", "p": 3739}, {"n": "插座", "g": 2, "w": 1, "h": 1, "img": "https://playerhub.df.qq.com/playerhub/60004/object/15040010012.png", "p": 2278}, {"n": "摩卡咖啡壶", "g": 3, "w": 1, "h": 2, "img": "https://playerhub.df.qq.com/playerhub/60004/object/15080050072.png", "p": 17244}, {"n": "迷你氢电池", "g": 2, "w": 1, "h": 1, "img": "https://playerhub.df.qq.com/playerhub/60004/object/15010010015.png", "p": 2562}, {"n": "建筑图纸3号", "g": 2, "w": 2, "h": 1, "img": "https://playerhub.df.qq.com/playerhub/60004/object/15070010007.png", "p": 3735}, {"n": "枪械零件", "g": 3, "w": 2, "h": 1, "img": "https://playerhub.df.qq.com/playerhub/60004/object/15040010021.png", "p": 17654}, {"n": "精密工具组", "g": 1, "w": 1, "h": 1, "img": "https://playerhub.df.qq.com/playerhub/60004/object/15020010001.png", "p": 1086}, {"n": "手锯", "g": 2, "w": 3, "h": 1, "img": "https://playerhub.df.qq.com/playerhub/60004/object/15080050087.png", "p": 12136}, {"n": "原木木板", "g": 2, "w": 2, "h": 1, "img": "https://playerhub.df.qq.com/playerhub/60004/object/15020010008.png", "p": 4200}, {"n": "阿萨拉新闻周刊", "g": 2, "w": 2, "h": 2, "img": "https://playerhub.df.qq.com/playerhub/60004/object/15080050020.png", "p": 5818}, {"n": "酒店宣传海报", "g": 2, "w": 2, "h": 2, "img": "https://playerhub.df.qq.com/playerhub/60004/object/15080050019.png", "p": 4739}, {"n": "太阳能板", "g": 3, "w": 4, "h": 2, "img": "https://playerhub.df.qq.com/playerhub/60004/object/15030050016.png", "p": 33720}, {"n": "可编程处理器", "g": 5, "w": 1, "h": 1, "img": "https://playerhub.df.qq.com/playerhub/60004/object/15030050003.png", "p": 72219}, {"n": "LED灯管", "g": 2, "w": 2, "h": 1, "img": "https://playerhub.df.qq.com/playerhub/60004/object/15020010032.png", "p": 3329}, {"n": "压力计", "g": 2, "w": 1, "h": 2, "img": "https://playerhub.df.qq.com/playerhub/60004/object/15020040003.png", "p": 4124}, {"n": "军情录音", "g": 3, "w": 1, "h": 3, "img": "https://playerhub.df.qq.com/playerhub/60004/object/15080050096.png", "p": 28655}, {"n": "无菌敷料包", "g": 4, "w": 1, "h": 2, "img": "https://playerhub.df.qq.com/playerhub/60004/object/15080050057.png", "p": 50945}, {"n": "键盘", "g": 2, "w": 2, "h": 1, "img": "https://playerhub.df.qq.com/playerhub/60004/object/15030010014.png", "p": 3059}, {"n": "胡椒瓶", "g": 1, "w": 1, "h": 1, "img": "https://playerhub.df.qq.com/playerhub/60004/object/15080050081.png", "p": 1770}, {"n": "含氟牙膏", "g": 1, "w": 1, "h": 2, "img": "https://playerhub.df.qq.com/playerhub/60004/object/15010010004.png", "p": 2264}, {"n": "阿萨拉特色陶瓷", "g": 2, "w": 2, "h": 2, "img": "https://playerhub.df.qq.com/playerhub/60004/object/15080050017.png", "p": 5858}, {"n": "物流信息单", "g": 1, "w": 1, "h": 1, "img": "https://playerhub.df.qq.com/playerhub/60004/object/15090910019.png", "p": 1039}, {"n": "扑克牌-10", "g": 1, "w": 1, "h": 1, "img": "https://playerhub.df.qq.com/playerhub/60004/object/15080050046.png", "p": 910}, {"n": "手术剪刀", "g": 1, "w": 1, "h": 1, "img": "https://playerhub.df.qq.com/playerhub/60004/object/15060010008.png", "p": 1012}, {"n": "防水胶布", "g": 1, "w": 1, "h": 1, "img": "https://playerhub.df.qq.com/playerhub/60004/object/15020010002.png", "p": 1077}, {"n": "电容", "g": 2, "w": 1, "h": 1, "img": "https://playerhub.df.qq.com/playerhub/60004/object/15020050007.png", "p": 2639}, {"n": "高出力粉碎钳", "g": 4, "w": 1, "h": 2, "img": "https://playerhub.df.qq.com/playerhub/60004/object/15020010024.png", "p": 41548}, {"n": "波纹软管", "g": 2, "w": 1, "h": 1, "img": "https://playerhub.df.qq.com/playerhub/60004/object/15020010026.png", "p": 2373}, {"n": "直角尺", "g": 1, "w": 1, "h": 2, "img": "https://playerhub.df.qq.com/playerhub/60004/object/15020010014.png", "p": 2590}, {"n": "香喷喷炒面", "g": 3, "w": 1, "h": 1, "img": "https://playerhub.df.qq.com/playerhub/60004/object/15060080010.png", "p": 10292}, {"n": "火柴", "g": 1, "w": 1, "h": 1, "img": "https://playerhub.df.qq.com/playerhub/60004/object/15010010008.png", "p": 1069}, {"n": "注射器", "g": 2, "w": 1, "h": 1, "img": "https://playerhub.df.qq.com/playerhub/60004/object/15060010010.png", "p": 2249}, {"n": "盐溶液", "g": 2, "w": 1, "h": 1, "img": "https://playerhub.df.qq.com/playerhub/60004/object/15060010001.png", "p": 2258}, {"n": "电火机", "g": 2, "w": 1, "h": 1, "img": "https://playerhub.df.qq.com/playerhub/60004/object/15010010013.png", "p": 2668}, {"n": "非洲鼓", "g": 2, "w": 1, "h": 2, "img": "https://playerhub.df.qq.com/playerhub/60004/object/15080010003.png", "p": 4276}, {"n": "黄金饰章", "g": 4, "w": 1, "h": 2, "img": "https://playerhub.df.qq.com/playerhub/60004/object/15080050018.png", "p": 23440}, {"n": "电动爆破锤", "g": 2, "w": 2, "h": 1, "img": "https://playerhub.df.qq.com/playerhub/60004/object/15020010007.png", "p": 4198}, {"n": "医用酒精", "g": 3, "w": 1, "h": 1, "img": "https://playerhub.df.qq.com/playerhub/60004/object/15060010007.png", "p": 10508}, {"n": "螺丝刀", "g": 2, "w": 1, "h": 1, "img": "https://playerhub.df.qq.com/playerhub/60004/object/15020010005.png", "p": 2861}, {"n": "非洲木雕", "g": 2, "w": 1, "h": 2, "img": "https://playerhub.df.qq.com/playerhub/60004/object/15080040005.png", "p": 4366}, {"n": "苹果", "g": 2, "w": 1, "h": 1, "img": "https://playerhub.df.qq.com/playerhub/60004/object/15060080001.png", "p": 2783}, {"n": "残缺的档案", "g": 4, "w": 1, "h": 2, "img": "https://playerhub.df.qq.com/playerhub/60004/object/15080050181.png", "p": 25060}, {"n": "酸奶", "g": 1, "w": 1, "h": 1, "img": "https://playerhub.df.qq.com/playerhub/60004/object/15060080002.png", "p": 945}, {"n": "当地小报", "g": 1, "w": 2, "h": 1, "img": "https://playerhub.df.qq.com/playerhub/60004/object/15090910016.png", "p": 1945}, {"n": "鼠标", "g": 1, "w": 1, "h": 1, "img": "https://playerhub.df.qq.com/playerhub/60004/object/15030010009.png", "p": 922}, {"n": "充电电池组", "g": 2, "w": 1, "h": 1, "img": "https://playerhub.df.qq.com/playerhub/60004/object/15080050110.png", "p": 3908}, {"n": "糖三角", "g": 3, "w": 1, "h": 1, "img": "https://playerhub.df.qq.com/playerhub/60004/object/15080050076.png", "p": 12558}, {"n": "生津柠檬茶", "g": 4, "w": 1, "h": 1, "img": "https://playerhub.df.qq.com/playerhub/60004/object/15060080005.png", "p": 19189}, {"n": "三角洲特种部队：黑鹰坠落-战队之刃", "g": 3, "w": 1, "h": 1, "img": "https://playerhub.df.qq.com/playerhub/60004/object/15080050026.png", "p": 11302}, {"n": "木雕烟斗", "g": 3, "w": 2, "h": 1, "img": "https://playerhub.df.qq.com/playerhub/60004/object/15080050075.png", "p": 198612}, {"n": "自制护甲维修包", "g": 3, "w": 2, "h": 1, "img": "https://playerhub.df.qq.com/playerhub/60004/object/14060000008.png", "p": 21290}, {"n": "专业声卡", "g": 4, "w": 2, "h": 1, "img": "https://playerhub.df.qq.com/playerhub/60004/object/15080050038.png", "p": 35086}, {"n": "微型燃料棒", "g": 5, "w": 2, "h": 1, "img": "https://playerhub.df.qq.com/playerhub/60004/object/15080050223.png", "p": 105393}, {"n": "阿萨拉娱乐月刊", "g": 2, "w": 2, "h": 2, "img": "https://playerhub.df.qq.com/playerhub/60004/object/15080050022.png", "p": 5205}, {"n": "便携燃料瓶", "g": 3, "w": 1, "h": 1, "img": "https://playerhub.df.qq.com/playerhub/60004/object/15080050228.png", "p": 9958}, {"n": "E型滤毒罐", "g": 5, "w": 1, "h": 1, "img": "https://playerhub.df.qq.com/playerhub/60004/object/15040010019.png", "p": 88921}, {"n": "工具刀", "g": 1, "w": 2, "h": 1, "img": "https://playerhub.df.qq.com/playerhub/60004/object/15020010006.png", "p": 2293}, {"n": "盒装挂耳咖啡", "g": 5, "w": 1, "h": 2, "img": "https://playerhub.df.qq.com/playerhub/60004/object/15080050071.png", "p": 368252}, {"n": "燃气罐", "g": 3, "w": 2, "h": 2, "img": "https://playerhub.df.qq.com/playerhub/60004/object/15020010037.png", "p": 24420}, {"n": "军用露营灯", "g": 4, "w": 1, "h": 3, "img": "https://playerhub.df.qq.com/playerhub/60004/object/15080050105.png", "p": 48728}, {"n": "私密笔记簿", "g": 2, "w": 1, "h": 2, "img": "https://playerhub.df.qq.com/playerhub/60004/object/15090910017.png", "p": 5323}, {"n": "小糖人姜饼人", "g": 4, "w": 1, "h": 2, "img": "https://playerhub.df.qq.com/playerhub/60004/object/15080050183.png", "p": 24635}, {"n": "部队饰章", "g": 3, "w": 1, "h": 1, "img": "https://playerhub.df.qq.com/playerhub/60004/object/15080050229.png", "p": 8480}, {"n": "无线耳机", "g": 3, "w": 1, "h": 1, "img": "https://playerhub.df.qq.com/playerhub/60004/object/15080050217.png", "p": 9330}, {"n": "额温枪", "g": 3, "w": 1, "h": 1, "img": "https://playerhub.df.qq.com/playerhub/60004/object/15060010004.png", "p": 11561}, {"n": "血氧仪", "g": 5, "w": 1, "h": 1, "img": "https://playerhub.df.qq.com/playerhub/60004/object/15060040003.png", "p": 63279}];
+var GRADE_WEIGHT = {1:60,2:30,3:10,4:3,5:1};
+var GRADE_COLOR = {1:'var(--r1)',2:'var(--r2)',3:'var(--r3)',4:'var(--r4)',5:'var(--r5)'};
+var stats = {search:0,items:0,value:0,rare:0};
+var scanning = false;
+
+function fixContainerPic(pic){
+  if(pic.indexOf('://')===-1 && pic.indexOf('./')===0) return 'https://www.kkrb.net/'+pic.slice(2);
+  return pic;
+}
+
+function formatPrice(n){
+  if(!isFinite(n)||n<=0) return '0';
+  if(n<1000) return String(Math.round(n));
+  if(n<1000000) return (n/1000).toFixed(1)+'K';
+  return (n/1000000).toFixed(1)+'M';
+}
+
+function renderContainers(){
+  var grid = document.getElementById('containerGrid');
+  grid.innerHTML = '';
+  for(var i=0;i<CONTAINERS.length;i++){
+    var c = CONTAINERS[i];
+    var card = document.createElement('div');
+    card.className = 'ct-card';
+
+    var header = document.createElement('div');
+    header.className = 'ct-header';
+    header.textContent = c.name;
+    card.appendChild(header);
+
+    var body = document.createElement('div');
+    body.className = 'ct-body';
+    var img = document.createElement('img');
+    img.src = fixContainerPic(c.pic);
+    img.className = 'ct-img';
+    img.alt = c.name;
+    body.appendChild(img);
+    var info = document.createElement('div');
+    info.className = 'ct-info';
+    var types = (c.types||[]).map(function(t){return '<span class="tag">'+escapeHtml(t)+'</span>';}).join('');
+    info.innerHTML = '<p><b>主要产物：</b>'+types+'</p>'+
+      '<p><b>必出格式：</b>'+escapeHtml(c.real||'无')+'</p>'+
+      '<p><b>可能格式：</b>'+escapeHtml(c.maybe||'无')+'</p>'+
+      '<p><b>不出格式：</b>'+escapeHtml(c.none||'无')+'</p>';
+    body.appendChild(info);
+    card.appendChild(body);
+
+    var footer = document.createElement('div');
+    footer.className = 'ct-footer';
+    var draws = [1,6,12,30];
+    var labels = ['开搜','六连搜','十二连搜','三十连搜'];
+    for(var j=0;j<draws.length;j++){
+      var btn = document.createElement('button');
+      btn.className = j===0 ? 'btn btn-primary' : 'btn btn-sm';
+      btn.textContent = labels[j];
+      (function(cid,dcount){btn.onclick = function(){openSearch(cid,dcount);};})(c.id,draws[j]);
+      footer.appendChild(btn);
+    }
+    card.appendChild(footer);
+    grid.appendChild(card);
+  }
+}
+
+function escapeHtml(s){
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function rollItem(){
+  var weights = ITEM_POOL.map(function(it){return GRADE_WEIGHT[it.g]||1;});
+  var total = weights.reduce(function(a,b){return a+b;},0);
+  var r = Math.random()*total;
+  var acc = 0;
+  for(var i=0;i<ITEM_POOL.length;i++){
+    acc += weights[i];
+    if(r<=acc) return ITEM_POOL[i];
+  }
+  return ITEM_POOL[0];
+}
+
+function createOccupancy(rows,cols){
+  var occ = [];
+  for(var r=0;r<rows;r++){occ.push(Array(cols).fill(false));}
+  return occ;
+}
+
+function canPlace(occ,r,c,w,h){
+  if(r+h>occ.length || c+w>occ[0].length) return false;
+  for(var rr=r;rr<r+h;rr++){
+    for(var cc=c;cc<c+w;cc++){
+      if(occ[rr][cc]) return false;
+    }
+  }
+  return true;
+}
+
+function markPlace(occ,r,c,w,h){
+  for(var rr=r;rr<r+h;rr++){
+    for(var cc=c;cc<c+w;cc++){
+      occ[rr][cc]=true;
+    }
+  }
+}
+
+function findFirstFit(occ,w,h){
+  for(var r=0;r<occ.length;r++){
+    for(var c=0;c<occ[0].length;c++){
+      if(canPlace(occ,r,c,w,h)) return {r:r,c:c};
+    }
+  }
+  return null;
+}
+
+function layoutItems(items,cols,rows){
+  var occ = createOccupancy(rows,cols);
+  var placements = [];
+  for(var i=0;i<items.length;i++){
+    var it = items[i];
+    var w = Math.max(1,it.w||1);
+    var h = Math.max(1,it.h||1);
+    var pos = findFirstFit(occ,w,h);
+    if(!pos) continue;
+    markPlace(occ,pos.r,pos.c,w,h);
+    placements.push({r:pos.r,c:pos.c,w:w,h:h,item:it});
+  }
+  placements.sort(function(a,b){return (a.r-b.r)||(a.c-b.c);});
+  return placements;
+}
+
+function openSearch(containerId,drawCount){
+  if(scanning) return;
+  var c = null;
+  for(var i=0;i<CONTAINERS.length;i++){if(CONTAINERS[i].id===containerId){c=CONTAINERS[i];break;}}
+  if(!c) return;
+
+  var items = [];
+  for(var i=0;i<drawCount;i++){
+    items.push(rollItem());
+  }
+
+  stats.search++;
+  stats.items += items.length;
+  var totalValue = 0;
+  var rare = 0;
+  for(var i=0;i<items.length;i++){
+    totalValue += items[i].p||0;
+    if(items[i].g>=4) rare++;
+  }
+  stats.value += totalValue;
+  stats.rare += rare;
+  updateStats();
+
+  showResult(c,items,totalValue);
+}
+
+function updateStats(){
+  document.getElementById('stSearch').textContent = stats.search;
+  document.getElementById('stItems').textContent = stats.items;
+  document.getElementById('stValue').textContent = formatPrice(stats.value);
+  document.getElementById('stRare').textContent = stats.rare;
+}
+
+function showResult(c,items,totalValue){
+  var modal = document.getElementById('modal');
+  var title = document.getElementById('modalTitle');
+  var gridFrame = document.getElementById('gridFrame');
+  var itemLayer = document.getElementById('itemLayer');
+  var scanner = document.getElementById('scanner');
+
+  title.textContent = c.name + ' 搜索中...';
+  modal.classList.add('show');
+  scanning = true;
+
+  var cols = c.cols||4, rows = c.rows||4;
+  gridFrame.style.gridTemplateColumns = 'repeat('+cols+',48px)';
+  gridFrame.style.gridTemplateRows = 'repeat('+rows+',48px)';
+
+  // Build cells
+  var cellsHtml = '';
+  for(var i=0;i<cols*rows;i++) cellsHtml += '<div class="grid-cell"></div>';
+  // replace existing cells but keep itemLayer and scanner
+  gridFrame.innerHTML = cellsHtml + itemLayer.outerHTML + scanner.outerHTML;
+  // rebind references after rebuilding
+  itemLayer = document.getElementById('itemLayer');
+  scanner = document.getElementById('scanner');
+
+  var placements = layoutItems(items,cols,rows);
+
+  // Build item nodes
+  itemLayer.innerHTML = '';
+  var nodes = [];
+  for(var i=0;i<placements.length;i++){
+    var p = placements[i];
+    var it = p.item;
+    var node = document.createElement('div');
+    node.className = 'item-node';
+    node.style.gridColumn = (p.c+1)+' / span '+p.w;
+    node.style.gridRow = (p.r+1)+' / span '+p.h;
+
+    var bg = document.createElement('div');
+    bg.className = 'thumb-bg';
+    bg.style.backgroundColor = GRADE_COLOR[it.g]||GRADE_COLOR[1];
+    node.appendChild(bg);
+
+    var thumb = document.createElement('div');
+    thumb.className = 'thumb';
+    thumb.style.backgroundImage = "url("+it.img+")";
+    node.appendChild(thumb);
+
+    var label = document.createElement('div');
+    label.className = 'label';
+    label.textContent = it.n;
+    node.appendChild(label);
+
+    var price = document.createElement('div');
+    price.className = 'price';
+    price.textContent = formatPrice(it.p||0);
+    node.appendChild(price);
+
+    var cover = document.createElement('div');
+    cover.className = 'cover';
+    node.appendChild(cover);
+
+    itemLayer.appendChild(node);
+    nodes.push(node);
+  }
+
+  // Scan animation
+  var idx = 0;
+  function scanNext(){
+    if(idx>=nodes.length){
+      scanner.classList.remove('show');
+      title.innerHTML = escapeHtml(c.name)+'（总价值：<span style="color:#ffd700">'+formatPrice(totalValue)+'</span>）';
+      scanning = false;
+      return;
+    }
+    var node = nodes[idx];
+    var rect = node.getBoundingClientRect();
+    var frameRect = gridFrame.getBoundingClientRect();
+    scanner.style.left = (rect.left - frameRect.left + rect.width/2 - 21)+'px';
+    scanner.style.top = (rect.top - frameRect.top + rect.height/2 - 21)+'px';
+    scanner.classList.add('show');
+    setTimeout(function(){
+      node.classList.add('revealed');
+      idx++;
+      setTimeout(scanNext,220);
+    },350);
+  }
+  setTimeout(scanNext,200);
+}
+
+function closeModal(){
+  document.getElementById('modal').classList.remove('show');
+  scanning = false;
+}
+
+document.getElementById('modalClose').onclick = closeModal;
+document.getElementById('closeBtn2').onclick = closeModal;
+document.getElementById('modal').onclick = function(e){if(e.target===this) closeModal();};
+document.getElementById('againBtn').onclick = function(){
+  // Re-open same container with draw count 1
+  var title = document.getElementById('modalTitle').textContent;
+  var m = title.match(/^(.+?)(?:\s|（)/);
+  if(m){
+    var name = m[1];
+    for(var i=0;i<CONTAINERS.length;i++){
+      if(CONTAINERS[i].name===name){openSearch(CONTAINERS[i].id,1);return;}
+    }
+  }
 };
 
-// 物品池：名称用三角洲行动常见品类词，爆率权重参考社区爆率测试的大致量级（非官方）
-// 数据维度参考公开社区爆率测试（如 B站阿豪爆率测试 / kkrb 一图流），仅供娱乐模拟
-var POOL = [
-  { svg: ICON.gun, nm: "突击步枪", q: "普通", color: "#9ca3af", w: 28 },
-  { svg: ICON.gear, nm: "战术配件", q: "普通", color: "#9ca3af", w: 24 },
-  { svg: ICON.med, nm: "急救包", q: "普通", color: "#9ca3af", w: 18 },
-  { svg: ICON.ammo, nm: "弹药箱", q: "精良", color: "#22c55e", w: 13 },
-  { svg: ICON.shield, nm: "防弹插板", q: "精良", color: "#22c55e", w: 9 },
-  { svg: ICON.helmet, nm: "战术头盔", q: "精良", color: "#22c55e", w: 7 },
-  { svg: ICON.keycard, nm: "密钥卡", q: "稀有", color: "#3b82f6", w: 5 },
-  { svg: ICON.beacon, nm: "侦察信标", q: "稀有", color: "#3b82f6", w: 4 },
-  { svg: ICON.crystal, nm: "晶体核心", q: "史诗", color: "#a855f7", w: 2 },
-  { svg: ICON.file, nm: "机密档案", q: "史诗", color: "#a855f7", w: 1.5 },
-  { svg: ICON.terminal, nm: "战略终端", q: "传说", color: "#f59e0b", w: 0.7 },
-  { svg: ICON.trophy, nm: "黄金藏品", q: "传说", color: "#f59e0b", w: 0.4 }
-];
-
-var RARE_TIERS = ["稀有", "史诗", "传说"];
-
-var totalW = POOL.reduce(function (s, it) { return s + it.w; }, 0);
-var stats = { search: 0, items: 0, rare: 0 };
-var lootList = document.getElementById('lootList');
-var emptyTip = document.getElementById('emptyTip');
-
-function roll() {
-  var r = Math.random() * totalW;
-  var acc = 0;
-  for (var i = 0; i < POOL.length; i++) {
-    acc += POOL[i].w;
-    if (r <= acc) return POOL[i];
-  }
-  return POOL[0];
-}
-
-function doSearch() {
-  if (emptyTip) { emptyTip.remove(); emptyTip = null; }
-  stats.search++;
-  var count = 1 + Math.floor(Math.random() * 3); // 1~3 件
-  for (var i = 0; i < count; i++) {
-    var it = roll();
-    stats.items++;
-    if (RARE_TIERS.indexOf(it.q) !== -1) stats.rare++;
-    var el = document.createElement('div');
-    el.className = 'loot-item';
-    el.style.borderLeftColor = it.color;
-    el.innerHTML = '<span class="ico" style="color:' + it.color + '">' + it.svg + '</span>' +
-      '<span class="nm">' + it.nm + '</span>' +
-      '<span class="qt" style="color:' + it.color + '">' + it.q + '</span>';
-    lootList.insertBefore(el, lootList.firstChild);
-  }
-  document.getElementById('sSearch').textContent = stats.search;
-  document.getElementById('sItems').textContent = stats.items;
-  document.getElementById('sRare').textContent = stats.rare;
-}
-
-function resetAll() {
-  stats = { search: 0, items: 0, rare: 0 };
-  document.getElementById('sSearch').textContent = 0;
-  document.getElementById('sItems').textContent = 0;
-  document.getElementById('sRare').textContent = 0;
-  lootList.innerHTML = '<div class="empty" id="emptyTip">还没有翻到东西，点上面的按钮试试手气～</div>';
-  emptyTip = document.getElementById('emptyTip');
-}
-
-document.getElementById('searchBtn').onclick = doSearch;
-document.getElementById('resetBtn').onclick = resetAll;
+renderContainers();
 </script>
-
 </body>
 </html>

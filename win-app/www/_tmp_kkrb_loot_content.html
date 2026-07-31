@@ -1,0 +1,2285 @@
+<style>
+    .loot-container-simulator-card {
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        border-radius: 12px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        height: 330px;
+    }
+
+    .loot-container-simulator-card-body {
+        display: flex;
+        flex-direction: column;
+        flex: 1 1 auto;
+        min-height: 0;
+        overflow: hidden;
+    }
+
+    .loot-container-simulator-info-scroll {
+        margin-top: 6px;
+        padding: 16px;
+        flex: 1 1 auto;
+        min-height: 0;
+        overflow-x: hidden;
+        overflow-y: auto;
+    }
+
+    .loot-container-simulator-preview-image {
+        width: 64px;
+        height: 64px;
+        object-fit: contain;
+        align-self: center;
+        text-align: center;
+    }
+
+    .loot-container-simulator-card-footer {
+        padding: 10px;
+        text-align: right;
+        margin-top: auto;
+    }
+
+    .loot-container-simulator-split-row {
+        width: 100%;
+    }
+
+    .loot-container-simulator-popup {
+        box-sizing: border-box;
+        color: rgba(235, 245, 255, .92);
+    }
+
+    .loot-container-simulator-popup *,
+    .loot-container-simulator-popup *:before,
+    .loot-container-simulator-popup *:after {
+        box-sizing: border-box;
+    }
+
+    .loot-container-simulator-popup {
+        width: 100%;
+        height: 100%;
+    }
+
+    .loot-container-simulator-popup .lcs-scale-area {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+    }
+
+    .loot-container-simulator-popup .lcs-scale-wrapper {
+        transform-origin: center;
+        width: fit-content;
+        height: fit-content;
+    }
+
+    .loot-container-simulator-popup .lcs-panel {
+        width: 100%;
+        height: 100%;
+        background: radial-gradient(1200px 700px at 50% 35%, #3a4348 0%, #262c30 40%, #1b1f22 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0;
+    }
+
+    .loot-container-simulator-popup .lcs-panel-inner {
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(180deg, rgba(0, 0, 0, .35), rgba(0, 0, 0, .6));
+        border: 1px solid rgba(255, 255, 255, .06);
+        padding: 18px;
+    }
+
+    .loot-container-simulator-popup .lcs-panel-header {
+        height: 70px;
+        display: flex;
+        align-items: center;
+        padding: 0 18px;
+        position: relative;
+        background:
+            repeating-linear-gradient(135deg, rgba(255, 255, 255, .06) 0 5px, rgba(255, 255, 255, 0) 5px 10px),
+            linear-gradient(90deg, rgba(120, 25, 30, .85), rgba(120, 25, 30, .35));
+        box-shadow: inset 0 0 0 1px rgba(255, 60, 60, .12);
+    }
+
+    .loot-container-simulator-popup .lcs-panel-header:before,
+    .loot-container-simulator-popup .lcs-panel-header:after {
+        content: "";
+        position: absolute;
+        top: 16px;
+        bottom: 16px;
+        width: 2.6px;
+        background: rgba(255, 60, 60, .65);
+    }
+
+    .loot-container-simulator-popup .lcs-panel-header:before {
+        left: -0.1px;
+    }
+
+    .loot-container-simulator-popup .lcs-panel-header:after {
+        right: 0.1px;
+    }
+
+    .loot-container-simulator-popup .lcs-panel-header .corner {
+        position: absolute;
+        width: 10px;
+        height: 16.5px;
+        border-color: rgba(255, 60, 60, .65);
+        pointer-events: none;
+    }
+
+    .loot-container-simulator-popup .lcs-panel-header .corner.corner-tl {
+        top: -0.5px;
+        left: -0.5px;
+        border-top: 3px solid rgba(255, 60, 60, .65);
+        border-left: 3px solid rgba(255, 60, 60, .35);
+    }
+
+    .loot-container-simulator-popup .lcs-panel-header .corner.corner-tr {
+        top: -0.5px;
+        right: 0.5px;
+        border-top: 3px solid rgba(255, 60, 60, .65);
+        border-right: 3px solid rgba(255, 60, 60, .35);
+    }
+
+    .loot-container-simulator-popup .lcs-panel-header .corner.corner-bl {
+        bottom: -0.5px;
+        left: -0.5px;
+        border-bottom: 3px solid rgba(255, 60, 60, .65);
+        border-left: 3px solid rgba(255, 60, 60, .35);
+    }
+
+    .loot-container-simulator-popup .lcs-panel-header .corner.corner-br {
+        bottom: -0.5px;
+        right: 0.5px;
+        border-bottom: 3px solid rgba(255, 60, 60, .65);
+        border-right: 3px solid rgba(255, 60, 60, .35);
+    }
+
+    .loot-container-simulator-popup .lcs-header-icon {
+        width: 26px;
+        height: 26px;
+        margin-right: 12px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .loot-container-simulator-popup .lcs-header-title {
+        font-size: 20px;
+        font-weight: 700;
+        letter-spacing: .5px;
+    }
+
+    .loot-container-simulator-popup .lcs-header-title .coin {
+        width: 24px;
+        height: 24px;
+        vertical-align: -5px;
+        margin: 0 4px;
+    }
+
+    .loot-container-simulator-popup .lcs-content {
+        margin-top: 14px;
+        height: calc(100% - 70px - 14px);
+        border: 1px solid rgba(255, 255, 255, .08);
+        background:
+            radial-gradient(900px 500px at 30% 15%, rgba(60, 90, 80, .20), rgba(0, 0, 0, 0)),
+            linear-gradient(180deg, rgba(0, 0, 0, .10), rgba(0, 0, 0, .60));
+        position: relative;
+        display: flex;
+        align-items: flex-start;
+        justify-content: flex-start;
+        overflow: hidden;
+    }
+
+    .loot-container-simulator-popup .lcs-grid-frame {
+        position: relative;
+        margin-left: 0.5px;
+        margin-top: 2px;
+        width: 400px;
+        height: 400px;
+    }
+
+    .loot-container-simulator-popup .lcs-cells-layer,
+    .loot-container-simulator-popup .lcs-items-layer {
+        position: absolute;
+        inset: 0;
+        display: grid;
+        width: 100%;
+        height: 100%;
+    }
+
+    .loot-container-simulator-popup .lcs-scan-overlay {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        z-index: 50;
+        opacity: 0;
+        transition: opacity .08s ease;
+    }
+
+    .loot-container-simulator-popup .lcs-scan-overlay.show {
+        opacity: 1;
+    }
+
+    .loot-container-simulator-popup .lcs-scan-overlay .dim {
+        position: absolute;
+        inset: 0;
+        transition: opacity .08s ease;
+    }
+
+    .loot-container-simulator-popup .lcs-scan-overlay.show .dim {
+        opacity: 1;
+    }
+
+    .loot-container-simulator-popup .lcs-orbit {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        left: 0;
+        top: 0;
+    }
+
+    .loot-container-simulator-popup .lcs-orbit .anchor {
+        position: absolute;
+        width: 10px;
+        height: 10px;
+        left: -5px;
+        top: -5px;
+        opacity: .65;
+    }
+
+    .loot-container-simulator-popup .lcs-orbit .orbiter {
+        position: absolute;
+        left: -50px;
+        top: -35px;
+        transform-origin: 0 0;
+        animation: lcsOrbitMove 0.9s linear infinite;
+    }
+
+    .loot-container-simulator-popup .lcs-orbit .counter {
+        position: absolute;
+        left: 0;
+        top: 0;
+        transform-origin: -22px 0;
+        animation: lcsOrbitCounter 0.9s linear infinite;
+    }
+
+    @keyframes lcsOrbitMove {
+        from {
+            transform: rotate(0deg) translateX(var(--lcs-orbit-radius, 26px));
+        }
+
+        to {
+            transform: rotate(360deg) translateX(var(--lcs-orbit-radius, 26px));
+        }
+    }
+
+    @keyframes lcsOrbitCounter {
+        from {
+            transform: rotate(0deg);
+        }
+
+        to {
+            transform: rotate(-360deg);
+        }
+    }
+
+    .loot-container-simulator-popup .lcs-scan-magnifier {
+        position: absolute;
+        left: 0;
+        top: 0;
+        opacity: .95;
+        filter: drop-shadow(0 6px 14px rgba(0, 0, 0, .45));
+        animation: lcsBreathe 1.2s ease-in-out infinite;
+    }
+
+    @keyframes lcsBreathe {
+
+        0%,
+        100% {
+            transform: scale(1);
+        }
+
+        50% {
+            transform: scale(1.05);
+        }
+    }
+
+    .loot-container-simulator-popup .lcs-scan-magnifier .lens {
+        width: 42px;
+        height: 42px;
+        border-radius: 50%;
+        border: 4px solid rgba(255, 255, 255, .85);
+        position: relative;
+        background: rgba(0, 0, 0, .15);
+        box-shadow: inset 0 0 0 2px rgba(0, 0, 0, .18);
+    }
+
+    .loot-container-simulator-popup .lcs-scan-magnifier .lens:after {
+        content: "";
+        position: absolute;
+        width: 32px;
+        height: 10px;
+        background: rgba(255, 255, 255, .85);
+        right: -20px;
+        bottom: -18px;
+        transform: rotate(50deg);
+        border-radius: 10px;
+    }
+
+    .loot-container-simulator-popup .lcs-cell {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, .10);
+        border-right: 1px solid rgba(255, 255, 255, .1);
+        border-bottom: 1px solid rgba(255, 255, 255, .1);
+        overflow: hidden;
+    }
+
+    .loot-container-simulator-popup .lcs-cell.edge-top {
+        border-top: 1px solid rgba(255, 255, 255, .1);
+    }
+
+    .loot-container-simulator-popup .lcs-cell.edge-left {
+        border-left: 1px solid rgba(255, 255, 255, .1);
+    }
+
+    .loot-container-simulator-popup .lcs-cell.edge-right {
+        border-right: 1px solid rgba(255, 255, 255, .1);
+    }
+
+    .loot-container-simulator-popup .lcs-cell.edge-bottom {
+        border-bottom: 1px solid rgba(255, 255, 255, .1);
+    }
+
+    .loot-container-simulator-popup .lcs-item {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        overflow: visible;
+        background: rgba(0, 0, 0, .25);
+        border: 1px solid rgba(255, 255, 255, .25);
+        isolation: isolate;
+        z-index: 1;
+    }
+
+    .loot-container-simulator-popup .lcs-item-clip {
+        position: absolute;
+        inset: 0;
+        overflow: hidden;
+        width: 100%;
+        height: 100%;
+    }
+
+    .loot-container-simulator-popup .lcs-item:after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        border-radius: 4px;
+        opacity: 0;
+        pointer-events: none;
+        z-index: 200;
+        border: 4px solid transparent;
+        transform: scale(1);
+        box-shadow: 0 0 0 rgba(0, 0, 0, 0);
+    }
+
+    .loot-container-simulator-popup .lcs-thumb-bg {
+        position: absolute;
+        inset: 0;
+        background: transparent;
+        transform: scale(1.02);
+        z-index: 0;
+        pointer-events: none;
+        transition: opacity .18s ease, filter .18s ease;
+    }
+
+    .loot-container-simulator-popup .lcs-thumb {
+        position: absolute;
+        inset: 0;
+        background-size: contain;
+        background-position: center;
+        background-repeat: no-repeat;
+        opacity: .95;
+        transform: scale(0.95);
+        z-index: 1;
+        pointer-events: none;
+        transition: opacity .18s ease, filter .18s ease;
+    }
+
+    .loot-container-simulator-popup .lcs-item.unsearched .lcs-thumb,
+    .loot-container-simulator-popup .lcs-item.unsearched .lcs-thumb-bg {
+        opacity: .10;
+        filter: blur(2px) saturate(.85) brightness(.65);
+    }
+
+    .loot-container-simulator-popup .lcs-cover {
+        position: absolute;
+        inset: 0;
+        z-index: 10;
+        background:
+            radial-gradient(240px 160px at 22% 10%, rgba(255, 255, 255, .10), rgba(0, 0, 0, 0)),
+            repeating-linear-gradient(135deg, rgba(255, 255, 255, .14) 0 5px, rgba(255, 255, 255, 0) 5px 10px),
+            linear-gradient(180deg, rgba(0, 0, 0, .70), rgba(0, 0, 0, .80));
+        opacity: 1;
+        transition: opacity .18s ease;
+        pointer-events: none;
+    }
+
+    .loot-container-simulator-popup .lcs-item.searched .lcs-cover {
+        opacity: 0;
+    }
+
+    .loot-container-simulator-popup .lcs-label {
+        position: absolute;
+        left: 4px;
+        top: 2px;
+        z-index: 5;
+        font-size: 14px;
+        font-weight: 700;
+        color: rgba(255, 255, 255, .85);
+        text-shadow: 0 2px 10px rgba(0, 0, 0, .55);
+        opacity: 0;
+        transition: opacity .18s ease;
+        pointer-events: none;
+        max-width: calc(100% - 18px);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .loot-container-simulator-popup .lcs-item.searched .lcs-label {
+        opacity: 1;
+    }
+
+    .loot-container-simulator-popup .lcs-item.searched .lcs-thumb-bg {
+        opacity: 0.4;
+        filter: none;
+    }
+
+    .loot-container-simulator-popup .lcs-item.searched .lcs-thumb {
+        opacity: 1;
+        filter: none;
+        animation: lcsItemPopIn 0.18s ease-out;
+    }
+
+    @keyframes lcsItemPopIn {
+        0% {
+            transform: scale(1.5);
+        }
+
+        60% {
+            transform: scale(1);
+        }
+    }
+
+    .loot-container-simulator-popup .lcs-price-badge {
+        position: absolute;
+        right: 6px;
+        bottom: 6px;
+        z-index: 30;
+
+        display: none;
+        flex-direction: column;
+        align-items: flex-end;
+
+        border-radius: 6px;
+
+        font-size: 16px;
+        font-weight: 600;
+        line-height: 1;
+
+        color: rgba(255, 255, 255, .92);
+        text-shadow: 0 2px 8px rgba(0, 0, 0, .6);
+
+        pointer-events: none;
+    }
+
+    .loot-container-simulator-popup .lcs-item.searched .lcs-price-badge {
+        display: flex;
+    }
+
+    .loot-container-simulator-popup .lcs-price-badge .count {
+        font-size: 14px;
+        font-weight: 800;
+        margin-bottom: 4px;
+        opacity: .9;
+    }
+
+    .loot-container-simulator-popup .lcs-price-badge .row {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .loot-container-simulator-popup .lcs-price-badge .coin {
+        width: 16px;
+        height: 16px;
+        flex: 0 0 16px;
+    }
+
+    .loot-container-simulator-popup .lcs-price-badge .val {
+        white-space: nowrap;
+    }
+
+    .lcs-history {
+        padding: 14px;
+    }
+
+    .lcs-history-toolbar {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 12px;
+    }
+
+    .lcs-history-toolbar .layui-input {
+        flex: 1 1 auto;
+    }
+
+    .lcs-history-list {
+        max-height: 72vh;
+        overflow: auto;
+        padding: 6px;
+    }
+
+    .lcs-hcard {
+        display: grid;
+        grid-template-columns: 68px 120px 1fr;
+        gap: 12px;
+        padding: 12px;
+        border-radius: 12px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        margin-bottom: 10px;
+        align-items: center;
+    }
+
+    .lcs-h-left {
+        width: 64px;
+        height: 64px;
+        border-radius: 10px;
+        overflow: hidden;
+    }
+
+    .lcs-h-left img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+    }
+
+    .lcs-h-mid {
+        min-width: 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 6px;
+    }
+
+    .lcs-h-title {
+        font-size: 16px;
+        font-weight: 800;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .lcs-h-sub {
+        font-size: 12px;
+        opacity: .85;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 2px;
+    }
+
+    .lcs-h-sub .row {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+    }
+
+
+    .lcs-h-sub .coin {
+        width: 14px;
+        height: 14px;
+        vertical-align: -2px;
+    }
+
+    .lcs-h-right {
+        min-width: 0;
+        display: flex;
+        align-items: center;
+    }
+
+    .lcs-h-strip {
+        width: 100%;
+        overflow-x: auto;
+        overflow-y: hidden;
+        display: flex;
+        gap: 10px;
+        padding: 10px 10px;
+        scrollbar-width: thin;
+        scrollbar-color: rgba(255, 255, 255, 0.4) transparent;
+        -webkit-overflow-scrolling: touch;
+        cursor: grab;
+    }
+
+    .lcs-h-strip::-webkit-scrollbar {
+        height: 6px;
+        background: transparent;
+    }
+
+    .lcs-h-strip.dragging {
+        cursor: grabbing;
+        user-select: none;
+    }
+
+    .lcs-hitem{
+        flex: 0 0 auto;
+        width: 72px;
+        height: 72px;
+        border-radius: 10px;
+        position: relative;
+        overflow: hidden;
+        border: 1px solid rgba(255,255,255,.14);
+        background: rgba(0,0,0,.25);
+        box-shadow: 0 4px 8px rgba(0,0,0,.2);
+        isolation: isolate;
+    }
+    
+    .lcs-hitem .clip{
+        position: absolute;
+        inset: 0;
+        overflow: hidden;
+    }
+    
+    .lcs-hitem .thumb-bg{
+        position:absolute;
+        inset:0;
+    }
+    
+    .lcs-hitem .thumb{
+        position:absolute;
+        inset:0;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: contain;
+        transform: scale(.92);
+        opacity: .95;
+        pointer-events:none;
+    }
+    
+    .lcs-hitem .name{
+        position:absolute;
+        left: 3px;
+        top: 6px;
+        max-width: calc(100% - 8px);
+        font-size: 12px;
+        font-weight: 900;
+        line-height: 1.1;
+        color: rgba(255,255,255,.92);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        z-index: 3;
+        pointer-events:none;
+    }
+    
+    .lcs-hitem .br{
+        position:absolute;
+        right: 5px;
+        bottom: 4px;
+        display:flex;
+        flex-direction: column;
+        align-items: flex-end;
+        color: rgba(255,255,255,.92);
+        gap: 1px;
+    
+        z-index: 3;
+        pointer-events:none;
+    
+        border-radius: 8px;
+    }
+    
+    .lcs-hitem .br .line{
+        display:flex;
+        align-items:center;
+        gap: 4px;
+        line-height: 1;
+    }
+    
+    .lcs-hitem .br .cnt{
+        font-size: 13px;
+        font-weight: 800;
+        opacity: .9;
+    }
+    
+    .lcs-hitem .br .coin{
+        width: 13px;
+        height: 13px;
+    }
+    
+    .lcs-hitem .br .val{
+        font-size: 13px;
+        font-weight: 800;
+        white-space: nowrap;
+    }
+    
+    .luck-popup {
+        width: 100%;
+        height: 100%;
+        position: relative;
+        overflow: hidden;
+        background-color: #11313c;
+        background-image: url('/image/background/bg.svg');
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        font-family: Consolas, monospace;
+        color: #35ff9c;
+    }
+    
+    .luck-popup::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.35);
+    }
+    
+    .luck-popup-inner {
+        position: relative;
+        z-index: 2;
+        padding: 18px;
+    }
+    
+    .luck-title {
+        font-size: 20px;
+        font-weight: 900;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    
+    .luck-emoji {
+        font-size: 22px;
+    }
+    
+    .luck-glow {
+        text-shadow: 0 0 10px currentColor;
+    }
+    
+    .luck-info {
+        margin-top: 10px;
+        opacity: 0.85;
+        font-size: 13px;
+        line-height: 1.7;
+    }
+    
+    .luck-divider {
+        margin: 14px 0;
+        height: 1px;
+        background: linear-gradient(90deg, transparent, #35ff9c, transparent);
+        box-shadow: 0 0 8px #35ff9c;
+    }
+    
+    .luck-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+        font-size: 13px;
+    }
+    
+    .luck-card {
+        padding: 12px;
+        border: 1px solid rgba(53, 255, 156, 0.35);
+        border-radius: 10px;
+        background: rgba(0, 0, 0, 0.45);
+        box-shadow: 0 0 12px rgba(53, 255, 156, 0.15) inset;
+    }
+    
+    .luck-card-label {
+        opacity: 0.7;
+    }
+    
+    .luck-card-value {
+        margin-top: 6px;
+        font-size: 20px;
+        font-weight: 900;
+        color: #35ff9c;
+        text-shadow: 0 0 8px #35ff9c;
+    }
+    
+    .luck-band {
+        margin-top: 6px;
+        opacity: 0.65;
+        font-size: 12px;
+    }
+    
+    .luck-interpret {
+        margin-top: 14px;
+        padding: 14px;
+        border-radius: 10px;
+        border: 1px solid rgba(53, 255, 156, 0.35);
+        background: rgba(0, 0, 0, 0.55);
+        box-shadow: 0 0 16px rgba(53, 255, 156, 0.12) inset;
+    }
+    
+    .luck-interpret-title {
+        font-weight: 900;
+        margin-bottom: 6px;
+    }
+    
+    .luck-ratio {
+        font-size: 14px;
+        margin-bottom: 8px;
+        text-shadow: 0 0 8px currentColor;
+    }
+    
+    .luck-advice {
+        line-height: 1.7;
+        font-size: 13px;
+    }
+    
+    .luck-footer-note {
+        margin-top: 10px;
+        opacity: 0.45;
+        font-size: 12px;
+    }
+    
+    .lcs-dialog {
+        height: 100%;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        background: transparent;
+    }
+
+    .lcs-dialog-body {
+        flex: 1 1 auto;
+        min-height: 0;
+        overflow: auto;
+        padding: 8px;
+    }
+
+    .lcs-dialog-footer {
+        flex: 0 0 auto;
+        padding: 10px 12px;
+        border-top: 1px solid rgba(255, 255, 255, .10);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap; 
+    }
+
+    .lcs-dialog-footer .coin {
+        width: 14px;
+        height: 14px;
+        vertical-align: -3px;
+        margin: 0 2px;
+    }
+    
+    .lcs-live-stats{
+        width: 100%;
+        text-align: center;
+        font-size: 13px;
+        font-weight: 800;
+        line-height: 1.2;
+        opacity: .95;
+        display: flex;
+        justify-content: center;
+        gap: 12px;
+        flex-wrap: wrap;
+    }
+    
+    .lcs-live-stats .tag{
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 4px 10px;
+        border-radius: 999px;
+        border: 1px solid rgba(255,255,255,.12);
+        background: rgba(0,0,0,.18);
+    }
+    
+    .lcs-live-stats .dot{
+        width: 9px;
+        height: 9px;
+        border-radius: 50%;
+        box-shadow: 0 0 10px currentColor;
+    }
+</style>
+
+<blockquote class="layui-elem-quote">
+    <p>模拟容器搜索（爆率为机密爆率）</p>
+    <p>爆率数据由 B站：<a href="https://space.bilibili.com/385279051" target="_blank">阿豪爆率测试</a> 提供</p>
+</blockquote>
+<div class="layui-panel" style="padding: 16px;">
+    <button class="layui-btn layui-btn-sm" lay-on="lcsOpenHistory" style="float:right; margin-bottom:-6px;">
+        历史记录
+    </button>
+
+    <div style="clear:both;"></div>
+
+    <fieldset class="layui-elem-field layui-field-title">
+        <legend>模拟容器搜索</legend>
+    </fieldset>
+
+    <div id="loot-container-simulator-content" class="layui-row layui-col-space16 loot-container-simulator-split-row"
+        style="height:62vh; overflow-x: hidden; overflow-y: auto;"></div>
+</div>
+
+<script>
+    layui.use(['layer', 'element', 'flow', 'form', 'util'], function () {
+        var $ = layui.$;
+        var layer = layui.layer;
+        var element = layui.element;
+        var form = layui.form;
+        var flow = layui.flow;
+        var util = layui.util;
+
+        var pageSize = 9;
+        var isControllable = false;
+        var lootContainersData = {};
+        var totalPages = 0;
+
+        var LCS_HISTORY_KEY = 'LCS_HISTORY_V1';
+        var LCS_HISTORY_MAX = 120;
+
+        var CELL_SIZE = 96;
+        var BETWEEN_ITEM_MS = 80;
+
+        var EXTRA_W = 18 * 2 + 6;
+        var EXTRA_H = 18 * 2 + 70 + 14 + 6;
+
+        var RARITY_SCAN_MS = {
+            grade_0: 2000,
+            grade_1: 800,
+            grade_2: 1000,
+            grade_3: 1000,
+            grade_4: 1500,
+            grade_5: 2000,
+            grade_6: 3000
+        };
+        
+        var SOUNDS = {
+            g1: new Audio('./audio/Grade1.ogg'),
+            g2: new Audio('./audio/Grade2.ogg'),
+            g34: new Audio('./audio/Grade4.ogg'),
+            g56: new Audio('./audio/Grade56.ogg')
+        };
+        SOUNDS.g34.volume = 0.1;
+        SOUNDS.g56.volume = 0.1;
+        SOUNDS.g34.preload = 'auto';
+        SOUNDS.g56.preload = 'auto';
+
+        element.render();
+        form.render();
+
+        initLCSPage();
+
+        function initLCSPage() {
+            var loadingMsg = layer.msg('正在加载数据...', {
+                icon: 16,
+                shade: 0.01,
+                time: 0
+            });
+
+            $.ajax({
+                url: 'getLCSData',
+                method: 'POST',
+                data: {
+                    
+                    type: 'container',
+                    pageSize: pageSize
+                },
+                success: function (res) {
+                    if (res.code === 1) {
+                        layer.close(loadingMsg);
+
+                        var rawData = res.data || {};
+                        lootContainersData = rawData.containers || [];
+                        totalPages = rawData.totalPages || 0;
+
+                        initLootContainerFlow(1, '#loot-container-simulator-content');
+
+                        util.on('lay-on', {
+                            'simulatorOpenContainer': function (othis) {
+                                var containerId = othis.data('container-id');
+                                var containerName = othis.data('container-name') || '';
+                                var containerPic = othis.data('container-pic') || '';
+                                var drawCount = parseInt(othis.data('draw') || 1, 10);
+                                
+                                if (drawCount > 12) {
+                                    layer.confirm(
+                                        `你即将执行 ${drawCount} 连搜 ${containerName}，这是一个危险操作，可能导致：<br>
+                                         • 音频叠加声音爆炸 💥<br>
+                                         • 低配置设备页面卡顿 💥<br>
+                                         • 欧气透支 ✨<br><br>
+                                         是否继续？`,
+                                        {
+                                            icon: 3,
+                                            title: '危险操作确认',
+                                            btn: ['搜就完了', '我怂了'],
+                                            shadeClose: true
+                                        },
+                                        function (index) {
+                                            layer.close(index);
+                                            getLootContainerSimulatorData(containerId, containerName, containerPic, drawCount);
+                                        }
+                                    );
+                                    return;
+                                }
+                                
+                                getLootContainerSimulatorData(containerId, containerName, containerPic, drawCount);
+                            },
+                            'lcsOpenHistory': function () {
+                                lcsOpenHistoryPopup();
+                            },
+                            'simulatorOpenContainerAgain': function (othis) {
+                                var idx  = othis.data('layer-index');
+                                
+                                var containerId = othis.data('container-id');
+                                var containerName = othis.data('container-name') || '';
+                                var containerPic = othis.data('container-pic') || '';
+                                var drawCount = parseInt(othis.data('draw') || 1, 10);
+                                
+                                layer.close(idx);
+                                getLootContainerSimulatorData(containerId, containerName, containerPic, drawCount);
+                            },
+                            'lcsShowLuck': function (othis) {
+                                var idx  = othis.data('layer-index');
+                                
+                                var layero = $('#layui-layer' + idx);
+                                
+                                if (layero[0] && typeof layero[0]._lcsShowLuck === 'function') {
+                                    layer.close(idx);
+                                    layero[0]._lcsShowLuck();
+                                    return;
+                                }
+                                layer.msg('运势功能暂时无法使用', { icon: 0, time: 1200 });
+                            }
+                        });
+                    } else {
+                        layer.msg("获取数据失败：" + (res.msg || '请求失败'), { icon: 2 });
+
+                        if (res.code === -101 || res.code === -103) {
+                            setTimeout(function () {
+                                location.reload();
+                            }, 1000);
+                        }
+                    }
+                },
+                error: function (res) {
+                    layer.msg("获取数据失败：" + ((res && res.msg) || '请求失败'), { icon: 2 });
+
+                    if (res && (res.code === -101 || res.code === -103)) {
+                        setTimeout(function () {
+                            location.reload();
+                        }, 1000);
+                    }
+                }
+            });
+        }
+
+        function initLootContainerFlow(type, containerSelector) {
+            $(containerSelector).empty();
+
+            flow.load({
+                elem: containerSelector,
+                scrollElem: containerSelector,
+                isAuto: true,
+                end: '没有更多了喵~',
+                done: function (page, next) {
+                    var list = lootContainersData || [];
+
+                    var start = (page - 1) * pageSize;
+                    var end = Math.min(start + pageSize, list.length);
+                    var html = '';
+
+                    for (var i = start; i < end; i++) {
+                        var item = list[i] || {};
+                        var itemTypeDetails = (item.containerItemType || []).map(function (typeInfo) {
+                            var detailDisplay = '';
+                            if (typeInfo.name != '') {
+                                detailDisplay = `
+                                    ${typeInfo.name}
+                                `;
+                            }
+                            return detailDisplay;
+                        }).join('、');
+
+                        var realItemSize = item.containerRealItemSize.replace(/<br>/g, "、");
+                        var maybeItemSize = item.containerMaybeItemSize.replace(/<br>/g, "、");
+                        var noenItemSize = item.containerNoneItemSize.replace(/<br>/g, "、");
+
+                        var isDarkMode = document.documentElement.classList.contains('dark');
+                        var overlayColor = isDarkMode ? 'var(--gd5d)' : 'var(--gd5)';
+
+                        html += `
+                            <div class="layui-col-sm6 layui-col-md6 layui-col-lg4 layui-anim layui-anim-scale">
+                                <div class="layui-card loot-container-simulator-card">
+                                    <div class="layui-card-header">
+                                        ${item.containerName || ''}
+                                    </div>
+                                    <div class="layui-card-body loot-container-simulator-card-body">
+                                        <img src="${item.containerPic}" class="loot-container-simulator-preview-image" alt="${item.containerName || ''}" onerror="this.src='image/default.webp?t=1729416942'" style="background-color: ${overlayColor}; border-radius: 4px;">
+                                        <div class="loot-container-simulator-info-scroll">
+                                            <p>容器主要产物：${itemTypeDetails}</p>
+                                            <p>容器必出货格式：${realItemSize}</p>
+                                            <p>容器可能出货格式：${maybeItemSize}</p>
+                                            <p>容器不出货格式：${noenItemSize}</p>
+                                        </div>
+                                    </div>
+                                    <div class="loot-container-simulator-card-footer">
+                                        <hr>
+                                        <button class="layui-btn layui-btn-sm" lay-on="simulatorOpenContainer" data-container-id="${item.containerId || ''}" data-container-name="${item.containerName || ''}" data-container-pic="${item.containerPic || ''}" data-draw="1">
+                                            开搜
+                                        </button>
+                                        <button class="layui-btn layui-btn-sm" lay-on="simulatorOpenContainer" data-container-id="${item.containerId || ''}" data-container-name="${item.containerName || ''}" data-container-pic="${item.containerPic || ''}" data-draw="6">
+                                            六连搜
+                                        </button>
+                                        <button class="layui-btn layui-btn-sm" lay-on="simulatorOpenContainer" data-container-id="${item.containerId || ''}" data-container-name="${item.containerName || ''}" data-container-pic="${item.containerPic || ''}" data-draw="12">
+                                            十二连搜
+                                        </button>
+                                        <button class="layui-btn layui-btn-sm" lay-on="simulatorOpenContainer" data-container-id="${item.containerId || ''}" data-container-name="${item.containerName || ''}" data-container-pic="${item.containerPic || ''}" data-draw="30">
+                                            三十连搜
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    }
+
+                    setTimeout(function () {
+                        next(html, page < totalPages);
+                    }, 200);
+                }
+            });
+        }
+
+        function getLootContainerSimulatorData(containerId, containerName, containerPic, drawCount) {
+            var loadingMsg2 = layer.msg('正在获取数据...', {
+                icon: 16,
+                shade: 0.01,
+                time: 0
+            });
+
+            $.ajax({
+                url: 'getLCSData',
+                method: 'POST',
+                data: {
+                    
+                    type: 'lootData',
+                    cId: containerId,
+                    drawCount: drawCount
+                },
+                success: function (res2) {
+                    layer.close(loadingMsg2);
+
+                    if (res2.code === 1) {
+                        var arr = Array.isArray(res2.data.results) ? res2.data.results : [];
+                        arr = arr.slice(0, drawCount);
+
+                        arr.forEach(function (one) {
+                            if (!one) return;
+                            one.containerName = containerName;
+                            one.containerPic = containerPic;
+                        });
+                        
+                        var avgProfit = Number(res2.data.avgProfit);
+                        if (!Number.isFinite(avgProfit) || avgProfit < 0) avgProfit = 0;
+                        
+                        if (typeof window.plausible !== 'undefined' && typeof window.plausible === 'function') {
+                            window.plausible('LootContainerSimulator', {
+                                props: {
+                                    action: "模拟搜索容器 " + containerName + " - " + drawCount + " 连搜"
+                                }
+                            });
+                        } else {
+                            console.log('Plausible tracking is not initialized.');
+                        }
+                        
+                        showLootContainerSimulatorPopupWindows(arr, containerId, containerName, containerPic, drawCount, avgProfit);
+                    } else {
+                        layer.msg("获取数据失败：" + (res2.msg || '请求失败'), { icon: 2 });
+
+                        if (res2.code === -101 || res2.code === -103) {
+                            setTimeout(function () {
+                                location.reload();
+                            }, 1000);
+                        }
+                    }
+                },
+                error: function (res2) {
+                    layer.close(loadingMsg2);
+
+                    layer.msg("获取数据失败：" + ((res2 && res2.msg) || '请求失败'), { icon: 2 });
+
+                    if (res2 && (res2.code === -101 || res2.code === -103)) {
+                        setTimeout(function () {
+                            location.reload();
+                        }, 1000);
+                    }
+                }
+            });
+        }
+
+        function showLootContainerSimulatorPopupWindows(data, containerId, containerName, containerPic, drawCount, avgProfit) {
+            var dataArr = Array.isArray(data) ? data : [data];
+            dataArr = dataArr.filter(function (x) { return !!x; });
+            if (!dataArr.length) {
+                layer.msg('没有可展示的数据', { icon: 2 });
+                return;
+            }
+
+            function buildPanelHtml(contentW, contentH) {
+                return `
+                    <div class="loot-container-simulator-popup">
+                        <div class="lcs-scale-area" data-role="scaleArea">
+                            <div class="lcs-scale-wrapper" data-role="scaleWrapper">
+                                <div class="lcs-panel">
+                                    <div class="lcs-panel-inner" data-role="panelInner" style="width: ${contentW}px; height: ${contentH}px;">
+                                        <div class="lcs-panel-header">
+                                            <span class="corner corner-tl"></span>
+                                            <span class="corner corner-tr"></span>
+                                            <span class="corner corner-bl"></span>
+                                            <span class="corner corner-br"></span>
+                                            <div class="lcs-header-icon" aria-hidden="true">
+                                                <svg width="26" height="26" viewBox="0 0 24 24" fill="none">
+                                                    <path d="M10.5 18a7.5 7.5 0 1 1 0-15 7.5 7.5 0 0 1 0 15Z" stroke="rgba(255,255,255,.9)" stroke-width="2"></path>
+                                                    <path d="M16.5 16.5 21 21" stroke="rgba(255,255,255,.9)" stroke-width="2" stroke-linecap="round"></path>
+                                                </svg>
+                                            </div>
+                                            <div class="lcs-header-title" data-role="title">正在搜索物资</div>
+                                        </div>
+        
+                                        <div class="lcs-content">
+                                            <div class="lcs-grid-frame" data-role="gridFrame">
+                                                <div class="lcs-cells-layer" data-role="cellsLayer"></div>
+                                                <div class="lcs-items-layer" data-role="itemsLayer"></div>
+        
+                                                <div class="lcs-scan-overlay" data-role="scanOverlay">
+                                                    <div class="dim"></div>
+                                                    <div class="lcs-orbit" data-role="orbit">
+                                                        <div class="anchor"></div>
+                                                        <div class="orbiter" data-role="orbiter">
+                                                            <div class="counter" data-role="counter">
+                                                                <div class="lcs-scan-magnifier">
+                                                                    <div class="lens"></div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+        
+                                            </div>
+                                        </div>
+        
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            function createOccupancy(rows, cols) {
+                return Array.from({ length: rows }, function () {
+                    return Array(cols).fill(false);
+                });
+            }
+
+            function canPlace(occ, r, c, w, h) {
+                var rows = occ.length;
+                var cols = occ[0].length;
+                if (r + h > rows || c + w > cols) return false;
+                for (var rr = r; rr < r + h; rr++) {
+                    for (var cc = c; cc < c + w; cc++) {
+                        if (occ[rr][cc]) return false;
+                    }
+                }
+                return true;
+            }
+
+            function markPlace(occ, r, c, w, h, val) {
+                if (val == null) val = true;
+                for (var rr = r; rr < r + h; rr++) {
+                    for (var cc = c; cc < c + w; cc++) {
+                        occ[rr][cc] = val;
+                    }
+                }
+            }
+
+            function findFirstFit(occ, w, h) {
+                var rows = occ.length;
+                var cols = occ[0].length;
+                for (var r = 0; r < rows; r++) {
+                    for (var c = 0; c < cols; c++) {
+                        if (canPlace(occ, r, c, w, h)) return { r: r, c: c };
+                    }
+                }
+                return null;
+            }
+
+            function layoutItems(items, cols, rows) {
+                var occ = createOccupancy(rows, cols);
+                var placements = [];
+                for (var i = 0; i < items.length; i++) {
+                    var it = items[i];
+                    var w = Math.max(1, Number(it.w || 1));
+                    var h = Math.max(1, Number(it.h || 1));
+                    var pos = findFirstFit(occ, w, h);
+                    if (!pos) continue;
+                    markPlace(occ, pos.r, pos.c, w, h, true);
+                    placements.push({ r: pos.r, c: pos.c, w: w, h: h, item: it });
+                }
+                placements.sort(function (a, b) { return (a.r - b.r) || (a.c - b.c); });
+                return placements;
+            }
+
+            function formatPrice(v) {
+                var n = Number(v);
+                if (!Number.isFinite(n) || n <= 0) return '';
+                if (n < 1000) return String(Math.round(n));
+                if (n < 1000000) return (n / 1000).toFixed(1) + 'K';
+                return (n / 1000000).toFixed(1) + 'M';
+            }
+
+            function getScanMs(it) {
+                if (Number.isFinite(Number(it.searchMs))) return Number(it.searchMs);
+                var key = (it.rarity != null ? it.rarity : (it.grade != null ? it.grade : "1"));
+                var grade = "grade_" + key;
+                return (RARITY_SCAN_MS[grade] != null ? RARITY_SCAN_MS[grade] : 2000);
+            }
+
+            function initLcsPanel($root, d, onScanDone, onItemScan) {
+                var ctx = {
+                    stopped: false,
+                    timers: [],
+                    audios: [],
+                    addTimer: function (id) { this.timers.push(id); return id; },
+                    stopAll: function () {
+                        this.stopped = true;
+                        for (var i = 0; i < this.timers.length; i++) clearTimeout(this.timers[i]);
+                        this.timers = [];
+                        for (var j = 0; j < this.audios.length; j++) {
+                            try { this.audios[j].pause(); this.audios[j].currentTime = 0; } catch (e) { }
+                        }
+                        this.audios = [];
+                    }
+                };
+
+                var cols = Number(d.cols || 4);
+                var rows = Number(d.rows || 3);
+
+                var gridW = cols * CELL_SIZE;
+                var gridH = rows * CELL_SIZE;
+
+                var contentW = gridW + EXTRA_W;
+                var contentH = gridH + EXTRA_H;
+
+                var $titleEl = $root.find('[data-role="title"]');
+                var $panelInner = $root.find('[data-role="panelInner"]');
+
+                var $scaleArea = $root.find('[data-role="scaleArea"]');
+                var $scaleWrapper = $root.find('[data-role="scaleWrapper"]');
+
+                var $gridFrameEl = $root.find('[data-role="gridFrame"]');
+                var $cellsLayer = $root.find('[data-role="cellsLayer"]');
+                var $itemsLayer = $root.find('[data-role="itemsLayer"]');
+
+                var $scanOverlay = $root.find('[data-role="scanOverlay"]');
+                var $orbit = $root.find('[data-role="orbit"]');
+                var $orbiter = $root.find('[data-role="orbiter"]');
+                var $counter = $root.find('[data-role="counter"]');
+
+                function setTitle(t) { $titleEl.html(t); }
+
+                function applyFixedCellSizing(cols2, rows2) {
+                    var gw = cols2 * CELL_SIZE;
+                    var gh = rows2 * CELL_SIZE;
+
+                    $gridFrameEl.css({ width: gw + 'px', height: gh + 'px' });
+
+                    var tplC = `repeat(${cols2}, ${CELL_SIZE}px)`;
+                    var tplR = `repeat(${rows2}, ${CELL_SIZE}px)`;
+
+                    $cellsLayer.css({ gridTemplateColumns: tplC, gridTemplateRows: tplR });
+                    $itemsLayer.css({ gridTemplateColumns: tplC, gridTemplateRows: tplR });
+                }
+
+                function buildCells(cols2, rows2) {
+                    $cellsLayer.empty();
+                    for (var r = 0; r < rows2; r++) {
+                        for (var c = 0; c < cols2; c++) {
+                            var $cell = $('<div class="lcs-cell"></div>');
+                            if (r === 0) $cell.addClass('edge-top');
+                            if (c === 0) $cell.addClass('edge-left');
+                            if (c === cols2 - 1) $cell.addClass('edge-right');
+                            if (r === rows2 - 1) $cell.addClass('edge-bottom');
+                            $cellsLayer.append($cell);
+                        }
+                    }
+                }
+
+                function playGradeSound(grade) {
+                    if (ctx.stopped) return;
+
+                    var base = null;
+                    if (grade === 1) base = SOUNDS.g1;
+                    else if (grade === 2) base = SOUNDS.g2;
+                    else if (grade === 3 || grade === 4) base = SOUNDS.g34;
+                    else if (grade === 5 || grade === 6) base = SOUNDS.g56;
+                    if (!base) return;
+
+                    var a = base.cloneNode();
+                    a.volume = 0.1;
+                    ctx.audios.push(a);
+
+                    var p = a.play();
+                    if (p && p.catch) p.catch(function () { });
+                }
+
+                function createItemNode(it) {
+                    var $node = $('<div class="lcs-item unsearched"></div>');
+                    $node.attr('data-grade', String(it.grade != null ? it.grade : "0"));
+
+                    var $clip = $('<div class="lcs-item-clip"></div>');
+                    $node.append($clip);
+
+                    var $thumbBg = $('<div class="lcs-thumb-bg"></div>');
+                    var isDarkMode = document.documentElement.classList.contains('dark');
+                    var overlayColor = isDarkMode ? `var(--gd${it.grade}d)` : `var(--gd${it.grade})`;
+                    $thumbBg.css('background-color', overlayColor);
+                    $clip.append($thumbBg);
+
+                    var $thumb = $('<div class="lcs-thumb"></div>');
+                    $thumb.css('background-image', it.img ? `url("${it.img}")` : 'none');
+                    $clip.append($thumb);
+
+                    var $label = $('<div class="lcs-label"></div>');
+                    $label.text(it.name || "");
+                    $clip.append($label);
+
+                    var cnt = Number(it.count);
+                    var unitPrice = Number(it.currectPrice);
+                    var totalPrice = unitPrice;
+
+                    if (Number.isFinite(cnt) && cnt > 0) totalPrice = unitPrice * cnt;
+
+                    var priceText = formatPrice(totalPrice);
+                    if (priceText) {
+                        var $badge = $('<div class="lcs-price-badge"></div>');
+
+                        if (Number.isFinite(cnt) && cnt >= 1) {
+                            var $count = $('<div class="count"></div>');
+                            $count.text('(' + Math.floor(cnt) + ')');
+                            $badge.append($count);
+                        }
+
+                        var $row = $('<div class="row"></div>');
+                        var $coin = $('<img class="coin" alt="" src="//game.gtimg.cn/images/dfm/cp/a20240807community/swat/swat_gold_icon.png">');
+                        var $val = $('<span class="val"></span>').text(priceText);
+
+                        $row.append($coin).append($val);
+                        $badge.append($row);
+                        $node.append($badge);
+                    }
+
+                    var $cover = $('<div class="lcs-cover"></div>');
+                    $clip.append($cover);
+
+                    return $node;
+                }
+
+                function buildItems(placements) {
+                    $itemsLayer.empty();
+                    var scanQueue = [];
+                    for (var i = 0; i < placements.length; i++) {
+                        var p = placements[i];
+                        var it = p.item;
+
+                        var $itemNode = createItemNode(it);
+                        $itemNode.css({
+                            gridColumn: `${p.c + 1} / span ${p.w}`,
+                            gridRow: `${p.r + 1} / span ${p.h}`
+                        });
+
+                        $itemsLayer.append($itemNode);
+                        scanQueue.push({ placement: p, $itemNode: $itemNode, item: it });
+                    }
+                    return scanQueue;
+                }
+
+                function positionScanOverlayForPlacement(p) {
+                    var centerX = (p.c + p.w / 2) * CELL_SIZE;
+                    var centerY = (p.r + p.h / 2) * CELL_SIZE;
+
+                    $orbit.css({ left: centerX + 'px', top: centerY + 'px' });
+
+                    var radius = 14;
+                    $orbit.css('--lcs-orbit-radius', radius + 'px');
+
+                    $orbiter.css('animation-duration', '0.9s');
+                    $counter.css('animation-duration', '0.9s');
+                }
+
+                function runScan(scanQueue) {
+                    setTitle("正在搜索物资");
+
+                    var i = 0;
+                    var totalPrice = 0;
+
+                    function step() {
+                        if (ctx.stopped) return;
+
+                        if (i >= scanQueue.length) {
+                            setTitle((d.name || d.containerName || '搜索完成') +
+                                `（总价值：<img class="coin" alt="" src="//game.gtimg.cn/images/dfm/cp/a20240807community/swat/swat_gold_icon.png">${formatPrice(totalPrice)}）`);
+
+                            try {
+                                var now = new Date();
+                                var timeText = now.getFullYear() + '/' +
+                                    String(now.getMonth() + 1).padStart(2, '0') + '/' +
+                                    String(now.getDate()).padStart(2, '0') + ' ' +
+                                    String(now.getHours()).padStart(2, '0') + ':' +
+                                    String(now.getMinutes()).padStart(2, '0') + ':' +
+                                    String(now.getSeconds()).padStart(2, '0');
+
+                                lcsPushHistory({
+                                    id: Date.now() + '_' + Math.random().toString(16).slice(2),
+                                    timeText: timeText,
+                                    containerName: d.containerName || '',
+                                    containerPic: d.containerPic || '',
+                                    totalPrice: totalPrice,
+                                    items: (scanQueue || []).map(function (q) { return q.item; })
+                                });
+                            } catch (e) { }
+                            
+                            if (typeof onScanDone === 'function') {
+                                try { onScanDone(totalPrice); } catch (e) { }
+                            }
+                            
+                            return;
+                        }
+
+                        var q = scanQueue[i];
+                        positionScanOverlayForPlacement(q.placement);
+                        $scanOverlay.addClass('show');
+
+                        ctx.addTimer(setTimeout(function () {
+                            if (ctx.stopped) return;
+
+                            q.$itemNode.removeClass('unsearched').addClass('searched');
+                            q.$itemNode.find('.lcs-item-clip').attr('title', q.item.name || '');
+
+                            playGradeSound(Number(q.item.grade || 0));
+                            
+                            var g = Number(q.item.grade || 0);
+                            if (typeof onItemScan === 'function') {
+                                try { onItemScan(g, q.item); } catch (e) { }
+                            }
+
+                            var unitPrice = Number(q.item.currectPrice);
+                            if (!Number.isFinite(unitPrice)) unitPrice = 0;
+
+                            var cnt = Number(q.item.count);
+                            if (!Number.isFinite(cnt) || cnt <= 0) cnt = 1;
+
+                            totalPrice += unitPrice * cnt;
+
+                            $scanOverlay.removeClass('show');
+
+                            ctx.addTimer(setTimeout(function () {
+                                if (ctx.stopped) return;
+                                i++;
+                                step();
+                            }, BETWEEN_ITEM_MS));
+                        }, getScanMs(q.item)));
+                    }
+
+                    step();
+                }
+
+                function scaleContent() {
+                    var $host = $root.closest('.lcs-multi-host, .lcs-single-host, .layui-layer-content');
+                    if (!$host.length) return;
+
+                    var hostEl = $host[0];
+                    var availW = hostEl.clientWidth;
+                    var availH = hostEl.clientHeight;
+
+                    if (!availW || !availH) return;
+
+                    var baseW = $panelInner.outerWidth() || contentW;
+                    var baseH = $panelInner.outerHeight() || contentH;
+
+                    var scaleX = availW / baseW;
+                    var scaleY = availH / baseH;
+
+                    var scale = Math.min(scaleX, scaleY, 1);
+                    var s = Math.max(0.01, scale - 0.01);
+
+                    $scaleWrapper.css({
+                        transformOrigin: 'center',
+                        transform: 'scale(' + s + ')'
+                    });
+                }
+
+                $panelInner.css({ width: contentW + 'px', height: contentH + 'px' });
+
+                $scaleArea.css({ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' });
+                $scaleWrapper.css({ width: 'fit-content', height: 'fit-content', transformOrigin: 'center' });
+
+                applyFixedCellSizing(cols, rows);
+                buildCells(cols, rows);
+
+                var placements = layoutItems(d.items || [], cols, rows);
+                var scanQueue = buildItems(placements);
+
+                scaleContent();
+                ctx.addTimer(setTimeout(scaleContent, 60));
+                runScan(scanQueue);
+
+                return {
+                    stop: function () { ctx.stopAll(); },
+                    scale: scaleContent
+                };
+            }
+
+            var isMulti = dataArr.length > 1;
+
+            function calcCols(n) {
+                if (n === 6) return 3;
+                if (n === 2) return 2;
+                return Math.ceil(Math.sqrt(n));
+            }
+
+            var layerArea = isMobile() ? ['94%', '80%'] : ['80%', '85%'];
+
+            var contentHtmlBody = '';
+            
+            if (!isMulti) {
+                var d0 = dataArr[0];
+                var cols0 = Number(d0.cols || 4);
+                var rows0 = Number(d0.rows || 3);
+                var contentW0 = cols0 * CELL_SIZE + EXTRA_W;
+                var contentH0 = rows0 * CELL_SIZE + EXTRA_H;
+            
+                contentHtmlBody = `<div class="lcs-single-wrap lcs-single-host" data-role="lcsRoot0" style="width:100%;height:100%;">${buildPanelHtml(contentW0, contentH0)}</div>`;
+            } else {
+                contentHtmlBody = `
+                    <div class="lcs-multi-wrap layui-row layui-col-space16" style="padding:8px;">
+                        ${dataArr.map(function (d, i) {
+                            var cc = Number(d.cols || 4);
+                            var rr = Number(d.rows || 3);
+                            var cw = cc * CELL_SIZE + EXTRA_W;
+                            var ch = rr * CELL_SIZE + EXTRA_W;
+            
+                            return `
+                                <div class="layui-col-sm6 layui-col-md6 layui-col-lg4" data-role="lcsRoot${i}">
+                                    <div class="layui-card" style="margin:0;border-radius:12px;overflow:hidden;box-shadow:0 4px 8px rgba(0, 0, 0, 0.2);">
+                                        <div class="layui-card-body lcs-multi-host" style="padding:0;height:320px;overflow:hidden;">
+                                            ${buildPanelHtml(cw, ch)}
+                                        </div>
+                                    </div>
+                                </div>
+                            `;
+                        }).join('')}
+                    </div>
+                `;
+            }
+            
+            var contentHtml = `
+                <div class="lcs-dialog" data-role="lcsDialog">
+                    <div class="lcs-dialog-body" data-role="lcsDialogBody">
+                        ${contentHtmlBody}
+                    </div>
+                    
+                    <div class="lcs-dialog-footer" data-role="lcsDialogFooter">
+                        <div class="lcs-live-stats" data-role="lcsLiveStats">
+                            <span class="tag" style="color: var(--gd6);">红：<b data-role="cnt6">0</b></span>
+                            <span class="tag" style="color: var(--gd5);">金：<b data-role="cnt5">0</b></span>
+                            <span class="tag" style="color: var(--gd4);">紫：<b data-role="cnt4">0</b></span>
+                        </div>
+                        
+                        <button class="layui-btn layui-btn-sm" data-role="lcsBtnAgain" lay-on="simulatorOpenContainerAgain" data-container-id="${containerId}" data-container-name="${containerName}" data-container-pic="${containerPic}" data-draw="${drawCount}">再来一次</button>
+                        <button class="layui-btn layui-btn-sm layui-btn-primary" data-role="lcsBtnLuck" lay-on="lcsShowLuck">今日运势</button>
+                    </div>
+                </div>
+            `;
+
+            var controllers = [];
+
+            layer.open({
+                type: 1,
+                title: isMulti ? ('模拟容器搜索（' + dataArr.length + '连抽）') : '模拟容器搜索',
+                area: layerArea,
+                resize: true,
+                closeBtn: 1,
+                scrollbar: false,
+                shadeClose: true,
+                content: contentHtml,
+                resizing: function (layero) {
+                    if (layero && layero._lcsRescaleAll) layero._lcsRescaleAll();
+                },
+                end: function () {
+                    controllers.forEach(function (c) {
+                        if (c && c.stop) c.stop();
+                    });
+                    controllers = [];
+                },
+                success: function (layero, index) {
+                    var $layero = $(layero);
+                    
+                    $layero.find('.layui-layer-content').css({
+                        padding: 0,
+                        overflow: 'hidden',
+                        background: 'transparent'
+                    });
+                    
+                    var $againBtn = $layero.find('[data-role="lcsBtnAgain"]');
+                    var $luckBtn  = $layero.find('[data-role="lcsBtnLuck"]');
+                    
+                    $againBtn.attr('data-layer-index', index);
+                    $luckBtn.attr('data-layer-index', index);
+                    
+                    var $stats = $layero.find('[data-role="lcsLiveStats"]');
+                    var $c6 = $stats.find('[data-role="cnt6"]');
+                    var $c5 = $stats.find('[data-role="cnt5"]');
+                    var $c4 = $stats.find('[data-role="cnt4"]');
+                    
+                    var live = { g6: 0, g5: 0, g4: 0 };
+                    
+                    function renderLiveStats() {
+                        $c6.text(live.g6);
+                        $c5.text(live.g5);
+                        $c4.text(live.g4);
+                    }
+                    renderLiveStats();
+                    
+                    function onItemScanAdd(grade) {
+                        if (grade === 6) live.g6++;
+                        else if (grade === 5) live.g5++;
+                        else if (grade === 4) live.g4++;
+                        renderLiveStats();
+                    }
+                    
+                    var baseText = '再来一次';
+                    var luckBaseText = '今日运势';
+                    
+                    function setLuckBtnEnabled(on){
+                        if (on) {
+                            $luckBtn.removeClass('layui-btn-disabled')
+                                .removeAttr('disabled')
+                                .css({ pointerEvents:'', opacity:'' })
+                                .html(luckBaseText);
+                        } else {
+                            $luckBtn.addClass('layui-btn-disabled')
+                                .attr('disabled','disabled')
+                                .css({ pointerEvents:'none', opacity:0.55 })
+                                .html(luckBaseText + '（未完成）');
+                        }
+                    }
+                    setLuckBtnEnabled(false);
+                    
+                    function setAgainBtnEnabled(on){
+                        if (on) {
+                            $againBtn.removeClass('layui-btn-disabled')
+                                .removeAttr('disabled')
+                                .css({ pointerEvents:'', opacity:'' });
+                        } else {
+                            $againBtn.addClass('layui-btn-disabled')
+                                .attr('disabled','disabled')
+                                .css({ pointerEvents:'none', opacity:0.55 });
+                        }
+                    }
+            
+                    function setBtnText(isDone, totalAll) {
+                        var t = isDone ? baseText : '搜索中...';
+                        var p = lcsFormatPrice(totalAll || 0);
+                        if (p) {
+                            t += `（累计<img class="coin" alt=""
+                                src="//game.gtimg.cn/images/dfm/cp/a20240807community/swat/swat_gold_icon.png">${p}）`;
+                        }
+                        $againBtn.html(t);
+                    }
+                    
+                    setAgainBtnEnabled(false);
+                    
+                    var needDone = (isMulti ? dataArr.length : 1);
+                    var doneCount = 0;
+                    var totalAll = 0;
+                    
+                    setBtnText(false, totalAll);
+                    
+                    function markOneDone(panelTotal) {
+                        doneCount++;
+                        
+                        var n = Number(panelTotal);
+                        if (Number.isFinite(n) && n > 0) totalAll += n;
+                        
+                        setBtnText(false, totalAll);
+                        
+                        if (doneCount >= needDone) {
+                            setAgainBtnEnabled(true);
+                            setBtnText(true, totalAll);
+                            setLuckBtnEnabled(true);
+                        }
+                    }
+                    
+                    if (!isMulti) {
+                        var $root = $layero.find('[data-role="lcsRoot0"] .loot-container-simulator-popup').first();
+                        controllers.push(initLcsPanel($root, dataArr[0], markOneDone, onItemScanAdd));
+                    } else {
+                        for (var i = 0; i < dataArr.length; i++) {
+                            var $rooti = $layero.find('[data-role="lcsRoot' + i + '"] .loot-container-simulator-popup').first();
+                            controllers.push(initLcsPanel($rooti, dataArr[i], markOneDone, onItemScanAdd));
+                        }
+                    }
+                    
+                    layero._lcsRescaleAll = function () {
+                        controllers.forEach(function (c) {
+                            if (c && c.scale) c.scale();
+                        });
+                    };
+                    
+                    function luckInterpret(openTimes, totalAll, avgProfit){
+                        openTimes = Math.max(1, Number(openTimes) || 1);
+                        totalAll = Number(totalAll) || 0;
+                        avgProfit = Number(avgProfit) || 0;
+                        
+                        var E = (avgProfit > 0) ? (avgProfit * openTimes) : 0;
+                        
+                        var base = 0.12;
+                        var k = 0.35;
+                        var tol = base + k / Math.sqrt(openTimes);
+                        
+                        tol = Math.min(Math.max(tol, 0.12), 0.55);
+                        
+                        var low = E * (1 - tol);
+                        var high = E * (1 + tol);
+                        
+                        var ratio = (E > 0) ? (totalAll / E) : 1;
+                        
+                        var level, emoji, advice;
+                        
+                        if (E <= 0) {
+                            level = '未知';
+                            emoji = '❓';
+                            advice = '期望收益缺失/为0，暂无法解签。';
+                        } else if (totalAll >= high * 1.25) {
+                            level='天选之人'; emoji='✨';
+                            advice='建议：大欧！可以趁热打铁，但别上头，见好就收。';
+                        } else if (totalAll >= high) {
+                            level='欧皇附体'; emoji='🟡';
+                            advice='建议：今天偏欧，适合多连搜，高价值容器优先。';
+                        } else if (totalAll >= E) {
+                            level='小欧'; emoji='🟢';
+                            advice='建议：略赚，正常节奏就行，别为了追更高而加码。';
+                        } else if (totalAll >= low) {
+                            level='平'; emoji='⚪';
+                            advice='建议：运势在正常波动范围内，别指望爆，别梭哈。';
+                        } else if (totalAll >= low * 0.85) {
+                            level='小非'; emoji='🟠';
+                            advice='建议：略非，建议少开或换个容器/换时间再试试。';
+                        } else if (totalAll >= low * 0.70) {
+                            level='非酋'; emoji='🔴';
+                            advice='建议：今天偏非，谨慎开容器，做任务/跑图可能更赚。';
+                        } else {
+                            level='地狱难度'; emoji='💀';
+                            advice='建议：收手吧，今天花钱开容器像在上供。';
+                        }
+                        
+                        return {
+                            openTimes: openTimes,
+                            totalAll: totalAll,
+                            avgProfit: avgProfit,
+                            expTotal: E,
+                            ratio: ratio,
+                            tol: tol,
+                            bandLow: low,
+                            bandHigh: high,
+                            level: level,
+                            emoji: emoji,
+                            advice: advice
+                        };
+                    }
+                    
+                    function fmtInt(n){
+                        n = Number(n);
+                        if (!Number.isFinite(n)) return '0';
+                        return Math.round(n).toLocaleString('zh-CN');
+                    }
+                    function fmtRatio(r){
+                        r = Number(r);
+                        if (!Number.isFinite(r)) return '--';
+                        return (r * 100).toFixed(1) + '%';
+                    }
+                    
+                    $layero[0]._lcsShowLuck = function(){
+                        if (doneCount < needDone) {
+                            layer.msg('还在搜索中，完成后才能解签~', { icon: 0, time: 1200 });
+                            return;
+                        }
+                        
+                        var openTimes = needDone;
+                        var info = luckInterpret(openTimes, totalAll, Number(avgProfit));
+                        
+                        var now = new Date();
+                        var timeText = now.getFullYear() + '/' +
+                            String(now.getMonth()+1).padStart(2,'0') + '/' +
+                            String(now.getDate()).padStart(2,'0') + ' ' +
+                            String(now.getHours()).padStart(2,'0') + ':' +
+                            String(now.getMinutes()).padStart(2,'0') + ':' +
+                            String(now.getSeconds()).padStart(2,'0');
+                        
+                        var levelColor = '#35ff9c';
+                        if (info.level.includes('欧') || info.level.includes('天选')) levelColor = '#6dff6d';
+                        else if (info.level.includes('非') || info.level.includes('地狱')) levelColor = '#ff6b6b';
+                        
+                        var html = `
+                        <div class="luck-popup">
+                            <div class="luck-popup-inner">
+                                <div class="luck-title luck-glow" style="color:${levelColor}">
+                                    <span class="luck-emoji">${info.emoji}</span>
+                                    <span>今日运势：${info.level}</span>
+                                </div>
+                                
+                                <div class="luck-info">
+                                    <div>时间：${timeText}</div>
+                                    <div>容器：${containerName || ''}</div>
+                                    <div>本次开箱次数：<b>${info.openTimes}</b></div>
+                                </div>
+                                
+                                <div class="luck-divider"></div>
+                                
+                                <div class="luck-grid">
+                                    <div class="luck-card">
+                                        <div class="luck-card-label">本次总收益</div>
+                                        <div class="luck-card-value">
+                                            <img class="coin" style="width:16px;height:16px;vertical-align:-2px;margin-right:6px;"
+                                                 src="//game.gtimg.cn/images/dfm/cp/a20240807community/swat/swat_gold_icon.png">
+                                            ${fmtInt(info.totalAll)}
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="luck-card">
+                                        <div class="luck-card-label">期望收益（参考值）</div>
+                                        <div class="luck-card-value">
+                                            <img class="coin" style="width:16px;height:16px;vertical-align:-2px;margin-right:6px;"
+                                                 src="//game.gtimg.cn/images/dfm/cp/a20240807community/swat/swat_gold_icon.png">
+                                            ${fmtInt(info.expTotal)}
+                                        </div>
+                                        
+                                        <div class="luck-band">
+                                            宽容区间：${fmtInt(info.bandLow)} ~ ${fmtInt(info.bandHigh)}（±${Math.round(info.tol*100)}%）
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="luck-interpret">
+                                    <div class="luck-interpret-title">解签</div>
+                                    
+                                    <div class="luck-ratio" style="color:${levelColor}">
+                                        你本次收益 / 期望收益 = <b>${fmtRatio(info.ratio)}</b>
+                                    </div>
+                                    
+                                    <div class="luck-advice" style="color:${levelColor}">
+                                        ${info.advice}
+                                    </div>
+                                    
+                                    <div class="luck-footer-note">
+                                        * 期望收益来自实时价格估算；单次波动属正常随机；结果仅供娱乐
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        `;
+                        
+                        layer.open({
+                            type: 1,
+                            title: '今日运势 · 解签',
+                            area: isMobile() ? ['94%','70%'] : ['560px','520px'],
+                            shadeClose: true,
+                            scrollbar: false,
+                            content: html,
+                            success: function(layero){
+                                var $layero = $(layero);
+                                
+                                $layero.find('.layui-layer-content').css({
+                                    padding: 0,
+                                    overflow: 'hidden',
+                                    background: '#11313c'
+                                });
+                            }
+                        });
+                    };
+                    
+                    element.render();
+                }
+            });
+        }
+
+        function lcsLoadHistory() {
+            try {
+                var raw = localStorage.getItem(LCS_HISTORY_KEY);
+                var arr = raw ? JSON.parse(raw) : [];
+                if (!Array.isArray(arr)) {
+                    return [];
+                }
+                return arr;
+            } catch (e) {
+                return [];
+            }
+        }
+
+        function lcsSaveHistory(list) {
+            try {
+                localStorage.setItem(LCS_HISTORY_KEY, JSON.stringify(list || []));
+            } catch (e) { }
+        }
+
+        function lcsPushHistory(record) {
+            if (!record) {
+                return;
+            }
+            var list = lcsLoadHistory();
+            list.unshift(record);
+            if (list.length > LCS_HISTORY_MAX) {
+                list.length = LCS_HISTORY_MAX;
+            }
+            lcsSaveHistory(list);
+        }
+
+        function lcsFormatPrice(v) {
+            var n = Number(v);
+            if (!Number.isFinite(n) || n <= 0) return '';
+            if (n < 1000) return String(Math.round(n));
+            if (n < 1000000) return (n / 1000).toFixed(1) + 'K';
+            return (n / 1000000).toFixed(1) + 'M';
+        }
+
+        function lcsBuildHistoryItemHtml(it) {
+            var grade = Number(it.grade || 0);
+            var isDarkMode = document.documentElement.classList.contains('dark');
+            var overlayColor = isDarkMode ? ('var(--gd' + grade + 'd)') : ('var(--gd' + grade + ')');
+        
+            var cnt = Number(it.count);
+            if (!Number.isFinite(cnt) || cnt <= 0) cnt = 1;
+        
+            var unitPrice = Number(it.currectPrice);
+            if (!Number.isFinite(unitPrice) || unitPrice < 0) unitPrice = 0;
+        
+            var total = unitPrice * cnt;
+            var priceText = lcsFormatPrice(total);
+        
+            var cntLine = (cnt > 1)
+                ? `<div class="line"><span class="cnt">(${Math.floor(cnt)})</span></div>`
+                : '';
+            
+            var priceLine = `
+                <div class="line">
+                    <img class="coin" alt="" src="//game.gtimg.cn/images/dfm/cp/a20240807community/swat/swat_gold_icon.png">
+                    <span class="val">${priceText || '-'}</span>
+                </div>
+            `;
+            
+            return `
+                <div class="lcs-hitem" title="${(it.name || '')}">
+                    <div class="clip">
+                        <div class="thumb-bg" style="background:${overlayColor};"></div>
+                        <div class="thumb" style="background-image:${it.img ? `url('${it.img}')` : 'none'};"></div>
+            
+                        <div class="name">${it.name || ''}</div>
+            
+                        <div class="br">
+                            ${cntLine}
+                            ${priceLine}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function lcsBuildHistoryCardHtml(rec) {
+            var itemsHtml = (rec.items || []).map(lcsBuildHistoryItemHtml).join('');
+            var timeText = rec.timeText || '';
+
+            var isDarkMode = document.documentElement.classList.contains('dark');
+            var overlayColor = isDarkMode ? 'var(--gd5d)' : 'var(--gd5)';
+
+            return `
+                <div class="lcs-hcard">
+                    <div class="lcs-h-left">
+                        <img src="${rec.containerPic || ''}" onerror="this.src='image/default.webp?t=1729416942'" style="background: ${overlayColor}">
+                    </div>
+                    <div class="lcs-h-mid">
+                        <div class="lcs-h-title">${rec.containerName || ''}</div>
+                        <div class="lcs-h-sub">
+                            <span>${timeText}</span>
+                            <div class="row">
+                                <span>总价值：</span>
+                                <img class="coin" alt="" src="//game.gtimg.cn/images/dfm/cp/a20240807community/swat/swat_gold_icon.png">
+                                <span style="font-weight:900;">${lcsFormatPrice(rec.totalPrice || 0) || '0'}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="lcs-h-right">
+                        <div class="lcs-h-strip" data-role="hstrip">
+                            ${itemsHtml}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function lcsEnableDragScroll($el) {
+            var el = $el[0];
+            var down = false;
+            var startX = 0;
+            var startLeft = 0;
+
+            $el.find('img').attr('draggable', 'false');
+
+            el.addEventListener('pointerdown', function (e) {
+                if (e.pointerType === 'mouse' && e.button !== 0) return;
+
+                down = true;
+                startX = e.clientX;
+                startLeft = el.scrollLeft;
+
+                $el.addClass('dragging');
+
+                try { el.setPointerCapture(e.pointerId); } catch (err) { }
+
+                e.preventDefault();
+            }, { passive: false });
+
+            el.addEventListener('pointermove', function (e) {
+                if (!down) return;
+                var dx = e.clientX - startX;
+                el.scrollLeft = startLeft - dx;
+                e.preventDefault();
+            }, { passive: false });
+
+            function end(e) {
+                if (!down) return;
+                down = false;
+                $el.removeClass('dragging');
+                try { el.releasePointerCapture(e.pointerId); } catch (err) { }
+            }
+
+            el.addEventListener('pointerup', end);
+            el.addEventListener('pointercancel', end);
+
+            $el.on('dragstart', function (ev) { ev.preventDefault(); });
+        }
+
+        function lcsOpenHistoryPopup() {
+            var list = lcsLoadHistory();
+
+            var html = `
+                <div class="lcs-history">
+                    <div class="lcs-history-toolbar">
+                        <input type="text" class="layui-input" id="lcsHistoryKw" placeholder="搜索：容器名 / 物品名">
+                        <button class="layui-btn layui-btn-sm" id="lcsHistoryClear">清空</button>
+                    </div>
+                    <hr>
+                    <div class="lcs-history-list" id="lcsHistoryList"></div>
+                </div>
+            `;
+
+            var idx = layer.open({
+                type: 1,
+                title: '历史模拟搜索记录',
+                area: isMobile() ? ['94%', '80%'] : ['725px', '80%'],
+                resize: true,
+                shadeClose: true,
+                scrollbar: false,
+                content: html,
+                success: function (layero) {
+                    var $wrap = $(layero);
+
+                    $wrap.find('.lcs-history').css({
+                        height: '95%',
+                        display: 'flex',
+                        flexDirection: 'column'
+                    });
+
+                    $wrap.find('#lcsHistoryList').css({
+                        flex: '1 1 auto',
+                        minHeight: '0',
+                        overflow: 'auto'
+                    });
+
+                    function render(kw) {
+                        kw = (kw || '').trim();
+                        var arr = list;
+
+                        if (kw) {
+                            var k = kw.toLowerCase();
+                            arr = list.filter(function (rec) {
+                                var hit1 = String(rec.containerName || '').toLowerCase().indexOf(k) >= 0;
+                                var hit2 = (rec.items || []).some(function (it) {
+                                    return String(it.name || '').toLowerCase().indexOf(k) >= 0;
+                                });
+                                return hit1 || hit2;
+                            });
+                        }
+
+                        var out = arr.map(lcsBuildHistoryCardHtml).join('');
+                        $('#lcsHistoryList').html(out || '<div style="opacity:.8;padding:12px;">暂无记录</div>');
+
+                        $('#lcsHistoryList').find('[data-role="hstrip"]').each(function () {
+                            lcsEnableDragScroll($(this));
+                        });
+                    }
+
+                    render('');
+
+                    $('#lcsHistoryKw').on('input', function () {
+                        render(this.value);
+                    });
+
+                    $('#lcsHistoryClear').on('click', function () {
+                        layer.confirm('确定清空历史记录？', { icon: 3, title: '提示' }, function (i2) {
+                            layer.close(i2);
+                            list = [];
+                            lcsSaveHistory([]);
+                            render('');
+
+                            layer.msg('已清空历史记录', { icon: 1, time: 1200 });
+                        });
+                    });
+                }
+            });
+
+            return idx;
+        }
+        
+        function handleMessage(event) {
+            if (event.data === 'changeTheme') {
+                const isDarkMode = document.documentElement.classList.contains('dark');
+                const bgColor = isDarkMode ? 'var(--gd5d)' : 'var(--gd5)';
+                
+                $('.loot-container-simulator-card-body img').each(function () {
+                    $(this).css('background-color', bgColor);
+                });
+            }
+        };
+        
+        window.addEventListener('message', handleMessage);
+        
+        window.onPageUnload = function() {
+            window.removeEventListener('message', handleMessage);
+        };
+    });
+</script>

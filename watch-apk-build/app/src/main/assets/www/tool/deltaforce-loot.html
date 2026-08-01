@@ -493,7 +493,11 @@ var ITEM_POOL = [
   {"n": "哈夫克脑机液-\"超体\"", "g": 5, "w": 1, "h": 1, "img": "tool/deltaforce-loot-assets/items/14070000018.webp", "p": 0, "t": "针剂", "d": 0, "exc": []},
   {"n": "特殊装备补给", "g": 4, "w": 1, "h": 2, "img": "tool/deltaforce-loot-assets/items/14070000017.webp", "p": 0, "t": "针剂", "d": 0, "exc": []}
 ];
-var GRADE_WEIGHT = {1:60,2:30,3:10,4:3,5:4,6:2};
+// 品质稀有度权重：数值越大越常见；红/金品质极稀有，且与物品数量无关。
+// 抽取分两步：先按本权重决定品质，再在该品质内随机选一件。
+var GRADE_WEIGHT = {1:100,2:55,3:22,4:7,5:1.2,6:0.25};
+// 每个容器内单品质出货上限，避免一个容器同时冒出多个红色/金色品质物品
+var GRADE_CAP = {5:1,6:1};
 var GRADE_COLOR = {1:'var(--r1)',2:'var(--r2)',3:'var(--r3)',4:'var(--r4)',5:'var(--r5)',6:'var(--r6)'};
 var GRADE_NAME = {1:'普通',2:'精良',3:'稀有',4:'史诗',5:'传说·金',6:'神话·红'};
 var CATEGORY_GLYPH = {"工艺藏品": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"white\" stroke-width=\"1.7\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M12 3l8 6-8 12-8-12 8-6z\"/><path d=\"M4 9h16\"/><path d=\"M12 3v18\"/><path d=\"M12 9l-4-3M12 9l4-3\"/></svg>", "哈机密": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"white\" stroke-width=\"1.7\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x=\"5\" y=\"10\" width=\"14\" height=\"10\" rx=\"2\"/><path d=\"M8 10V7a4 4 0 0 1 8 0v3\"/></svg>", "子弹": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"white\" stroke-width=\"1.7\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M12 3l-3 6v11a3 3 0 0 0 6 0V9l-3-6z\"/><path d=\"M9 12h6\"/></svg>", "家居物品": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"white\" stroke-width=\"1.7\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M6 9h10v8a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V9z\"/><path d=\"M16 11h2a2 2 0 0 1 0 4h-2\"/></svg>", "工具材料": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"white\" stroke-width=\"1.7\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><circle cx=\"12\" cy=\"12\" r=\"3.2\"/><path d=\"M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M18.4 5.6l-2.1 2.1M7.7 16.3l-2.1 2.1\"/></svg>", "武器": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"white\" stroke-width=\"1.7\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M12 3v15\"/><path d=\"M7 18h10\"/><path d=\"M12 18v3\"/></svg>", "电子物品": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"white\" stroke-width=\"1.7\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x=\"7\" y=\"7\" width=\"10\" height=\"10\" rx=\"1.5\"/><path d=\"M10 7V4M14 7V4M10 20v-3M14 20v-3M7 10H4M7 14H4M20 10h-3M20 14h-3\"/></svg>", "能源燃料": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"white\" stroke-width=\"1.7\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x=\"6\" y=\"8\" width=\"11\" height=\"9\" rx=\"1.5\"/><path d=\"M9 8V6h4v2\"/><path d=\"M12 11l-2 3h3l-2 3\"/></svg>", "药品": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"white\" stroke-width=\"1.7\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><g transform=\"rotate(45 12 12)\"><rect x=\"6\" y=\"9.5\" width=\"12\" height=\"5\" rx=\"2.5\"/><path d=\"M12 9.5v5\"/></g></svg>", "配件": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"white\" stroke-width=\"1.7\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><circle cx=\"12\" cy=\"12\" r=\"6\"/><path d=\"M12 5v3M12 16v3M5 12h3M16 12h3\"/></svg>", "针剂": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"white\" stroke-width=\"1.7\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M5 19l9-9\"/><path d=\"M14 10l5-5\"/><path d=\"M3 21l2-2\"/><path d=\"M8 16l2 2\"/></svg>", "非洲之心": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"white\" stroke-width=\"1.7\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M12 20s-7-4.5-7-10a4 4 0 0 1 7-2 4 4 0 0 1 7 2c0 5.5-7 10-7 10z\"/></svg>", "高级咖啡豆": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"white\" stroke-width=\"1.7\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><ellipse cx=\"12\" cy=\"12\" rx=\"6\" ry=\"8\"/><path d=\"M12 5c-2 4 2 8 0 14\"/></svg>", "资料情报": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"white\" stroke-width=\"1.7\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z\"/><polyline points=\"14 2 14 8 20 8\"/><line x1=\"16\" y1=\"13\" x2=\"8\" y2=\"13\"/><line x1=\"16\" y1=\"17\" x2=\"8\" y2=\"17\"/><polyline points=\"10 9 9 9 8 9\"/></svg>", "医疗道具": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"white\" stroke-width=\"1.7\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M10 6h4v4h4v4h-4v4h-4v-4H6v-4h4z\"/></svg>",
@@ -574,17 +578,41 @@ function getPool(c){
   return pool;
 }
 
-function rollItem(c){
+function rollItem(c, capCounts){
   var pool = getPool(c);
-  var weights = pool.map(function(it){return GRADE_WEIGHT[it.g]||1;});
-  var total = weights.reduce(function(a,b){return a+b;},0);
-  var r = Math.random()*total;
-  var acc = 0;
+  // 先按品质分组，再按稀有度权重决定品质（不受各品质物品数量影响）
+  var byGrade = {};
   for(var i=0;i<pool.length;i++){
-    acc += weights[i];
-    if(r<=acc) return pool[i];
+    var g = pool[i].g;
+    (byGrade[g] = byGrade[g]||[]).push(pool[i]);
   }
-  return pool[0];
+  var grades = Object.keys(byGrade).map(function(x){return +x;});
+  var weights = grades.map(function(g){
+    var w = (GRADE_WEIGHT[g]!=null) ? GRADE_WEIGHT[g] : 1;
+    if(capCounts && GRADE_CAP[g]!=null && (capCounts[g]||0) >= GRADE_CAP[g]) w = 0;
+    return w;
+  });
+  var total = weights.reduce(function(a,b){return a+b;},0);
+  if(total<=0){
+    // 上限触发后无可用权重：退化为在未达上限的品质中均匀选
+    var availG = [];
+    for(var k=0;k<grades.length;k++){
+      var gk = grades[k];
+      if(!(GRADE_CAP[gk]!=null && (capCounts[gk]||0) >= GRADE_CAP[gk])) availG.push(gk);
+    }
+    if(availG.length===0) availG = grades.slice();
+    var pg = availG[Math.floor(Math.random()*availG.length)];
+    var fa = byGrade[pg];
+    return fa[Math.floor(Math.random()*fa.length)];
+  }
+  var r = Math.random()*total, acc = 0, pickG = null;
+  for(var j=0;j<grades.length;j++){
+    acc += weights[j];
+    if(r<=acc){ pickG = grades[j]; break; }
+  }
+  if(pickG==null) pickG = grades[grades.length-1];
+  var arr = byGrade[pickG];
+  return arr[Math.floor(Math.random()*arr.length)];
 }
 
 function createOccupancy(rows,cols){
@@ -642,8 +670,13 @@ function searchOneContainer(c){
   var minItems = 2;
   var maxItems = Math.min(6, Math.max(3, Math.floor(slots/4)));
   var count = minItems + Math.floor(Math.random()*(maxItems-minItems+1));
+  var capCounts = {};   // 本容器内各品质已出货数量（用于红/金上限）
   var items = [];
-  for(var i=0;i<count;i++) items.push(rollItem(c));
+  for(var i=0;i<count;i++){
+    var it = rollItem(c, capCounts);
+    items.push(it);
+    capCounts[it.g] = (capCounts[it.g]||0)+1;
+  }
   var placements = layoutItems(items,c.cols||4,c.rows||4);
   var value = items.reduce(function(a,it){return a+(it.p||0);},0);
   return {c:c, items:items, placements:placements, value:value};

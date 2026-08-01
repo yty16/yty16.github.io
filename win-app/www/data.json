@@ -46,7 +46,8 @@
               { "link": "robot/", "line1": "人机测试", "line2": "整蛊，一直往下划即可" },
               { "link": "checkbox/", "line1": "10000个复选框", "line2": "无聊专用" },
               { "link": "guessblock/", "line1": "MC猜方块", "line2": "未完工" },
-              { "link": "download/NGGYU.html", "line1": "神秘链接", "line2": "神秘链接" }
+              { "link": "download/NGGYU.html", "line1": "神秘链接", "line2": "神秘链接" },
+              { "link": "timestamp/", "line1": "时间戳转换", "line2": "时间戳⇄日期时间" }
             ]
           }
         ]

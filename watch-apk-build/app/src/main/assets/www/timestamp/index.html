@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head><script>
+(function(){
+var _0x4a=[function(){return[atob('eXR5MTYuZ2l0aHViLmlv'),atob('eXR5MTYucGFnZXMuZGV2')]},function(){return location.hostname}];
+var _0x4b=_0x4a[0]();var _0x4c=_0x4a[1]();var _0x4d=false;for(var i=0;i<_0x4b.length;i++){if(_0x4c===_0x4b[i]){_0x4d=true;break;}}
+if(!_0x4d){
+window.addEventListener('DOMContentLoaded',function(){
+document.body.innerHTML='<div style="position:fixed;top:0;left:0;width:100%;height:100%;background:#f5f5f5;display:flex;align-items:center;justify-content:center;z-index:99999;font-family:sans-serif;color:#666"><div style="text-align:center"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><h2 style="margin:20px 0 10px;font-weight:500">页面加载异常</h2><p style="font-size:14px;color:#999">请访问正常渠道获取资源</p></div></div>';
+});}
+})();
+</script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🕒 时间戳转换</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg: #f5f5f5;
+            --card-bg: rgba(255, 255, 255, 0.7);
+            --card-border: rgba(255, 255, 255, 0.3);
+            --text: #1a1a2e;
+            --text-secondary: #666;
+            --accent: #6c5ce7;
+            --accent-light: #a29bfe;
+            --input-bg: rgba(255, 255, 255, 0.6);
+        }
+
+        [data-theme="dark"] {
+            --bg: #1a1a2e;
+            --card-bg: rgba(255, 255, 255, 0.05);
+            --card-border: rgba(255, 255, 255, 0.1);
+            --text: #eee;
+            --text-secondary: #aaa;
+            --accent: #a29bfe;
+            --accent-light: #6c5ce7;
+            --input-bg: rgba(255, 255, 255, 0.04);
+        }
+
+        body {
+            font-family: 'Inter', 'Microsoft YaHei', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            padding: 20px;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        .container {
+            max-width: 640px;
+            margin: 0 auto;
+        }
+
+        .back-btn {
+            display: inline-block;
+            padding: 10px 20px;
+            margin-bottom: 20px;
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--card-border);
+            border-radius: 10px;
+            color: var(--text);
+            text-decoration: none;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        .back-btn:hover {
+            transform: translateX(-5px);
+            box-shadow: 0 5px 15px rgba(108, 92, 231, 0.2);
+        }
+
+        .card {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--card-border);
+            border-radius: 20px;
+            padding: 26px;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            font-size: 26px;
+            margin-bottom: 6px;
+            text-align: center;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 13px;
+            margin-bottom: 22px;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--text);
+            font-size: 14px;
+        }
+
+        input[type="text"], input[type="number"] {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1px solid var(--card-border);
+            border-radius: 10px;
+            background: var(--input-bg);
+            color: var(--text);
+            font-size: 15px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        input[type="text"]:focus, input[type="number"]:focus {
+            border-color: var(--accent);
+        }
+
+        .btn {
+            padding: 11px 18px;
+            border: none;
+            border-radius: 10px;
+            background: linear-gradient(135deg, var(--accent), var(--accent-light));
+            color: #fff;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 18px rgba(108, 92, 231, 0.35);
+        }
+
+        .btn-ghost {
+            background: var(--card-bg);
+            color: var(--text);
+            border: 1px solid var(--card-border);
+        }
+
+        .btn-row {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 12px;
+        }
+
+        .result {
+            margin-top: 14px;
+            padding: 14px;
+            border: 1px dashed var(--accent);
+            border-radius: 12px;
+            background: rgba(108, 92, 231, 0.06);
+            font-size: 15px;
+            line-height: 1.8;
+            word-break: break-all;
+        }
+
+        .result .row {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .result .k {
+            color: var(--text-secondary);
+            font-size: 13px;
+            white-space: nowrap;
+        }
+
+        .result .v {
+            text-align: right;
+            font-family: 'Consolas', 'Courier New', monospace;
+        }
+
+        .copy {
+            cursor: pointer;
+            color: var(--accent);
+            font-size: 12px;
+            border: none;
+            background: none;
+            text-decoration: underline;
+        }
+
+        .hint {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-top: 6px;
+        }
+
+        .badge {
+            display: inline-block;
+            font-size: 11px;
+            padding: 2px 8px;
+            border-radius: 999px;
+            background: var(--accent-light);
+            color: #fff;
+            margin-left: 6px;
+            vertical-align: middle;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="/" class="back-btn">← 返回</a>
+
+        <div class="card">
+            <h1>🕒 时间戳转换</h1>
+            <div class="subtitle">Unix 时间戳 ↔ 日期时间（本地 / UTC）</div>
+
+            <div class="form-group">
+                <label>时间戳（秒）<span class="badge">支持毫秒自动识别</span></label>
+                <input type="text" id="tsInput" placeholder="例如 1700000000" inputmode="numeric">
+                <div class="hint">输入 10 位为秒，13 位自动按毫秒处理。</div>
+                <div class="btn-row">
+                    <button class="btn" onclick="tsToDate()">转日期</button>
+                    <button class="btn btn-ghost" onclick="fillNow()">填入当前时间戳</button>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>日期时间</label>
+                <input type="text" id="dateInput" placeholder="例如 2026-07-31 22:17:40">
+                <div class="hint">格式：YYYY-MM-DD HH:mm:ss（按本地时区解析）。</div>
+                <div class="btn-row">
+                    <button class="btn" onclick="dateToTs()">转时间戳</button>
+                    <button class="btn btn-ghost" onclick="fillNowDate()">填入当前时间</button>
+                </div>
+            </div>
+
+            <div class="result" id="result" style="display:none"></div>
+        </div>
+    </div>
+
+    <script>
+        // 同步主站深浅色
+        (function () {
+            try {
+                const saved = localStorage.getItem('theme');
+                if (saved === 'light' || saved === 'dark') {
+                    document.documentElement.setAttribute('data-theme', saved);
+                } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                    document.documentElement.setAttribute('data-theme', 'dark');
+                }
+            } catch (e) {}
+        })();
+
+        const pad = (n) => String(n).padStart(2, '0');
+
+        function fmt(d) {
+            return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()) +
+                ' ' + pad(d.getHours()) + ':' + pad(d.getMinutes()) + ':' + pad(d.getSeconds());
+        }
+
+        function parseTs(raw) {
+            const s = (raw || '').trim();
+            if (!/^\d+$/.test(s)) return null;
+            let ms;
+            if (s.length === 13) ms = parseInt(s, 10);
+            else if (s.length === 10) ms = parseInt(s, 10) * 1000;
+            else if (s.length > 13) ms = parseInt(s.slice(0, 13), 10); // 更长也按毫秒取前13位
+            else if (s.length >= 9 && s.length < 10) ms = parseInt(s, 10) * 1000; // 9位也按秒
+            else return null;
+            if (!isFinite(ms) || ms <= 0) return null;
+            return ms;
+        }
+
+        function tsToDate() {
+            const ms = parseTs(document.getElementById('tsInput').value);
+            if (ms === null) return showErr('请输入有效的时间戳（纯数字）');
+            const d = new Date(ms);
+            if (isNaN(d.getTime())) return showErr('时间戳超出可解析范围');
+            const utc = d.toISOString().replace('T', ' ').replace(/\.\d+Z$/, ' UTC');
+            render([
+                ['本地时间', fmt(d)],
+                ['UTC 时间', utc],
+                ['时间戳(秒)', Math.floor(ms / 1000)],
+                ['时间戳(毫秒)', ms]
+            ]);
+        }
+
+        function dateToTs() {
+            const raw = document.getElementById('dateInput').value.trim();
+            if (!raw) return showErr('请输入日期时间');
+            // 兼容多种分隔符
+            const normalized = raw.replace(/[Tt]/g, ' ').replace(/\//g, '-');
+            const m = normalized.match(/^(\d{4})-(\d{1,2})-(\d{1,2})[ ](\d{1,2}):(\d{1,2})(?::(\d{1,2}))?$/);
+            if (!m) return showErr('格式应为 YYYY-MM-DD HH:mm:ss');
+            const d = new Date(+m[1], +m[2] - 1, +m[3], +m[4], +m[5], +(m[6] || 0));
+            if (isNaN(d.getTime())) return showErr('日期不合法');
+            const ms = d.getTime();
+            render([
+                ['时间戳(秒)', Math.floor(ms / 1000)],
+                ['时间戳(毫秒)', ms],
+                ['本地时间', fmt(d)],
+                ['UTC 时间', d.toISOString().replace('T', ' ').replace(/\.\d+Z$/, ' UTC')]
+            ]);
+        }
+
+        function fillNow() {
+            document.getElementById('tsInput').value = Math.floor(Date.now() / 1000);
+        }
+
+        function fillNowDate() {
+            document.getElementById('dateInput').value = fmt(new Date());
+        }
+
+        function showErr(msg) {
+            const r = document.getElementById('result');
+            r.style.display = 'block';
+            r.innerHTML = '<div style="color:#e74c3c">' + msg + '</div>';
+        }
+
+        function render(rows) {
+            const r = document.getElementById('result');
+            r.style.display = 'block';
+            r.innerHTML = rows.map(([k, v]) =>
+                '<div class="row"><span class="k">' + k + '</span>' +
+                '<span class="v">' + v + ' <button class="copy" onclick="copyText(\'' + String(v).replace(/'/g, "\\'") + '\')">复制</button></span></div>'
+            ).join('');
+        }
+
+        function copyText(t) {
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(t).then(() => alert('已复制：' + t), () => fallbackCopy(t));
+            } else {
+                fallbackCopy(t);
+            }
+        }
+
+        function fallbackCopy(t) {
+            const ta = document.createElement('textarea');
+            ta.value = t;
+            document.body.appendChild(ta);
+            ta.select();
+            try { document.execCommand('copy'); alert('已复制：' + t); } catch (e) { alert('复制失败，请手动复制'); }
+            document.body.removeChild(ta);
+        }
+    </script>
+</body>
+</html>

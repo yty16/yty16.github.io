@@ -718,7 +718,14 @@ function renderMiniContainer(result, index, options){
 
     var thumb = document.createElement('div');
     thumb.className = 'thumb';
-    if(it.img){ thumb.style.backgroundImage = "url("+it.img+")"; }
+    if(it.img){
+      thumb.style.backgroundImage = "url("+it.img+")";
+      (function(th,im,ty){
+        var img=new Image();img.onerror=function(){
+          var gu=glyphURI(ty);ifgu){th.style.backgroundColor="rgba(0,0,0,0.32)";th.style.backgroundImage="url("+gu+")";}
+        };img.src=im;
+      })(thumb,it.img,it.t);
+    }
     else { var gu=glyphURI(it.t); if(gu){ thumb.style.backgroundColor="rgba(0,0,0,0.32)"; thumb.style.backgroundImage = "url("+gu+")"; } }
     inner.appendChild(thumb);
 

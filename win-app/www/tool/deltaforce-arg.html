@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<script>
+(function(){
+var _0x4a=[function(){return[atob('eXR5MTYuZ2l0aHViLmlv'),atob('eXR5MTYucGFnZXMuZGV2')]},function(){return location.hostname}];
+var _0x4b=_0x4a[0]();var _0x4c=_0x4a[1]();var _0x4d=false;for(var i=0;i<_0x4b.length;i++){if(_0x4c===_0x4b[i]){_0x4d=true;break;}}
+if(!_0x4d){
+window.addEventListener('DOMContentLoaded',function(){
+document.body.innerHTML='<div style="position:fixed;top:0;left:0;width:100%;height:100%;background:#f5f5f5;display:flex;align-items:center;justify-content:center;z-index:99999;font-family:sans-serif;color:#666"><div style="text-align:center"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><h2 style="margin:20px 0 10px;font-weight:500">页面加载异常</h2><p style="font-size:14px;color:#999">请访问正常渠道获取资源</p></div></div>';
+});}
+})();
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HAVVK RELINK ARG 解谜报告 - 元拓域 Toolbox</title>
+<style>
+:root{
+  --bg:#f0f2f5; --card:#ffffff; --card2:#f8fafc; --border:#e2e8f0;
+  --text:#1f2937; --muted:#64748b; --accent:#b45309; --accent-soft:rgba(180,83,9,.10);
+  --red:#dc2626; --green:#15803d; --blue:#2563eb; --purple:#7c3aed;
+  --th-bg:#f1f5f9; --shadow:0 4px 16px rgba(0,0,0,.07);
+}
+[data-theme="dark"]{
+  --bg:#0a1628; --card:#111f34; --card2:#0d1829; --border:#1e3a5f;
+  --text:#c5d4e8; --muted:#6b82a4; --accent:#f59e0b; --accent-soft:rgba(245,158,11,.12);
+  --red:#e74c3c; --green:#2ecc71; --blue:#3498db; --purple:#9b59b6;
+  --th-bg:#152233; --shadow:0 4px 16px rgba(0,0,0,.35);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--text);font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,"Apple Color Emoji","Segoe UI Emoji",sans-serif;line-height:1.7;padding:20px 16px 40px;transition:background .3s,color .3s}
+.back-btn{position:fixed;top:16px;left:16px;z-index:100;display:inline-flex;align-items:center;gap:6px;padding:8px 16px;background:var(--card);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1px solid var(--border);border-radius:10px;color:var(--text);text-decoration:none;font-size:14px;font-weight:500;box-shadow:var(--shadow);transition:all .2s}
+.back-btn:hover{background:var(--accent);color:#fff;border-color:var(--accent)}
+.theme-btn{position:fixed;top:16px;right:16px;z-index:100;width:38px;height:38px;display:flex;align-items:center;justify-content:center;background:var(--card);border:1px solid var(--border);border-radius:10px;color:var(--text);font-size:17px;cursor:pointer;box-shadow:var(--shadow);transition:all .2s}
+.theme-btn:hover{border-color:var(--accent)}
+h1{text-align:center;font-size:1.7em;color:var(--accent);margin:44px 0 8px;letter-spacing:1.5px}
+.subtitle{text-align:center;color:var(--muted);font-size:.88em;margin-bottom:28px;word-break:break-all}
+.wrap{max-width:1200px;margin:0 auto}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(360px,1fr));gap:18px;margin-bottom:18px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px;box-shadow:var(--shadow)}
+.card.wide{grid-column:1/-1}
+.card h2{font-size:1.12em;color:var(--accent);border-bottom:1px solid var(--border);padding-bottom:8px;margin-bottom:12px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.tag{font-size:.68em;padding:2px 9px;border-radius:10px;background:var(--accent);color:#fff;font-weight:700;letter-spacing:.5px}
+.tag-green{background:var(--green)}
+.tag-red{background:var(--red)}
+.tag-blue{background:var(--blue)}
+.tag-purple{background:var(--purple)}
+table{width:100%;border-collapse:collapse;margin:10px 0;font-size:.9em}
+th,td{border:1px solid var(--border);padding:8px 10px;text-align:left;vertical-align:top}
+th{background:var(--th-bg);color:var(--accent);white-space:nowrap}
+code{background:var(--accent-soft);padding:1px 6px;border-radius:4px;font-family:'Courier New',monospace;font-size:.94em;word-break:break-all}
+.password-box{background:var(--card2);border:2px dashed var(--accent);border-radius:10px;padding:14px;text-align:center;margin:12px 0}
+.password-box .label{font-size:.8em;color:var(--muted);margin-bottom:6px}
+.password-box .pw{font-size:1.5em;font-weight:700;color:var(--accent);letter-spacing:3px;font-family:'Courier New',monospace;word-break:break-all;cursor:pointer;user-select:all}
+.password-box .src{font-size:.78em;color:var(--muted);margin-top:6px;line-height:1.6}
+.password-box.solved{border-color:var(--green)}
+.password-box.solved .pw{color:var(--green)}
+.folder-list{list-style:none;padding:0}
+.folder-list li{padding:8px 12px;margin:5px 0;border-radius:6px;background:var(--card2);border-left:3px solid var(--border);display:flex;justify-content:space-between;align-items:center;gap:10px;font-size:.92em}
+.folder-list li.open{border-left-color:var(--green)}
+.folder-list li.locked{border-left-color:var(--red)}
+.ok{color:var(--green);font-weight:600;white-space:nowrap}
+.highlight{color:var(--accent);font-weight:700}
+.warn{color:var(--red);font-weight:600}
+.diary-date{color:var(--purple);font-weight:700;font-size:.86em;margin:16px 0 6px}
+.doc-content p{margin:8px 0}
+.doc-content h3{color:var(--accent);font-size:1em;margin:14px 0 6px}
+.doc-content ul,.doc-content ol{padding-left:20px}
+.doc-content li{margin:4px 0}
+.note{font-size:.86em;color:var(--muted);margin-top:12px;line-height:1.8}
+.tbl-scroll{overflow-x:auto}
+footer{text-align:center;color:var(--muted);margin-top:36px;font-size:.8em;padding:20px;border-top:1px solid var(--border);line-height:1.9}
+@media(max-width:600px){
+  h1{font-size:1.32em;margin-top:52px}
+  .grid{grid-template-columns:1fr;gap:14px}
+  .card{padding:16px}
+  .password-box .pw{font-size:1.2em;letter-spacing:2px}
+  table{font-size:.82em}
+  th,td{padding:6px 7px}
+}
+</style>
+</head>
+<body>
+
+<script>
+(function(){var s=localStorage.getItem('theme');if(s==='light'||s==='dark'){document.documentElement.setAttribute('data-theme',s)}else{var d=window.matchMedia('(prefers-color-scheme:dark)').matches;document.documentElement.setAttribute('data-theme',d?'dark':'light')}})();
+</script>
+
+<a href="./deltaforce.html" class="back-btn">← 返回</a>
+<button class="theme-btn" id="themeBtn" title="切换主题">🌓</button>
+
+<h1>🔓 HAVVK RELINK ARG 解谜报告</h1>
+<p class="subtitle">三角洲行动 S10 赛季 · 信息予你无限 · df.qq.com/cp/havvkrelink/admin/</p>
+
+<div class="wrap">
+
+<div class="grid">
+
+  <div class="card">
+    <h2>🔑 登录凭据</h2>
+    <table>
+      <tr><th>网址</th><td><code>df.qq.com/cp/havvkrelink/admin/</code></td></tr>
+      <tr><th>账号</th><td><span class="highlight">42847</span>（来自仿星器研究所员工证件）</td></tr>
+      <tr><th>密码</th><td><span class="highlight">time0926</span></td></tr>
+      <tr><th>密码来源</th><td>S9 PV 摩斯密码 → BASE32/BASE64 → 藏宝堆 NPC「时间是关键」→ 密钥 <strong>0926</strong> → time0926</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2>📁 文件夹结构 <span class="tag tag-blue">5 个文件夹</span></h2>
+    <ul class="folder-list">
+      <li class="open"><span>✅ 人员伤亡事故调查</span> <span class="ok">已破解 089376423</span></li>
+      <li class="open"><span>✅ 哈夫克分部选址报告</span> <span class="ok">已开放</span></li>
+      <li class="open"><span>✅ 核电招聘部</span> <span class="ok">已开放</span></li>
+      <li class="open"><span>✅ 脑机α原型机</span> <span class="ok">已开放</span></li>
+      <li class="open"><span>✅ 草稿</span> <span class="ok">已开放</span></li>
+    </ul>
+  </div>
+
+</div>
+
+<div class="grid">
+
+  <div class="card">
+    <h2>✅ 已破解密钥</h2>
+
+    <div class="password-box">
+      <div class="label">📂 accident 文件夹密码（9 位）</div>
+      <div class="pw">089376423</div>
+      <div class="src">来源：空气墙迷宫尽头员工证件 2 上的 UID</div>
+    </div>
+
+    <div class="password-box">
+      <div class="label">📄 location_report 密码（16 位）</div>
+      <div class="pw">GAINSBOROGALLEON</div>
+      <div class="src">来源：代号 D 员工日记「旅店的名字」= AZ3 地图 A 点咖啡店招牌名（G-A-I-N-S-B-O-R-O-G-A-L-L-E-O-N，16 字母，已验证 code:0）</div>
+    </div>
+
+    <p style="margin-top:14px"><strong>解锁内容：</strong></p>
+    <ol style="padding-left:20px;font-size:.92em">
+      <li><strong>事故调查报告</strong> — AZ3 围栏外哈夫克雇员昏迷事件（4 月 16 日），疑似被犬类追踪导致坠亡</li>
+      <li><strong>工作个人日记（代号 C）</strong> — 巡视员 089376423 记录的<span class="warn">红色眼眸</span>神秘生物目击事件 + B 站 UP 主账号 <code>3707006600874797</code></li>
+    </ol>
+  </div>
+
+  <div class="card">
+    <h2>✅ 后台加密项已全部破解</h2>
+
+    <div class="password-box solved">
+      <div class="label">🖼️ alpha_archive 密码（6 位，已验证 code:0）</div>
+      <div class="pw">HS9837</div>
+      <div class="src">来源：kkrb 解谜流程「第四份文档『脑机α原型机』用在第二份文档得到的 HS9837 输入」；6 位字母+数字，与后端 maxlength=6 吻合。解锁内容为 doc_b3.png（工作记录图）。</div>
+    </div>
+
+    <p class="note">
+      🔓 <strong>accident</strong>（089376423）、<strong>location_report</strong>（GAINSBOROGALLEON）、<strong>alpha_archive</strong>（HS9837）三项后台加密均已破解并验证。<br>
+      ⚠️ 注意：<code>842075</code> 是「惬意的消遣」的密码（主站文档，非后台），并非 alpha_archive 的密码——此前误判已纠正。
+    </p>
+  </div>
+
+  <div class="card">
+    <h2>🔗 同 ARG 主站相关密码</h2>
+    <ul style="padding-left:20px;font-size:.9em;line-height:1.95">
+      <li><strong>842075</strong> — 「惬意的消遣」密码（取自 location_report 正文数字 8 处 / 4 厘米 / 2 米 / 0 基站 / 7 竖井 / 5 条）</li>
+      <li><strong>23847632</strong> — 「受损的脑细胞」密码（将 alpha_archive 的 doc_b3.png 改 .zip 解压得到）</li>
+      <li><strong>451365266</strong> — 「它的玩具罢了」密码（draft_doc 魔方解密得到）</li>
+      <li><strong>540627</strong> — 36 位密码门输入顺序（苏联首座原子能电站发电日 1954-06-27）</li>
+    </ul>
+  </div>
+
+</div>
+
+<div class="grid">
+
+  <div class="card wide">
+    <h2>📋 事故调查报告 <span class="tag tag-red">CLASSIFIED</span></h2>
+    <div class="doc-content">
+      <div class="tbl-scroll">
+      <table>
+        <tr><th>编制部门</th><td>安保部 / 事故调查组</td></tr>
+        <tr><th>事故日期</th><td>4 月 16 日</td></tr>
+        <tr><th>事故地点</th><td>AZ3 防御围栏外侧面，区域草丛</td></tr>
+      </table>
+      </div>
+
+      <h3>一、事故概要</h3>
+      <p>哈夫克雇员在 AZ3 防御围栏外侧面草丛中被巡视人员发现，处于<strong class="warn">深度昏迷状态</strong>。伤者已移交医疗机构进行紧急救治。</p>
+
+      <h3>二、伤情记录</h3>
+      <div class="tbl-scroll">
+      <table>
+        <tr><th>检查项目</th><th>检查结果</th></tr>
+        <tr><td>意识状态</td><td>深度昏迷，对强光及痛觉刺激无明显反应</td></tr>
+        <tr><td>呼吸情况</td><td>微弱，尚存</td></tr>
+        <tr><td>体表创伤</td><td>躯干及四肢多处不规则创口，部分淤血已凝固</td></tr>
+        <tr><td>着装状况</td><td>军装多处破损、拉扯，附着大量泥土、草屑及植被碎屑</td></tr>
+      </table>
+      </div>
+
+      <h3>三、现场勘察</h3>
+      <div class="tbl-scroll">
+      <table>
+        <tr><th>勘察项目</th><th>勘察结果</th></tr>
+        <tr><td>落地痕迹</td><td>草丛有人体碾压及翻滚痕迹；推测伤者从上方山坡坠落</td></tr>
+        <tr><td>动物痕迹</td><td>发现动物巢迹及脚印，<strong>初步断定为犬类</strong></td></tr>
+        <tr><td>人类活动</td><td>周边发现人类活动迹象</td></tr>
+        <tr><td>围栏状态</td><td>顶部防爬设施局部损坏，有攀爬残留及擦痕</td></tr>
+      </table>
+      </div>
+
+      <h3>四、初步原因分析</h3>
+      <p>综合证据判断：伤者在围栏外侧面遭到<strong>追踪</strong>，逃跑中不慎下山坡，因撞击或滚落导致昏迷。<br>
+      犬类巢迹表明追踪来源可能为<strong>犬只</strong>；人类活动存在不排除有人牵涉其中。</p>
+
+      <h3>五、后续工作</h3>
+      <ul>
+        <li>调取事发阶段周边监控记录</li>
+        <li>对犬类巢迹及脚印进行物种鉴定</li>
+        <li>排查周边人类活动来踪来源</li>
+        <li>待伤者苏醒后进行问询</li>
+      </ul>
+    </div>
+  </div>
+
+</div>
+
+<div class="grid">
+
+  <div class="card wide">
+    <h2>📝 工作个人日记 <span class="tag tag-purple">代号 C</span></h2>
+    <div class="doc-content">
+      <p><strong>员工编号：</strong><span class="highlight">089376423</span> &nbsp; <strong>职位：</strong>设备外围巡视组</p>
+
+      <p class="diary-date">━━━ 4 月 13 日 | 天气：阴 | 夜班 ━━━</p>
+      <p>今晚的外围巡视极其压抑，连鸟鸣声都听不见。</p>
+      <p>凌晨一点左右，我巡查到北面监控盲区那片草地。就在电力架旁枯木灌丛的缝隙，我发现了一双<span class="warn">红眼睛</span>，而且那绝对不是普通野生动物的眼睛，我能看出来它在观察我，甚至说在<strong>监视</strong>我。我呆在原地足足一分钟没敢动弹，直到一阵冷风吹过来我才发现自己后背全被冷汗湿透了。</p>
+
+      <p class="diary-date">━━━ 4 月 14 日 | 天气：晴 | 白班 ━━━</p>
+      <p>大白天的外围巡逻算让人能喘口气了。</p>
+      <p>下午巡视到东面河边水闸附近时，瞄见一个野人，不知怎么越过监控到附近的。我喊了一声，他远远地还招了招手。他手里举着带稳定器的微单相机，一边顺着河边走一边对着镜头说话。我假借上去询问，他解释说自己是一名<strong>短视频 UP 主</strong>，来取景迷路了。</p>
+      <p>我看了下他的账号：<strong class="highlight">3707006600874797</strong>（B 站）。没发现什么疑点，但我还是警告了他让他离开。</p>
+
+      <p class="diary-date">━━━ 4 月 15 日 | 天气：多云转阵雨 | 夜班 ━━━</p>
+      <p><strong class="warn">它来了。</strong></p>
+      <p>今晚巡线到一半，那种被注视的强烈直觉再次出现。我一转身，就在不到五十米外的树影深处，那双<span class="warn">红色眼眸</span>再次锁定我的位置。</p>
+      <p>这一次我握紧手枪，立马将战术手电调到最强档位，直接对准那个方向射了过去。结果力柱打过去的空隙，那双红眸直接消失了。</p>
+      <p>也是在那一刻，我想起来了，白班值勤时的疑惑。<br>
+      它的视线里全是只有一只<strong style="color:#94a3b8">银白色</strong>的犬影，但看见它时，这只犬并不在它身边。</p>
+      <p><strong>明天如果它还在附近出现，我必查个水落石出。</strong></p>
+    </div>
+  </div>
+
+</div>
+
+<div class="grid">
+
+  <div class="card">
+    <h2>🔍 隐藏线索汇总</h2>
+    <div class="tbl-scroll">
+    <table style="font-size:.87em">
+      <tr><th>位置</th><th>线索内容</th><th>用途</th></tr>
+      <tr><td>rp3.jpg 左上角</td><td>G.T.I 内核终端日志<br><code>DF******</code>(6 位隐藏)<br><code>#Reorder 993.01.06</code><br><code>Y·2.035■■</code></td><td>ARG 世界观补充</td></tr>
+      <tr><td>rp3.jpg 右下角</td><td>C 源码 pidfd_getfd()<br><code>DIST·3.82M —— 65% 2°</code></td><td>目标测距数据？</td></tr>
+      <tr><td>nuclear_exam</td><td>9 道核工程填空题<br>答案序列可能对应 36 位密码门</td><td>待验证</td></tr>
+      <tr><td>draft_doc</td><td>Rubik's Cube 操作序列<br>罗米修斯实验室 · 六面着色</td><td>alpha_archive(6 位)密钥</td></tr>
+      <tr><td>location_diary</td><td>代号 D 员工日记<br>「酒店的名字就不错」</td><td>location_report(16 位)密钥</td></tr>
+    </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>📅 ARG 时间线</h2>
+    <div class="tbl-scroll">
+    <table style="font-size:.87em">
+      <tr><th>时间</th><th>事件</th></tr>
+      <tr><td>S9 赛季 PV</td><td>隐藏摩斯密码 →「高频」→ 彩蛋房瀑布</td></tr>
+      <tr><td>S9 藏宝堆</td><td>NPC 马苏德纸条：「Time is the key」</td></tr>
+      <tr><td>S9 后期</td><td>解码密钥 <strong>time0926</strong> → 解锁仿星器研究所图片</td></tr>
+      <tr><td>S10 体验服</td><td>AZ3 核电站地图上线，识别出仿星器研究所位置</td></tr>
+      <tr><td>S10 赛季 PV</td><td>光头 BOSS 脑后二维码 → 扫码进入 HAVVK 网站</td></tr>
+      <tr><td>S10 正式服</td><td>玩家登录 admin 后台 → 解锁文件夹 → 36 位密码门 → 空气墙迷宫 → 员工证件 2 → <strong>089376423</strong></td></tr>
+      <tr><td>6 月 28 日凌晨</td><td>迷宫被攻克，找到员工尸体和证件</td></tr>
+      <tr><td>9 月（预告）</td><td>ARG 后续章节开启（B 站 UP 主「四叶与小罗」）</td></tr>
+    </table>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <p>⚠️ 本报告基于公开网络资源逆向分析生成 · HAVVK RELINK ARG © Tencent Games</p>
+  <p>三角洲行动 S10 赛季 · 天下无核 · 信息予你无限</p>
+  <p>yty7816 总结</p>
+</footer>
+
+</div>
+
+<script>
+(function(){
+  var btn=document.getElementById('themeBtn');
+  btn.addEventListener('click',function(){
+    var cur=document.documentElement.getAttribute('data-theme')==='dark'?'dark':'light';
+    var nxt=cur==='dark'?'light':'dark';
+    document.documentElement.setAttribute('data-theme',nxt);
+    try{localStorage.setItem('theme',nxt)}catch(e){}
+  });
+  // 点击密码即复制
+  document.querySelectorAll('.password-box .pw').forEach(function(el){
+    el.addEventListener('click',function(){
+      var t=el.textContent.trim();
+      var done=function(){
+        var old=el.textContent;el.textContent='已复制 ✓';
+        setTimeout(function(){el.textContent=old;},900);
+      };
+      if(navigator.clipboard&&navigator.clipboard.writeText){
+        navigator.clipboard.writeText(t).then(done).catch(function(){});
+      }else{
+        var ta=document.createElement('textarea');ta.value=t;document.body.appendChild(ta);
+        ta.select();try{document.execCommand('copy');done()}catch(e){}document.body.removeChild(ta);
+      }
+    });
+  });
+})();
+</script>
+
+</body>
+</html>

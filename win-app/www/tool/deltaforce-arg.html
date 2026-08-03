@@ -290,13 +290,24 @@ footer{text-align:center;color:var(--muted);margin-top:36px;font-size:.8em;paddi
 <footer>
   <p>⚠️ 本报告基于公开网络资源逆向分析生成 · HAVVK RELINK ARG © Tencent Games</p>
   <p>三角洲行动 S10 赛季 · 天下无核 · 信息予你无限</p>
-  <p>yty7816 总结</p>
+  <p>By: yty16 · <a id="siteLink" href="https://yty16.github.io" rel="noopener">yty16.github.io</a></p>
 </footer>
 
 </div>
 
 <script>
 (function(){
+  // 页脚站点网址：跟随当前访问来源（主站/分站），离线端回落主站
+  try{
+    var link=document.getElementById('siteLink');
+    if(link){
+      var h=location.hostname||'';
+      var isWeb=(location.protocol==='http:'||location.protocol==='https:')&&h&&h!=='localhost'&&h!=='127.0.0.1';
+      var origin=isWeb?location.origin:'https://yty16.github.io';
+      link.href=origin+'/';
+      link.textContent=origin.replace(/^https?:\/\//,'');
+    }
+  }catch(e){}
   var btn=document.getElementById('themeBtn');
   btn.addEventListener('click',function(){
     var cur=document.documentElement.getAttribute('data-theme')==='dark'?'dark':'light';

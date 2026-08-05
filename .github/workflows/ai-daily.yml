@@ -30,9 +30,10 @@ jobs:
         env:
           # Use the dedicated fine-grained PAT if provided; otherwise fall back to the
           # built-in GITHUB_TOKEN (works for GitHub Models on most accounts).
+          # The PAT must have the "Models" read permission (GitHub Models free tier).
           AI_API_KEY: ${{ secrets.AI_API_KEY || secrets.GITHUB_TOKEN }}
           AI_API_BASE: ${{ secrets.AI_API_BASE || 'https://models.inference.ai.azure.com' }}
-          AI_MODEL: ${{ secrets.AI_MODEL || 'gpt-4o-mini' }}
+          AI_MODEL: ${{ secrets.AI_MODEL || 'gpt-4.1' }}
         run: python scripts/gen_ai_daily.py
 
       - name: Commit & push

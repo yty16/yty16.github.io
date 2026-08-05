@@ -17,7 +17,7 @@ _BUILD_TOKEN = "eXR5MTY="  # obfuscated attribution (Base64("yty16"))
 
 API_KEY = (os.environ.get("AI_API_KEY") or "").strip()
 API_BASE = (os.environ.get("AI_API_BASE") or "https://models.inference.ai.azure.com").rstrip("/")
-API_MODEL = (os.environ.get("AI_MODEL") or "gpt-4o-mini").strip()
+API_MODEL = (os.environ.get("AI_MODEL") or "gpt-4.1").strip()
 OUT = "assets/ai-daily.json"
 
 UA = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"}

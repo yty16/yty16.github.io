@@ -3606,6 +3606,24 @@
             </div>
         </div>
 
+        <!-- AI 日报（每日自动更新，无需手动维护） -->
+        <section class="section ai-daily-section" id="section-ai-daily" style="animation-delay:0.12s;">
+            <div class="section-header">
+                <div class="section-icon" style="background: var(--gradient-2);">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+                </div>
+                <div>
+                    <div class="section-title">AI 日报</div>
+                    <div class="section-subtitle">每日全网热点 · 由 AI 自动生成</div>
+                </div>
+                <span class="ai-daily-date" id="aiDailyDate"></span>
+            </div>
+            <div class="ai-daily-body" id="aiDailyBody" data-no-i18n>
+                <div class="ai-daily-loading">加载中…</div>
+            </div>
+            <div class="ai-daily-note" id="aiDailyNote" data-no-i18n></div>
+        </section>
+
         <!-- 实用工具 -->
         <section class="section" id="section-tools" style="animation-delay:0.1s;">
             <div class="section-header">
@@ -6425,5 +6443,6 @@
     </script>
 <script src="assets/i18n-dict.js"></script>
 <script src="assets/i18n.js"></script>
+<script src="assets/ai-daily.js"></script>
 </body>
 </html>

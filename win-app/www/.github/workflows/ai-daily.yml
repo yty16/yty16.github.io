@@ -1,0 +1,48 @@
+name: AI Daily Report
+
+on:
+  schedule:
+    - cron: "0 0 * * *"          # UTC 00:00 == Beijing 08:00
+  workflow_dispatch: {}          # manual "Run workflow" button
+
+permissions:
+  contents: write
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout (sparse)
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          sparse-checkout: |
+            assets
+            scripts
+          sparse-checkout-cone-mode: false
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Generate daily report
+        env:
+          # Use the dedicated fine-grained PAT if provided; otherwise fall back to the
+          # built-in GITHUB_TOKEN (works for GitHub Models on most accounts).
+          AI_API_KEY: ${{ secrets.AI_API_KEY || secrets.GITHUB_TOKEN }}
+          AI_API_BASE: ${{ secrets.AI_API_BASE || 'https://models.inference.ai.azure.com' }}
+          AI_MODEL: ${{ secrets.AI_MODEL || 'gpt-4o-mini' }}
+        run: python scripts/gen_ai_daily.py
+
+      - name: Commit & push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add assets/ai-daily.json
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "chore: update AI daily report $(date -u +%F)"
+            git push || (git pull --rebase --autostash origin main && git push)
+          fi

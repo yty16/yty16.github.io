@@ -1,6 +1,6 @@
 {
   "date": "2026-08-06",
-  "updatedAt": "2026-08-06T08:15:40+08:00",
+  "updatedAt": "2026-08-06T08:32:14+08:00",
   "sources": [
     {
       "name": "微博",
@@ -10,12 +10,16 @@
           "url": "https://s.weibo.com/weibo?q=%E4%B8%AD%E4%BC%A0%E5%8F%96%E6%B6%88%E8%89%BA%E8%80%83%E6%84%8F%E5%91%B3%E7%9D%80%E4%BB%80%E4%B9%88"
         },
         {
-          "title": "梅姨真实姓名首曝光",
-          "url": "https://s.weibo.com/weibo?q=%E6%A2%85%E5%A7%A8%E7%9C%9F%E5%AE%9E%E5%A7%93%E5%90%8D%E9%A6%96%E6%9B%9D%E5%85%89"
+          "title": "最近你买黄金了没",
+          "url": "https://s.weibo.com/weibo?q=%E6%9C%80%E8%BF%91%E4%BD%A0%E4%B9%B0%E9%BB%84%E9%87%91%E4%BA%86%E6%B2%A1"
         },
         {
           "title": "预拨3.3亿元支持8省市抢险救灾",
           "url": "https://s.weibo.com/weibo?q=%E9%A2%84%E6%8B%A83.3%E4%BA%BF%E5%85%83%E6%94%AF%E6%8C%818%E7%9C%81%E5%B8%82%E6%8A%A2%E9%99%A9%E6%95%91%E7%81%BE"
+        },
+        {
+          "title": "梅姨真实姓名首曝光",
+          "url": "https://s.weibo.com/weibo?q=%E6%A2%85%E5%A7%A8%E7%9C%9F%E5%AE%9E%E5%A7%93%E5%90%8D%E9%A6%96%E6%9B%9D%E5%85%89"
         },
         {
           "title": "姆巴佩官宣恋情",
@@ -34,24 +38,20 @@
           "url": "https://s.weibo.com/weibo?q=%E8%80%81%E7%A5%96%E5%AE%97%E6%80%8E%E4%B9%88%E5%8F%AF%E4%BB%A5%E8%81%AA%E6%98%8E%E6%88%90%E8%BF%99%E6%A0%B7"
         },
         {
-          "title": "这一秒过火全员be",
-          "url": "https://s.weibo.com/weibo?q=%E8%BF%99%E4%B8%80%E7%A7%92%E8%BF%87%E7%81%AB%E5%85%A8%E5%91%98be"
+          "title": "这一秒过火没破万",
+          "url": "https://s.weibo.com/weibo?q=%E8%BF%99%E4%B8%80%E7%A7%92%E8%BF%87%E7%81%AB%E6%B2%A1%E7%A0%B4%E4%B8%87"
         },
         {
-          "title": "中国名将樊振东的全新征程",
-          "url": "https://s.weibo.com/weibo?q=%E4%B8%AD%E5%9B%BD%E5%90%8D%E5%B0%86%E6%A8%8A%E6%8C%AF%E4%B8%9C%E7%9A%84%E5%85%A8%E6%96%B0%E5%BE%81%E7%A8%8B"
+          "title": "余承东曾称扛不住了也可能涨价",
+          "url": "https://s.weibo.com/weibo?q=%E4%BD%99%E6%89%BF%E4%B8%9C%E6%9B%BE%E7%A7%B0%E6%89%9B%E4%B8%8D%E4%BD%8F%E4%BA%86%E4%B9%9F%E5%8F%AF%E8%83%BD%E6%B6%A8%E4%BB%B7"
         },
         {
-          "title": "苹果要求长鑫降价反遭涨价",
-          "url": "https://s.weibo.com/weibo?q=%E8%8B%B9%E6%9E%9C%E8%A6%81%E6%B1%82%E9%95%BF%E9%91%AB%E9%99%8D%E4%BB%B7%E5%8F%8D%E9%81%AD%E6%B6%A8%E4%BB%B7"
+          "title": "TFBOYS这组头像用了九年了",
+          "url": "https://s.weibo.com/weibo?q=TFBOYS%E8%BF%99%E7%BB%84%E5%A4%B4%E5%83%8F%E7%94%A8%E4%BA%86%E4%B9%9D%E5%B9%B4%E4%BA%86"
         },
         {
           "title": "王源易烊千玺换蛋糕不给王俊凯说",
           "url": "https://s.weibo.com/weibo?q=%E7%8E%8B%E6%BA%90%E6%98%93%E7%83%8A%E5%8D%83%E7%8E%BA%E6%8D%A2%E8%9B%8B%E7%B3%95%E4%B8%8D%E7%BB%99%E7%8E%8B%E4%BF%8A%E5%87%AF%E8%AF%B4"
-        },
-        {
-          "title": "最近你买黄金了没",
-          "url": "https://s.weibo.com/weibo?q=%E6%9C%80%E8%BF%91%E4%BD%A0%E4%B9%B0%E9%BB%84%E9%87%91%E4%BA%86%E6%B2%A1"
         }
       ]
     },
@@ -75,36 +75,36 @@
           "url": "https://www.zhihu.com/question/2068309576659595271"
         },
         {
-          "title": "网友吐槽现在的交响乐团只能靠游戏演奏会维持生计，对此你怎么看？",
-          "url": "https://www.zhihu.com/question/2067670987710189967"
+          "title": "完全理解不了《三国演义》中刘备“若不为弟报仇，纵有万里江山何足为贵”浪漫在哪，是我的问题吗?",
+          "url": "https://www.zhihu.com/question/1949217086791452316"
         },
         {
           "title": "人大教授被曝主持国家社科基金重点项目，6年花35万考证莫言家世，研究有意义吗？纳税人的钱该不该这样花？",
           "url": "https://www.zhihu.com/question/2068364859402450214"
         },
         {
+          "title": "十进制有什么优点？为什么世界各地的数学不约而同的选择了十进制？",
+          "url": "https://www.zhihu.com/question/321792424"
+        },
+        {
+          "title": "网友吐槽现在的交响乐团只能靠游戏演奏会维持生计，对此你怎么看？",
+          "url": "https://www.zhihu.com/question/2067670987710189967"
+        },
+        {
           "title": "44岁爸爸因叛逆期女儿说「有本事你去考个研究生」，在职一战上岸985，怎样看待这种教育方式？",
           "url": "https://www.zhihu.com/question/2068288018167882727"
         },
         {
-          "title": "段永平减持了泡泡玛特，前几天刚说十年内不卖，如何评价他的操作？",
-          "url": "https://www.zhihu.com/question/2068389679494161975"
-        },
-        {
-          "title": "如何看待李修贤关于周星驰事件的道歉言论？",
-          "url": "https://www.zhihu.com/question/2068238488609338440"
-        },
-        {
-          "title": "沈腾新片《欢迎来龙餐馆》空降，极限定档 8 月 11 日全国上映，战争美食喜剧题材，对此你有何期待？",
-          "url": "https://www.zhihu.com/question/2068277179704664546"
+          "title": "我九岁的儿子骂了我的朋友，我回家打了他，到底是谁的错?",
+          "url": "https://www.zhihu.com/question/2065771738886042396"
         },
         {
           "title": "韩国因极端高温持续进入「国家灾难状态」，目前已致 16 死，今年当地气候算反常吗？哪些信息值得关注？",
           "url": "https://www.zhihu.com/question/2068299771345728525"
         },
         {
-          "title": "35 岁女子 1 天 5 瓶可乐喝成 60 岁脸，可乐危害真有这么大吗？高糖饮食为何会加速健康恶化？",
-          "url": "https://www.zhihu.com/question/2068241594126267915"
+          "title": "段永平减持了泡泡玛特，前几天刚说十年内不卖，如何评价他的操作？",
+          "url": "https://www.zhihu.com/question/2068389679494161975"
         }
       ]
     },
@@ -128,8 +128,8 @@
           "url": "https://www.baidu.com/s?wd=%E9%AB%98%E6%B8%A9%E7%83%AD%E6%B5%AA%E6%9D%A5%E8%A2%AD+%E8%BF%99%E4%BA%9B%E5%9C%B0%E6%96%B9%E9%9C%80%E6%B3%A8%E6%84%8F&sa=fyb_news&rsv_dl=fyb_news"
         },
         {
-          "title": "一枚俄导弹都没击落 泽连斯基发声",
-          "url": "https://www.baidu.com/s?wd=%E4%B8%80%E6%9E%9A%E4%BF%84%E5%AF%BC%E5%BC%B9%E9%83%BD%E6%B2%A1%E5%87%BB%E8%90%BD+%E6%B3%BD%E8%BF%9E%E6%96%AF%E5%9F%BA%E5%8F%91%E5%A3%B0&sa=fyb_news&rsv_dl=fyb_news"
+          "title": "美国退回1000亿美元关税",
+          "url": "https://www.baidu.com/s?wd=%E7%BE%8E%E5%9B%BD%E9%80%80%E5%9B%9E1000%E4%BA%BF%E7%BE%8E%E5%85%83%E5%85%B3%E7%A8%8E&sa=fyb_news&rsv_dl=fyb_news"
         },
         {
           "title": "李亚鹏向地铁吐血女孩捐99999元",
@@ -140,8 +140,8 @@
           "url": "https://www.baidu.com/s?wd=%E5%B0%8F%E5%AD%A6%E9%97%A8%E5%8F%A3%E2%80%9C%E4%B8%80%E6%A0%B9%E6%A3%8D%E2%80%9D%E9%95%BF%E6%A4%85%E6%80%8E%E4%B9%88%E5%B0%B1%E7%81%AB%E4%BA%86&sa=fyb_news&rsv_dl=fyb_news"
         },
         {
-          "title": "美国退回1000亿美元关税",
-          "url": "https://www.baidu.com/s?wd=%E7%BE%8E%E5%9B%BD%E9%80%80%E5%9B%9E1000%E4%BA%BF%E7%BE%8E%E5%85%83%E5%85%B3%E7%A8%8E&sa=fyb_news&rsv_dl=fyb_news"
+          "title": "姆巴佩官宣恋情",
+          "url": "https://www.baidu.com/s?wd=%E5%A7%86%E5%B7%B4%E4%BD%A9%E5%AE%98%E5%AE%A3%E6%81%8B%E6%83%85&sa=fyb_news&rsv_dl=fyb_news"
         },
         {
           "title": "“领导干部带头休假 值得推广”",
@@ -169,48 +169,101 @@
           "url": "https://search.bilibili.com/all?keyword=%E6%AC%A2%E8%BF%8E%E6%9D%A5%E5%88%B0%E7%A0%94%E7%A9%B6%E7%94%9F%E7%9A%84%E4%B8%96%E7%95%8C"
         },
         {
-          "title": "韩国人炒股有多疯狂",
-          "url": "https://search.bilibili.com/all?keyword=%E9%9F%A9%E5%9B%BD%E4%BA%BA%E7%82%92%E8%82%A1%E6%9C%89%E5%A4%9A%E7%96%AF%E7%8B%82"
+          "title": "三台风相继生成",
+          "url": "https://search.bilibili.com/all?keyword=%E4%B8%89%E5%8F%B0%E9%A3%8E%E7%9B%B8%E7%BB%A7%E7%94%9F%E6%88%90"
         },
         {
-          "title": "台风鲸鱼和灿鸿先后生成",
-          "url": "https://search.bilibili.com/all?keyword=%E5%8F%B0%E9%A3%8E%E9%B2%B8%E9%B1%BC%E5%92%8C%E7%81%BF%E9%B8%BF%E5%85%88%E5%90%8E%E7%94%9F%E6%88%90"
+          "title": "韩国人炒股有多疯狂",
+          "url": "https://search.bilibili.com/all?keyword=%E9%9F%A9%E5%9B%BD%E4%BA%BA%E7%82%92%E8%82%A1%E6%9C%89%E5%A4%9A%E7%96%AF%E7%8B%82"
         },
         {
           "title": "TheShy力挺Meiko",
           "url": "https://search.bilibili.com/all?keyword=TheShy%E5%8A%9B%E6%8C%BAMeiko"
         },
         {
-          "title": "神二十一乘组回家后首次亮相",
-          "url": "https://search.bilibili.com/all?keyword=%E7%A5%9E%E4%BA%8C%E5%8D%81%E4%B8%80%E4%B9%98%E7%BB%84%E5%9B%9E%E5%AE%B6%E5%90%8E%E9%A6%96%E6%AC%A1%E4%BA%AE%E7%9B%B8"
-        },
-        {
-          "title": "不同大学专业怎么选笔记本",
-          "url": "https://search.bilibili.com/all?keyword=%E4%B8%8D%E5%90%8C%E5%A4%A7%E5%AD%A6%E4%B8%93%E4%B8%9A%E6%80%8E%E4%B9%88%E9%80%89%E7%AC%94%E8%AE%B0%E6%9C%AC"
-        },
-        {
-          "title": "网红烤鱼店为何频频倒闭",
-          "url": "https://search.bilibili.com/all?keyword=%E7%BD%91%E7%BA%A2%E7%83%A4%E9%B1%BC%E5%BA%97%E4%B8%BA%E4%BD%95%E9%A2%91%E9%A2%91%E5%80%92%E9%97%AD"
+          "title": "电脑市场2026现状",
+          "url": "https://search.bilibili.com/all?keyword=%E7%94%B5%E8%84%91%E5%B8%82%E5%9C%BA2026%E7%8E%B0%E7%8A%B6"
         },
         {
           "title": "BLG常规赛上海Vlog",
           "url": "https://search.bilibili.com/all?keyword=BLG%E5%B8%B8%E8%A7%84%E8%B5%9B%E4%B8%8A%E6%B5%B7Vlog"
         },
         {
+          "title": "我国发起首例对外贸易国家安全调查",
+          "url": "https://search.bilibili.com/all?keyword=%E6%88%91%E5%9B%BD%E5%8F%91%E8%B5%B7%E9%A6%96%E4%BE%8B%E5%AF%B9%E5%A4%96%E8%B4%B8%E6%98%93%E5%9B%BD%E5%AE%B6%E5%AE%89%E5%85%A8%E8%B0%83%E6%9F%A5"
+        },
+        {
+          "title": "网红烤鱼店为何频频倒闭",
+          "url": "https://search.bilibili.com/all?keyword=%E7%BD%91%E7%BA%A2%E7%83%A4%E9%B1%BC%E5%BA%97%E4%B8%BA%E4%BD%95%E9%A2%91%E9%A2%91%E5%80%92%E9%97%AD"
+        },
+        {
+          "title": "神二十一乘组回家后首次亮相",
+          "url": "https://search.bilibili.com/all?keyword=%E7%A5%9E%E4%BA%8C%E5%8D%81%E4%B8%80%E4%B9%98%E7%BB%84%E5%9B%9E%E5%AE%B6%E5%90%8E%E9%A6%96%E6%AC%A1%E4%BA%AE%E7%9B%B8"
+        },
+        {
           "title": "GEN战胜HLE终结连败",
           "url": "https://search.bilibili.com/all?keyword=GEN%E6%88%98%E8%83%9CHLE%E7%BB%88%E7%BB%93%E8%BF%9E%E8%B4%A5"
         },
         {
-          "title": "电脑市场2026现状",
-          "url": "https://search.bilibili.com/all?keyword=%E7%94%B5%E8%84%91%E5%B8%82%E5%9C%BA2026%E7%8E%B0%E7%8A%B6"
+          "title": "台风鲸鱼和灿鸿先后生成",
+          "url": "https://search.bilibili.com/all?keyword=%E5%8F%B0%E9%A3%8E%E9%B2%B8%E9%B1%BC%E5%92%8C%E7%81%BF%E9%B8%BF%E5%85%88%E5%90%8E%E7%94%9F%E6%88%90"
         },
         {
-          "title": "海绵宝宝大战僵尸",
-          "url": "https://search.bilibili.com/all?keyword=%E6%B5%B7%E7%BB%B5%E5%AE%9D%E5%AE%9D%E5%A4%A7%E6%88%98%E5%83%B5%E5%B0%B8"
+          "title": "为何我国很少闹蝗灾了",
+          "url": "https://search.bilibili.com/all?keyword=%E4%B8%BA%E4%BD%95%E6%88%91%E5%9B%BD%E5%BE%88%E5%B0%91%E9%97%B9%E8%9D%97%E7%81%BE%E4%BA%86"
+        }
+      ]
+    },
+    {
+      "name": "GitHub 热门",
+      "items": [
+        {
+          "title": "openclaw/openclaw: Your own personal AI assistant. Any OS. Any Platform. The lobster way. 🦞 ",
+          "url": "https://github.com/openclaw/openclaw"
         },
         {
-          "title": "武松打猫",
-          "url": "https://search.bilibili.com/all?keyword=%E6%AD%A6%E6%9D%BE%E6%89%93%E7%8C%AB"
+          "title": "NousResearch/hermes-agent: The agent that grows with you",
+          "url": "https://github.com/NousResearch/hermes-agent"
+        },
+        {
+          "title": "tensorflow/tensorflow: An Open Source Machine Learning Framework for Everyone",
+          "url": "https://github.com/tensorflow/tensorflow"
+        },
+        {
+          "title": "anomalyco/opencode: The open source coding agent.",
+          "url": "https://github.com/anomalyco/opencode"
+        },
+        {
+          "title": "microsoft/vscode: Visual Studio Code",
+          "url": "https://github.com/microsoft/vscode"
+        },
+        {
+          "title": "vercel/next.js: The React Framework",
+          "url": "https://github.com/vercel/next.js"
+        },
+        {
+          "title": "clash-verge-rev/clash-verge-rev: A modern GUI client based on Tauri, designed to run in Windows, macOS and Linux for tailored proxy experience",
+          "url": "https://github.com/clash-verge-rev/clash-verge-rev"
+        },
+        {
+          "title": "iptv-org/iptv: Collection of publicly available IPTV channels from all over the world",
+          "url": "https://github.com/iptv-org/iptv"
+        },
+        {
+          "title": "2dust/v2rayN: A GUI client for Windows, Linux and macOS, support Xray and sing-box and others",
+          "url": "https://github.com/2dust/v2rayN"
+        },
+        {
+          "title": "supabase/supabase: The Postgres development platform. Supabase gives you a dedicated Postgres database to build your web, mobile, and AI applications.",
+          "url": "https://github.com/supabase/supabase"
+        },
+        {
+          "title": "openai/codex: Lightweight coding agent that runs in your terminal",
+          "url": "https://github.com/openai/codex"
+        },
+        {
+          "title": "pytorch/pytorch: Tensors and Dynamic neural networks in Python with strong GPU acceleration",
+          "url": "https://github.com/pytorch/pytorch"
         }
       ]
     },
@@ -234,10 +287,6 @@
           "url": "https://zed.dev/deltadb"
         },
         {
-          "title": "Position: LLMs Can't Jump",
-          "url": "https://openreview.net/challenge?redirect=%2Fforum%3Fid%3DklU4737opt"
-        },
-        {
           "title": "Meta Ran Ads That Contained AI-Generated Child Sexual Abuse Imagery",
           "url": "https://www.wired.com/story/meta-ran-ads-that-contained-ai-generated-child-sexual-abuse-imagery/"
         },
@@ -254,21 +303,25 @@
           "url": "https://www.promptarmor.com/resources/atlassian-rovo-exfiltrates-data"
         },
         {
-          "title": "Aristotle quotes on virtue, knowledge, and happiness",
-          "url": "https://www.campion.edu.au/blog/top-25-aristotle-quotes-on-virtue-knowledge-and-happiness/"
-        },
-        {
           "title": "Muse Code and Muse Spark 1.2",
           "url": "https://research.meta.ai/blog/introducing-muse-code-and-muse-spark-1-2"
         },
         {
+          "title": "Aristotle quotes on virtue, knowledge, and happiness",
+          "url": "https://www.campion.edu.au/blog/top-25-aristotle-quotes-on-virtue-knowledge-and-happiness/"
+        },
+        {
           "title": "The Valley of Webhooks",
           "url": "https://weli.dev/blog/the-valley-of-webhooks/"
+        },
+        {
+          "title": "Celld: Self-hosted, distributed Durable Objects",
+          "url": "https://github.com/denoland/celld"
         }
       ]
     }
   ],
   "note": "FALLBACK_AIERR",
-  "zh": "⚠️ AI 智能总结暂不可用：AI_API_KEY 缺少 GitHub Models 的 models:read 权限（请求返回 404）。请到仓库 Settings → Secrets 用具备 models:read 的 Token 更新 AI_API_KEY。热点榜数据正常。\n\n今日要点（自动汇编，非 AI）：\n• 中传取消艺考意味着什么\n• 梅姨真实姓名首曝光\n• 预拨3.3亿元支持8省市抢险救灾\n• 长鑫拒绝苹果压价，要求内存采购价不低于三星和 SK 海力士，是否意味议价权彻底反转？可能有哪些影响？\n• 商务部称「美方置中方多次交涉于不顾，中方只能采取必要的反制措施」，释放哪些信号？\n• 媒体称电车露营正干崩暑期酒店生意，全国平均入住率同比下降3%，真是这样吗？你愿意省下房费住进车里吗？\n• 中国经济展现强大韧性和活力\n• 费大厨全国小炒肉大王仅凭视频评出",
-  "en": "⚠️ AI summary unavailable: the AI_API_KEY secret lacks the GitHub Models 'models:read' permission (request returned 404). Update AI_API_KEY with a token that has models:read. Hot-list data is fine.\n\nToday's highlights (auto-compiled, not AI):\n• 中传取消艺考意味着什么\n• 梅姨真实姓名首曝光\n• 预拨3.3亿元支持8省市抢险救灾\n• 长鑫拒绝苹果压价，要求内存采购价不低于三星和 SK 海力士，是否意味议价权彻底反转？可能有哪些影响？\n• 商务部称「美方置中方多次交涉于不顾，中方只能采取必要的反制措施」，释放哪些信号？\n• 媒体称电车露营正干崩暑期酒店生意，全国平均入住率同比下降3%，真是这样吗？你愿意省下房费住进车里吗？\n• 中国经济展现强大韧性和活力\n• 费大厨全国小炒肉大王仅凭视频评出"
+  "zh": "⚠️ AI 智能总结暂不可用：AI_API_KEY 缺少 GitHub Models 的 models:read 权限（请求返回 404）。请到仓库 Settings → Secrets 用具备 models:read 的 Token 更新 AI_API_KEY。热点榜数据正常。\n\n今日要点（自动汇编，非 AI）：\n• 中传取消艺考意味着什么\n• 最近你买黄金了没\n• 预拨3.3亿元支持8省市抢险救灾\n• 长鑫拒绝苹果压价，要求内存采购价不低于三星和 SK 海力士，是否意味议价权彻底反转？可能有哪些影响？\n• 商务部称「美方置中方多次交涉于不顾，中方只能采取必要的反制措施」，释放哪些信号？\n• 媒体称电车露营正干崩暑期酒店生意，全国平均入住率同比下降3%，真是这样吗？你愿意省下房费住进车里吗？\n• 中国经济展现强大韧性和活力\n• 费大厨全国小炒肉大王仅凭视频评出",
+  "en": "⚠️ AI summary unavailable: the AI_API_KEY secret lacks the GitHub Models 'models:read' permission (request returned 404). Update AI_API_KEY with a token that has models:read. Hot-list data is fine.\n\nToday's highlights (auto-compiled, not AI):\n• 中传取消艺考意味着什么\n• 最近你买黄金了没\n• 预拨3.3亿元支持8省市抢险救灾\n• 长鑫拒绝苹果压价，要求内存采购价不低于三星和 SK 海力士，是否意味议价权彻底反转？可能有哪些影响？\n• 商务部称「美方置中方多次交涉于不顾，中方只能采取必要的反制措施」，释放哪些信号？\n• 媒体称电车露营正干崩暑期酒店生意，全国平均入住率同比下降3%，真是这样吗？你愿意省下房费住进车里吗？\n• 中国经济展现强大韧性和活力\n• 费大厨全国小炒肉大王仅凭视频评出"
 }

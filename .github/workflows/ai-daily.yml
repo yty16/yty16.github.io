@@ -7,6 +7,7 @@ on:
 
 permissions:
   contents: write
+  # No extra scopes needed: GITHUB_TOKEN is auto-injected for public repo read/search.
 
 jobs:
   generate:
@@ -34,6 +35,7 @@ jobs:
           AI_API_KEY: ${{ secrets.AI_API_KEY || secrets.GITHUB_TOKEN }}
           AI_API_BASE: ${{ secrets.AI_API_BASE || 'https://models.inference.ai.azure.com' }}
           AI_MODEL: ${{ secrets.AI_MODEL || 'gpt-4.1' }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: python scripts/gen_ai_daily.py
 
       - name: Commit & push

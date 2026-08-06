@@ -423,6 +423,15 @@ def main():
     names = [s["name"] for s in sources]
     print("wrote %s | sources=%s note=%s" % (OUT, names, result["note"]))
 
+    # Save dated copy for history browsing
+    hist_dir = "assets/ai-daily-history"
+    os.makedirs(hist_dir, exist_ok=True)
+    date_str = datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%d")
+    hist_path = os.path.join(hist_dir, "%s.json" % date_str)
+    with open(hist_path, "w", encoding="utf-8") as f:
+        json.dump(result, f, ensure_ascii=False, indent=2)
+    print("wrote %s (history)" % hist_path)
+
 
 if __name__ == "__main__":
     main()

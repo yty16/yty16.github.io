@@ -283,6 +283,22 @@ def gather():
 
 # ── AI Summary ─────────────────────────────────────────────────────────
 
+def _do_request(url, payload, headers, timeout=90):
+    req = urllib.request.Request(url, data=payload, headers=headers)
+    try:
+        with urllib.request.urlopen(req, timeout=timeout) as r:
+            return json.loads(r.read().decode("utf-8")), None
+    except urllib.error.HTTPError as e:
+        body = ""
+        try:
+            body = e.read().decode("utf-8", "replace")
+        except Exception:
+            pass
+        return None, (e.code, body)
+    except Exception as e:
+        return None, (-1, str(e))
+
+
 def call_ai(blob):
     if not API_KEY:
         raise RuntimeError("AI_API_KEY not set")
@@ -297,30 +313,46 @@ def call_ai(blob):
         "5. 不要代码块标记，不要多余文字"
     )
     user = "今日全球热搜原始条目（来自多个平台）：\n" + blob
-    payload = json.dumps({
-        "model": API_MODEL,
-        "messages": [
-            {"role": "system", "content": system},
-            {"role": "user", "content": user}
-        ],
-        "temperature": 0.5,
-        "response_format": {"type": "json_object"}
-    }, ensure_ascii=False).encode("utf-8")
-    url = API_BASE + "/chat/completions"
-    req = urllib.request.Request(url, data=payload, headers={
+    headers = {
         "Authorization": "Bearer " + API_KEY,
         "Content-Type": "application/json"
-    })
-    with urllib.request.urlopen(req, timeout=90) as r:
-        resp = json.loads(r.read().decode("utf-8"))
-    content = resp["choices"][0]["message"]["content"]
-    try:
-        return json.loads(content)
-    except Exception:
-        m = re.search(r"\{.*\}", content, re.S)
-        if m:
-            return json.loads(m.group(0))
-        raise
+    }
+    # Try several (endpoint, model) combos for resilience.
+    # Azure OpenAI-compatible endpoint uses bare model names (e.g. gpt-4.1).
+    # GitHub-hosted inference endpoint requires vendor-prefixed names
+    # (openai/gpt-4.1) and is the reliable one for fine-grained PATs.
+    gh_model = API_MODEL if API_MODEL.startswith("openai/") else "openai/" + API_MODEL
+    attempts = [
+        (API_BASE.rstrip("/") + "/chat/completions", API_MODEL),
+        ("https://models.github.ai/inference/chat/completions", gh_model),
+    ]
+    last_err = None
+    for url, model in attempts:
+        payload = json.dumps({
+            "model": model,
+            "messages": [
+                {"role": "system", "content": system},
+                {"role": "user", "content": user}
+            ],
+            "temperature": 0.5,
+            "response_format": {"type": "json_object"}
+        }, ensure_ascii=False).encode("utf-8")
+        resp, err = _do_request(url, payload, headers)
+        if resp is not None:
+            content = resp["choices"][0]["message"]["content"]
+            try:
+                return json.loads(content)
+            except Exception:
+                m = re.search(r"\{.*\}", content, re.S)
+                if m:
+                    return json.loads(m.group(0))
+                raise
+        else:
+            code, body = err
+            print("AI endpoint %s (model=%s) failed: HTTP %s | %s"
+                  % (url, model, code, body[:400]))
+            last_err = (url, model, code, body)
+    raise RuntimeError("all AI endpoints failed: %s" % str(last_err))
 
 
 # ── Fallback digest (used when the AI call fails but hot-list data exists) ─

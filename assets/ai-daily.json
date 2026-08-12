@@ -1,57 +1,57 @@
 {
-  "date": "2026-08-11",
-  "updatedAt": "2026-08-11T09:08:30+08:00",
+  "date": "2026-08-12",
+  "updatedAt": "2026-08-12T09:16:00+08:00",
   "sources": [
     {
       "name": "微博",
       "items": [
         {
-          "title": "白海豚突然大拐弯",
-          "url": "https://s.weibo.com/weibo?q=%E7%99%BD%E6%B5%B7%E8%B1%9A%E7%AA%81%E7%84%B6%E5%A4%A7%E6%8B%90%E5%BC%AF"
+          "title": "C罗宣布结婚",
+          "url": "https://s.weibo.com/weibo?q=C%E7%BD%97%E5%AE%A3%E5%B8%83%E7%BB%93%E5%A9%9A"
         },
         {
-          "title": "疑山西一医院实习护士晒患者隐私照",
-          "url": "https://s.weibo.com/weibo?q=%E7%96%91%E5%B1%B1%E8%A5%BF%E4%B8%80%E5%8C%BB%E9%99%A2%E5%AE%9E%E4%B9%A0%E6%8A%A4%E5%A3%AB%E6%99%92%E6%82%A3%E8%80%85%E9%9A%90%E7%A7%81%E7%85%A7"
+          "title": "曝赵一鸣4块牛肉干64元复称仅17元",
+          "url": "https://s.weibo.com/weibo?q=%E6%9B%9D%E8%B5%B5%E4%B8%80%E9%B8%A34%E5%9D%97%E7%89%9B%E8%82%89%E5%B9%B264%E5%85%83%E5%A4%8D%E7%A7%B0%E4%BB%8517%E5%85%83"
         },
         {
-          "title": "长江十年行",
-          "url": "https://s.weibo.com/weibo?q=%E9%95%BF%E6%B1%9F%E5%8D%81%E5%B9%B4%E8%A1%8C"
+          "title": "请查收这份暴雨天避险指南",
+          "url": "https://s.weibo.com/weibo?q=%E8%AF%B7%E6%9F%A5%E6%94%B6%E8%BF%99%E4%BB%BD%E6%9A%B4%E9%9B%A8%E5%A4%A9%E9%81%BF%E9%99%A9%E6%8C%87%E5%8D%97"
         },
         {
-          "title": "Angelababy85花首位百花奖",
-          "url": "https://s.weibo.com/weibo?q=Angelababy85%E8%8A%B1%E9%A6%96%E4%BD%8D%E7%99%BE%E8%8A%B1%E5%A5%96"
+          "title": "王宝强国际影帝无国内大奖",
+          "url": "https://s.weibo.com/weibo?q=%E7%8E%8B%E5%AE%9D%E5%BC%BA%E5%9B%BD%E9%99%85%E5%BD%B1%E5%B8%9D%E6%97%A0%E5%9B%BD%E5%86%85%E5%A4%A7%E5%A5%96"
         },
         {
-          "title": "旅游发朋友圈为什么要带定位",
-          "url": "https://s.weibo.com/weibo?q=%E6%97%85%E6%B8%B8%E5%8F%91%E6%9C%8B%E5%8F%8B%E5%9C%88%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E5%B8%A6%E5%AE%9A%E4%BD%8D"
+          "title": "日全食",
+          "url": "https://s.weibo.com/weibo?q=%E6%97%A5%E5%85%A8%E9%A3%9F"
         },
         {
-          "title": "易烊千玺工作室编辑加了刘春和",
-          "url": "https://s.weibo.com/weibo?q=%E6%98%93%E7%83%8A%E5%8D%83%E7%8E%BA%E5%B7%A5%E4%BD%9C%E5%AE%A4%E7%BC%96%E8%BE%91%E5%8A%A0%E4%BA%86%E5%88%98%E6%98%A5%E5%92%8C"
+          "title": "郭兰英逝世",
+          "url": "https://s.weibo.com/weibo?q=%E9%83%AD%E5%85%B0%E8%8B%B1%E9%80%9D%E4%B8%96"
         },
         {
-          "title": "百花奖获奖名单",
-          "url": "https://s.weibo.com/weibo?q=%E7%99%BE%E8%8A%B1%E5%A5%96%E8%8E%B7%E5%A5%96%E5%90%8D%E5%8D%95"
+          "title": "上海暴雨",
+          "url": "https://s.weibo.com/weibo?q=%E4%B8%8A%E6%B5%B7%E6%9A%B4%E9%9B%A8"
         },
         {
-          "title": "曾经月销5万的车现在卖不动了",
-          "url": "https://s.weibo.com/weibo?q=%E6%9B%BE%E7%BB%8F%E6%9C%88%E9%94%805%E4%B8%87%E7%9A%84%E8%BD%A6%E7%8E%B0%E5%9C%A8%E5%8D%96%E4%B8%8D%E5%8A%A8%E4%BA%86"
+          "title": "六公主力挺赵丽颖百花奖",
+          "url": "https://s.weibo.com/weibo?q=%E5%85%AD%E5%85%AC%E4%B8%BB%E5%8A%9B%E6%8C%BA%E8%B5%B5%E4%B8%BD%E9%A2%96%E7%99%BE%E8%8A%B1%E5%A5%96"
         },
         {
-          "title": "国乒男单上半区失守",
-          "url": "https://s.weibo.com/weibo?q=%E5%9B%BD%E4%B9%92%E7%94%B7%E5%8D%95%E4%B8%8A%E5%8D%8A%E5%8C%BA%E5%A4%B1%E5%AE%88"
+          "title": "国行苹果AI支持机型",
+          "url": "https://s.weibo.com/weibo?q=%E5%9B%BD%E8%A1%8C%E8%8B%B9%E6%9E%9CAI%E6%94%AF%E6%8C%81%E6%9C%BA%E5%9E%8B"
         },
         {
-          "title": "ksg流浪夏季赛不打了",
-          "url": "https://s.weibo.com/weibo?q=ksg%E6%B5%81%E6%B5%AA%E5%A4%8F%E5%AD%A3%E8%B5%9B%E4%B8%8D%E6%89%93%E4%BA%86"
+          "title": "比亚迪海獭日本订单破千",
+          "url": "https://s.weibo.com/weibo?q=%E6%AF%94%E4%BA%9A%E8%BF%AA%E6%B5%B7%E7%8D%AD%E6%97%A5%E6%9C%AC%E8%AE%A2%E5%8D%95%E7%A0%B4%E5%8D%83"
         },
         {
-          "title": "陈思诚在家里气哭了",
-          "url": "https://s.weibo.com/weibo?q=%E9%99%88%E6%80%9D%E8%AF%9A%E5%9C%A8%E5%AE%B6%E9%87%8C%E6%B0%94%E5%93%AD%E4%BA%86"
+          "title": "赵一鸣涉事店铺老板回应",
+          "url": "https://s.weibo.com/weibo?q=%E8%B5%B5%E4%B8%80%E9%B8%A3%E6%B6%89%E4%BA%8B%E5%BA%97%E9%93%BA%E8%80%81%E6%9D%BF%E5%9B%9E%E5%BA%94"
         },
         {
-          "title": "赵丽颖百花奖首提即中",
-          "url": "https://s.weibo.com/weibo?q=%E8%B5%B5%E4%B8%BD%E9%A2%96%E7%99%BE%E8%8A%B1%E5%A5%96%E9%A6%96%E6%8F%90%E5%8D%B3%E4%B8%AD"
+          "title": "马伊琍想让谁顺谁就顺极了",
+          "url": "https://s.weibo.com/weibo?q=%E9%A9%AC%E4%BC%8A%E7%90%8D%E6%83%B3%E8%AE%A9%E8%B0%81%E9%A1%BA%E8%B0%81%E5%B0%B1%E9%A1%BA%E6%9E%81%E4%BA%86"
         }
       ]
     },
@@ -59,52 +59,52 @@
       "name": "知乎",
       "items": [
         {
-          "title": "易烊千玺、卫诗雅分封影帝、影后，如何评价第 38 届大众电影百花奖获奖名单？",
-          "url": "https://www.zhihu.com/question/2070241074514224234"
+          "title": "胖东来公布侵犯员工尊严案例，顾客驾车顶撞员工被行拘、掌掴员工被起诉，员工获上万元赔偿，如何看待此事？",
+          "url": "https://www.zhihu.com/question/2070467817976210988"
         },
         {
-          "title": "于东来回应关闭胖东来生活广场店，因早年租约失误造成租户租金失衡，门店盈利上亿仍闭店，如何看待他的选择？",
-          "url": "https://www.zhihu.com/question/2069799083045287916"
+          "title": "Claude证明黎曼猜想取得了重大突破，这个事件有什么开创性意义？",
+          "url": "https://www.zhihu.com/question/2070452772391194651"
         },
         {
-          "title": "央视首次曝光 055 遵义舰演习遭潜艇伏击「击沉」，这一操作的意图是什么？算暴露055的短板吗？",
-          "url": "https://www.zhihu.com/question/2069804922732860138"
+          "title": "怎么看 DeepSeek 注册 Harness 公众号并选用黑鲸鱼 logo ？",
+          "url": "https://www.zhihu.com/question/2070437867311174069"
         },
         {
-          "title": "为什么那么多年轻人得了尿毒症？",
-          "url": "https://www.zhihu.com/question/2025229966229485529"
+          "title": "孕妇胎监异常被安排4天后手术结果胎儿死亡，医院40余次篡改病历，法院判医院赔偿 14 万，如何解读？",
+          "url": "https://www.zhihu.com/question/2070525080463828728"
         },
         {
-          "title": "山东菏泽古沉船一件元青花杯被曝下落不明，举报者称其曾出现在央视画面中，却未移交给博物馆，具体情况如何？",
-          "url": "https://www.zhihu.com/question/2069191321374418713"
+          "title": "如何评价起点官方被曝禁止新人作者使用 AI 润色？否则不允许上架？",
+          "url": "https://www.zhihu.com/question/2068955233896640772"
         },
         {
-          "title": "每天通勤骑车 60 公里身体会不会累垮？",
-          "url": "https://www.zhihu.com/question/560147506"
+          "title": "睡车里被酒店收 150 元住宿费事件反转，媒体因报道呈现不够全面客观致歉，如何避免类似事件再次发生？",
+          "url": "https://www.zhihu.com/question/2070468397289009796"
         },
         {
-          "title": "如何评价《欢迎来龙餐馆》这部电影？",
-          "url": "https://www.zhihu.com/question/2070182701299152586"
+          "title": "今年百花奖王宝强 0 票，对此你的看法是什么？",
+          "url": "https://www.zhihu.com/question/2070427612044961729"
         },
         {
-          "title": "山东一中学让新生填家长职务和车价，校方称用于贫困补助甄别，学校该不该收集这类信息？你遇到过类似情况吗？",
-          "url": "https://www.zhihu.com/question/2069476448205812044"
+          "title": "5 万元以下微型车遇冷，40 万元以上新能源车热销，这说明了什么？",
+          "url": "https://www.zhihu.com/question/2069887569639248076"
         },
         {
-          "title": "因儿子说「大不了送外卖」，爸爸三伏天带他送外卖，竟意外修复父子关系，这一实践式教育怎么样？值得效仿吗？",
-          "url": "https://www.zhihu.com/question/2070152087481083737"
+          "title": "东莞招教师将其称作「课时服务人员」，网友质疑老师变为服务者，如何看待这一称呼的转变？会弱化教师身份吗？",
+          "url": "https://www.zhihu.com/question/2070470862801737396"
         },
         {
-          "title": "为什么立秋以后天气一下子就凉快起来了，这里有什么说法吗？",
-          "url": "https://www.zhihu.com/question/2069355924951667964"
+          "title": "现在年轻人都很少主动考驾照了，未来还有必要人手一本驾照吗？",
+          "url": "https://www.zhihu.com/question/2066668547292521975"
         },
         {
-          "title": "如何看待《哪吒之魔童闹海》斩获第 38 届大众电影百花奖最佳影片，成为百花奖历史上首部动画最佳影片？",
-          "url": "https://www.zhihu.com/question/2070263777988289579"
+          "title": "短剧演员自曝富婆带资进组演女主，给自己硬加 60 多场吻戏，短剧上线仅数日便被下架，如何看待此事？",
+          "url": "https://www.zhihu.com/question/2069387389651215691"
         },
         {
-          "title": "原字节跳动机器人一号位加入小米，负责基座模型研发，这透露出小米在人工智能领域的哪些战略意图？",
-          "url": "https://www.zhihu.com/question/2069868469005326051"
+          "title": "演员贾冰参加朋友饭局被偷拍，网传视频中有爆粗口、抽烟喝酒等行为，是真的吗？为什么反而被网友力挺？",
+          "url": "https://www.zhihu.com/question/2070108326516318471"
         }
       ]
     },
@@ -112,52 +112,52 @@
       "name": "百度",
       "items": [
         {
-          "title": "我是人民的勤务员",
-          "url": "https://www.baidu.com/s?wd=%E6%88%91%E6%98%AF%E4%BA%BA%E6%B0%91%E7%9A%84%E5%8B%A4%E5%8A%A1%E5%91%98&sa=fyb_news&rsv_dl=fyb_news"
+          "title": "总书记多次强调因地制宜",
+          "url": "https://www.baidu.com/s?wd=%E6%80%BB%E4%B9%A6%E8%AE%B0%E5%A4%9A%E6%AC%A1%E5%BC%BA%E8%B0%83%E5%9B%A0%E5%9C%B0%E5%88%B6%E5%AE%9C&sa=fyb_news&rsv_dl=fyb_news"
         },
         {
-          "title": "第一次见有人撸台风羊毛",
-          "url": "https://www.baidu.com/s?wd=%E7%AC%AC%E4%B8%80%E6%AC%A1%E8%A7%81%E6%9C%89%E4%BA%BA%E6%92%B8%E5%8F%B0%E9%A3%8E%E7%BE%8A%E6%AF%9B&sa=fyb_news&rsv_dl=fyb_news"
+          "title": "郭兰英逝世 享年97岁",
+          "url": "https://www.baidu.com/s?wd=%E9%83%AD%E5%85%B0%E8%8B%B1%E9%80%9D%E4%B8%96+%E4%BA%AB%E5%B9%B497%E5%B2%81&sa=fyb_news&rsv_dl=fyb_news"
         },
         {
-          "title": "曾年销超76万的神车要退场了",
-          "url": "https://www.baidu.com/s?wd=%E6%9B%BE%E5%B9%B4%E9%94%80%E8%B6%8576%E4%B8%87%E7%9A%84%E7%A5%9E%E8%BD%A6%E8%A6%81%E9%80%80%E5%9C%BA%E4%BA%86&sa=fyb_news&rsv_dl=fyb_news"
+          "title": "多地试点：直升高中",
+          "url": "https://www.baidu.com/s?wd=%E5%A4%9A%E5%9C%B0%E8%AF%95%E7%82%B9%EF%BC%9A%E7%9B%B4%E5%8D%87%E9%AB%98%E4%B8%AD&sa=fyb_news&rsv_dl=fyb_news"
         },
         {
-          "title": "农业“变酷”只是第一步",
-          "url": "https://www.baidu.com/s?wd=%E5%86%9C%E4%B8%9A%E2%80%9C%E5%8F%98%E9%85%B7%E2%80%9D%E5%8F%AA%E6%98%AF%E7%AC%AC%E4%B8%80%E6%AD%A5&sa=fyb_news&rsv_dl=fyb_news"
+          "title": "这个时代我们该追什么样的星",
+          "url": "https://www.baidu.com/s?wd=%E8%BF%99%E4%B8%AA%E6%97%B6%E4%BB%A3%E6%88%91%E4%BB%AC%E8%AF%A5%E8%BF%BD%E4%BB%80%E4%B9%88%E6%A0%B7%E7%9A%84%E6%98%9F&sa=fyb_news&rsv_dl=fyb_news"
         },
         {
-          "title": "不满房东涨租 于东来自掏65亿建商场",
-          "url": "https://www.baidu.com/s?wd=%E4%B8%8D%E6%BB%A1%E6%88%BF%E4%B8%9C%E6%B6%A8%E7%A7%9F+%E4%BA%8E%E4%B8%9C%E6%9D%A5%E8%87%AA%E6%8E%8F65%E4%BA%BF%E5%BB%BA%E5%95%86%E5%9C%BA&sa=fyb_news&rsv_dl=fyb_news"
+          "title": "赵一鸣4块牛肉干64元复称仅17元",
+          "url": "https://www.baidu.com/s?wd=%E8%B5%B5%E4%B8%80%E9%B8%A34%E5%9D%97%E7%89%9B%E8%82%89%E5%B9%B264%E5%85%83%E5%A4%8D%E7%A7%B0%E4%BB%8517%E5%85%83&sa=fyb_news&rsv_dl=fyb_news"
         },
         {
-          "title": "女子花3万全款购入宝鸡40平米住房",
-          "url": "https://www.baidu.com/s?wd=%E5%A5%B3%E5%AD%90%E8%8A%B13%E4%B8%87%E5%85%A8%E6%AC%BE%E8%B4%AD%E5%85%A5%E5%AE%9D%E9%B8%A140%E5%B9%B3%E7%B1%B3%E4%BD%8F%E6%88%BF&sa=fyb_news&rsv_dl=fyb_news"
+          "title": "C罗晒照官宣完婚",
+          "url": "https://www.baidu.com/s?wd=C%E7%BD%97%E6%99%92%E7%85%A7%E5%AE%98%E5%AE%A3%E5%AE%8C%E5%A9%9A&sa=fyb_news&rsv_dl=fyb_news"
         },
         {
-          "title": "王宝强首次入围百花奖却以0票收场",
-          "url": "https://www.baidu.com/s?wd=%E7%8E%8B%E5%AE%9D%E5%BC%BA%E9%A6%96%E6%AC%A1%E5%85%A5%E5%9B%B4%E7%99%BE%E8%8A%B1%E5%A5%96%E5%8D%B4%E4%BB%A50%E7%A5%A8%E6%94%B6%E5%9C%BA&sa=fyb_news&rsv_dl=fyb_news"
+          "title": "北京暴雨",
+          "url": "https://www.baidu.com/s?wd=%E5%8C%97%E4%BA%AC%E6%9A%B4%E9%9B%A8&sa=fyb_news&rsv_dl=fyb_news"
         },
         {
-          "title": "豆包回应“推荐酒店抽取12%佣金”",
-          "url": "https://www.baidu.com/s?wd=%E8%B1%86%E5%8C%85%E5%9B%9E%E5%BA%94%E2%80%9C%E6%8E%A8%E8%8D%90%E9%85%92%E5%BA%97%E6%8A%BD%E5%8F%9612%25%E4%BD%A3%E9%87%91%E2%80%9D&sa=fyb_news&rsv_dl=fyb_news"
+          "title": "借用30多年 兰州拉面还给兰州了",
+          "url": "https://www.baidu.com/s?wd=%E5%80%9F%E7%94%A830%E5%A4%9A%E5%B9%B4+%E5%85%B0%E5%B7%9E%E6%8B%89%E9%9D%A2%E8%BF%98%E7%BB%99%E5%85%B0%E5%B7%9E%E4%BA%86&sa=fyb_news&rsv_dl=fyb_news"
         },
         {
-          "title": "母子三人想去郴州结果到了彬州",
-          "url": "https://www.baidu.com/s?wd=%E6%AF%8D%E5%AD%90%E4%B8%89%E4%BA%BA%E6%83%B3%E5%8E%BB%E9%83%B4%E5%B7%9E%E7%BB%93%E6%9E%9C%E5%88%B0%E4%BA%86%E5%BD%AC%E5%B7%9E&sa=fyb_news&rsv_dl=fyb_news"
+          "title": "郭兰英1994年将演唱版权无偿捐国家",
+          "url": "https://www.baidu.com/s?wd=%E9%83%AD%E5%85%B0%E8%8B%B11994%E5%B9%B4%E5%B0%86%E6%BC%94%E5%94%B1%E7%89%88%E6%9D%83%E6%97%A0%E5%81%BF%E6%8D%90%E5%9B%BD%E5%AE%B6&sa=fyb_news&rsv_dl=fyb_news"
         },
         {
-          "title": "医生问诊27岁女子 妈妈在旁不停打断",
-          "url": "https://www.baidu.com/s?wd=%E5%8C%BB%E7%94%9F%E9%97%AE%E8%AF%8A27%E5%B2%81%E5%A5%B3%E5%AD%90+%E5%A6%88%E5%A6%88%E5%9C%A8%E6%97%81%E4%B8%8D%E5%81%9C%E6%89%93%E6%96%AD&sa=fyb_news&rsv_dl=fyb_news"
+          "title": "两张照片沈腾能玩出100个梗",
+          "url": "https://www.baidu.com/s?wd=%E4%B8%A4%E5%BC%A0%E7%85%A7%E7%89%87%E6%B2%88%E8%85%BE%E8%83%BD%E7%8E%A9%E5%87%BA100%E4%B8%AA%E6%A2%97&sa=fyb_news&rsv_dl=fyb_news"
         },
         {
-          "title": "哥伦比亚因地震进入国家灾难状态",
-          "url": "https://www.baidu.com/s?wd=%E5%93%A5%E4%BC%A6%E6%AF%94%E4%BA%9A%E5%9B%A0%E5%9C%B0%E9%9C%87%E8%BF%9B%E5%85%A5%E5%9B%BD%E5%AE%B6%E7%81%BE%E9%9A%BE%E7%8A%B6%E6%80%81&sa=fyb_news&rsv_dl=fyb_news"
+          "title": "回望郭兰英经典代表作",
+          "url": "https://www.baidu.com/s?wd=%E5%9B%9E%E6%9C%9B%E9%83%AD%E5%85%B0%E8%8B%B1%E7%BB%8F%E5%85%B8%E4%BB%A3%E8%A1%A8%E4%BD%9C&sa=fyb_news&rsv_dl=fyb_news"
         },
         {
-          "title": "浙江温州一建筑被台风吹塌不实",
-          "url": "https://www.baidu.com/s?wd=%E6%B5%99%E6%B1%9F%E6%B8%A9%E5%B7%9E%E4%B8%80%E5%BB%BA%E7%AD%91%E8%A2%AB%E5%8F%B0%E9%A3%8E%E5%90%B9%E5%A1%8C%E4%B8%8D%E5%AE%9E&sa=fyb_news&rsv_dl=fyb_news"
+          "title": "上海浦东一女子台风中坠楼不实",
+          "url": "https://www.baidu.com/s?wd=%E4%B8%8A%E6%B5%B7%E6%B5%A6%E4%B8%9C%E4%B8%80%E5%A5%B3%E5%AD%90%E5%8F%B0%E9%A3%8E%E4%B8%AD%E5%9D%A0%E6%A5%BC%E4%B8%8D%E5%AE%9E&sa=fyb_news&rsv_dl=fyb_news"
         }
       ]
     },
@@ -165,52 +165,52 @@
       "name": "B站",
       "items": [
         {
-          "title": "DNS战胜GEN赛后数据",
-          "url": "https://search.bilibili.com/all?keyword=DNS%E6%88%98%E8%83%9CGEN%E8%B5%9B%E5%90%8E%E6%95%B0%E6%8D%AE"
+          "title": "曝曼城决定在夏窗签下恩佐",
+          "url": "https://search.bilibili.com/all?keyword=%E6%9B%9D%E6%9B%BC%E5%9F%8E%E5%86%B3%E5%AE%9A%E5%9C%A8%E5%A4%8F%E7%AA%97%E7%AD%BE%E4%B8%8B%E6%81%A9%E4%BD%90"
         },
         {
-          "title": "浙江首创无堂食外卖集聚地",
-          "url": "https://search.bilibili.com/all?keyword=%E6%B5%99%E6%B1%9F%E9%A6%96%E5%88%9B%E6%97%A0%E5%A0%82%E9%A3%9F%E5%A4%96%E5%8D%96%E9%9B%86%E8%81%9A%E5%9C%B0"
+          "title": "白海豚停编后为何还有暴雨能力",
+          "url": "https://search.bilibili.com/all?keyword=%E7%99%BD%E6%B5%B7%E8%B1%9A%E5%81%9C%E7%BC%96%E5%90%8E%E4%B8%BA%E4%BD%95%E8%BF%98%E6%9C%89%E6%9A%B4%E9%9B%A8%E8%83%BD%E5%8A%9B"
         },
         {
-          "title": "台风白海豚实时路径",
-          "url": "https://search.bilibili.com/all?keyword=%E5%8F%B0%E9%A3%8E%E7%99%BD%E6%B5%B7%E8%B1%9A%E5%AE%9E%E6%97%B6%E8%B7%AF%E5%BE%84"
+          "title": "当你遇上了奇葩家长",
+          "url": "https://search.bilibili.com/all?keyword=%E5%BD%93%E4%BD%A0%E9%81%87%E4%B8%8A%E4%BA%86%E5%A5%87%E8%91%A9%E5%AE%B6%E9%95%BF"
         },
         {
-          "title": "白海豚大拐弯",
-          "url": "https://search.bilibili.com/all?keyword=%E7%99%BD%E6%B5%B7%E8%B1%9A%E5%A4%A7%E6%8B%90%E5%BC%AF"
+          "title": "郭兰英逝世",
+          "url": "https://search.bilibili.com/all?keyword=%E9%83%AD%E5%85%B0%E8%8B%B1%E9%80%9D%E4%B8%96"
         },
         {
-          "title": "台风天钱塘江现大地流沙画",
-          "url": "https://search.bilibili.com/all?keyword=%E5%8F%B0%E9%A3%8E%E5%A4%A9%E9%92%B1%E5%A1%98%E6%B1%9F%E7%8E%B0%E5%A4%A7%E5%9C%B0%E6%B5%81%E6%B2%99%E7%94%BB"
+          "title": "Flandre将首发出战",
+          "url": "https://search.bilibili.com/all?keyword=Flandre%E5%B0%86%E9%A6%96%E5%8F%91%E5%87%BA%E6%88%98"
         },
         {
-          "title": "假面骑士祥子",
-          "url": "https://search.bilibili.com/all?keyword=%E5%81%87%E9%9D%A2%E9%AA%91%E5%A3%AB%E7%A5%A5%E5%AD%90"
+          "title": "郭兰英经典作品回顾",
+          "url": "https://search.bilibili.com/all?keyword=%E9%83%AD%E5%85%B0%E8%8B%B1%E7%BB%8F%E5%85%B8%E4%BD%9C%E5%93%81%E5%9B%9E%E9%A1%BE"
         },
         {
-          "title": "TI2026首日对阵前瞻",
-          "url": "https://search.bilibili.com/all?keyword=TI2026%E9%A6%96%E6%97%A5%E5%AF%B9%E9%98%B5%E5%89%8D%E7%9E%BB"
+          "title": "C罗宣布结婚",
+          "url": "https://search.bilibili.com/all?keyword=C%E7%BD%97%E5%AE%A3%E5%B8%83%E7%BB%93%E5%A9%9A"
         },
         {
-          "title": "百花奖获奖名单公布",
-          "url": "https://search.bilibili.com/all?keyword=%E7%99%BE%E8%8A%B1%E5%A5%96%E8%8E%B7%E5%A5%96%E5%90%8D%E5%8D%95%E5%85%AC%E5%B8%83"
+          "title": "泰前议员枪杀高官后致电记者",
+          "url": "https://search.bilibili.com/all?keyword=%E6%B3%B0%E5%89%8D%E8%AE%AE%E5%91%98%E6%9E%AA%E6%9D%80%E9%AB%98%E5%AE%98%E5%90%8E%E8%87%B4%E7%94%B5%E8%AE%B0%E8%80%85"
         },
         {
-          "title": "古巴如何应对能源短缺",
-          "url": "https://search.bilibili.com/all?keyword=%E5%8F%A4%E5%B7%B4%E5%A6%82%E4%BD%95%E5%BA%94%E5%AF%B9%E8%83%BD%E6%BA%90%E7%9F%AD%E7%BC%BA"
+          "title": "万人后室生存大挑战",
+          "url": "https://search.bilibili.com/all?keyword=%E4%B8%87%E4%BA%BA%E5%90%8E%E5%AE%A4%E7%94%9F%E5%AD%98%E5%A4%A7%E6%8C%91%E6%88%98"
         },
         {
-          "title": "甘蔗育种世纪难题被破解",
-          "url": "https://search.bilibili.com/all?keyword=%E7%94%98%E8%94%97%E8%82%B2%E7%A7%8D%E4%B8%96%E7%BA%AA%E9%9A%BE%E9%A2%98%E8%A2%AB%E7%A0%B4%E8%A7%A3"
-        },
-        {
-          "title": "白海豚带来的暴雨究竟多大",
-          "url": "https://search.bilibili.com/all?keyword=%E7%99%BD%E6%B5%B7%E8%B1%9A%E5%B8%A6%E6%9D%A5%E7%9A%84%E6%9A%B4%E9%9B%A8%E7%A9%B6%E7%AB%9F%E5%A4%9A%E5%A4%A7"
+          "title": "把恐龙投放到现代社会它能活多久",
+          "url": "https://search.bilibili.com/all?keyword=%E6%8A%8A%E6%81%90%E9%BE%99%E6%8A%95%E6%94%BE%E5%88%B0%E7%8E%B0%E4%BB%A3%E7%A4%BE%E4%BC%9A%E5%AE%83%E8%83%BD%E6%B4%BB%E5%A4%9A%E4%B9%85"
         },
         {
           "title": "Topson正式加入LGD",
           "url": "https://search.bilibili.com/all?keyword=Topson%E6%AD%A3%E5%BC%8F%E5%8A%A0%E5%85%A5LGD"
+        },
+        {
+          "title": "红警蜘蛛机器人走进现实",
+          "url": "https://search.bilibili.com/all?keyword=%E7%BA%A2%E8%AD%A6%E8%9C%98%E8%9B%9B%E6%9C%BA%E5%99%A8%E4%BA%BA%E8%B5%B0%E8%BF%9B%E7%8E%B0%E5%AE%9E"
         }
       ]
     },
@@ -220,6 +220,10 @@
         {
           "title": "openclaw/openclaw: Your own personal AI assistant. Any OS. Any Platform. The lobster way. 🦞 ",
           "url": "https://github.com/openclaw/openclaw"
+        },
+        {
+          "title": "react/react: The library for web and native user interfaces.",
+          "url": "https://github.com/react/react"
         },
         {
           "title": "NousResearch/hermes-agent: The agent that grows with you",
@@ -254,10 +258,6 @@
           "url": "https://github.com/langgenius/dify"
         },
         {
-          "title": "open-webui/open-webui: User-friendly AI Interface (Supports Ollama, OpenAI API, ...)",
-          "url": "https://github.com/open-webui/open-webui"
-        },
-        {
           "title": "langchain-ai/langchain: The agent engineering platform.",
           "url": "https://github.com/langchain-ai/langchain"
         },
@@ -271,57 +271,57 @@
       "name": "Hacker News",
       "items": [
         {
-          "title": "Muse Glimmer: 30B-parameter model optimized for always-on local agent workflows",
-          "url": "https://research.meta.ai/blog/introducing-muse-glimmer-open-agentic-model"
+          "title": "England set to be one of the first countries to eliminate hepatitis C",
+          "url": "https://www.bbc.com/news/articles/c75gk620r22o"
         },
         {
-          "title": "Mark Zuckerberg attacks 'closed' AI rivals as Meta returns to open models",
-          "url": "https://www.ft.com/content/4e3957f8-ea7c-4c46-a3de-cdce8e526878"
+          "title": "Stealing Reasoning Traces from Proprietary LLM APIs",
+          "url": "https://stolen-thoughts.com/"
         },
         {
-          "title": "Sonic Pi v5",
-          "url": "https://www.patreon.com/samaaron/posts/sonic-pi-v5-166001392"
+          "title": "Nvidia's Risky Business",
+          "url": "https://stratechery.com/2026/nvidias-risky-business/"
         },
         {
-          "title": "Squeak 6.1",
-          "url": "https://squeak.org/release_notes/6.1/"
+          "title": "Apple Silicon and macOS VMs: Faster LLM Inference with llama.cpp",
+          "url": "https://github.com/trycua/cua/blob/main/blog/gpu-passthrough-macos-vms.md"
         },
         {
-          "title": "Parametron: 50s Japanese computer that uses neither transistors nor vacuum tubes",
-          "url": "https://ethw.org/Milestones:Parametron,_1954"
+          "title": "Mojo 1.0",
+          "url": "https://www.modular.com/blog/modular-26-5-mojo-1-0-is-here"
         },
         {
-          "title": "Magnitude 7.4 Earthquake – 5 km S of San José del Palmar, Colombia",
-          "url": "https://earthquake.usgs.gov/earthquakes/eventpage/us6000tjl2/executive"
+          "title": "OpenAI’s head of ethics leaves less than a year after joining",
+          "url": "https://www.ft.com/content/e49dfb75-f841-4466-a577-f7aaff8779a0"
         },
         {
-          "title": "Show HN: Needle2: 14MB agentic LLM for phones, wearables, smart home and robots",
-          "url": "https://cactuscompute.com/needle"
+          "title": "Go is an ideal language for AI-assisted software engineering",
+          "url": "https://developers.googleblog.com/why-go-is-an-ideal-language-for-ai-assisted-software-engineering/"
         },
         {
-          "title": "Humanising LLM Outputs Is Dumb",
-          "url": "https://kuber.studio/blog/Reflections/Humanising-LLM-Outputs-is-Actually-Dumb"
+          "title": "Compression is prediction",
+          "url": "https://ngrok.com/blog/compression-is-prediction"
         },
         {
-          "title": "Stop Killing Games: It's time to sue Sony, join us",
-          "url": "https://www.massaschadeconsument.nl/collectieve-acties/playstation/"
+          "title": "London Underground begins scanning passengers' faces",
+          "url": "https://www.btp.police.uk/news/btp/news/england/btp-expands-live-facial-recognition-lfr-trial-into-london-underground-stations/"
         },
         {
-          "title": "Ask HN: In your experience, what are sound conventions for e-ink UI development?",
-          "url": ""
+          "title": "Show HN: iPhone app takes simultaneous images from 2 lenses, fuses into 1 photo",
+          "url": "https://photosynthesis.camera"
         },
         {
-          "title": "Exploiting System Management Mode with a very long interrupt",
-          "url": "https://github.com/xoreaxeaxeax/smiiiiiiiiiiiiiiii"
+          "title": "Nvidia Nemotron 3.5 Lightning and NeMo Switchyard",
+          "url": "https://blogs.nvidia.com/blog/nemotron-lightning-switchyard-rtx-dgx/"
         },
         {
-          "title": "Tail-call optimization in C is relatively recent (2025)",
-          "url": "https://lwn.net/Articles/1034703/"
+          "title": "What I learned by putting GitHub Copilot behind a MitM proxy",
+          "url": "https://www.lighthousenewsletter.com/p/i-put-github-copilot-behind-a-mitm"
         }
       ]
     }
   ],
   "note": "FALLBACK_AIERR",
-  "zh": "⚠️ AI 智能总结暂不可用：AI_API_KEY 缺少 GitHub Models 的 models:read 权限（请求返回 404）。请到仓库 Settings → Secrets 用具备 models:read 的 Token 更新 AI_API_KEY。热点榜数据正常。\n\n今日要点（自动汇编，非 AI）：\n• 白海豚突然大拐弯\n• 疑山西一医院实习护士晒患者隐私照\n• 长江十年行\n• 易烊千玺、卫诗雅分封影帝、影后，如何评价第 38 届大众电影百花奖获奖名单？\n• 于东来回应关闭胖东来生活广场店，因早年租约失误造成租户租金失衡，门店盈利上亿仍闭店，如何看待他的选择？\n• 央视首次曝光 055 遵义舰演习遭潜艇伏击「击沉」，这一操作的意图是什么？算暴露055的短板吗？\n• 我是人民的勤务员\n• 第一次见有人撸台风羊毛",
-  "en": "⚠️ AI summary unavailable: the AI_API_KEY secret lacks the GitHub Models 'models:read' permission (request returned 404). Update AI_API_KEY with a token that has models:read. Hot-list data is fine.\n\nToday's highlights (auto-compiled, not AI):\n• 白海豚突然大拐弯\n• 疑山西一医院实习护士晒患者隐私照\n• 长江十年行\n• 易烊千玺、卫诗雅分封影帝、影后，如何评价第 38 届大众电影百花奖获奖名单？\n• 于东来回应关闭胖东来生活广场店，因早年租约失误造成租户租金失衡，门店盈利上亿仍闭店，如何看待他的选择？\n• 央视首次曝光 055 遵义舰演习遭潜艇伏击「击沉」，这一操作的意图是什么？算暴露055的短板吗？\n• 我是人民的勤务员\n• 第一次见有人撸台风羊毛"
+  "zh": "⚠️ AI 智能总结暂不可用：AI_API_KEY 缺少 GitHub Models 的 models:read 权限（请求返回 404）。请到仓库 Settings → Secrets 用具备 models:read 的 Token 更新 AI_API_KEY。热点榜数据正常。\n\n今日要点（自动汇编，非 AI）：\n• C罗宣布结婚\n• 曝赵一鸣4块牛肉干64元复称仅17元\n• 请查收这份暴雨天避险指南\n• 胖东来公布侵犯员工尊严案例，顾客驾车顶撞员工被行拘、掌掴员工被起诉，员工获上万元赔偿，如何看待此事？\n• Claude证明黎曼猜想取得了重大突破，这个事件有什么开创性意义？\n• 怎么看 DeepSeek 注册 Harness 公众号并选用黑鲸鱼 logo ？\n• 总书记多次强调因地制宜\n• 郭兰英逝世 享年97岁",
+  "en": "⚠️ AI summary unavailable: the AI_API_KEY secret lacks the GitHub Models 'models:read' permission (request returned 404). Update AI_API_KEY with a token that has models:read. Hot-list data is fine.\n\nToday's highlights (auto-compiled, not AI):\n• C罗宣布结婚\n• 曝赵一鸣4块牛肉干64元复称仅17元\n• 请查收这份暴雨天避险指南\n• 胖东来公布侵犯员工尊严案例，顾客驾车顶撞员工被行拘、掌掴员工被起诉，员工获上万元赔偿，如何看待此事？\n• Claude证明黎曼猜想取得了重大突破，这个事件有什么开创性意义？\n• 怎么看 DeepSeek 注册 Harness 公众号并选用黑鲸鱼 logo ？\n• 总书记多次强调因地制宜\n• 郭兰英逝世 享年97岁"
 }

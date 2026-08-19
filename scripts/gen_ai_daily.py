@@ -24,8 +24,10 @@ import json, os, sys, datetime, re, urllib.request, urllib.error, urllib.parse
 _BUILD_TOKEN = "eXR5MTY="  # obfuscated attribution (Base64("yty16"))
 
 API_KEY = (os.environ.get("AI_API_KEY") or "").strip()
-API_BASE = (os.environ.get("AI_API_BASE") or "https://models.inference.ai.azure.com").rstrip("/")
-API_MODEL = (os.environ.get("AI_MODEL") or "gpt-4.1").strip()
+# GitHub Models was retired on 2026-07-30; default to a free, no-real-name,
+# OpenAI-compatible provider (OpenRouter). Override via AI_API_BASE / AI_MODEL.
+API_BASE = (os.environ.get("AI_API_BASE") or "https://openrouter.ai/api/v1").rstrip("/")
+API_MODEL = (os.environ.get("AI_MODEL") or "meta-llama/llama-3.3-8b-instruct:free").strip()
 OUT = "assets/ai-daily.json"
 # GitHub token: use AI_API_KEY first (user's PAT), fall back to GITHUB_TOKEN
 GH_TOKEN = API_KEY or (os.environ.get("GITHUB_TOKEN") or "").strip()
@@ -283,20 +285,36 @@ def gather():
 
 # ── AI Summary ─────────────────────────────────────────────────────────
 
-def _do_request(url, payload, headers, timeout=90):
-    req = urllib.request.Request(url, data=payload, headers=headers)
-    try:
-        with urllib.request.urlopen(req, timeout=timeout) as r:
-            return json.loads(r.read().decode("utf-8")), None
-    except urllib.error.HTTPError as e:
-        body = ""
-        try:
-            body = e.read().decode("utf-8", "replace")
-        except Exception:
-            pass
-        return None, (e.code, body)
-    except Exception as e:
-        return None, (-1, str(e))
+def _providers():
+    """Ordered list of (base_url, model, key) tuples to try.
+
+    Primary comes from AI_API_BASE / AI_MODEL / AI_API_KEY (OpenAI-compatible).
+    Extra providers (sharing the same key) can be supplied via
+    AI_PROVIDERS="base::model,base2::model2". A built-in OpenRouter free model
+    is appended as a last-resort fallback so the report keeps working once a
+    free, no-real-name key (OpenRouter / Groq) is configured in AI_API_KEY.
+    """
+    key = API_KEY
+    provs = []
+    if API_BASE and API_MODEL:
+        provs.append((API_BASE, API_MODEL, key))
+    extra = (os.environ.get("AI_PROVIDERS") or "").strip()
+    for part in extra.split(","):
+        part = part.strip()
+        if "::" not in part:
+            continue
+        b, m = part.split("::", 1)
+        if b.strip() and m.strip():
+            provs.append((b.strip().rstrip("/"), m.strip(), key))
+    provs.append(("https://openrouter.ai/api/v1",
+                  "meta-llama/llama-3.3-8b-instruct:free", key))
+    seen, out = set(), []
+    for p in provs:
+        if p in seen:
+            continue
+        seen.add(p)
+        out.append(p)
+    return out
 
 
 def call_ai(blob):
@@ -313,21 +331,10 @@ def call_ai(blob):
         "5. 不要代码块标记，不要多余文字"
     )
     user = "今日全球热搜原始条目（来自多个平台）：\n" + blob
-    headers = {
-        "Authorization": "Bearer " + API_KEY,
-        "Content-Type": "application/json"
-    }
-    # Try several (endpoint, model) combos for resilience.
-    # Azure OpenAI-compatible endpoint uses bare model names (e.g. gpt-4.1).
-    # GitHub-hosted inference endpoint requires vendor-prefixed names
-    # (openai/gpt-4.1) and is the reliable one for fine-grained PATs.
-    gh_model = API_MODEL if API_MODEL.startswith("openai/") else "openai/" + API_MODEL
-    attempts = [
-        (API_BASE.rstrip("/") + "/chat/completions", API_MODEL),
-        ("https://models.github.ai/inference/chat/completions", gh_model),
-    ]
     last_err = None
-    for url, model in attempts:
+    tried = 0
+    for base, model, key in _providers():
+        tried += 1
         payload = json.dumps({
             "model": model,
             "messages": [
@@ -337,22 +344,36 @@ def call_ai(blob):
             "temperature": 0.5,
             "response_format": {"type": "json_object"}
         }, ensure_ascii=False).encode("utf-8")
-        resp, err = _do_request(url, payload, headers)
-        if resp is not None:
-            content = resp["choices"][0]["message"]["content"]
+        url = base + "/chat/completions"
+        req = urllib.request.Request(url, data=payload, headers={
+            "Authorization": "Bearer " + key,
+            "Content-Type": "application/json"
+        })
+        try:
+            with urllib.request.urlopen(req, timeout=90) as r:
+                resp = json.loads(r.read().decode("utf-8"))
+        except urllib.error.HTTPError as e:
+            body = ""
             try:
-                return json.loads(content)
+                body = e.read().decode("utf-8", "replace")
             except Exception:
-                m = re.search(r"\{.*\}", content, re.S)
-                if m:
-                    return json.loads(m.group(0))
-                raise
-        else:
-            code, body = err
-            print("AI endpoint %s (model=%s) failed: HTTP %s | %s"
-                  % (url, model, code, body[:400]))
-            last_err = (url, model, code, body)
-    raise RuntimeError("all AI endpoints failed: %s" % str(last_err))
+                pass
+            last_err = "HTTP %d @ %s: %s" % (e.code, base, body[:200])
+            sys.stderr.write("AI provider %s failed: %s\n" % (base, last_err))
+            continue
+        except Exception as e:
+            last_err = "%s @ %s: %s" % (type(e).__name__, base, e)
+            sys.stderr.write("AI provider %s error: %s\n" % (base, last_err))
+            continue
+        content = resp.get("choices", [{}])[0].get("message", {}).get("content", "")
+        try:
+            return json.loads(content)
+        except Exception:
+            m = re.search(r"\{.*\}", content, re.S)
+            if m:
+                return json.loads(m.group(0))
+            raise
+    raise RuntimeError("all %d AI providers failed; last: %s" % (tried, last_err))
 
 
 # ── Fallback digest (used when the AI call fails but hot-list data exists) ─
@@ -361,15 +382,18 @@ def build_fallback_digest(sources, lang):
     """Compile a plain (non-AI) "today's highlights" list from hot-list data,
     plus an honest note telling the user how to enable the AI summary."""
     if lang == "zh":
-        note = ("⚠️ AI 智能总结暂不可用：AI_API_KEY 缺少 GitHub Models 的 "
-                "models:read 权限（请求返回 404）。请到仓库 Settings → Secrets "
-                "用具备 models:read 的 Token 更新 AI_API_KEY。热点榜数据正常。")
+        note = ("⚠️ AI 智能总结暂不可用：GitHub Models 已于 2026-07-30 正式退役"
+                "（原接口返回 404/410），本仓库已改用 OpenAI 兼容的免费服务。"
+                "请在仓库 Settings → Secrets 添加 AI_API_KEY"
+                "（OpenRouter / Groq 等免实名服务的 API Key）即可恢复 AI 总结。"
+                "热点榜数据正常。")
         label = "今日要点（自动汇编，非 AI）："
     else:
-        note = ("⚠️ AI summary unavailable: the AI_API_KEY secret lacks the "
-                "GitHub Models 'models:read' permission (request returned 404). "
-                "Update AI_API_KEY with a token that has models:read. Hot-list "
-                "data is fine.")
+        note = ("⚠️ AI summary unavailable: GitHub Models was retired on 2026-07-30 "
+                "(endpoint now returns 404/410). This repo now uses a free "
+                "OpenAI-compatible provider. Add an AI_API_KEY secret (OpenRouter / "
+                "Groq API key, no real-name required) to restore the AI summary. "
+                "Hot-list data is fine.")
         label = "Today's highlights (auto-compiled, not AI):"
     picked, seen = [], set()
     for src in sources:
@@ -411,6 +435,7 @@ def main():
     print("=== AI Daily Report Generator ===")
     print("API model: %s" % API_MODEL)
     print("has API_KEY: %s" % bool(API_KEY))
+    print("AI providers configured: %d" % len(_providers()))
 
     sources = gather()
     result["sources"] = [{"name": s["name"], "items": s["items"]} for s in sources]

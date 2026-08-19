@@ -29,12 +29,13 @@ jobs:
 
       - name: Generate daily report
         env:
-          # Use the dedicated fine-grained PAT if provided; otherwise fall back to the
-          # built-in GITHUB_TOKEN (works for GitHub Models on most accounts).
-          # The PAT must have the "Models" read permission (GitHub Models free tier).
-          AI_API_KEY: ${{ secrets.AI_API_KEY || secrets.GITHUB_TOKEN }}
-          AI_API_BASE: ${{ secrets.AI_API_BASE || 'https://models.inference.ai.azure.com' }}
-          AI_MODEL: ${{ secrets.AI_MODEL || 'gpt-4.1' }}
+          # GitHub Models was retired on 2026-07-30 (endpoint returns 404/410).
+          # We now use any OpenAI-compatible provider. OpenRouter's free tier needs
+          # no real-name verification, so it is the default. To enable the AI
+          # summary, add an OpenRouter (or Groq) API key to the AI_API_KEY secret.
+          AI_API_KEY: ${{ secrets.AI_API_KEY }}
+          AI_API_BASE: ${{ secrets.AI_API_BASE || 'https://openrouter.ai/api/v1' }}
+          AI_MODEL: ${{ secrets.AI_MODEL || 'meta-llama/llama-3.3-8b-instruct:free' }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: python scripts/gen_ai_daily.py
 

@@ -47,6 +47,23 @@
   <string name="shortcut_note_full">云记事本</string>
   <string name="shortcut_pomodoro">番茄钟</string>
   <string name="shortcut_pomodoro_full">番茄钟（专注计时）</string>
-  <string name="shortcut_games">游戏专区</string>
-  <string name="shortcut_games_full">游戏专区（所有游戏）</string>
+    <string name="shortcut_games">游戏专区</string>
+    <string name="shortcut_games_full">游戏专区（所有游戏）</string>
+
+    <string name="settings_title">应用设置</string>
+    <string name="setting_keep_screen_on">屏幕常亮</string>
+    <string name="setting_keep_screen_on_desc">保持屏幕不熄屏</string>
+    <string name="setting_dark_mode">深色模式</string>
+    <string name="setting_dark_mode_desc">强制网页以深色显示</string>
+    <string name="setting_external_browser">外链用浏览器打开</string>
+    <string name="setting_external_browser_desc">站外链接跳转系统浏览器</string>
+    <string name="setting_clear_cache">清除缓存</string>
+    <string name="setting_clear_cache_desc">清理网页资源缓存</string>
+    <string name="setting_clear_data">清除浏览数据</string>
+    <string name="setting_clear_data_desc">清除 Cookie、表单与历史</string>
+    <string name="setting_about">关于</string>
+    <string name="setting_version">版本</string>
+    <string name="btn_clear">清除</string>
+    <string name="toast_cleared">缓存已清除</string>
+    <string name="toast_cleared_data">浏览数据已清除</string>
 </resources>

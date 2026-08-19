@@ -29,6 +29,7 @@ public class LauncherActivity extends Activity {
     private String currentLoadingUrl = "";
     private PowerManager.WakeLock wakeLock;
     private boolean siteOriginLoaded = false;
+    private boolean lastDarkMode = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +67,14 @@ public class LauncherActivity extends Activity {
         webView = findViewById(R.id.webView);
 
         setupWebView();
+
+        lastDarkMode = AppSettings.isDarkMode(this);
+        applyAppSettings();
+
+        View btnSettings = findViewById(R.id.btnSettings);
+        if (btnSettings != null) {
+            btnSettings.setOnClickListener(v -> startActivity(new Intent(LauncherActivity.this, SettingsActivity.class)));
+        }
 
         Intent intent = getIntent();
         String url = intent.getStringExtra("shortcut_url");
@@ -158,6 +167,21 @@ public class LauncherActivity extends Activity {
                     startDownload(url, null, null);
                     return true;
                 }
+
+                if (AppSettings.isExternalBrowser(LauncherActivity.this)
+                        && (url.startsWith("http://") || url.startsWith("https://"))) {
+                    try {
+                        android.net.Uri extUri = android.net.Uri.parse(url);
+                        String host = extUri.getHost();
+                        if (host != null && !host.contains("yty16.github.io")) {
+                            Intent extIntent = new Intent(Intent.ACTION_VIEW, extUri);
+                            extIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            startActivity(extIntent);
+                            return true;
+                        }
+                    } catch (Exception ignored) {
+                    }
+                }
                 return false;
             }
 
@@ -178,6 +202,22 @@ public class LauncherActivity extends Activity {
                 progressBar.setProgress(newProgress);
             }
         });
+    }
+
+    private void applyAppSettings() {
+        if (AppSettings.isKeepScreenOn(this)) {
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        } else {
+            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            boolean dark = AppSettings.isDarkMode(this);
+            webView.getSettings().setForceDark(dark ? WebSettings.FORCE_DARK_ON : WebSettings.FORCE_DARK_OFF);
+            if (dark != lastDarkMode) {
+                lastDarkMode = dark;
+                webView.reload();
+            }
+        }
     }
 
     private void startDownload(String url, String contentDisposition, String mimeType) {
@@ -258,6 +298,7 @@ public class LauncherActivity extends Activity {
             wakeLock.acquire(30 * 60 * 1000L);
         }
         webView.onResume();
+        applyAppSettings();
     }
 
     @Override

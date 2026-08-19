@@ -19,4 +19,15 @@
         android:progressBackgroundTint="#1A000000"
         android:indeterminate="false" />
 
+    <ImageButton
+        android:id="@+id/btnSettings"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="16dp"
+        android:background="@drawable/ic_settings_bg"
+        android:src="@drawable/ic_settings"
+        android:contentDescription="@string/settings_title"
+        android:padding="12dp" />
+
 </FrameLayout>

@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F5F7FA"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/settings_title"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:textColor="#1a1a2e"
+            android:paddingBottom="12dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@drawable/bg_card"
+            android:padding="4dp">
+
+            <LinearLayout style="@style/SettingsRow">
+                <LinearLayout style="@style/SettingsRowText">
+                    <TextView style="@style/SettingsTitle" android:text="@string/setting_keep_screen_on" />
+                    <TextView style="@style/SettingsDesc" android:text="@string/setting_keep_screen_on_desc" />
+                </LinearLayout>
+                <Switch android:id="@+id/switchKeepScreenOn" />
+            </LinearLayout>
+
+            <View style="@style/SettingsDivider" />
+
+            <LinearLayout style="@style/SettingsRow">
+                <LinearLayout style="@style/SettingsRowText">
+                    <TextView style="@style/SettingsTitle" android:text="@string/setting_dark_mode" />
+                    <TextView style="@style/SettingsDesc" android:text="@string/setting_dark_mode_desc" />
+                </LinearLayout>
+                <Switch android:id="@+id/switchDarkMode" />
+            </LinearLayout>
+
+            <View style="@style/SettingsDivider" />
+
+            <LinearLayout style="@style/SettingsRow">
+                <LinearLayout style="@style/SettingsRowText">
+                    <TextView style="@style/SettingsTitle" android:text="@string/setting_external_browser" />
+                    <TextView style="@style/SettingsDesc" android:text="@string/setting_external_browser_desc" />
+                </LinearLayout>
+                <Switch android:id="@+id/switchExternalBrowser" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@drawable/bg_card"
+            android:layout_marginTop="12dp"
+            android:padding="4dp">
+
+            <LinearLayout android:id="@+id/rowClearCache" style="@style/SettingsRow">
+                <LinearLayout style="@style/SettingsRowText">
+                    <TextView style="@style/SettingsTitle" android:text="@string/setting_clear_cache" />
+                    <TextView style="@style/SettingsDesc" android:text="@string/setting_clear_cache_desc" />
+                </LinearLayout>
+                <TextView style="@style/SettingsAction" android:text="@string/btn_clear" />
+            </LinearLayout>
+
+            <View style="@style/SettingsDivider" />
+
+            <LinearLayout android:id="@+id/rowClearData" style="@style/SettingsRow">
+                <LinearLayout style="@style/SettingsRowText">
+                    <TextView style="@style/SettingsTitle" android:text="@string/setting_clear_data" />
+                    <TextView style="@style/SettingsDesc" android:text="@string/setting_clear_data_desc" />
+                </LinearLayout>
+                <TextView style="@style/SettingsAction" android:text="@string/btn_clear" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@drawable/bg_card"
+            android:layout_marginTop="12dp"
+            android:padding="16dp">
+
+            <TextView style="@style/SettingsTitle" android:text="@string/setting_about" />
+            <TextView
+                android:id="@+id/textVersion"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#888888"
+                android:textSize="13sp"
+                android:paddingTop="4dp" />
+        </LinearLayout>
+
+    </LinearLayout>
+</ScrollView>

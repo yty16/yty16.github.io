@@ -27,7 +27,7 @@ API_KEY = (os.environ.get("AI_API_KEY") or "").strip()
 # GitHub Models was retired on 2026-07-30; default to a free, no-real-name,
 # OpenAI-compatible provider (OpenRouter). Override via AI_API_BASE / AI_MODEL.
 API_BASE = (os.environ.get("AI_API_BASE") or "https://openrouter.ai/api/v1").rstrip("/")
-API_MODEL = (os.environ.get("AI_MODEL") or "meta-llama/llama-3.3-8b-instruct:free").strip()
+API_MODEL = (os.environ.get("AI_MODEL") or "z-ai/glm-5.2:free").strip()
 OUT = "assets/ai-daily.json"
 # GitHub token: use AI_API_KEY first (user's PAT), fall back to GITHUB_TOKEN
 GH_TOKEN = API_KEY or (os.environ.get("GITHUB_TOKEN") or "").strip()
@@ -306,8 +306,15 @@ def _providers():
         b, m = part.split("::", 1)
         if b.strip() and m.strip():
             provs.append((b.strip().rstrip("/"), m.strip(), key))
-    provs.append(("https://openrouter.ai/api/v1",
-                  "meta-llama/llama-3.3-8b-instruct:free", key))
+    # Last-resort fallback: OpenRouter free models, using a dedicated
+    # OPENROUTER_API_KEY secret (NOT the primary key, which may belong to a
+    # different provider). These models are verified-free on OpenRouter as of
+    # 2026-08. Skipped silently if the secret is not set.
+    or_key = (os.environ.get("OPENROUTER_API_KEY") or "").strip()
+    if or_key:
+        for m in ("z-ai/glm-5.2:free", "google/gemma-4-31b-it:free",
+                  "openai/gpt-oss-20b:free"):
+            provs.append(("https://openrouter.ai/api/v1", m, or_key))
     seen, out = set(), []
     for p in provs:
         if p in seen:

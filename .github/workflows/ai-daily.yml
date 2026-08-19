@@ -35,7 +35,7 @@ jobs:
           # summary, add an OpenRouter (or Groq) API key to the AI_API_KEY secret.
           AI_API_KEY: ${{ secrets.AI_API_KEY }}
           AI_API_BASE: ${{ secrets.AI_API_BASE || 'https://openrouter.ai/api/v1' }}
-          AI_MODEL: ${{ secrets.AI_MODEL || 'meta-llama/llama-3.3-8b-instruct:free' }}
+          AI_MODEL: ${{ secrets.AI_MODEL || 'z-ai/glm-5.2:free' }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: python scripts/gen_ai_daily.py
 

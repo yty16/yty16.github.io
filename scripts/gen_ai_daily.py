@@ -352,13 +352,24 @@ def call_ai(blob):
         raise RuntimeError("AI_API_KEY not set")
     system = (
         "你是资深中英双语热点编辑。根据提供的今日热搜条目（来自 GitHub、Hacker News、"
-        "Reddit、微博、知乎等多个平台），撰写一份精炼的《AI 每日热点日报》。\n\n"
-        "要求：\n"
-        "1. 从所有条目中挑选最重要的 6-8 条（兼顾科技、社会、娱乐、国际等维度）\n"
-        "2. 中文版格式：每条「标题：一句话点评」，语言简洁有力、口语化\n"
-        "3. 英文版：同样 6-8 条，意译而非直译，符合英文新闻习惯\n"
-        "4. 严格只输出如下 JSON：{\"zh\":\"...\",\"en\":\"...\"}\n"
-        "5. 不要代码块标记，不要多余文字"
+        "Reddit、微博、知乎、百度、B站等多个平台），撰写一份精炼、结构清晰、重点突出的"
+        "《AI 每日热点日报》。\n\n"
+        "【输出结构】纯文本，每行一条，严格使用下列行首标记：\n"
+        "1. 开头第一行以 `# ` 打头，后面直接跟一句话总览（中文 40 字内 / 英文 25 词内），"
+        "概括今天最值得关注的事，要有信息量、不要空话，不要重复写「今日速览」四个字。\n"
+        "2. 随后按主题分成 3-4 组，每组以 `## 组名` 开头（中文组名 2-5 字，例如"
+        "「AI 与科技」「行业动向」「社会民生」「国际视野」「开发者圈」；英文版用对应"
+        "英文组名，例如 `## AI & Tech`）。\n"
+        "3. 每组 2-3 条，每条以 `- ` 开头，格式为 `- **事件标题**：一句话点评`。"
+        "标题用 ** 加粗、不超过 18 字，用中文全角冒号分隔；点评一句话说清"
+        "「为什么值得关注」，口语化、有观点，不要复述标题。\n"
+        "4. 全文 6-8 条，宁精勿多；同一事件只出现一次。\n\n"
+        "【内容要求】\n"
+        "- 优先选有实质影响的：产品发布、重大政策、安全事故、行业并购、技术突破。\n"
+        "- 兼顾中文圈与海外，不要全是技术话题，也不要全是娱乐八卦。\n"
+        "- 英文版意译而非直译，符合英文新闻表达习惯，同样保持上述标记结构。\n\n"
+        "【严格输出】只输出 JSON：{\"zh\":\"...\",\"en\":\"...\"}；"
+        "两段文本内部用 \\n 换行；不要代码块标记，不要多余文字。"
     )
     user = "今日全球热搜原始条目（来自多个平台）：\n" + blob
     last_err = None
@@ -433,14 +444,16 @@ def build_fallback_digest(sources, lang):
                 "请在仓库 Settings → Secrets 添加 AI_API_KEY"
                 "（OpenRouter / Groq 等免实名服务的 API Key）即可恢复 AI 总结。"
                 "热点榜数据正常。")
-        label = "今日要点（自动汇编，非 AI）："
+        label = "今日要点"
+        head = "以下由热点榜自动汇编，非 AI 生成"
     else:
         note = ("⚠️ AI summary unavailable: GitHub Models was retired on 2026-07-30 "
                 "(endpoint now returns 404/410). This repo now uses a free "
                 "OpenAI-compatible provider. Add an AI_API_KEY secret (OpenRouter / "
                 "Groq API key, no real-name required) to restore the AI summary. "
                 "Hot-list data is fine.")
-        label = "Today's highlights (auto-compiled, not AI):"
+        label = "Today's Highlights"
+        head = "Auto-compiled from the hot list, not AI-generated"
     picked, seen = [], set()
     for src in sources:
         for it in src.get("items", [])[:3]:
@@ -452,8 +465,8 @@ def build_fallback_digest(sources, lang):
                 break
         if len(picked) >= 8:
             break
-    lines = [note, "", label]
-    lines += ["• " + t for t in picked]
+    lines = [note, "", "# " + head, "", "## " + label]
+    lines += ["- " + t for t in picked]
     return "\n".join(lines)
 
 

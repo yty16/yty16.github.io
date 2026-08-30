@@ -363,6 +363,10 @@ def call_ai(blob):
         "3. 每组 2-3 条，每条以 `- ` 开头，格式为 `- **事件标题**：一句话点评`。"
         "标题用 ** 加粗、不超过 18 字，用中文全角冒号分隔；点评一句话说清"
         "「为什么值得关注」，口语化、有观点，不要复述标题。\n"
+        "5. 标题必须是「可直接拿去搜索引擎搜索的关键词短语」：写清主体（公司/产品/人物/"
+        "地名）+ 事件，不要写评价性、抒情性或带歧义的短句，不要加书名号、引号或序号前缀；"
+        "系统会自动把标题渲染成百度搜索链接，所以标题本身要能当搜索词用。\n"
+        "6. 全文禁止出现任何 URL、网址或 markdown 链接（不要写 [x](url)），搜索入口由前端自动附加。\n"
         "4. 全文 6-8 条，宁精勿多；同一事件只出现一次。\n\n"
         "【内容要求】\n"
         "- 优先选有实质影响的：产品发布、重大政策、安全事故、行业并购、技术突破。\n"
@@ -434,6 +438,20 @@ def call_ai(blob):
 
 
 # ── Fallback digest (used when the AI call fails but hot-list data exists) ─
+
+def _scrub_links(text):
+    """Drop bare URLs and non-http markdown links; keep valid http(s) links."""
+    if not text:
+        return text
+    def repl(m):
+        label, url = m.group(1), m.group(2)
+        if not url.lower().startswith(("http://", "https://")):
+            return label
+        return m.group(0)
+    t = re.sub(r"\[([^\]]{1,80})\]\(([^)\s]+)\)", repl, text)
+    t = re.sub(r"https?://\S+", "", t)
+    return t
+
 
 def build_fallback_digest(sources, lang):
     """Compile a plain (non-AI) "today's highlights" list from hot-list data,
@@ -521,8 +539,8 @@ def main():
             en = (out.get("en") or "").strip()
             if not zh:
                 raise ValueError("empty zh from AI")
-            result["zh"] = zh
-            result["en"] = en or zh
+            result["zh"] = _scrub_links(zh)
+            result["en"] = _scrub_links(en) or _scrub_links(zh)
             print("AI summary OK (zh=%d chars, en=%d chars)" % (len(zh), len(en)))
         except Exception as e:
             # Don't fall back to a possibly-stale/placeholder previous summary.

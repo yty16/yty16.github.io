@@ -43,10 +43,19 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add assets/ai-daily.json
-          if git diff --cached --quiet; then
-            echo "No changes to commit"
-          else
+          for i in 1 2 3; do
+            git fetch origin main
+            git reset --mixed origin/main
+            git add assets/ai-daily.json
+            if git diff --cached --quiet; then
+              echo "No changes to commit"
+              exit 0
+            fi
             git commit -m "chore: update AI daily report $(date -u +%F)"
-            git push || (git pull --rebase --autostash origin main && git push)
-          fi
+            if git push origin HEAD:main; then
+              exit 0
+            fi
+            sleep 5
+          done
+          echo "push failed after retries"
+          exit 1

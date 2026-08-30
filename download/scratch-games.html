@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0, user-scalable=no">
+    <title>Scratch 游戏合集 | 元拓域 Toolbox</title>
+    <style>
+        :root {
+            --bg-primary: #f0f2f5;
+            --bg-secondary: #ffffff;
+            --bg-card: rgba(255, 255, 255, 0.85);
+            --text-primary: #1a1a2e;
+            --text-secondary: #4a5568;
+            --text-muted: #a0aec0;
+            --accent: #6366f1;
+            --accent-hover: #4f46e5;
+            --accent-light: rgba(99, 102, 241, 0.1);
+            --border: rgba(0, 0, 0, 0.06);
+            --shadow-card: 0 2px 8px rgba(0, 0, 0, 0.04);
+            --radius-md: 12px;
+            --radius-lg: 16px;
+        }
+        [data-theme="dark"] {
+            --bg-primary: #0f0f1a;
+            --bg-secondary: #1a1a2e;
+            --bg-card: rgba(30, 30, 50, 0.85);
+            --text-primary: #e2e8f0;
+            --text-secondary: #a0aec0;
+            --text-muted: #4a5568;
+            --accent: #818cf8;
+            --accent-hover: #6366f1;
+            --accent-light: rgba(129, 140, 248, 0.15);
+            --border: rgba(255, 255, 255, 0.06);
+            --shadow-card: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            padding: 24px;
+        }
+        .container { max-width: 1200px; margin: 0 auto; }
+        .header {
+            background: var(--bg-card);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow-card);
+        }
+        .header h1 { font-size: 22px; margin-bottom: 8px; display: flex; align-items: center; gap: 10px; }
+        .header p { color: var(--text-secondary); font-size: 14px; }
+        .back {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--accent);
+            text-decoration: none;
+            font-size: 14px;
+            margin-bottom: 12px;
+            font-weight: 500;
+        }
+        .back:hover { text-decoration: underline; }
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 16px;
+        }
+        .card {
+            background: var(--bg-card);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 18px;
+            box-shadow: var(--shadow-card);
+            transition: transform 0.2s, box-shadow 0.2s;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+            position: relative;
+        }
+        .card:hover:not(.disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+        }
+        .card.disabled {
+            opacity: 0.55;
+            cursor: not-allowed;
+            filter: grayscale(0.5);
+        }
+        .card-title { font-size: 16px; font-weight: 600; margin-bottom: 6px; }
+        .card-desc { font-size: 13px; color: var(--text-secondary); line-height: 1.5; }
+        .card-badge {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            font-size: 11px;
+            padding: 2px 8px;
+            border-radius: 20px;
+            background: var(--accent-light);
+            color: var(--accent);
+            font-weight: 600;
+        }
+        .notice {
+            background: rgba(250, 112, 154, 0.08);
+            border: 1px solid rgba(250, 112, 154, 0.2);
+            border-radius: var(--radius-md);
+            padding: 14px 18px;
+            margin-bottom: 24px;
+            color: var(--text-secondary);
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        .notice strong { color: #fa709a; }
+        @media (max-width: 600px) {
+            body { padding: 16px; }
+            .card-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a class="back" href="../index.html#section-downloads">← 返回资源下载</a>
+        <div class="header">
+            <h1>🎮 Scratch 游戏合集</h1>
+            <p>9 款 Scratch 小游戏，下载后用 Scratch 或 TurboWarp 打开即可运行。</p>
+        </div>
+        <div class="notice">
+            <strong>注意：</strong>当前列表中的 Scratch 项目文件体积为 0 字节，无法下载使用。请上传有效的 .sb3 文件后刷新本页。
+        </div>
+        <div class="card-grid" id="grid">
+            <a class="card disabled" href="javascript:void(0)">
+                <div class="card-badge">待补充</div>
+                <div class="card-title">小猫回家路</div>
+                <div class="card-desc">Scratch 小游戏</div>
+            </a>
+            <a class="card disabled" href="javascript:void(0)">
+                <div class="card-badge">待补充</div>
+                <div class="card-title">植物大战僵尸</div>
+                <div class="card-desc">Scratch 小游戏</div>
+            </a>
+            <a class="card disabled" href="javascript:void(0)">
+                <div class="card-badge">待补充</div>
+                <div class="card-title">字母闯天关</div>
+                <div class="card-desc">Scratch 小游戏</div>
+            </a>
+            <a class="card disabled" href="javascript:void(0)">
+                <div class="card-badge">待补充</div>
+                <div class="card-title">超级马里奥 3</div>
+                <div class="card-desc">Scratch 小游戏</div>
+            </a>
+            <a class="card disabled" href="javascript:void(0)">
+                <div class="card-badge">待补充</div>
+                <div class="card-title">方块闯天关</div>
+                <div class="card-desc">Scratch 小游戏</div>
+            </a>
+            <a class="card disabled" href="javascript:void(0)">
+                <div class="card-badge">待补充</div>
+                <div class="card-title">华容道</div>
+                <div class="card-desc">Scratch 小游戏</div>
+            </a>
+            <a class="card disabled" href="javascript:void(0)">
+                <div class="card-badge">待补充</div>
+                <div class="card-title">切水果</div>
+                <div class="card-desc">Scratch 小游戏</div>
+            </a>
+            <a class="card disabled" href="javascript:void(0)">
+                <div class="card-badge">待补充</div>
+                <div class="card-title">赛车</div>
+                <div class="card-desc">Scratch 小游戏</div>
+            </a>
+            <a class="card disabled" href="javascript:void(0)">
+                <div class="card-badge">待补充</div>
+                <div class="card-title">2D 我的世界</div>
+                <div class="card-desc">Scratch 小游戏</div>
+            </a>
+        </div>
+    </div>
+</body>
+</html>

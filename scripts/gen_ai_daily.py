@@ -19,7 +19,7 @@ Fallback behaviour (never leaves the page blank):
 
 Hidden attribution token (Base64 of "yty16"), do not remove:
 """
-import json, os, sys, datetime, re, urllib.request, urllib.error, urllib.parse
+import json, os, sys, datetime, re, time, random, urllib.request, urllib.error, urllib.parse
 
 _BUILD_TOKEN = "eXR5MTY="  # obfuscated attribution (Base64("yty16"))
 
@@ -285,19 +285,35 @@ def gather():
 
 # ── AI Summary ─────────────────────────────────────────────────────────
 
-def _providers():
-    """Ordered list of (base_url, model, key) tuples to try.
+_FREE_CHAIN = (
+    "z-ai/glm-5.2:free",
+    "minimax/minimax-m2.7:free",
+    "google/gemma-4-31b-it:free",
+    "nvidia/nemotron-3-super-120b-a12b:free",
+    "minimax/minimax-m3:free",
+    "inclusionai/ling-3.0-flash-fin:free",
+    "thinkingmachines/inkling-small:free",
+    "liquid/lfm-2.5-2.6b:free",
+)
 
-    Primary comes from AI_API_BASE / AI_MODEL / AI_API_KEY (OpenAI-compatible).
-    Extra providers (sharing the same key) can be supplied via
-    AI_PROVIDERS="base::model,base2::model2". A built-in OpenRouter free model
-    is appended as a last-resort fallback so the report keeps working once a
-    free, no-real-name key (OpenRouter / Groq) is configured in AI_API_KEY.
+_RETRY_STATUS = (408, 409, 425, 429, 500, 502, 503, 504)
+
+
+def _providers():
+    """Ordered (base_url, model, key) tuples to try.
+
+    AI_MODEL accepts a comma-separated model list so a rate-limited upstream
+    model falls through to the next one. When the primary endpoint is
+    OpenRouter (or OPENROUTER_API_KEY is set), a chain of distinct free
+    models from different upstreams is appended as last-resort fallbacks.
     """
     key = API_KEY
     provs = []
     if API_BASE and API_MODEL:
-        provs.append((API_BASE, API_MODEL, key))
+        for m in API_MODEL.split(","):
+            m = m.strip()
+            if m:
+                provs.append((API_BASE, m, key))
     extra = (os.environ.get("AI_PROVIDERS") or "").strip()
     for part in extra.split(","):
         part = part.strip()
@@ -306,14 +322,11 @@ def _providers():
         b, m = part.split("::", 1)
         if b.strip() and m.strip():
             provs.append((b.strip().rstrip("/"), m.strip(), key))
-    # Last-resort fallback: OpenRouter free models, using a dedicated
-    # OPENROUTER_API_KEY secret (NOT the primary key, which may belong to a
-    # different provider). These models are verified-free on OpenRouter as of
-    # 2026-08. Skipped silently if the secret is not set.
     or_key = (os.environ.get("OPENROUTER_API_KEY") or "").strip()
+    if not or_key and "openrouter.ai" in API_BASE:
+        or_key = key
     if or_key:
-        for m in ("z-ai/glm-5.2:free", "google/gemma-4-31b-it:free",
-                  "openai/gpt-oss-20b:free"):
+        for m in _FREE_CHAIN:
             provs.append(("https://openrouter.ai/api/v1", m, or_key))
     seen, out = set(), []
     for p in provs:
@@ -322,6 +335,16 @@ def _providers():
         seen.add(p)
         out.append(p)
     return out
+
+
+def _chat(base, model, key, body, timeout=75):
+    payload = json.dumps(body, ensure_ascii=False).encode("utf-8")
+    req = urllib.request.Request(base + "/chat/completions", data=payload, headers={
+        "Authorization": "Bearer " + key,
+        "Content-Type": "application/json",
+    })
+    with urllib.request.urlopen(req, timeout=timeout) as r:
+        return json.loads(r.read().decode("utf-8"))
 
 
 def call_ai(blob):
@@ -342,44 +365,60 @@ def call_ai(blob):
     tried = 0
     for base, model, key in _providers():
         tried += 1
-        payload = json.dumps({
-            "model": model,
-            "messages": [
-                {"role": "system", "content": system},
-                {"role": "user", "content": user}
-            ],
-            "temperature": 0.5,
-            "response_format": {"type": "json_object"}
-        }, ensure_ascii=False).encode("utf-8")
-        url = base + "/chat/completions"
-        req = urllib.request.Request(url, data=payload, headers={
-            "Authorization": "Bearer " + key,
-            "Content-Type": "application/json"
-        })
-        try:
-            with urllib.request.urlopen(req, timeout=90) as r:
-                resp = json.loads(r.read().decode("utf-8"))
-        except urllib.error.HTTPError as e:
-            body = ""
+        for attempt in range(3):
+            body = {
+                "model": model,
+                "messages": [
+                    {"role": "system", "content": system},
+                    {"role": "user", "content": user}
+                ],
+                "temperature": 0.5,
+            }
+            if attempt == 0:
+                body["response_format"] = {"type": "json_object"}
             try:
-                body = e.read().decode("utf-8", "replace")
+                resp = _chat(base, model, key, body)
+            except urllib.error.HTTPError as e:
+                err_body = ""
+                try:
+                    err_body = e.read().decode("utf-8", "replace")
+                except Exception:
+                    pass
+                last_err = "HTTP %d @ %s [%s]: %s" % (e.code, base, model, err_body[:160])
+                sys.stderr.write("AI model %s failed: %s\n" % (model, last_err))
+                if e.code in (401, 403) or attempt >= 2:
+                    break
+                time.sleep(4 * (attempt + 1) + random.random() * 3)
+                continue
+            except Exception as e:
+                last_err = "%s @ %s [%s]: %s" % (type(e).__name__, base, model, e)
+                sys.stderr.write("AI model %s error: %s\n" % (model, last_err))
+                if attempt >= 2:
+                    break
+                time.sleep(3 + random.random() * 2)
+                continue
+            content = resp.get("choices", [{}])[0].get("message", {}).get("content", "")
+            if not content.strip():
+                last_err = "empty content @ %s [%s]" % (base, model)
+                sys.stderr.write("AI model %s returned empty content\n" % model)
+                if attempt >= 2:
+                    break
+                time.sleep(3)
+                continue
+            try:
+                return json.loads(content)
             except Exception:
-                pass
-            last_err = "HTTP %d @ %s: %s" % (e.code, base, body[:200])
-            sys.stderr.write("AI provider %s failed: %s\n" % (base, last_err))
-            continue
-        except Exception as e:
-            last_err = "%s @ %s: %s" % (type(e).__name__, base, e)
-            sys.stderr.write("AI provider %s error: %s\n" % (base, last_err))
-            continue
-        content = resp.get("choices", [{}])[0].get("message", {}).get("content", "")
-        try:
-            return json.loads(content)
-        except Exception:
-            m = re.search(r"\{.*\}", content, re.S)
-            if m:
-                return json.loads(m.group(0))
-            raise
+                m = re.search(r"\{.*\}", content, re.S)
+                if m:
+                    try:
+                        return json.loads(m.group(0))
+                    except Exception:
+                        pass
+                last_err = "bad JSON @ %s [%s]: %s" % (base, model, content[:120])
+                sys.stderr.write("AI model %s returned non-JSON\n" % model)
+                if attempt >= 2:
+                    break
+                time.sleep(2)
     raise RuntimeError("all %d AI providers failed; last: %s" % (tried, last_err))
 
 

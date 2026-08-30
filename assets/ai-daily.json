@@ -1,6 +1,6 @@
 {
   "date": "2026-08-30",
-  "updatedAt": "2026-08-30T18:29:00+08:00",
+  "updatedAt": "2026-08-30T18:33:51+08:00",
   "sources": [
     {
       "name": "百度",
@@ -46,8 +46,8 @@
           "url": "https://www.baidu.com/s?wd=%E6%A2%85%E8%89%B3%E8%8A%B3%E6%AF%8D%E4%BA%B2%E5%8E%BB%E4%B8%96&sa=fyb_news&rsv_dl=fyb_news"
         },
         {
-          "title": "癌王胰腺癌迎来里程碑新药",
-          "url": "https://www.baidu.com/s?wd=%E7%99%8C%E7%8E%8B%E8%83%B0%E8%85%BA%E7%99%8C%E8%BF%8E%E6%9D%A5%E9%87%8C%E7%A8%8B%E7%A2%91%E6%96%B0%E8%8D%AF&sa=fyb_news&rsv_dl=fyb_news"
+          "title": "尼泊尔冰崩是因为全球变暖吗",
+          "url": "https://www.baidu.com/s?wd=%E5%B0%BC%E6%B3%8A%E5%B0%94%E5%86%B0%E5%B4%A9%E6%98%AF%E5%9B%A0%E4%B8%BA%E5%85%A8%E7%90%83%E5%8F%98%E6%9A%96%E5%90%97&sa=fyb_news&rsv_dl=fyb_news"
         },
         {
           "title": "桂圆“打针增甜”不可能",
@@ -67,16 +67,24 @@
           "url": "https://search.bilibili.com/all?keyword=JDG%20WE"
         },
         {
-          "title": "明日方舟仙术杯",
-          "url": "https://search.bilibili.com/all?keyword=%E6%98%8E%E6%97%A5%E6%96%B9%E8%88%9F%E4%BB%99%E6%9C%AF%E6%9D%AF"
-        },
-        {
           "title": "敌敌畏消杀事件6人被刑拘",
           "url": "https://search.bilibili.com/all?keyword=%E6%95%8C%E6%95%8C%E7%95%8F%E6%B6%88%E6%9D%80%E4%BA%8B%E4%BB%B66%E4%BA%BA%E8%A2%AB%E5%88%91%E6%8B%98"
         },
         {
-          "title": "烽火职业联赛夏季赛",
-          "url": "https://search.bilibili.com/all?keyword=%E7%83%BD%E7%81%AB%E8%81%8C%E4%B8%9A%E8%81%94%E8%B5%9B%E5%A4%8F%E5%AD%A3%E8%B5%9B"
+          "title": "广州TTG 北京JDG",
+          "url": "https://search.bilibili.com/all?keyword=%E5%B9%BF%E5%B7%9ETTG%20%E5%8C%97%E4%BA%ACJDG"
+        },
+        {
+          "title": "下一个是谁到底好看吗",
+          "url": "https://search.bilibili.com/all?keyword=%E4%B8%8B%E4%B8%80%E4%B8%AA%E6%98%AF%E8%B0%81%E5%88%B0%E5%BA%95%E5%A5%BD%E7%9C%8B%E5%90%97"
+        },
+        {
+          "title": "揭秘全球10亿粉丝UP主的真实生活",
+          "url": "https://search.bilibili.com/all?keyword=%E6%8F%AD%E7%A7%98%E5%85%A8%E7%90%8310%E4%BA%BF%E7%B2%89%E4%B8%9DUP%E4%B8%BB%E7%9A%84%E7%9C%9F%E5%AE%9E%E7%94%9F%E6%B4%BB"
+        },
+        {
+          "title": "明日方舟仙术杯",
+          "url": "https://search.bilibili.com/all?keyword=%E6%98%8E%E6%97%A5%E6%96%B9%E8%88%9F%E4%BB%99%E6%9C%AF%E6%9D%AF"
         },
         {
           "title": "UP主挑战搬空便利店",
@@ -87,16 +95,8 @@
           "url": "https://search.bilibili.com/all?keyword=%E8%BF%88%E9%98%BF%E5%AF%867-1%E7%8B%82%E6%89%AB%E8%92%99%E7%89%B9%E5%88%A9%E5%B0%94"
         },
         {
-          "title": "下一个是谁到底好看吗",
-          "url": "https://search.bilibili.com/all?keyword=%E4%B8%8B%E4%B8%80%E4%B8%AA%E6%98%AF%E8%B0%81%E5%88%B0%E5%BA%95%E5%A5%BD%E7%9C%8B%E5%90%97"
-        },
-        {
           "title": "国家动物博物馆强烈谴责",
           "url": "https://search.bilibili.com/all?keyword=%E5%9B%BD%E5%AE%B6%E5%8A%A8%E7%89%A9%E5%8D%9A%E7%89%A9%E9%A6%86%E5%BC%BA%E7%83%88%E8%B0%B4%E8%B4%A3"
-        },
-        {
-          "title": "揭秘全球10亿粉丝UP主的真实生活",
-          "url": "https://search.bilibili.com/all?keyword=%E6%8F%AD%E7%A7%98%E5%85%A8%E7%90%8310%E4%BA%BF%E7%B2%89%E4%B8%9DUP%E4%B8%BB%E7%9A%84%E7%9C%9F%E5%AE%9E%E7%94%9F%E6%B4%BB"
         },
         {
           "title": "记忆管理局",
@@ -114,10 +114,6 @@
         {
           "title": "Tether: iMessage, SMS, etc. on Linux",
           "url": "https://zackbartel.com/blog/2026/08/tether/"
-        },
-        {
-          "title": "Boot a Virtual iPhone via Apple's Virtualization.framework",
-          "url": "https://github.com/Lakr233/vphone-cli"
         },
         {
           "title": "EVE Online moves to Python 3",
@@ -158,11 +154,15 @@
         {
           "title": "RISC-V is now officially supported by CPython",
           "url": "https://blog.python.org/2026/08/riscv-now-officially-supported/"
+        },
+        {
+          "title": "Calibrate Before You Accelerate: Bias Toward Action in a New Role",
+          "url": "https://tucker.wales/writing/bias-towards-action/"
         }
       ]
     }
   ],
   "note": "",
-  "zh": "胰腺癌新药获批：被称\"癌王\"的胰腺癌迎来里程碑式突破，患者终于看到新希望；RISC-V获Python官方支持：开源芯片架构RISC-V正式加入CPython支持名单，开发者的选择又多了；南极冰川融化释放水银：科研发现冰川正在释放剧毒甲基汞，全球环境警报再次拉响；西藏泥石流已致16死546失联：天灾无情，救援争分夺秒，愿平安；上合峰会召开：国际合作持续深化，中国外交舞台再亮相；开学三件套齐涨价：文具、电子产品集体涨价，家长钱包又被掏空；官方回应ETC争议：读懂车主真实诉求，政策执行还需更精细。",
-  "en": "Pancreatic Cancer Breakthrough: Landmark Drug Offers Hope for deadliest cancer; Python Embraces RISC-V: Open-source chip architecture gains official CPython support, boosting developer flexibility; Antarctic Mercury Release: Melting glaciers found releasing toxic methylmercury, raising global environmental alarms; Tibet Mudslide Devastation: 16 dead, 546 missing as rescue efforts intensify amid tragedy; SCO Summit Kicks Off: International cooperation deepens as leaders convene; Back-to-School Costs Surge: Essential school supplies see widespread price hikes, straining family budgets; ETC Policy Under Scrutiny: Officials address driver concerns over electronic toll system implementation."
+  "zh": "Python生态又双叒扩张：EVE Online宣布全面迁移至Python 3；加州立法者一致通过Linux免于年龄验证法，开源社区喜大普奔；CPython正式支持RISC-V架构，国产芯片生态再进一步；腾讯发布Hy4预览，内存计算成芯片新战场。西藏泥石流已致16人死亡500余人失联，救援工作紧张进行；开学季“三件套”齐涨价，家长钱包遭暴击；敌敌畏消杀事件6人被刑拘，食品安全底线不能碰；南极冰川融化惊现剧毒水银释放，气候危机再响警报。习近平赴上合峰会，中国元首外交忙不停；梅艳芳母亲去世，香港一代歌后家人终得安宁。",
+  "en": "Python 3 migration accelerates as EVE Online joins the ecosystem; California unanimously exempts Linux from age-verification law, open source wins; CPython officially supports RISC-V architecture, boosting domestic chip ecosystem; Tencent releases Hy4 preview, in-memory computing emerges as new battleground. Tibet landslide death toll rises to 16 with 500+ missing, rescue efforts intensifying; Back-to-school costs surge as parents feel the pinch; Six arrested for using toxic pesticide in food supply chain, food safety crackdown; Antarctic glaciers melting release toxic mercury, climate crisis escalates. Chinese President Xi attends SCO summit, diplomacy in full swing; Anita Mui's mother passes away, closing a chapter for Hong Kong's legendary singer."
 }

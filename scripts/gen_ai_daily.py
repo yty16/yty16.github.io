@@ -439,17 +439,34 @@ def call_ai(blob):
 
 # ── Fallback digest (used when the AI call fails but hot-list data exists) ─
 
+def _baidu(kw):
+    return "https://www.baidu.com/s?wd=" + urllib.parse.quote((kw or "").strip())
+
+
 def _scrub_links(text):
-    """Drop bare URLs and non-http markdown links; keep valid http(s) links."""
+    """Normalise links in AI output: only http(s) targets survive and non-Baidu
+    targets are rewritten to a Baidu search for the label (avoids hallucinated
+    URLs). Bare URLs are stripped. Label-only bullets stay clickable because the
+    front-end auto-links every bullet title to Baidu."""
     if not text:
         return text
+    keep = []
+
     def repl(m):
         label, url = m.group(1), m.group(2)
         if not url.lower().startswith(("http://", "https://")):
             return label
-        return m.group(0)
+        host = (urllib.parse.urlparse(url).netloc or "").lower()
+        if "baidu.com" in host:
+            keep.append(m.group(0))
+        else:
+            keep.append("[%s](%s)" % (label, _baidu(label)))
+        return "\x00K%d\x00" % (len(keep) - 1)
+
     t = re.sub(r"\[([^\]]{1,80})\]\(([^)\s]+)\)", repl, text)
     t = re.sub(r"https?://\S+", "", t)
+    for i, frag in enumerate(keep):
+        t = t.replace("\x00K%d\x00" % i, frag)
     return t
 
 

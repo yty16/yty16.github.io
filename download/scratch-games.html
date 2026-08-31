@@ -133,38 +133,43 @@
 </head>
 <body>
     <div class="container">
-        <a class="back" href="../index.html#section-downloads">← 返回资源下载</a>
+        <a class="back" href="../index.html#section-downloads" data-i18n="← 返回资源下载">← 返回资源下载</a>
         <div class="header">
-            <h1>🎮 Scratch 游戏合集</h1>
-            <p>9 款 Scratch 小游戏。点「在线运行」可直接在浏览器里玩（由 TurboWarp 加载本站文件），或下载 <code>.sb3</code> 用 Scratch 3 / TurboWarp 打开。</p>
+            <h1 data-i18n="🎮 Scratch 游戏合集">🎮 Scratch 游戏合集</h1>
+            <p data-i18n="9 款 Scratch 小游戏。点「在线运行」可直接在浏览器里玩（由 TurboWarp 加载本站文件），或下载 .sb3 用 Scratch 3 / TurboWarp 打开。">9 款 Scratch 小游戏。点「在线运行」可直接在浏览器里玩（由 TurboWarp 加载本站文件），或下载 .sb3 用 Scratch 3 / TurboWarp 打开。</p>
         </div>
         <div class="notice" id="notice">
-            <strong>提示：</strong><span id="noticeText"></span>
+            <strong data-i18n="提示：">提示：</strong><span id="noticeText"></span>
         </div>
         <div class="card-grid" id="grid"></div>
-        <div class="tips">
-            <h3>怎么打开 .sb3 文件？</h3>
-            1. 在线运行：直接点卡片上的「在线运行」，无需安装任何软件。<br>
-            2. 本地打开：下载后打开 <b>Scratch 3 离线编辑器</b> 或 <b>TurboWarp 桌面版</b>，把 <code>.sb3</code> 拖进窗口即可。<br>
-            3. 也可以访问 TurboWarp 编辑器网页版，用「文件 → 从电脑中导入」加载。
+        <div class="tips" id="tips">
+            <h3 data-i18n="怎么打开 .sb3 文件？">怎么打开 .sb3 文件？</h3>
+            <p data-i18n="1. 在线运行：直接点卡片上的「在线运行」，无需安装任何软件。">1. 在线运行：直接点卡片上的「在线运行」，无需安装任何软件。</p>
+            <p data-i18n="2. 本地打开：下载后打开 .sb3，用 Scratch 3 / TurboWarp 打开。把 .sb3 拖进窗口即可。">2. 本地打开：下载后打开 .sb3，用 Scratch 3 / TurboWarp 打开。把 .sb3 拖进窗口即可。</p>
+            <p data-i18n="3. 也可以访问 TurboWarp 编辑器网页版，用「文件 → 从电脑中导入」加载。">3. 也可以访问 TurboWarp 编辑器网页版，用「文件 → 从电脑中导入」加载。</p>
         </div>
     </div>
 
     <div class="modal" id="modal">
         <div class="modal-box">
             <div class="modal-bar">
-                <span id="modalTitle">游戏中…</span>
+                <span id="modalTitle" data-i18n="游戏中…">游戏中…</span>
                 <span style="display:flex;align-items:center;gap:14px;">
-                    <a id="modalFull" href="#" target="_blank" rel="noopener">全屏打开 ↗</a>
-                    <button id="modalClose" aria-label="关闭">×</button>
+                    <a id="modalFull" href="#" target="_blank" rel="noopener" data-i18n="全屏打开 ↗">全屏打开 ↗</a>
+                    <button id="modalClose" aria-label="关闭" title="关闭">×</button>
                 </span>
             </div>
             <iframe id="modalFrame" allowfullscreen allow="autoplay; fullscreen; gamepad"></iframe>
         </div>
     </div>
 
+    <script src="../assets/i18n-dict.js"></script>
+    <script src="../assets/i18n.js"></script>
     <script>
     var _attr = "eXR5MTY=";
+    function T(k, v) {
+        return (window.i18n && window.i18n.t) ? window.i18n.t(k, v) : k;
+    }
     // file: 相对于本页的文件路径；ok: 文件是否已上线；size: 展示体积
     var GAMES = [
         { name: "小猫回家路",   emoji: "🐱", file: "scratch/cat-home.sb3",      ok: false, size: "" },
@@ -181,29 +186,41 @@
     function abs(u) { return new URL(u, window.location.href).href; }
 
     var grid = document.getElementById("grid");
-    var ready = 0;
-    GAMES.forEach(function (g) {
-        if (g.ok) ready++;
-        var el = document.createElement("div");
-        el.className = "card " + (g.ok ? "ready" : "pending");
-        var playUrl = "https://turbowarp.org/embed?autostart&project_url=" + encodeURIComponent(abs(g.file));
-        var editUrl = "https://turbowarp.org/editor?project_url=" + encodeURIComponent(abs(g.file));
-        el.innerHTML =
-            '<div class="card-badge">' + (g.ok ? "可玩" : "待上传") + '</div>' +
-            '<div class="card-emoji">' + g.emoji + '</div>' +
-            '<div class="card-title">' + g.name + '</div>' +
-            '<div class="card-desc">' + (g.ok ? ("Scratch 项目" + (g.size ? " · " + g.size : "")) : "项目文件待上传") + '</div>' +
-            '<div class="btn-row">' +
-                '<a class="btn' + (g.ok ? '' : ' off') + '" href="javascript:void(0)" data-play="' + playUrl +
-                    '" data-edit="' + editUrl + '" data-name="' + g.name + '">▶ 在线运行</a>' +
-                '<a class="btn ghost' + (g.ok ? '' : ' off') + '" href="' + g.file + '" download>⬇ 下载</a>' +
-            '</div>';
-        grid.appendChild(el);
-    });
+    var noticeText = document.getElementById("noticeText");
 
-    document.getElementById("noticeText").textContent = ready === GAMES.length
-        ? "全部 " + ready + " 款游戏已上线，点击「在线运行」即可在浏览器里直接玩。"
-        : "当前 " + GAMES.length + " 款中有 " + (GAMES.length - ready) + " 款项目文件尚未上传到本站，暂时无法运行或下载。文件补齐后本页会自动开放对应卡片。";
+    function renderGrid() {
+        grid.innerHTML = "";
+        var ready = 0;
+        GAMES.forEach(function (g) {
+            if (g.ok) ready++;
+            var el = document.createElement("div");
+            el.className = "card " + (g.ok ? "ready" : "pending");
+            var playUrl = "https://turbowarp.org/embed?autostart&project_url=" + encodeURIComponent(abs(g.file));
+            var editUrl = "https://turbowarp.org/editor?project_url=" + encodeURIComponent(abs(g.file));
+            var badge = g.ok ? T("可玩") : T("待上传");
+            var desc = g.ok ? (T("Scratch 项目") + (g.size ? " · " + g.size : "")) : T("项目文件待上传");
+            el.innerHTML =
+                '<div class="card-badge">' + badge + '</div>' +
+                '<div class="card-emoji">' + g.emoji + '</div>' +
+                '<div class="card-title">' + g.name + '</div>' +
+                '<div class="card-desc">' + desc + '</div>' +
+                '<div class="btn-row">' +
+                    '<a class="btn' + (g.ok ? '' : ' off') + '" href="javascript:void(0)" data-play="' + playUrl +
+                        '" data-edit="' + editUrl + '" data-name="' + g.name + '">' + T("▶ 在线运行") + '</a>' +
+                    '<a class="btn ghost' + (g.ok ? '' : ' off') + '" href="' + g.file + '" download>' + T("⬇ 下载") + '</a>' +
+                '</div>';
+            grid.appendChild(el);
+        });
+        if (ready === GAMES.length) {
+            noticeText.textContent = T('全部 {n} 款游戏已上线，点击「在线运行」即可在浏览器里直接玩。', { n: ready });
+        } else {
+            noticeText.textContent = T('当前 {total} 款中有 {pending} 款项目文件尚未上传到本站，暂时无法运行或下载。文件补齐后本页会自动开放对应卡片。', { total: GAMES.length, pending: GAMES.length - ready });
+        }
+        if (window.i18n && window.i18n.translate) {
+            window.i18n.translate(grid);
+            window.i18n.translate(document.getElementById("notice"));
+        }
+    }
 
     var modal = document.getElementById("modal");
     var frame = document.getElementById("modalFrame");
@@ -216,11 +233,20 @@
         var t = e.target.closest("[data-play]");
         if (!t || t.classList.contains("off")) return;
         e.preventDefault();
-        document.getElementById("modalTitle").textContent = t.getAttribute("data-name");
+        var modalTitle = document.getElementById("modalTitle");
+        modalTitle.textContent = t.getAttribute("data-name");
+        if (window.i18n && window.i18n.translate) window.i18n.translate(modalTitle);
         document.getElementById("modalFull").href = t.getAttribute("data-edit");
         frame.src = t.getAttribute("data-play");
         modal.classList.add("show");
     });
+
+    renderGrid();
+    var _prevOnI18n = window.onI18nChange;
+    window.onI18nChange = function (lang) {
+        renderGrid();
+        if (typeof _prevOnI18n === "function") { try { _prevOnI18n(lang); } catch (e) {} }
+    };
     </script>
 </body>
 </html>

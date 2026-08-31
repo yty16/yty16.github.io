@@ -112,7 +112,6 @@
 
         html {
             scroll-behavior: smooth;
-                    scroll-padding-top: calc(var(--header-height) + 16px);
         }
 
         body {
@@ -959,7 +958,6 @@
             margin-bottom: 36px;
             animation: fadeInUp 0.5s ease forwards;
             opacity: 0;
-                    scroll-margin-top: calc(var(--header-height) + 16px);
         }
 
         .section.visible {
@@ -3735,12 +3733,22 @@
                         </div>
                     </label>
                 </div>
+                <div class="settings-group">
+                    <div class="settings-label">AI 日报</div>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="aiDailyAutoExpand">
+                        <div>
+                            <div class="toggle-label">新日报自动展开</div>
+                            <div class="toggle-hint">每天更新后首次打开自动展开，之后自动折叠</div>
+                        </div>
+                    </label>
+                </div>
             </div>
         </section>
 
         <footer class="footer">
             <p class="footer-text">
-                本网站已运营 <strong id="footerDays">--</strong> 天 &nbsp;|&nbsp;
+                <span id="footerDaysWrap"></span>&nbsp;|&nbsp;
                 Powered by <a href="https://pages.github.com" target="_blank">GitHub Pages</a> &nbsp;|&nbsp;
                 put forward by <a href="https://huzhonghe2011.github.io/" target="_blank">huzhonghe2011</a> | upgrade by <a href="https://github.com/yty16" target="_blank"><img src="images/yty7816-signature.png" alt="yty7816" class="footer-signature" /></a>
             </p>

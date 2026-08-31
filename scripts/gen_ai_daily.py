@@ -255,13 +255,13 @@ def fetch_bilibili():
 
 # ── Gather ─────────────────────────────────────────────────────────────
 
-# Chinese platforms first (what the user wants), then reliable global sources.
-# Order also drives the hotlist ranking: top slots fill with Chinese items.
+# User priority (2026-08-31): 百度 / 微博 / B站 first, then 知乎, then global.
+# Source order drives the hotlist ranking: top slots fill with these three.
 _SOURCE_FNS = [
-    ("微博",         fetch_weibo),
-    ("知乎",         fetch_zhihu),
     ("百度",         fetch_baidu),
+    ("微博",         fetch_weibo),
     ("B站",          fetch_bilibili),
+    ("知乎",         fetch_zhihu),
     ("GitHub 热门",   fetch_github_trending),
     ("Hacker News",  fetch_hackernews),
     ("Reddit",       fetch_reddit),
@@ -279,7 +279,9 @@ def gather():
         cnt = len(items)
         print("  [%s] → %d items" % (name, cnt))
         if items:
-            out.append({"name": name, "items": items[:12]})
+            # Keep a full slice (up to 30) so the hot list is comprehensive;
+            # the front-end caps how many it actually renders per source.
+            out.append({"name": name, "items": items[:30]})
     return out
 
 

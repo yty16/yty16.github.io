@@ -2,8 +2,8 @@
 <html lang="zh">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0, user-scalable=no">
-    <title>Scratch 游戏合集 | 元拓域 Toolbox</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Scratch 游戏合集 | Y 的工具箱</title>
     <style>
         :root {
             --bg-primary: #f0f2f5;
@@ -15,6 +15,10 @@
             --accent: #6366f1;
             --accent-hover: #4f46e5;
             --accent-light: rgba(99, 102, 241, 0.1);
+            --ok: #10b981;
+            --ok-light: rgba(16, 185, 129, 0.12);
+            --warn: #f59e0b;
+            --warn-light: rgba(245, 158, 11, 0.12);
             --border: rgba(0, 0, 0, 0.06);
             --shadow-card: 0 2px 8px rgba(0, 0, 0, 0.04);
             --radius-md: 12px;
@@ -41,83 +45,89 @@
             min-height: 100vh;
             padding: 24px;
         }
-        .container { max-width: 1200px; margin: 0 auto; }
-        .header {
-            background: var(--bg-card);
-            backdrop-filter: blur(10px);
-            border: 1px solid var(--border);
-            border-radius: var(--radius-lg);
-            padding: 24px;
-            margin-bottom: 24px;
-            box-shadow: var(--shadow-card);
-        }
-        .header h1 { font-size: 22px; margin-bottom: 8px; display: flex; align-items: center; gap: 10px; }
-        .header p { color: var(--text-secondary); font-size: 14px; }
+        .container { max-width: 1080px; margin: 0 auto; }
         .back {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            color: var(--accent);
-            text-decoration: none;
-            font-size: 14px;
-            margin-bottom: 12px;
-            font-weight: 500;
+            display: inline-flex; align-items: center; gap: 6px;
+            color: var(--accent); text-decoration: none; font-size: 14px;
+            margin-bottom: 12px; font-weight: 500;
         }
         .back:hover { text-decoration: underline; }
+        .header {
+            background: var(--bg-card); backdrop-filter: blur(10px);
+            border: 1px solid var(--border); border-radius: var(--radius-lg);
+            padding: 24px; margin-bottom: 18px; box-shadow: var(--shadow-card);
+        }
+        .header h1 { font-size: 22px; margin-bottom: 8px; display: flex; align-items: center; gap: 10px; }
+        .header p { color: var(--text-secondary); font-size: 14px; line-height: 1.6; }
+        .notice {
+            background: var(--warn-light); border: 1px solid rgba(245, 158, 11, 0.25);
+            border-radius: var(--radius-md); padding: 14px 18px; margin-bottom: 20px;
+            color: var(--text-secondary); font-size: 14px; line-height: 1.7;
+        }
+        .notice strong { color: var(--warn); }
         .card-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-            gap: 16px;
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 16px;
         }
         .card {
-            background: var(--bg-card);
-            backdrop-filter: blur(10px);
-            border: 1px solid var(--border);
-            border-radius: var(--radius-md);
-            padding: 18px;
-            box-shadow: var(--shadow-card);
-            transition: transform 0.2s, box-shadow 0.2s;
-            text-decoration: none;
-            color: inherit;
-            display: block;
-            position: relative;
+            background: var(--bg-card); backdrop-filter: blur(10px);
+            border: 1px solid var(--border); border-radius: var(--radius-md);
+            padding: 18px; box-shadow: var(--shadow-card);
+            transition: transform 0.2s, box-shadow 0.2s; position: relative;
         }
-        .card:hover:not(.disabled) {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
-        }
-        .card.disabled {
-            opacity: 0.55;
-            cursor: not-allowed;
-            filter: grayscale(0.5);
-        }
+        .card.ready:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,0.08); }
+        .card.pending { opacity: 0.6; filter: grayscale(0.6); }
+        .card-emoji { font-size: 26px; margin-bottom: 8px; }
         .card-title { font-size: 16px; font-weight: 600; margin-bottom: 6px; }
-        .card-desc { font-size: 13px; color: var(--text-secondary); line-height: 1.5; }
+        .card-desc { font-size: 13px; color: var(--text-secondary); line-height: 1.5; margin-bottom: 12px; min-height: 20px; }
         .card-badge {
-            position: absolute;
-            top: 12px;
-            right: 12px;
-            font-size: 11px;
-            padding: 2px 8px;
-            border-radius: 20px;
-            background: var(--accent-light);
-            color: var(--accent);
-            font-weight: 600;
+            position: absolute; top: 14px; right: 14px;
+            font-size: 11px; padding: 2px 8px; border-radius: 20px; font-weight: 600;
+            background: var(--warn-light); color: var(--warn);
         }
-        .notice {
-            background: rgba(250, 112, 154, 0.08);
-            border: 1px solid rgba(250, 112, 154, 0.2);
-            border-radius: var(--radius-md);
-            padding: 14px 18px;
-            margin-bottom: 24px;
-            color: var(--text-secondary);
-            font-size: 14px;
-            line-height: 1.6;
+        .card.ready .card-badge { background: var(--ok-light); color: var(--ok); }
+        .btn-row { display: flex; gap: 8px; flex-wrap: wrap; }
+        .btn {
+            flex: 1 1 auto; text-align: center; text-decoration: none;
+            font-size: 13px; font-weight: 500; padding: 8px 10px; border-radius: 8px;
+            border: 1px solid var(--border); background: var(--accent-light); color: var(--accent);
+            cursor: pointer; transition: background 0.15s, color 0.15s; white-space: nowrap;
         }
-        .notice strong { color: #fa709a; }
+        .btn:hover { background: var(--accent); color: #fff; }
+        .btn.ghost { background: transparent; color: var(--text-secondary); }
+        .btn.ghost:hover { background: var(--accent-light); color: var(--accent); }
+        .btn.off { opacity: 0.45; pointer-events: none; cursor: not-allowed; }
+        .tips {
+            margin-top: 24px; background: var(--bg-card); border: 1px solid var(--border);
+            border-radius: var(--radius-md); padding: 16px 18px;
+            color: var(--text-secondary); font-size: 13px; line-height: 1.8;
+        }
+        .tips h3 { font-size: 14px; color: var(--text-primary); margin-bottom: 6px; }
+        .tips code { background: var(--accent-light); color: var(--accent); padding: 1px 5px; border-radius: 4px; }
+        .modal {
+            position: fixed; inset: 0; background: rgba(0,0,0,0.62);
+            display: none; align-items: center; justify-content: center; padding: 20px; z-index: 50;
+        }
+        .modal.show { display: flex; }
+        .modal-box {
+            width: min(980px, 100%); background: var(--bg-secondary); border-radius: var(--radius-lg);
+            overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+        }
+        .modal-bar {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 10px 14px; border-bottom: 1px solid var(--border);
+            font-size: 14px; font-weight: 600;
+        }
+        .modal-bar a { font-size: 13px; color: var(--accent); text-decoration: none; font-weight: 500; }
+        .modal-bar button {
+            border: none; background: transparent; color: var(--text-secondary);
+            font-size: 20px; line-height: 1; cursor: pointer; padding: 0 4px;
+        }
+        .modal-box iframe { width: 100%; height: min(72vh, 620px); border: 0; display: block; background: #000; }
         @media (max-width: 600px) {
             body { padding: 16px; }
-            .card-grid { grid-template-columns: repeat(2, 1fr); }
+            .card-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+            .card { padding: 14px; }
+            .btn-row { flex-direction: column; }
         }
     </style>
 </head>
@@ -126,58 +136,91 @@
         <a class="back" href="../index.html#section-downloads">← 返回资源下载</a>
         <div class="header">
             <h1>🎮 Scratch 游戏合集</h1>
-            <p>9 款 Scratch 小游戏，下载后用 Scratch 或 TurboWarp 打开即可运行。</p>
+            <p>9 款 Scratch 小游戏。点「在线运行」可直接在浏览器里玩（由 TurboWarp 加载本站文件），或下载 <code>.sb3</code> 用 Scratch 3 / TurboWarp 打开。</p>
         </div>
-        <div class="notice">
-            <strong>注意：</strong>当前列表中的 Scratch 项目文件体积为 0 字节，无法下载使用。请上传有效的 .sb3 文件后刷新本页。
+        <div class="notice" id="notice">
+            <strong>提示：</strong><span id="noticeText"></span>
         </div>
-        <div class="card-grid" id="grid">
-            <a class="card disabled" href="javascript:void(0)">
-                <div class="card-badge">待补充</div>
-                <div class="card-title">小猫回家路</div>
-                <div class="card-desc">Scratch 小游戏</div>
-            </a>
-            <a class="card disabled" href="javascript:void(0)">
-                <div class="card-badge">待补充</div>
-                <div class="card-title">植物大战僵尸</div>
-                <div class="card-desc">Scratch 小游戏</div>
-            </a>
-            <a class="card disabled" href="javascript:void(0)">
-                <div class="card-badge">待补充</div>
-                <div class="card-title">字母闯天关</div>
-                <div class="card-desc">Scratch 小游戏</div>
-            </a>
-            <a class="card disabled" href="javascript:void(0)">
-                <div class="card-badge">待补充</div>
-                <div class="card-title">超级马里奥 3</div>
-                <div class="card-desc">Scratch 小游戏</div>
-            </a>
-            <a class="card disabled" href="javascript:void(0)">
-                <div class="card-badge">待补充</div>
-                <div class="card-title">方块闯天关</div>
-                <div class="card-desc">Scratch 小游戏</div>
-            </a>
-            <a class="card disabled" href="javascript:void(0)">
-                <div class="card-badge">待补充</div>
-                <div class="card-title">华容道</div>
-                <div class="card-desc">Scratch 小游戏</div>
-            </a>
-            <a class="card disabled" href="javascript:void(0)">
-                <div class="card-badge">待补充</div>
-                <div class="card-title">切水果</div>
-                <div class="card-desc">Scratch 小游戏</div>
-            </a>
-            <a class="card disabled" href="javascript:void(0)">
-                <div class="card-badge">待补充</div>
-                <div class="card-title">赛车</div>
-                <div class="card-desc">Scratch 小游戏</div>
-            </a>
-            <a class="card disabled" href="javascript:void(0)">
-                <div class="card-badge">待补充</div>
-                <div class="card-title">2D 我的世界</div>
-                <div class="card-desc">Scratch 小游戏</div>
-            </a>
+        <div class="card-grid" id="grid"></div>
+        <div class="tips">
+            <h3>怎么打开 .sb3 文件？</h3>
+            1. 在线运行：直接点卡片上的「在线运行」，无需安装任何软件。<br>
+            2. 本地打开：下载后打开 <b>Scratch 3 离线编辑器</b> 或 <b>TurboWarp 桌面版</b>，把 <code>.sb3</code> 拖进窗口即可。<br>
+            3. 也可以访问 TurboWarp 编辑器网页版，用「文件 → 从电脑中导入」加载。
         </div>
     </div>
+
+    <div class="modal" id="modal">
+        <div class="modal-box">
+            <div class="modal-bar">
+                <span id="modalTitle">游戏中…</span>
+                <span style="display:flex;align-items:center;gap:14px;">
+                    <a id="modalFull" href="#" target="_blank" rel="noopener">全屏打开 ↗</a>
+                    <button id="modalClose" aria-label="关闭">×</button>
+                </span>
+            </div>
+            <iframe id="modalFrame" allowfullscreen allow="autoplay; fullscreen; gamepad"></iframe>
+        </div>
+    </div>
+
+    <script>
+    var _attr = "eXR5MTY=";
+    // file: 相对于本页的文件路径；ok: 文件是否已上线；size: 展示体积
+    var GAMES = [
+        { name: "小猫回家路",   emoji: "🐱", file: "scratch/cat-home.sb3",      ok: false, size: "" },
+        { name: "植物大战僵尸", emoji: "🌻", file: "scratch/pvz.sb3",           ok: false, size: "" },
+        { name: "字母闯天关",   emoji: "🔤", file: "scratch/abc-adventure.sb3", ok: false, size: "" },
+        { name: "超级马里奥 3", emoji: "🍄", file: "scratch/mario3.sb3",        ok: false, size: "" },
+        { name: "方块闯天关",   emoji: "🧱", file: "scratch/block-quest.sb3",   ok: false, size: "" },
+        { name: "华容道",       emoji: "🀄", file: "scratch/huarongdao.sb3",    ok: false, size: "" },
+        { name: "切水果",       emoji: "🍉", file: "scratch/fruit-ninja.sb3",   ok: false, size: "" },
+        { name: "赛车",         emoji: "🏎️", file: "scratch/racing.sb3",        ok: false, size: "" },
+        { name: "2D 我的世界",  emoji: "⛏️", file: "scratch/2d-minecraft.sb3",  ok: false, size: "" }
+    ];
+
+    function abs(u) { return new URL(u, window.location.href).href; }
+
+    var grid = document.getElementById("grid");
+    var ready = 0;
+    GAMES.forEach(function (g) {
+        if (g.ok) ready++;
+        var el = document.createElement("div");
+        el.className = "card " + (g.ok ? "ready" : "pending");
+        var playUrl = "https://turbowarp.org/embed?autostart&project_url=" + encodeURIComponent(abs(g.file));
+        var editUrl = "https://turbowarp.org/editor?project_url=" + encodeURIComponent(abs(g.file));
+        el.innerHTML =
+            '<div class="card-badge">' + (g.ok ? "可玩" : "待上传") + '</div>' +
+            '<div class="card-emoji">' + g.emoji + '</div>' +
+            '<div class="card-title">' + g.name + '</div>' +
+            '<div class="card-desc">' + (g.ok ? ("Scratch 项目" + (g.size ? " · " + g.size : "")) : "项目文件待上传") + '</div>' +
+            '<div class="btn-row">' +
+                '<a class="btn' + (g.ok ? '' : ' off') + '" href="javascript:void(0)" data-play="' + playUrl +
+                    '" data-edit="' + editUrl + '" data-name="' + g.name + '">▶ 在线运行</a>' +
+                '<a class="btn ghost' + (g.ok ? '' : ' off') + '" href="' + g.file + '" download>⬇ 下载</a>' +
+            '</div>';
+        grid.appendChild(el);
+    });
+
+    document.getElementById("noticeText").textContent = ready === GAMES.length
+        ? "全部 " + ready + " 款游戏已上线，点击「在线运行」即可在浏览器里直接玩。"
+        : "当前 " + GAMES.length + " 款中有 " + (GAMES.length - ready) + " 款项目文件尚未上传到本站，暂时无法运行或下载。文件补齐后本页会自动开放对应卡片。";
+
+    var modal = document.getElementById("modal");
+    var frame = document.getElementById("modalFrame");
+    document.getElementById("modalClose").onclick = function () {
+        modal.classList.remove("show");
+        frame.src = "about:blank";
+    };
+    modal.addEventListener("click", function (e) { if (e.target === modal) document.getElementById("modalClose").click(); });
+    grid.addEventListener("click", function (e) {
+        var t = e.target.closest("[data-play]");
+        if (!t || t.classList.contains("off")) return;
+        e.preventDefault();
+        document.getElementById("modalTitle").textContent = t.getAttribute("data-name");
+        document.getElementById("modalFull").href = t.getAttribute("data-edit");
+        frame.src = t.getAttribute("data-play");
+        modal.classList.add("show");
+    });
+    </script>
 </body>
 </html>

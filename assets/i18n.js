@@ -1,1 +1,177 @@
-!function(){"use strict";var e=window.I18N_DICT&&"object"==typeof window.I18N_DICT?window.I18N_DICT:{},t="lang",n=["placeholder","title","alt","aria-label","value","label"],o=function(){try{var e=localStorage.getItem(t);if("en"===e||"zh"===e)return e}catch(e){}return 0===(navigator.language||navigator.userLanguage||"zh").toLowerCase().indexOf("zh")?"zh":"en"}(),a=new WeakMap,r=new WeakMap,i=new WeakMap;function l(e){return!(!e||1!==e.nodeType)&&(!(!e.hasAttribute||!e.hasAttribute("data-no-i18n"))||!!e.closest&&!!e.closest("[data-no-i18n]"))}function c(t){if("en"!==o)return t;var n=t.trim();if(n.length&&e[n]){var a=t.slice(0,t.indexOf(n)),r=t.slice(t.lastIndexOf(n)+n.length);return a+e[n]+r}return t}function d(t){if(3===t.nodeType&&t.nodeValue&&t.nodeValue.trim()){var n=t.parentNode;if(n&&!l(n)){if(1===n.nodeType){var o=n.tagName;if("SCRIPT"===o||"STYLE"===o||"TEXTAREA"===o||"INPUT"===o)return}a.has(t)||a.set(t,t.nodeValue),t.nodeValue=c(a.get(t))}}}function s(t){l(t)||n.forEach(function(n){if(t.hasAttribute(n)){var o=t.getAttribute(n);if(null!=o){var l=r.get(t);l||(l={},r.set(t,l)),n in l||(l[n]=o);var c=a(l[n]);c!==o&&t.setAttribute(n,c)}}})}function u(t,n){if(t){for(var o,a=document.createTreeWalker(t,NodeFilter.SHOW_TEXT,null,!1),r=[];o=a.nextNode();)r.push(o);r.forEach(n)}}function f(t){if(l(t))return!1;var n=t.getAttribute("data-i18n");if(n&&e[n]){i.set(t,t.innerHTML),t.textContent=e[n];return}var o=t.getAttribute("data-i18n-template");if(o&&e[o]){var a=i.get(t);a||(a=t.textContent,i.set(t,a));var r=e[o],c=t.getAttribute("data-i18n-vars");if(c)try{var d=JSON.parse(c);for(var s in d)r=r.replace(new RegExp("\\{"+s+"\\}","g"),d[s])}catch(e){}t.textContent=r}}function p(t){u(t=t||document.documentElement,d);var n=t.querySelectorAll?t.querySelectorAll("*"):[];Array.prototype.forEach.call(n,function(t){s(t),f(t)}),f(t)}function g(){try{document.documentElement.setAttribute("lang","en"===o?"en":"zh-CN")}catch(e){}}var h=null;function m(){h&&(h.textContent="zh"===o?"EN":"中",h.title="zh"===o?"Switch to English":"切换到中文",h.setAttribute("aria-label",h.title))}function A(t){if("en"===t||"zh"===t){o=t;try{localStorage.setItem(t,o)}catch(e){}if(g(),p(document.documentElement),m(),"function"==typeof window.onI18nChange)try{window.onI18nChange(o)}catch(e){}}}function v(){var t;(function(){if(!document.getElementById("i18nStyle")){var e=document.createElement("style");e.id="i18nStyle",e.textContent=".i18n-lang-btn{display:inline-flex;align-items:center;justify-content:center;min-width:38px;height:34px;padding:0 10px;border-radius:9px;border:1px solid var(--border,rgba(128,128,128,.35));background:var(--surface,rgba(255,255,255,.08));color:var(--text,#111);font-size:13px;font-weight:700;cursor:pointer;user-select:none;line-height:1;letter-spacing:.3px;}.i18n-lang-btn:hover{border-color:var(--accent,#6366f1);color:var(--accent,#6366f1);}.i18n-floating{position:fixed;top:12px;right:12px;z-index:2147483000;box-shadow:0 4px 16px rgba(0,0,0,.18);}",document.head.appendChild(e)}}(),g(),t=document.getElementById("langToggleHost"),(h=document.createElement("button")).id="i18nLangBtn",h.type="button",h.className="i18n-lang-btn",m(),h.addEventListener("click",function(){A("zh"===o?"en":"zh")}),t?t.appendChild(h):(h.classList.add("i18n-floating"),document.body.appendChild(h)),p(document.documentElement),window.MutationObserver)&&new MutationObserver(function(e){for(var t=0;t<e.length;t++){var n=e[t];if("childList"===n.type)for(var o=0;o<n.addedNodes.length;o++){var a=n.addedNodes[o];if(1===a.nodeType){u(a,d);var r=a.querySelectorAll?a.querySelectorAll("*"):[];Array.prototype.forEach.call(r,function(e){d(e),s(e),f(e)}),s(a),f(a)}else 3===a.nodeType&&d(a)}}}).observe(document.documentElement,{childList:!0,subtree:!0});setTimeout(function(){p(document.documentElement)},300),setTimeout(function(){p(document.documentElement)},1200)}window.i18n={setLang:A,getLang:function(){return o},t:function(t,n){if("en"!==o)return t;var a=e[t];return a?(n&&"object"==typeof n&&(a=a.replace(/\{([\w]+)\}/g,function(e,t){return null!=n[t]?n[t]:e})),a):t},translate:function(e){p(e)},isNoTranslate:l},"loading"===document.readyState?document.addEventListener("DOMContentLoaded",v):v()}();
+/*
+ * i18n.js — path/param based bilingual engine for yty16.github.io
+ * Language is determined by the URL, not by an in-page toggle:
+ *   /en , /en/ , ?__lang=en , ?lang=en  -> English
+ *   /zh , /zh/ , ?__lang=zh             -> Chinese
+ *   anything else (incl. /)             -> Chinese (default)
+ * The language switch control navigates to the corresponding site URL.
+ */
+(function () {
+  "use strict";
+
+  var dict = (window.I18N_DICT && typeof window.I18N_DICT === "object") ? window.I18N_DICT : {};
+  var ATTRS = ["placeholder", "title", "alt", "aria-label", "value", "label"];
+
+  function getLang() {
+    var path = window.location.pathname || "";
+    var search = window.location.search || "";
+    if (/(?:[?&])(?:__lang|lang)=en/.test(search) || path.indexOf("/en") === 0) return "en";
+    if (path.indexOf("/zh") === 0) return "zh";
+    return "zh";
+  }
+  var lang = getLang();
+
+  function fill(str, vars) {
+    if (!vars || typeof str !== "string") return str;
+    for (var k in vars) {
+      if (!Object.prototype.hasOwnProperty.call(vars, k)) continue;
+      var val = vars[k];
+      if (val === undefined || val === null) continue;
+      str = str.split("{" + k + "}").join(String(val));
+    }
+    return str;
+  }
+
+  // Public translate: given a key (or raw text) return its translation.
+  function t(key, vars) {
+    if (lang !== "en") return fill(key, vars);
+    var v = (typeof dict[key] === "string") ? dict[key] : key;
+    return fill(v, vars);
+  }
+
+  // Translate a raw text-node value, preserving surrounding whitespace.
+  function translateText(value) {
+    if (lang !== "en") return value;
+    var n = value.trim();
+    if (n && dict[n]) {
+      var a = value.slice(0, value.indexOf(n));
+      var b = value.slice(value.lastIndexOf(n) + n.length);
+      return a + dict[n] + b;
+    }
+    return value;
+  }
+
+  function skip(node) {
+    if (!node || node.nodeType !== 1) return false;
+    if (node.hasAttribute && node.hasAttribute("data-no-i18n")) return true;
+    if (node.closest && node.closest("[data-no-i18n]")) return true;
+    return false;
+  }
+
+  function translateAttributes(node) {
+    ATTRS.forEach(function (attr) {
+      if (!node.hasAttribute(attr)) return;
+      var cur = node.getAttribute(attr);
+      if (cur === null) return;
+      var key = cur.trim();
+      if (lang === "en" && dict[key]) {
+        node.setAttribute(attr, dict[key]);
+      }
+    });
+  }
+
+  function translateDataI18n(node) {
+    if (skip(node)) return;
+    var key = node.getAttribute("data-i18n");
+    if (key && dict[key]) {
+      node.textContent = dict[key];
+      return;
+    }
+    var tpl = node.getAttribute("data-i18n-template");
+    if (tpl && dict[tpl]) {
+      var out = dict[tpl];
+      var varsAttr = node.getAttribute("data-i18n-vars");
+      if (varsAttr) {
+        try {
+          var vars = JSON.parse(varsAttr);
+          out = fill(out, vars);
+        } catch (e) { /* ignore bad json */ }
+      }
+      node.textContent = out;
+    }
+  }
+
+  function walk(root) {
+    if (!root) return;
+    var walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, null, false);
+    var textNodes = [];
+    var n;
+    while ((n = walker.nextNode())) textNodes.push(n);
+    textNodes.forEach(function (tn) {
+      var parent = tn.parentNode;
+      if (!parent || parent.nodeType !== 1) return;
+      if (skip(parent)) return;
+      var tag = parent.tagName;
+      if (tag === "SCRIPT" || tag === "STYLE" || tag === "TEXTAREA" || tag === "INPUT") return;
+      tn.nodeValue = translateText(tn.nodeValue);
+    });
+    var all = root.querySelectorAll ? root.querySelectorAll("*") : [];
+    Array.prototype.forEach.call(all, function (el) {
+      if (skip(el)) return;
+      translateAttributes(el);
+      translateDataI18n(el);
+    });
+  }
+
+  function translate(root) {
+    walk(root || document.documentElement);
+  }
+
+  // Render the language switch control inside #langToggleHost.
+  // It navigates to the other language's site URL (no in-page toggle).
+  function renderToggle() {
+    var host = document.getElementById("langToggleHost");
+    if (!host) return;
+    var en = (lang === "en");
+    host.innerHTML = "";
+    var a = document.createElement("a");
+    a.className = "lang-switch";
+    a.href = en ? "/zh/" : "/en/";
+    a.textContent = en ? "中文" : "EN";
+    a.setAttribute("data-no-i18n", "");
+    host.appendChild(a);
+  }
+
+  function applyDocumentLang() {
+    try {
+      document.documentElement.setAttribute("lang", lang === "en" ? "en" : "zh-CN");
+    } catch (e) { /* ignore */ }
+  }
+
+  // After a language stub redirect (?__lang=en -> /en/), rewrite the URL
+  // so the address bar shows the clean path.
+  function cleanupUrl() {
+    try {
+      var s = window.location.search || "";
+      var m = s.match(/(?:[?&])(?:__lang|lang)=(en|zh)/);
+      if (m) {
+        var target = m[1] === "en" ? "/en/" : "/zh/";
+        history.replaceState({}, "", target);
+      }
+    } catch (e) { /* ignore */ }
+  }
+
+  function init() {
+    applyDocumentLang();
+    translate(document);
+    renderToggle();
+    cleanupUrl();
+  }
+
+  // Expose API + keep onI18nChange hook for dynamic re-renders (no recursion).
+  window.i18n = {
+    t: t,
+    translate: translate,
+    getLang: getLang
+  };
+  window.onI18nChange = function () {
+    translate(document);
+    renderToggle();
+  };
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", init);
+  } else {
+    init();
+  }
+})();

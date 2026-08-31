@@ -117,6 +117,15 @@
     walk(root || document.documentElement);
   }
 
+  // Inject the previous language-switch button styles (kept self-contained in JS).
+  function ensureLangBtnStyles() {
+    if (document.getElementById("i18nStyle")) return;
+    var style = document.createElement("style");
+    style.id = "i18nStyle";
+    style.textContent = ".i18n-lang-btn{display:inline-flex;align-items:center;justify-content:center;min-width:38px;height:34px;padding:0 10px;border-radius:9px;border:1px solid var(--border,rgba(128,128,128,.35));background:var(--surface,rgba(255,255,255,.08));color:var(--text,#111);font-size:13px;font-weight:700;cursor:pointer;user-select:none;line-height:1;letter-spacing:.3px;}.i18n-lang-btn:hover{border-color:var(--accent,#6366f1);color:var(--accent,#6366f1);}.i18n-floating{position:fixed;top:12px;right:12px;z-index:2147483000;box-shadow:0 4px 16px rgba(0,0,0,.18)}";
+    document.head.appendChild(style);
+  }
+
   // Render the language switch control inside #langToggleHost.
   // It navigates to the other language's site URL (no in-page toggle).
   function renderToggle() {
@@ -124,12 +133,18 @@
     if (!host) return;
     var en = (lang === "en");
     host.innerHTML = "";
-    var a = document.createElement("a");
-    a.className = "lang-switch";
-    a.href = en ? "/zh/" : "/en/";
-    a.textContent = en ? "中文" : "EN";
-    a.setAttribute("data-no-i18n", "");
-    host.appendChild(a);
+    var btn = document.createElement("button");
+    btn.id = "i18nLangBtn";
+    btn.type = "button";
+    btn.className = "i18n-lang-btn";
+    btn.textContent = en ? "中文" : "EN";
+    btn.title = en ? "切换到中文" : "Switch to English";
+    btn.setAttribute("aria-label", btn.title);
+    btn.setAttribute("data-no-i18n", "");
+    btn.addEventListener("click", function () {
+      window.location.href = en ? "/zh/" : "/en/";
+    });
+    host.appendChild(btn);
   }
 
   function applyDocumentLang() {
@@ -152,6 +167,7 @@
   }
 
   function init() {
+    ensureLangBtnStyles();
     applyDocumentLang();
     translate(document);
     renderToggle();

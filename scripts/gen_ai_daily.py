@@ -287,6 +287,10 @@ def gather():
 
 # ── AI Summary ─────────────────────────────────────────────────────────
 
+# Last-resort fallbacks, ordered across DIFFERENT upstream providers so that a
+# rate-limited upstream (HTTP 429 "temporarily rate-limited upstream") falls
+# through to another vendor instead of hammering the same one.
+# Verified against https://openrouter.ai/api/v1/models on 2026-09-04.
 _FREE_CHAIN = (
     "z-ai/glm-5.2:free",
     "minimax/minimax-m2.7:free",
@@ -296,6 +300,12 @@ _FREE_CHAIN = (
     "inclusionai/ling-3.0-flash-fin:free",
     "thinkingmachines/inkling-small:free",
     "liquid/lfm-2.5-2.6b:free",
+    "google/gemma-4-26b-a4b-it:free",
+    "nvidia/nemotron-3-ultra-550b-a55b:free",
+    "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free",
+    "thinkingmachines/inkling:free",
+    "cohere/north-mini-code:free",
+    "poolside/laguna-s-2.1:free",
 )
 
 _RETRY_STATUS = (408, 409, 425, 429, 500, 502, 503, 504)
@@ -403,7 +413,11 @@ def call_ai(blob):
                     pass
                 last_err = "HTTP %d @ %s [%s]: %s" % (e.code, base, model, err_body[:160])
                 sys.stderr.write("AI model %s failed: %s\n" % (model, last_err))
-                if e.code in (401, 403) or attempt >= 2:
+                # 429 = the upstream vendor is rate-limiting ("temporarily
+                # rate-limited upstream"). Hammering the same model rarely helps,
+                # so try once more and then fall through to the next provider.
+                if e.code in (401, 403) or attempt >= 2 \
+                        or (e.code == 429 and attempt >= 1):
                     break
                 time.sleep(4 * (attempt + 1) + random.random() * 3)
                 continue
@@ -472,23 +486,42 @@ def _scrub_links(text):
     return t
 
 
-def build_fallback_digest(sources, lang):
-    """Compile a plain (non-AI) "today's highlights" list from hot-list data,
-    plus an honest note telling the user how to enable the AI summary."""
+def build_fallback_digest(sources, lang, reason="error"):
+    """Compile a plain (non-AI) "today's highlights" list from hot-list data.
+
+    reason:
+      "nokey" — no AI_API_KEY secret configured; tell the user how to enable it.
+      "error" — a key IS configured but every provider failed (typically upstream
+                429 rate-limiting on free models); say so honestly instead of
+                wrongly asking for a key that already exists.
+    """
     if lang == "zh":
-        note = ("⚠️ AI 智能总结暂不可用：GitHub Models 已于 2026-07-30 正式退役"
-                "（原接口返回 404/410），本仓库已改用 OpenAI 兼容的免费服务。"
-                "请在仓库 Settings → Secrets 添加 AI_API_KEY"
-                "（OpenRouter / Groq 等免实名服务的 API Key）即可恢复 AI 总结。"
-                "热点榜数据正常。")
+        if reason == "nokey":
+            note = ("⚠️ AI 智能总结尚未启用：未配置 AI_API_KEY。"
+                    "在仓库 Settings → Secrets 添加任意 OpenAI 兼容服务的 API Key"
+                    "（OpenRouter / Groq 等免实名服务即可），下次自动生成时恢复。"
+                    "当前展示的是热点榜汇编，数据真实有效。")
+        else:
+            note = ("⚠️ AI 智能总结本次生成失败：AI 上游服务暂时限流或不可用"
+                    "（免费模型常见 429 限流，与本站配置无关）。"
+                    "已自动改用热点榜汇编，下列内容真实有效；"
+                    "每日 08:00 的定时任务会重新生成完整 AI 总结。")
         label = "今日要点"
         head = "以下由热点榜自动汇编，非 AI 生成"
     else:
-        note = ("⚠️ AI summary unavailable: GitHub Models was retired on 2026-07-30 "
-                "(endpoint now returns 404/410). This repo now uses a free "
-                "OpenAI-compatible provider. Add an AI_API_KEY secret (OpenRouter / "
-                "Groq API key, no real-name required) to restore the AI summary. "
-                "Hot-list data is fine.")
+        if reason == "nokey":
+            note = ("⚠️ AI summary is not enabled: no AI_API_KEY secret is set. "
+                    "Add an OpenAI-compatible API key (OpenRouter / Groq need no "
+                    "real-name verification) under Settings → Secrets and the next "
+                    "scheduled run will restore it. The list below is compiled from "
+                    "the hot list and is real data.")
+        else:
+            note = ("⚠️ AI summary could not be generated this time: the upstream AI "
+                    "service is temporarily rate-limited or unavailable (HTTP 429 is "
+                    "common on free models and is unrelated to this site's config). "
+                    "Falling back to a digest compiled from the hot list — the items "
+                    "below are real. The daily 08:00 run will regenerate the full "
+                    "AI summary.")
         label = "Today's Highlights"
         head = "Auto-compiled from the hot list, not AI-generated"
     picked, seen = [], set()
@@ -565,11 +598,15 @@ def main():
             # Don't fall back to a possibly-stale/placeholder previous summary.
             # Instead compile a real digest from today's hot-list so the left
             # panel is never empty or misleading.
-            result["zh"] = build_fallback_digest(sources, "zh")
-            result["en"] = build_fallback_digest(sources, "en")
-            result["note"] = "FALLBACK_AIERR"
+            # Distinguish "no key configured" from "key present but every
+            # provider failed" so the on-page notice is accurate.
+            reason = "nokey" if not API_KEY else "error"
+            result["zh"] = build_fallback_digest(sources, "zh", reason)
+            result["en"] = build_fallback_digest(sources, "en", reason)
+            result["note"] = "FALLBACK_NOKEY" if reason == "nokey" else "FALLBACK_AIERR"
             sys.stderr.write("AI call failed: %s\n" % e)
-            print("ERROR: AI call failed → FALLBACK_AIERR (digest compiled from hot-list)")
+            print("ERROR: AI call failed → %s (digest compiled from hot-list)"
+                  % result["note"])
 
     with open(OUT, "w", encoding="utf-8") as f:
         json.dump(result, f, ensure_ascii=False, indent=2)

@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head><script>
+(function(){
+var _0x4a=[function(){return[atob('eXR5MTYuZ2l0aHViLmlv'),atob('eXR5MTYucGFnZXMuZGV2')]},function(){return location.hostname}];
+var _0x4b=_0x4a[0]();var _0x4c=_0x4a[1]();var _0x4d=false;for(var i=0;i<_0x4b.length;i++){if(_0x4c===_0x4b[i]){_0x4d=true;break;}}
+if(!_0x4d){
+window.addEventListener('DOMContentLoaded',function(){
+document.body.innerHTML='<div style="position:fixed;top:0;left:0;width:100%;height:100%;background:#f5f5f5;display:flex;align-items:center;justify-content:center;z-index:99999;font-family:sans-serif;color:#666"><div style="text-align:center"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><h2 style="margin:20px 0 10px;font-weight:500">页面加载异常</h2><p style="font-size:14px;color:#999">请访问正常渠道获取资源</p></div></div>';
+});}
+})();
+</script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>黄金矿工</title>
+    <style>
+        :root {
+            --bg: #f0f2f5;
+            --card-bg: rgba(255, 255, 255, 0.7);
+            --card-border: rgba(255, 255, 255, 0.3);
+            --text: #1a1a2e;
+            --text-secondary: #666;
+            --accent: #6c5ce7;
+            --accent-light: #a29bfe;
+        }
+        [data-theme="dark"] {
+            --bg: #1a1a2e;
+            --card-bg: rgba(255, 255, 255, 0.05);
+            --card-border: rgba(255, 255, 255, 0.1);
+            --text: #eee;
+            --text-secondary: #aaa;
+            --accent: #a29bfe;
+            --accent-light: #6c5ce7;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', 'Microsoft YaHei', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            padding: 20px;
+            transition: background 0.3s, color 0.3s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .container { max-width: 520px; width: 100%; }
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--accent);
+            text-decoration: none;
+            font-size: 14px;
+            margin-bottom: 20px;
+            padding: 8px 16px;
+            border-radius: 8px;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            backdrop-filter: blur(10px);
+            transition: all 0.2s;
+            align-self: flex-start;
+        }
+        .back-btn:hover { background: var(--accent); color: white; }
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 20px;
+            backdrop-filter: blur(20px);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            width: 100%;
+        }
+        h1 { font-size: 28px; margin-bottom: 16px; text-align: center; }
+        .stats { display: flex; justify-content: space-around; margin-bottom: 16px; text-align: center; }
+        .stat { flex: 1; }
+        .stat-value { font-size: 32px; font-weight: 700; color: var(--accent); }
+        .stat-label { font-size: 12px; color: var(--text-secondary); }
+        .canvas-wrap {
+            position: relative;
+            width: 100%;
+            border-radius: 16px;
+            overflow: hidden;
+            line-height: 0;
+        }
+        canvas { display: block; width: 100%; max-width: 480px; margin: 0 auto; cursor: pointer; }
+        .overlay {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            background: rgba(26,26,46,0.55);
+            color: #fff;
+            text-align: center;
+            padding: 20px;
+        }
+        .overlay-text { font-size: 16px; line-height: 1.6; max-width: 320px; }
+        .tip { text-align: center; font-size: 13px; color: var(--text-secondary); margin-top: 12px; }
+        .btn {
+            padding: 14px 32px;
+            background: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+        .btn:hover { background: var(--accent-light); transform: translateY(-2px); box-shadow: 0 4px 12px rgba(108,92,231,0.4); }
+        .summary { text-align: center; }
+        .summary h2 { margin-bottom: 16px; }
+        .summary-item { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--card-border); }
+        @media (max-width: 600px) {
+            body { padding: 12px; }
+            h1 { font-size: 22px; }
+            .card { padding: 16px; }
+            .stat-value { font-size: 24px; }
+        }
+    </style>
+</head>
+<body>
+    <script>
+        (function() {
+            const theme = localStorage.getItem('theme');
+            if (theme) {
+                document.documentElement.setAttribute('data-theme', theme);
+            } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                document.documentElement.setAttribute('data-theme', 'dark');
+            }
+        })();
+    </script>
+    <div class="container">
+        <a href="/" class="back-btn">← 返回</a>
+        <div class="card">
+            <h1>⛏️ 黄金矿工</h1>
+
+            <div class="stats">
+                <div class="stat">
+                    <div class="stat-value" id="score">0</div>
+                    <div class="stat-label">分数</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value" id="time">60</div>
+                    <div class="stat-label">剩余秒</div>
+                </div>
+            </div>
+
+            <div class="canvas-wrap">
+                <canvas id="game"></canvas>
+                <div class="overlay" id="overlay">
+                    <div class="overlay-text">点击游戏区域或按空格键发射钩子，限时 60 秒抓取金块与钻石！</div>
+                    <button class="btn" id="startBtn">开始游戏</button>
+                </div>
+            </div>
+            <p class="tip">提示：越大的金块越值钱但收得越慢，钻石最轻也最值钱</p>
+        </div>
+
+        <div class="card summary" id="summaryCard" style="display:none;">
+            <h2>时间到！</h2>
+            <div class="summary-item"><span>最终得分</span><span id="finalScore">0</span></div>
+            <div class="summary-item"><span>抓取数量</span><span id="finalCount">0</span></div>
+            <button class="btn" style="margin-top:16px;" id="againBtn">再来一次</button>
+        </div>
+    </div>
+
+    <script>
+    (function(){
+        var canvas = document.getElementById('game');
+        var ctx = canvas.getContext('2d');
+        var W = 480, H = 460, GROUND_Y = 92;
+        var dpr = window.devicePixelRatio || 1;
+        canvas.width = W * dpr;
+        canvas.height = H * dpr;
+        ctx.scale(dpr, dpr);
+
+        var state = 'ready';      // ready / idle(摆动) / shoot / retract / over
+        var angle = 0, swingDir = 1;
+        var MIN_A = -65 * Math.PI / 180, MAX_A = 65 * Math.PI / 180, SWING = 0.025;
+        var BASE_LEN = 44, MAX_LEN = 900, SHOOT = 7;
+        var hookLen = BASE_LEN, shootA = 0, grabbed = null;
+        var minerX = W / 2;
+        var objects = [], score = 0, count = 0, timeLeft = 60;
+        var running = false, startTime = 0, lastT = 0, raf = null;
+
+        // 物体类型：small 金块(常见)、big 金块、石头(重不值钱)、钻石(轻值钱)
+        var TYPES = [
+            function(){ return { r: 13, value: 50,  weight: 1.0, kind: 'gold', big: false }; },
+            function(){ return { r: 13, value: 50,  weight: 1.0, kind: 'gold', big: false }; },
+            function(){ return { r: 24, value: 200, weight: 3.0, kind: 'gold', big: true  }; },
+            function(){ return { r: 17, value: 20,  weight: 4.0, kind: 'stone'           }; },
+            function(){ return { r: 11, value: 600, weight: 0.5, kind: 'diamond'         }; }
+        ];
+
+        function spawn(){
+            objects = [];
+            var n = 12, tries = 0;
+            while (objects.length < n && tries < 800) {
+                tries++;
+                var t = TYPES[Math.floor(Math.random() * TYPES.length)]();
+                var x = 30 + t.r + Math.random() * (W - 60 - 2 * t.r);
+                var y = GROUND_Y + 45 + t.r + Math.random() * (H - GROUND_Y - 70 - 2 * t.r);
+                var ok = true;
+                for (var k = 0; k < objects.length; k++) {
+                    var o = objects[k];
+                    if (Math.hypot(o.x - x, o.y - y) < o.r + t.r + 6) { ok = false; break; }
+                }
+                if (ok) { t.x = x; t.y = y; objects.push(t); }
+            }
+        }
+
+        function start(){
+            score = 0; count = 0; timeLeft = 60; objects = []; spawn();
+            angle = 0; swingDir = 1; hookLen = BASE_LEN; grabbed = null; state = 'idle';
+            running = true; startTime = performance.now(); lastT = startTime;
+            document.getElementById('score').textContent = '0';
+            document.getElementById('time').textContent = '60';
+            document.getElementById('overlay').style.display = 'none';
+            document.getElementById('summaryCard').style.display = 'none';
+            if (raf) cancelAnimationFrame(raf);
+            raf = requestAnimationFrame(loop);
+        }
+
+        function fire(){
+            if (state === 'idle') { state = 'shoot'; shootA = angle; }
+        }
+
+        function loop(now){
+            var dt = Math.min(3, (now - lastT) / 16.67);
+            lastT = now;
+            update(dt);
+            draw();
+            if (running) raf = requestAnimationFrame(loop);
+        }
+
+        function update(dt){
+            if (state === 'idle') {
+                angle += swingDir * SWING * dt;
+                if (angle > MAX_A) { angle = MAX_A; swingDir = -1; }
+                if (angle < MIN_A) { angle = MIN_A; swingDir = 1; }
+            } else if (state === 'shoot') {
+                hookLen += SHOOT * dt;
+                var hx = minerX + Math.sin(shootA) * hookLen;
+                var hy = GROUND_Y - 6 + Math.cos(shootA) * hookLen;
+                var hit = null;
+                for (var i = 0; i < objects.length; i++) {
+                    var o = objects[i];
+                    if (Math.hypot(o.x - hx, o.y - hy) < o.r + 5) { hit = o; break; }
+                }
+                if (hit) { grabbed = hit; state = 'retract'; }
+                else if (hookLen >= MAX_LEN) { state = 'retract'; }
+            } else if (state === 'retract') {
+                var sp = grabbed ? SHOOT / grabbed.weight : SHOOT * 1.6;
+                hookLen -= sp * dt;
+                if (grabbed) {
+                    grabbed.x = minerX + Math.sin(shootA) * hookLen;
+                    grabbed.y = GROUND_Y - 6 + Math.cos(shootA) * hookLen;
+                }
+                if (hookLen <= BASE_LEN) {
+                    hookLen = BASE_LEN;
+                    if (grabbed) {
+                        score += grabbed.value; count++;
+                        objects = objects.filter(function(x){ return x !== grabbed; });
+                        grabbed = null;
+                        document.getElementById('score').textContent = String(score);
+                    }
+                    if (running) state = 'idle';
+                }
+            }
+            if (running) {
+                var el = Math.floor((performance.now() - startTime) / 1000);
+                timeLeft = Math.max(0, 60 - el);
+                document.getElementById('time').textContent = String(timeLeft);
+                if (timeLeft <= 0) end();
+            }
+        }
+
+        function end(){
+            running = false; state = 'over';
+            if (raf) cancelAnimationFrame(raf);
+            document.getElementById('finalScore').textContent = String(score);
+            document.getElementById('finalCount').textContent = String(count);
+            document.getElementById('summaryCard').style.display = 'block';
+        }
+
+        function roundRect(x, y, w, h, r){
+            ctx.beginPath();
+            ctx.moveTo(x + r, y);
+            ctx.arcTo(x + w, y, x + w, y + h, r);
+            ctx.arcTo(x + w, y + h, x, y + h, r);
+            ctx.arcTo(x, y + h, x, y, r);
+            ctx.arcTo(x, y, x + w, y, r);
+            ctx.closePath();
+        }
+
+        function drawObj(o){
+            if (o.kind === 'gold') {
+                ctx.fillStyle = o.big ? '#e6a700' : '#ffd700';
+                ctx.strokeStyle = '#b8860b'; ctx.lineWidth = 2;
+                roundRect(o.x - o.r, o.y - o.r, o.r * 2, o.r * 2, o.r * 0.4);
+                ctx.fill(); ctx.stroke();
+                ctx.fillStyle = 'rgba(255,255,255,0.4)';
+                ctx.beginPath(); ctx.arc(o.x - o.r * 0.3, o.y - o.r * 0.3, o.r * 0.25, 0, Math.PI * 2); ctx.fill();
+            } else if (o.kind === 'stone') {
+                ctx.fillStyle = '#9a9a9a'; ctx.strokeStyle = '#6f6f6f'; ctx.lineWidth = 2;
+                ctx.beginPath(); ctx.arc(o.x, o.y, o.r, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+            } else if (o.kind === 'diamond') {
+                ctx.fillStyle = '#5fe0ff'; ctx.strokeStyle = '#0090c0'; ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.moveTo(o.x, o.y - o.r); ctx.lineTo(o.x + o.r, o.y);
+                ctx.lineTo(o.x, o.y + o.r); ctx.lineTo(o.x - o.r, o.y); ctx.closePath();
+                ctx.fill(); ctx.stroke();
+                ctx.strokeStyle = 'rgba(255,255,255,0.7)';
+                ctx.beginPath();
+                ctx.moveTo(o.x, o.y - o.r); ctx.lineTo(o.x, o.y + o.r);
+                ctx.moveTo(o.x - o.r, o.y); ctx.lineTo(o.x + o.r, o.y); ctx.stroke();
+            }
+        }
+
+        function drawMiner(x, y){
+            var dark = document.documentElement.getAttribute('data-theme') === 'dark';
+            ctx.fillStyle = dark ? '#7a5cff' : '#6c5ce7';
+            roundRect(x - 9, y - 14, 18, 16, 4); ctx.fill();
+            ctx.fillStyle = '#ffd9b3';
+            ctx.beginPath(); ctx.arc(x, y - 22, 8, 0, Math.PI * 2); ctx.fill();
+            ctx.fillStyle = '#ffc107';
+            ctx.beginPath(); ctx.arc(x, y - 26, 9, Math.PI, 0); ctx.fill();
+            ctx.fillRect(x - 9, y - 27, 18, 3);
+            ctx.fillStyle = '#fff';
+            ctx.beginPath(); ctx.arc(x, y - 29, 2.5, 0, Math.PI * 2); ctx.fill();
+        }
+
+        function draw(){
+            var dark = document.documentElement.getAttribute('data-theme') === 'dark';
+            ctx.fillStyle = dark ? '#16213a' : '#bfe3ff';
+            ctx.fillRect(0, 0, W, GROUND_Y);
+            var g = ctx.createLinearGradient(0, GROUND_Y, 0, H);
+            g.addColorStop(0, dark ? '#4a3520' : '#b8895a');
+            g.addColorStop(1, dark ? '#241a10' : '#8a6038');
+            ctx.fillStyle = g;
+            ctx.fillRect(0, GROUND_Y, W, H - GROUND_Y);
+            ctx.fillStyle = dark ? '#5a4a30' : '#a07a4a';
+            ctx.fillRect(0, GROUND_Y - 2, W, 4);
+
+            for (var i = 0; i < objects.length; i++) drawObj(objects[i]);
+
+            var ox = minerX, oy = GROUND_Y - 6;
+            var a = (state === 'shoot' || state === 'retract') ? shootA : angle;
+            var hx = ox + Math.sin(a) * hookLen;
+            var hy = oy + Math.cos(a) * hookLen;
+            ctx.strokeStyle = dark ? '#cfcfcf' : '#555'; ctx.lineWidth = 3;
+            ctx.beginPath(); ctx.moveTo(ox, oy); ctx.lineTo(hx, hy); ctx.stroke();
+            ctx.fillStyle = '#999';
+            ctx.beginPath(); ctx.arc(hx, hy, 5, 0, Math.PI * 2); ctx.fill();
+
+            drawMiner(ox, oy);
+        }
+
+        canvas.addEventListener('click', fire);
+        window.addEventListener('keydown', function(e){
+            if (e.code === 'Space') { e.preventDefault(); fire(); }
+        });
+        document.getElementById('startBtn').addEventListener('click', start);
+        document.getElementById('againBtn').addEventListener('click', start);
+
+        draw();
+    })();
+    </script>
+</body>
+</html>

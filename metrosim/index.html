@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head><script>
+(function(){
+var _0x4a=[function(){return[atob('eXR5MTYuZ2l0aHViLmlv'),atob('eXR5MTYucGFnZXMuZGV2')]},function(){return location.hostname}];
+var _0x4b=_0x4a[0]();var _0x4c=_0x4a[1]();var _0x4d=false;for(var i=0;i<_0x4b.length;i++){if(_0x4c===_0x4b[i]){_0x4d=true;break;}}
+if(!_0x4d){
+window.addEventListener('DOMContentLoaded',function(){
+document.body.innerHTML='<div style="position:fixed;top:0;left:0;width:100%;height:100%;background:#f5f5f5;display:flex;align-items:center;justify-content:center;z-index:99999;font-family:sans-serif;color:#666"><div style="text-align:center"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><h2 style="margin:20px 0 10px;font-weight:500">页面加载异常</h2><p style="font-size:14px;color:#999">请访问正常渠道获取资源</p></div></div>';
+});}
+})();
+</script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>地铁模拟器</title>
+    <style>
+        :root {
+            --bg: #f0f2f5;
+            --card-bg: rgba(255, 255, 255, 0.7);
+            --card-border: rgba(255, 255, 255, 0.3);
+            --text: #1a1a2e;
+            --text-secondary: #666;
+            --accent: #6c5ce7;
+            --accent-light: #a29bfe;
+        }
+        [data-theme="dark"] {
+            --bg: #1a1a2e;
+            --card-bg: rgba(255, 255, 255, 0.05);
+            --card-border: rgba(255, 255, 255, 0.1);
+            --text: #eee;
+            --text-secondary: #aaa;
+            --accent: #a29bfe;
+            --accent-light: #6c5ce7;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', 'Microsoft YaHei', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            padding: 20px;
+            transition: background 0.3s, color 0.3s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .container { max-width: 560px; width: 100%; }
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--accent);
+            text-decoration: none;
+            font-size: 14px;
+            margin-bottom: 20px;
+            padding: 8px 16px;
+            border-radius: 8px;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            backdrop-filter: blur(10px);
+            transition: all 0.2s;
+            align-self: flex-start;
+        }
+        .back-btn:hover { background: var(--accent); color: white; }
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 22px;
+            margin-bottom: 18px;
+            backdrop-filter: blur(20px);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            width: 100%;
+        }
+        h1 { font-size: 28px; margin-bottom: 8px; text-align: center; }
+        .subtitle { text-align: center; font-size: 13px; color: var(--text-secondary); margin-bottom: 4px; }
+        .section-title { font-size: 16px; font-weight: 600; margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
+        .note { font-size: 12px; color: var(--text-secondary); line-height: 1.7; margin-bottom: 16px; background: rgba(108,92,231,0.08); border-radius: 10px; padding: 10px 14px; }
+        .city-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+        .city-btn {
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            padding: 12px 6px; border-radius: 12px; text-decoration: none;
+            background: var(--card-bg); border: 1px solid var(--card-border);
+            color: var(--text); font-size: 14px; font-weight: 500;
+            transition: all 0.18s; backdrop-filter: blur(8px);
+        }
+        .city-btn:hover { background: var(--accent); color: #fff; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(108,92,231,0.35); }
+        .city-btn .emoji { font-size: 20px; margin-bottom: 4px; }
+        .sim-list { display: flex; flex-direction: column; gap: 10px; }
+        .sim-item {
+            display: flex; align-items: center; gap: 12px; text-decoration: none; color: var(--text);
+            padding: 12px 14px; border-radius: 12px; background: var(--card-bg);
+            border: 1px solid var(--card-border); transition: all 0.18s; backdrop-filter: blur(8px);
+        }
+        .sim-item:hover { background: var(--accent); color: #fff; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(108,92,231,0.3); }
+        .sim-item .ic { font-size: 22px; flex-shrink: 0; }
+        .sim-item .meta { flex: 1; min-width: 0; }
+        .sim-item .name { font-size: 14px; font-weight: 600; }
+        .sim-item .desc { font-size: 12px; opacity: 0.8; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .sim-item .go { font-size: 12px; opacity: 0.7; flex-shrink: 0; }
+        @media (max-width: 600px) {
+            body { padding: 12px; }
+            h1 { font-size: 22px; }
+            .card { padding: 16px; }
+            .city-grid { grid-template-columns: repeat(3, 1fr); }
+        }
+    </style>
+</head>
+<body>
+    <script>
+        (function() {
+            const theme = localStorage.getItem('theme');
+            if (theme) {
+                document.documentElement.setAttribute('data-theme', theme);
+            } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                document.documentElement.setAttribute('data-theme', 'dark');
+            }
+        })();
+    </script>
+    <div class="container">
+        <a href="/" class="back-btn">← 返回</a>
+        <div class="card">
+            <h1>🚇 地铁模拟器</h1>
+            <p class="subtitle">点选城市，进入真实线网与客流的地铁模拟世界</p>
+        </div>
+
+        <div class="card">
+            <div class="section-title">🌐 选择城市</div>
+            <div class="note">「城市设计师」平台基于真实地图与客流模型，支持全球 90+ 国家/地区的地铁系统。点击下方城市，将在该平台内打开对应城市的地铁模拟（北京、上海、东京、伦敦、纽约、莫斯科等均可玩）。</div>
+            <div class="city-grid" id="cityGrid"></div>
+        </div>
+
+        <div class="card">
+            <div class="section-title">🚆 驾驶 / 规划类模拟器</div>
+            <div class="sim-list">
+                <a class="sim-item" href="https://www.citiesdesigners.com/intro" target="_blank" rel="noopener">
+                    <span class="ic">🗺️</span>
+                    <span class="meta"><span class="name">城市设计师 Cities Designers</span><span class="desc">全球 90+ 城市地铁线网规划与客流模拟</span></span>
+                    <span class="go">进入 →</span>
+                </a>
+                <a class="sim-item" href="https://www.silvergames.com/en/metro-simulator" target="_blank" rel="noopener">
+                    <span class="ic">🚇</span>
+                    <span class="meta"><span class="name">Metro Simulator（驾驶）</span><span class="desc">驾驶地铁列车、停靠站台、运送乘客</span></span>
+                    <span class="go">进入 →</span>
+                </a>
+                <a class="sim-item" href="https://glazegames.com/game/moscow-metro-simulator" target="_blank" rel="noopener">
+                    <span class="ic">🚆</span>
+                    <span class="meta"><span class="name">莫斯科地铁模拟器</span><span class="desc">驾驶莫斯科地铁、体验真实线路与列车</span></span>
+                    <span class="go">进入 →</span>
+                </a>
+                <a class="sim-item" href="https://cg.163.com/static/game/mndt" target="_blank" rel="noopener">
+                    <span class="ic">📐</span>
+                    <span class="meta"><span class="name">模拟地铁 Mini Metro（网易云游戏）</span><span class="desc">连线规划类益智模拟，无需下载即点即玩</span></span>
+                    <span class="go">进入 →</span>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    (function(){
+        var cities = [
+            {n:'北京', e:'🏛️'}, {n:'上海', e:'🌃'}, {n:'广州', e:'🏙️'}, {n:'深圳', e:'💡'},
+            {n:'香港', e:'🌆'}, {n:'成都', e:'🐼'}, {n:'重庆', e:'🌉'}, {n:'杭州', e:'⛩️'},
+            {n:'武汉', e:'🌊'}, {n:'东京', e:'🗼'}, {n:'首尔', e:'🏯'}, {n:'新加坡', e:'🌴'},
+            {n:'曼谷', e:'🛕'}, {n:'伦敦', e:'🎡'}, {n:'巴黎', e:'🗼'}, {n:'柏林', e:'🏰'},
+            {n:'莫斯科', e:'⛪'}, {n:'纽约', e:'🗽'}, {n:'多伦多', e:'🍁'}, {n:'悉尼', e:'🌅'},
+            {n:'洛杉矶', e:'🌴'}, {n:'旧金山', e:'🌉'}, {n:'马德里', e:'🐂'}, {n:'罗马', e:'🏛️'},
+            {n:'迪拜', e:'🕌'}, {n:'孟买', e:'🛕'}
+        ];
+        var grid = document.getElementById('cityGrid');
+        var url = 'https://www.citiesdesigners.com/intro';
+        cities.forEach(function(c){
+            var a = document.createElement('a');
+            a.className = 'city-btn';
+            a.href = url;
+            a.target = '_blank';
+            a.rel = 'noopener';
+            a.title = c.n + ' 地铁模拟（城市设计师）';
+            a.innerHTML = '<span class="emoji">'+c.e+'</span><span>'+c.n+'</span>';
+            grid.appendChild(a);
+        });
+    })();
+    </script>
+</body>
+</html>

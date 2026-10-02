@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>中国地铁模拟器</title>
+<style>
+  :root{
+    --bg:#0f1420; --bg2:#161d2e; --card:rgba(255,255,255,.06);
+    --card2:rgba(255,255,255,.09); --border:rgba(255,255,255,.12);
+    --text:#e8edf7; --muted:#9aa6bd; --accent:#3da9fc; --accent2:#5ee0a0;
+    --danger:#ff6b6b; --warn:#ffd166; --radius:16px;
+  }
+  html[data-theme="light"]{
+    --bg:#eef2f8; --bg2:#e3e9f3; --card:rgba(20,30,50,.05);
+    --card2:rgba(20,30,50,.08); --border:rgba(20,30,50,.12);
+    --text:#16203a; --muted:#5a6party; --muted:#5a667e; --accent:#1f7ad6; --accent2:#1faa6a;
+    --danger:#d83a3a; --warn:#c79100;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{margin:0;height:100%}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+    background:radial-gradient(1200px 600px at 70% -10%,#1d2942 0%,var(--bg) 55%) fixed,var(--bg);
+    color:var(--text);min-height:100%;overflow-x:hidden;
+  }
+  .wrap{max-width:880px;margin:0 auto;padding:18px 16px 40px}
+  header{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+  .back{
+    border:1px solid var(--border);background:var(--card);color:var(--text);
+    width:40px;height:40px;border-radius:12px;font-size:18px;cursor:pointer;flex-shrink:0;
+    display:flex;align-items:center;justify-content:center;transition:.15s;
+  }
+  .back:hover{background:var(--card2)}
+  .title{font-size:22px;font-weight:800;letter-spacing:.5px}
+  .sub{font-size:13px;color:var(--muted);margin-top:2px}
+  .search{
+    width:100%;padding:11px 14px;border-radius:12px;border:1px solid var(--border);
+    background:var(--card);color:var(--text);font-size:15px;margin:6px 0 14px;outline:none;
+  }
+  .search::placeholder{color:var(--muted)}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:10px}
+  .city{
+    border:1px solid var(--border);background:var(--card);border-radius:14px;
+    padding:12px 8px;text-align:center;cursor:pointer;transition:.15s;position:relative;overflow:hidden;
+  }
+  .city:hover{background:var(--card2);transform:translateY(-2px)}
+  .city .em{font-size:22px;line-height:1}
+  .city .nm{font-size:14px;font-weight:700;margin-top:6px}
+  .city .ct{font-size:11px;color:var(--muted);margin-top:2px}
+  .city .badge{position:absolute;top:6px;right:6px;font-size:10px;background:var(--accent);color:#fff;padding:1px 6px;border-radius:8px}
+  .lines{display:flex;flex-direction:column;gap:10px;margin-top:6px}
+  .line{
+    display:flex;align-items:center;gap:12px;border:1px solid var(--border);
+    background:var(--card);border-radius:14px;padding:12px 14px;cursor:pointer;transition:.15s;
+  }
+  .line:hover{background:var(--card2);transform:translateY(-2px)}
+  .line .dot{width:14px;height:14px;border-radius:50%;flex-shrink:0;box-shadow:0 0 0 4px rgba(255,255,255,.08)}
+  .line .meta{flex:1;min-width:0}
+  .line .ln{font-size:15px;font-weight:700}
+  .line .st{font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:2px}
+  .line .go{font-size:13px;color:var(--accent);flex-shrink:0}
+  /* play */
+  .hud{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:10px}
+  .pill{border:1px solid var(--border);background:var(--card);border-radius:999px;padding:6px 12px;font-size:13px;font-weight:700}
+  .pill b{color:var(--accent2)}
+  .stage{position:relative;border:1px solid var(--border);border-radius:16px;overflow:hidden;background:linear-gradient(180deg,#0b1020,#0e1530);aspect-ratio:16/9}
+  html[data-theme="light"] .stage{background:linear-gradient(180deg,#dde6f5,#cdd9ee)}
+  canvas{display:block;width:100%;height:100%}
+  .ctrl{display:flex;gap:10px;margin-top:12px}
+  .btn{
+    flex:1;border:1px solid var(--border);background:var(--card);color:var(--text);
+    padding:16px 0;border-radius:14px;font-size:16px;font-weight:800;cursor:pointer;user-select:none;transition:.1s;
+  }
+  .btn:active{transform:scale(.97);background:var(--card2)}
+  .btn.acc{background:linear-gradient(180deg,#3da9fc,#2b86d6);border-color:transparent;color:#fff}
+  .btn.brk{background:linear-gradient(180deg,#ff8a5b,#e8633a);border-color:transparent;color:#fff}
+  .btn.go{background:linear-gradient(180deg,#5ee0a0,#36c285);border-color:transparent;color:#06281a}
+  .ann{
+    margin-top:10px;min-height:22px;text-align:center;font-size:15px;font-weight:700;color:var(--warn);
+    transition:.2s;opacity:0;
+  }
+  .ann.show{opacity:1}
+  .mapbox{border:1px solid var(--border);border-radius:14px;background:var(--card);padding:12px;margin-top:12px;overflow-x:auto}
+  .maprow{display:flex;align-items:center;gap:0;min-width:max-content;padding:4px 0}
+  .ms{display:flex;align-items:center;gap:0}
+  .mdot{width:12px;height:12px;border-radius:50%;border:2px solid #fff;flex-shrink:0}
+  .mseg{height:4px;width:26px;flex-shrink:0}
+  .mlabel{font-size:11px;color:var(--muted);margin-top:4px;white-space:nowrap}
+  .mcur{outline:3px solid var(--warn);outline-offset:2px;border-radius:50%}
+  .toggle{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--muted);cursor:pointer}
+  .toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(20px);background:#000a;color:#fff;padding:10px 16px;border-radius:12px;font-size:14px;opacity:0;transition:.25s;pointer-events:none;z-index:50}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+  .note{font-size:12px;color:var(--muted);margin-top:14px;line-height:1.6}
+  .empty{text-align:center;color:var(--muted);padding:30px 0}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <button class="back" id="backBtn" title="返回">←</button>
+    <div>
+      <div class="title" id="title">中国地铁模拟器</div>
+      <div class="sub" id="subtitle">选择一个城市开始</div>
+    </div>
+  </header>
+
+  <!-- HOME -->
+  <section id="home">
+    <input class="search" id="search" placeholder="搜索城市，如 北京 / 上海 / 成都 …" />
+    <div class="grid" id="cityGrid"></div>
+    <div class="note">
+      数据说明：线路名称、代表色与起讫站均为真实信息；非骨干线路的途经站为示意性罗列，
+      用于驾驶模拟体验，具体运营站点请以官方为准。驾驶时用「加速 / 刹车」控制列车，进站需停在站台区内。
+    </div>
+  </section>
+
+  <!-- CITY -->
+  <section id="city" style="display:none">
+    <div class="lines" id="lineList"></div>
+    <div class="note">选择一条线路进入驾驶模拟。列车从起点站发车，沿途需在每一站站台区内平稳停车。</div>
+  </section>
+
+  <!-- PLAY -->
+  <section id="play" style="display:none">
+    <div class="hud">
+      <span class="pill" id="hLine">线路</span>
+      <span class="pill">站 <b id="hIdx">0</b>/<b id="hTot">0</b></span>
+      <span class="pill">时速 <b id="hSpeed">0</b> km/h</span>
+      <span class="pill">得分 <b id="hScore">0</b></span>
+      <label class="toggle"><input type="checkbox" id="voi" checked /> 报站语音</label>
+    </div>
+    <div class="stage"><canvas id="cv"></canvas></div>
+    <div class="ann" id="ann"></div>
+    <div class="ctrl">
+      <div class="btn brk" id="bBrake">🛑 刹车</div>
+      <div class="btn acc" id="bAcc">🚀 加速</div>
+      <div class="btn go" id="bDoor" style="display:none">🚪 关门发车</div>
+    </div>
+    <div class="mapbox"><div class="maprow" id="mapRow"></div></div>
+  </section>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+/* 域名校验 + 隐藏署名（yty16） */
+(function(){
+  try{
+    var ok = location.hostname.indexOf(atob("eXR5MTY=")+".github.io")>-1 || location.hostname.indexOf("yty16.pages.dev")>-1;
+  }catch(e){ ok=false; }
+})();
+var _attr = "eXR5MTY="; // 隐藏署名
+
+/* ===== 城市与线路数据（真实线路名/代表色/起讫站，途经站为示意） ===== */
+var CITIES = [
+  {em:"🏙️",nm:"北京",lines:[
+    {n:"1号线",c:"#a52a2a",s:["苹果园","古城","五棵松","军事博物馆","木樨地","复兴门","西单","天安门西","王府井","东单","建国门","国贸","大望路","四惠","四惠东"]},
+    {n:"2号线 (环线)",c:"#1e73b8",s:["西直门","积水潭","雍和宫","东直门","东四十条","朝阳门","建国门","北京站","前门","宣武门","长椿街","复兴门","阜成门","车公庄","西直门"]},
+    {n:"4号线",c:"#008e9c",s:["安河桥北","北宫门","圆明园","中关村","海淀黄庄","国家图书馆","西直门","宣武门","菜市口","北京南站","公益西桥"]},
+    {n:"5号线",c:"#cf1f2f",s:["天通苑北","立水桥","惠新西街南口","雍和宫","东四","东单","崇文门","天坛东门","蒲黄榆","宋家庄"]},
+    {n:"10号线 (环线)",c:"#f3a300",s:["巴沟","苏州街","海淀黄庄","知春路","牡丹园","三元桥","国贸","劲松","十里河","宋家庄","草桥","首经贸","丰台站","西局","公主坟","慈寿寺","苏州街"]},
+    {n:"13号线",c:"#ffd200",s:["西直门","大钟寺","知春路","五道口","上地","西二旗","龙泽","回龙观","霍营","立水桥","望京西","东直门"]},
+    {n:"昌平线",c:"#e2b400",s:["昌平西山口","昌平","沙河","生命科学园","西二旗","清河站","蓟门桥"]},
+    {n:"大兴机场线",c:"#c8102e",s:["草桥","大兴新城","大兴机场"]}
+  ]},
+  {em:"🌃",nm:"上海",lines:[
+    {n:"1号线",c:"#e3002b",s:["莘庄","上海南站","徐家汇","人民广场","上海火车站","中山北路","汶水路","通河新村","富锦路"]},
+    {n:"2号线",c:"#8cc63e",s:["徐泾东","虹桥火车站","中山公园","静安寺","人民广场","陆家嘴","世纪大道","龙阳路","浦东国际机场"]},
+    {n:"3号线",c:"#ffd100",s:["上海南站","宜山路","虹桥路","中山公园","曹杨路","上海火车站","宝山路","江湾镇","长江南路"]},
+    {n:"4号线 (环线)",c:"#5b2a86",s:["宜山路","中山公园","上海火车站","宝山路","世纪大道","西藏南路","大木桥路","宜山路"]},
+    {n:"10号线",c:"#c4a3d1",s:["航中路","上海动物园","虹桥路","交通大学","南京东路","海伦路","五角场","新江湾城","基隆路"]},
+    {n:"11号线",c:"#851e22",s:["迪士尼","罗山路","徐家汇","江苏路","隆德路","嘉定西","花桥"]},
+    {n:"14号线",c:"#6f1d77",s:["封浜","真如","静安寺","大世界","陆家嘴","昌邑路","云顺路","桂桥路"]}
+  ]},
+  {em:"🌆",nm:"广州",lines:[
+    {n:"1号线",c:"#d4237e",s:["西塱","坑口","芳村","黄沙","公园前","烈士陵园","东山口","广州东站"]},
+    {n:"2号线",c:"#3aa547",s:["广州南站","石壁","洛溪","昌岗","公园前","纪念堂","广州火车站","三元里","嘉禾望岗"]},
+    {n:"3号线",c:"#e60012",s:["番禺广场","汉溪长隆","大石","客村","珠江新城","体育西路","广州东站","机场南","机场北"]},
+    {n:"4号线",c:"#7a2b1a",s:["南沙客运港","蕉门","车陂南","万胜围","大学城北","新造"]},
+    {n:"5号线",c:"#d59411",s:["滘口","西场","西村","广州火车站","小北","珠江新城","车陂南","文冲"]},
+    {n:"7号线",c:"#00629b",s:["美的大道","广州南站","汉溪长隆","大学城南","姬堂"]},
+    {n:"广佛线",c:"#a62427",s:["新城东","魁奇路","祖庙","普君北路","西朗","沙园","沥滘"]}
+  ]},
+  {em:"🌇",nm:"深圳",lines:[
+    {n:"1号线",c:"#e60012",s:["机场东","后瑞","前海湾","世界之窗","会展中心","老街","罗湖"]},
+    {n:"2号线",c:"#6f1d77",s:["赤湾","海上世界","后海","福田","市民中心","大剧院","莲塘"]},
+    {n:"3号线",c:"#ffd100",s:["双龙","大运","布吉","老街","购物公园","福田","益田"]},
+    {n:"4号线",c:"#a5243d",s:["牛湖","清湖","深圳北站","市民中心","会展中心","福田口岸"]},
+    {n:"5号线",c:"#009b77",s:["赤湾","前海湾","宝安中心","西丽","深圳北站","布吉","黄贝岭"]},
+    {n:"7号线",c:"#7a2b86",s:["西丽湖","安托山","车公庙","华强北","太安"]},
+    {n:"11号线",c:"#7c4d00",s:["碧头","机场","前海湾","车公庙","福田","岗厦北","华强南"]}
+  ]},
+  {em:"🐼",nm:"成都",lines:[
+    {n:"1号线",c:"#c8102e",s:["韦家碾","火车北站","人民北路","天府广场","倪家桥","火车南站","世纪城","科学城","兴隆湖","天府机场北"]},
+    {n:"2号线",c:"#ff8c00",s:["犀浦","茶店子","天府广场","春熙路","成都东客站","洪河","龙泉驿站"]},
+    {n:"3号线",c:"#d9006c",s:["成都医学院","昭觉寺南路","驷马桥","春熙路","省体育馆","太平园","双流西站","双流机场2航站楼"]},
+    {n:"4号线",c:"#009b77",s:["万盛","非遗博览园","文化宫","骡马市","市二医院","万年场","西河"]},
+    {n:"7号线 (环线)",c:"#7a5c00",s:["火车北站","一品天下","金沙博物馆","火车南站","三瓦窑","大观","成都东客站","迎晖路","火车北站"]},
+    {n:"10号线",c:"#009ee3",s:["太平园","簇锦","双流机场1航站楼","双流机场2航站楼","天府机场3号4号航站楼"]}
+  ]},
+  {em:"🌉",nm:"重庆",lines:[
+    {n:"1号线",c:"#e60012",s:["璧山","大学城","沙坪坝","小龙坎","较场口","朝天门"]},
+    {n:"2号线",c:"#009b77",s:["鱼洞","大坪","牛角沱","临江门","较场口","天堂堡"]},
+    {n:"3号线",c:"#ff8c00",s:["鱼洞","花溪","四公里","两路口","牛角沱","观音桥","红旗河沟","重庆北站","鸳鸯","江北机场T2航站楼"]},
+    {n:"4号线",c:"#c9352e",s:["民安大道","重庆北站北广场","头塘","唐家沱"]},
+    {n:"5号线",c:"#a5243d",s:["园博中心","冉家坝","大石坝","石桥铺","跳磴"]},
+    {n:"6号线",c:"#e2b400",s:["茶园","江北城","红旗河沟","冉家坝","光电园","北碚"]},
+    {n:"环线",c:"#0a6ebd",s:["重庆北站南广场","五里店","冉家坝","沙坪坝","重庆图书馆","四公里","上新街","重庆北站南广场"]},
+    {n:"国博线",c:"#7a2b86",s:["礼嘉","悦来","沙河坝"]}
+  ]},
+  {em:"🌊",nm:"武汉",lines:[
+    {n:"1号线",c:"#e60012",s:["径河","舵落口","硚口路","三阳路","黄浦路","汉口北"]},
+    {n:"2号线",c:"#ff8c00",s:["天河机场","金银潭","中山公园","江汉路","积玉桥","洪山广场","光谷广场","佛祖岭"]},
+    {n:"3号线",c:"#009b77",s:["宏图大道","范湖","武汉商务区","宗关","沌阳大道"]},
+    {n:"4号线",c:"#32a3d9",s:["柏林","黄金口","五里墩","武昌火车站","中南路","武汉火车站"]},
+    {n:"5号线",c:"#a5243d",s:["武汉站东广场","徐家棚","司门口黄鹤楼","复兴路","中医药大学"]},
+    {n:"6号线",c:"#d1a000",s:["东风公司","琴台","六渡桥","石桥","金银湖公园"]},
+    {n:"7号线",c:"#7a5c00",s:["园博园北","王家墩东","武昌火车站","湖工大","青龙山地铁小镇"]},
+    {n:"8号线",c:"#009bdf",s:["金潭路","黄浦路","赵家条","徐东","梨园"]}
+  ]},
+  {em:"🏯",nm:"西安",lines:[
+    {n:"1号线",c:"#e60012",s:["沣河森林公园","后卫寨","开远门","北大街","五路口","纺织城"]},
+    {n:"2号线",c:"#009b77",s:["北客站","大明宫西","北大街","钟楼","会展中心","韦曲南"]},
+    {n:"3号线",c:"#f0a000",s:["鱼化寨","科技路","小寨","大雁塔","青龙寺","国际港务区"]},
+    {n:"4号线",c:"#008e9c",s:["北客站北","大明宫北","西安站","大差市","大雁塔","航天新城"]},
+    {n:"5号线",c:"#7a2b86",s:["创新港","阿房宫南","南稍门","李家村","雁翔路北口"]},
+    {n:"6号线",c:"#e2b400",s:["西安国际医学中心","科技路","钟楼","交通大学","纺织城"]},
+    {n:"9号线",c:"#a5243d",s:["纺织城","华清池","秦陵西"]},
+    {n:"14号线",c:"#6f1d77",s:["机场西","北客站北","奥体中心"]}
+  ]},
+  {em:"🌿",nm:"杭州",lines:[
+    {n:"1号线",c:"#e60012",s:["湘湖","滨康路","近江","龙翔桥","武林广场","西湖文化广场","火车东站","客运中心","下沙江滨"]},
+    {n:"2号线",c:"#ff8c00",s:["良渚","三墩","学院路","凤起路","钱江路","钱江世纪城","人民路","朝阳"]},
+    {n:"3号线",c:"#a5243d",s:["石马","武林门","武林广场","西湖文化广场","善贤","星桥"]},
+    {n:"4号线",c:"#009bdf",s:["浦沿","中医药大学","近江","市民中心","火车东站","彭埠","池华街"]},
+    {n:"5号线",c:"#6f1d77",s:["金星","蒋村","和睦","城站","南星桥","姑娘桥"]},
+    {n:"7号线",c:"#7a5c00",s:["吴山广场","市民中心","萧山国际机场","江东二路"]},
+    {n:"19号线",c:"#009b77",s:["火车西站","西湖文化广场","火车东站","萧山国际机场"]}
+  ]},
+  {em:"🍁",nm:"南京",lines:[
+    {n:"1号线",c:"#e60012",s:["八卦洲大桥南","迈皋桥","南京火车站","新模范马路","玄武门","鼓楼","新街口","三山街","中华门","安德门","江宁大学城","中国药科大学"]},
+    {n:"2号线",c:"#009b77",s:["鱼嘴","元通","新街口","大行宫","明故宫","孝陵卫","钟灵街","仙林中心","经天路"]},
+    {n:"3号线",c:"#3aa547",s:["林场","南京火车站","鸡鸣寺","浮桥","大行宫","武定门","卡子门","南京南站","秣周东路"]},
+    {n:"4号线",c:"#0a6ebd",s:["龙江","草场门","云南路","鼓楼","九华山","蒋王庙","仙林湖"]},
+    {n:"10号线",c:"#e2b400",s:["雨山路","文德路","龙华路","绿博园","元通","安德门"]},
+    {n:"S1机场线",c:"#7a2b86",s:["南京南站","翠屏山","禄口机场"]},
+    {n:"S3宁和线",c:"#a5243d",s:["南京南站","油坊桥","刘村","高家冲"]}
+  ]},
+  {em:"🌸",nm:"天津",lines:[
+    {n:"1号线",c:"#e60012",s:["刘园","勤俭道","西北角","西站","鼓楼","海光寺","鞍山道","营口道","小白楼","土城","陈塘庄","财经大学","双林","李楼"]},
+    {n:"2号线",c:"#009b77",s:["曹庄","咸阳路","鼓楼","天津站","靖江路","屿东城","滨海国际机场"]},
+    {n:"3号线",c:"#ff8c00",s:["南站","红旗南路","吴家窑","营口道","天津站","北站","铁东路","小淀"]},
+    {n:"4号线",c:"#0a6ebd",s:["东南角","和平路","徐州道","六纬路","成林道","万东路","新兴村"]},
+    {n:"5号线",c:"#e2b400",s:["北辰科技园北","丹河北道","志成路","建昌道","靖江路","直沽","下瓦房","李七庄南"]},
+    {n:"6号线",c:"#a5243d",s:["南孙庄","大毕庄","金钟街","北站","北竹林","长虹公园","人民医院","梅林路"]},
+    {n:"9号线",c:"#7a2b86",s:["天津站","十一经路","直沽","中山门","东海路","东海路"]}
+  ]},
+  {em:"🏞️",nm:"苏州",lines:[
+    {n:"1号线",c:"#e60012",s:["木渎","玉山路","苏州乐园","滨河路","广济南路","临顿路","相门","东方之门","星海广场","钟南街"]},
+    {n:"2号线",c:"#009b77",s:["骑河","高铁苏州北站","阳澄湖中路","广济南路","三香广场","桐泾公园","宝带桥南","桑田岛"]},
+    {n:"4号线",c:"#0a6ebd",s:["龙道浜","孙武纪念园","苏州火车站","北寺塔","观前街","南门","红庄","同里"]},
+    {n:"5号线",c:"#e2b400",s:["太湖香山","胥口","劳动路","南门","竹辉桥","斜塘","阳澄湖南"]}
+  ]},
+  {em:"🐉",nm:"郑州",lines:[
+    {n:"1号线",c:"#e60012",s:["河南工业大学","秦岭路","碧沙岗","绿城广场","医学院","二七广场","燕庄","郑州东站","文苑北路","河南大学新区"]},
+    {n:"2号线",c:"#009b77",s:["贾河","刘庄","沙门","关虎屯","黄河路","二里岗","南三环","南四环","城郊线","新郑机场"]},
+    {n:"3号线",c:"#ff8c00",s:["省体育中心","同乐","二七广场","东大街","博览中心","营岗"]},
+    {n:"4号线",c:"#0a6ebd",s:["老鸦陈","丰庆路","沙门","龙湖中环","姚庄","郎庄"]},
+    {n:"5号线 (环线)",c:"#e2b400",s:["月季公园","沙口路","郑州火车站","陇海西路","桐淮","南五里堡","郑州东站","金水东路","中央商务区","月季公园"]},
+    {n:"城郊线",c:"#a5243d",s:["南四环","孟庄","新郑机场"]}
+  ]},
+  {em:"🌶️",nm:"长沙",lines:[
+    {n:"1号线",c:"#e60012",s:["开福区政府","北辰三角洲","开福寺","五一广场","南门口","侯家塘","铁道学院","省政府","尚双塘"]},
+    {n:"2号线",c:"#009b77",s:["梅溪湖西","麓云路","金星路","溁湾镇","五一广场","芙蓉广场","长沙火车站","万家丽广场","长沙火车南站","光达"]},
+    {n:"3号线",c:"#ff8c00",s:["山塘","灵官渡","侯家塘","朝阳村","长沙火车站","月湖公园北","广生"]},
+    {n:"4号线",c:"#0a6ebd",s:["罐子岭","茶子山","六沟垅","溁湾镇","碧沙湖","砂子塘","长沙火车南站","杜家坪"]},
+    {n:"6号线",c:"#e2b400",s:["谢家桥","麓谷体育公园","白鸽咀","迎宾路口","朝阳村","黄花机场T1T2"]}
+  ]},
+  {em:"🌊",nm:"青岛",lines:[
+    {n:"1号线",c:"#e60012",s:["王家港","石油大学","青岛站","中山路","观象山","台东","海泊桥","青岛北站","兴国路","正阳中路","东郭庄"]},
+    {n:"2号线",c:"#009b77",s:["泰山路","台东","五四广场","浮山所","麦岛","石老人浴场","李村公园"]},
+    {n:"3号线",c:"#ff8c00",s:["青岛站","人民会堂","中山路","五四广场","敦化路","长沙路","李村","青岛北站"]},
+    {n:"4号线",c:"#0a6ebd",s:["人民会堂","信号山","海泊桥","浮山后","埠西","张村","大河东"]},
+    {n:"8号线",c:"#e2b400",s:["青岛北站","大洋","胶州北站"]},
+    {n:"11号线",c:"#7a2b86",s:["苗岭路","会展中心","海洋大学","鳌山卫","钱谷山"]}
+  ]},
+  {em:"⚓",nm:"宁波",lines:[
+    {n:"1号线",c:"#e60012",s:["高桥西","徐家漕","望春桥","西门口","鼓楼","东门口","福庆北路","海晏北路","盛莫路","霞浦"]},
+    {n:"2号线",c:"#009b77",s:["栎社国际机场","石碶","藕池","宁波火车站","城隍庙","鼓楼","外滩大桥","路林","红联"]},
+    {n:"3号线",c:"#ff8c00",s:["大通桥","体育馆","鄞州区政府","南部商务区","句章路","金海路"]},
+    {n:"4号线",c:"#0a6ebd",s:["慈城","丽江路","双东路","宁波火车站","兴宁桥东","儿童公园","东钱湖"]},
+    {n:"5号线",c:"#e2b400",s:["布政","石碶","雅渡","鄞州区政府","钱湖南路","会展中心","骆驼桥"]}
+  ]},
+  {em:"🏭",nm:"东莞",lines:[
+    {n:"2号线",c:"#e60012",s:["东莞火车站","茶山","榴花公园","鸿福路","西平","蛤地","虎门火车站","滨海湾新区"]}
+  ]},
+  {em:"🌾",nm:"无锡",lines:[
+    {n:"1号线",c:"#e60012",s:["堰桥","锡北运河","无锡火车站","三阳广场","清名桥","市民中心","江南大学","长广溪","南方泉"]},
+    {n:"2号线",c:"#009b77",s:["梅园开原寺","河埒口","三阳广场","东林广场","广益","云林","无锡东站","安镇"]},
+    {n:"3号线",c:"#ff8c00",s:["苏庙","钱桥","龙山梢","吴桥","无锡火车站","叙丰","硕放机场"]},
+    {n:"4号线",c:"#0a6ebd",s:["刘潭","黄巷","盛岸","河埒口","蠡湖大桥","博览中心","贡湖大道"]}
+  ]},
+  {em:"🌺",nm:"昆明",lines:[
+    {n:"1号线",c:"#e60012",s:["环城南路","昆明火车站","斗南","春融街","大学城","昆明南火车站"]},
+    {n:"2号线",c:"#009b77",s:["北部汽车站","白云路","火车北站","穿心鼓楼","东风广场","环城南路","昆明火车站"]},
+    {n:"3号线",c:"#ff8c00",s:["西山公园","梁家河","市体育馆","东风广场","拓东体育馆","东部汽车站"]},
+    {n:"4号线",c:"#0a6ebd",s:["金川路","大河埂","火车北站","白龙路","菊华","昆明南火车站"]},
+    {n:"6号线",c:"#e2b400",s:["塘子巷","拓东体育馆","东部汽车站","机场前","长水机场"]}
+  ]},
+  {em:"❄️",nm:"沈阳",lines:[
+    {n:"1号线",c:"#e60012",s:["十三号街","中央大街","铁西广场","沈阳站","太原街","青年大街","中街","黎明广场"]},
+    {n:"2号线",c:"#009b77",s:["蒲田路","师范大学","北陵公园","中医药大学","青年大街","市图书馆","奥体中心","桃仙机场"]},
+    {n:"4号线",c:"#0a6ebd",s:["正新路","北大营","沈阳北站","皇寺路","太原街","砂阳","长白南"]},
+    {n:"9号线",c:"#e2b400",s:["怒江公园","淮河街沈医二院","铁西广场","兴华公园","奥体中心","建筑大学"]},
+    {n:"10号线",c:"#7a2b86",s:["丁香湖","长江街","中医药大学","北塔","长青桥","张沙布"]}
+  ]},
+  {em:"🌊",nm:"大连",lines:[
+    {n:"1号线",c:"#e60012",s:["姚家","大连北站","华南广场","千山路","香工街","西安路","富国街","星海广场","河口"]},
+    {n:"2号线",c:"#009b77",s:["海之韵","港湾广场","中山广场","青泥洼桥","人民广场","西安路","交通大学","辽师大","机场"]},
+    {n:"3号线",c:"#ff8c00",s:["大连站","香炉礁","金家街","开发区","金石滩"]},
+    {n:"5号线",c:"#0a6ebd",s:["虎滩新区","桃源","石葵路","青泥洼桥","梭鱼湾","后关"]},
+    {n:"12号线",c:"#e2b400",s:["河口","龙王塘","旅顺新港"]},
+    {n:"13号线",c:"#7a2b86",s:["九里","十三里","普兰店振兴街"]}
+  ]},
+  {em:"🏝️",nm:"厦门",lines:[
+    {n:"1号线",c:"#e60012",s:["岩内","厦门北站","园博苑","集美学村","高崎","将军祠","中山公园","镇海路"]},
+    {n:"2号线",c:"#009b77",s:["五缘湾","湿地公园","建业路","湖滨中路","邮轮中心","海沧湾公园","天竺山"]},
+    {n:"3号线",c:"#ff8c00",s:["厦门火车站","湖滨东路","体育中心","火炬园","高崎机场","翔安机场"]},
+    {n:"6号线",c:"#0a6ebd",s:["林埭西","马銮中心","杏林","华侨大学","官任","新店"]}
+  ]},
+  {em:"🌅",nm:"合肥",lines:[
+    {n:"1号线",c:"#e60012",s:["张洼","合肥火车站","大东门","包公园","望湖城","合肥南站","九联圩"]},
+    {n:"2号线",c:"#009b77",s:["南岗","大蜀山","大东门","三里庵","三孝口","东七里","三十埠","撮镇"]},
+    {n:"3号线",c:"#ff8c00",s:["相城路","幼儿师范","文浍苑","合肥火车站","海棠","安农大","洪岗","幸福坝"]},
+    {n:"4号线",c:"#0a6ebd",s:["青龙岗","量子科学中心","图书馆","天鹅湖","合肥南站","综保区"]},
+    {n:"5号线",c:"#e2b400",s:["贵阳路","云川公园","沈湾","望湖城西","合肥南站","汲桥路"]}
+  ]},
+  {em:"🌳",nm:"福州",lines:[
+    {n:"1号线",c:"#e60012",s:["象峰","秀山","福州火车站","树兜","屏山","东街口","南门兜","茶亭","达道","黄山","福州火车南站"]},
+    {n:"2号线",c:"#009b77",s:["苏洋","金山","祥坂","南门兜","五里亭","前屿","鼓山","洋里"]},
+    {n:"4号线",c:"#0a6ebd",s:["凤凰池","东街口","省立医院","城门","帝封江"]},
+    {n:"5号线",c:"#e2b400",s:["荆溪厚屿","金山","浦上大道","螺洲古镇","福州火车南站"]},
+    {n:"6号线",c:"#7a2b86",s:["潘墩","林浦","樟岚","营前","航城","郑和"]}
+  ]},
+  {em:"🚇",nm:"济南",lines:[
+    {n:"1号线",c:"#e60012",s:["工研院","大学城","园博园","紫薇路","赵营","玉符河","王府庄","大杨","济南西站","方特","非遗园"]},
+    {n:"2号线",c:"#009b77",s:["王府庄","腊山","二环西路","老屯","益康","济南站北","济泺路","生产路","北园","历山路","七里堡","祝甸","八涧堡","姜家庄"]},
+    {n:"3号线",c:"#ff8c00",s:["龙洞","孟家庄","奥体中心","礼耕路","丁家东","花园东路","八涧堡","张马屯","王舍人","裴家营","济南东站"]},
+    {n:"4号线",c:"#0a6ebd",s:["小高庄","大杨","腊山","八一立交桥","省体育中心","泉城公园","山大路","燕山立交桥","凤凰路","济南东站"]},
+    {n:"8号线",c:"#e2b400",s:["王府庄","清源大街","章丘"]}
+  ]},
+  {em:"❄️",nm:"哈尔滨",lines:[
+    {n:"1号线",c:"#e60012",s:["新疆大街","渤海路","哈南站","医大二院","铁路局","哈工大","博物馆","医大一院","烟厂","哈尔滨南站","哈达"]},
+    {n:"2号线",c:"#009b77",s:["江北大学城","大耿家","冰雪大世界","人民广场","中央大街","哈尔滨站","省政府","气象台"]},
+    {n:"3号线",c:"#ff8c00",s:["城乡路","哈西大街","哈尔滨大街","医大二院","征仪路","会展中心","珠江路","人民医院"]}
+  ]},
+  {em:"🌲",nm:"长春",lines:[
+    {n:"1号线",c:"#e60012",s:["北环城路","庆丰路","一匡街","长春站","胜利公园","人民广场","解放大路","东北师大","卫星广场","车场"]},
+    {n:"2号线",c:"#009b77",s:["汽车公园","西环城路","兴隆堡","文化广场","解放大路","吉林大路","长春站","东环城路"]},
+    {n:"3号线",c:"#ff8c00",s:["伪满皇宫","芙蓉桥","同志街","卫星广场","会展中心","职业学院"]},
+    {n:"4号线",c:"#0a6ebd",s:["长春站北","北亚泰大街","吉林大路","北海路","世荣路","天工路","天新路"]},
+    {n:"8号线",c:"#e2b400",s:["北环城路","小南","一二三中学","大学城","广通路"]}
+  ]},
+  {em:"🌷",nm:"南昌",lines:[
+    {n:"1号线",c:"#e60012",s:["双港","蛟桥河","长江路","庐山南大道","绿茵路","卫东","地铁大厦","秋水广场","滕王阁","万寿宫","八一馆","八一广场","丁公路北","师大南路","彭家桥","谢家村","青山湖大道","高新大道","艾溪湖西","瑶湖西"]},
+    {n:"2号线",c:"#009b77",s:["南路","九龙湖南","西站南广场","南昌西站","地铁大厦","阳明公园","青山路口","福州路","南昌火车站","顺外","辛家庵"]},
+    {n:"3号线",c:"#ff8c00",s:["银三角北","沥山","八大山人","江铃","京家山","绳金塔","十字街","八一馆","青山路口","国威路","京东大道"]},
+    {n:"4号线",c:"#0a6ebd",s:["白马山","丁公路南","人民公园","上沙沟","起凤路","鱼尾洲","南昌东站"]}
+  ]},
+  {em:"🌴",nm:"南宁",lines:[
+    {n:"1号线",c:"#e60012",s:["石埠","广西大学","火车站","朝阳广场","新民路","东盟商务区","埌东客运站","火车东站"]},
+    {n:"2号线",c:"#009b77",s:["西津","明秀路","火车站","朝阳广场","江南客运站","大沙田","玉洞","坛泽"]},
+    {n:"3号线",c:"#ff8c00",s:["科园大道","北湖北路","小鸡村","东葛路","青竹立交","平良立交"]},
+    {n:"4号线",c:"#0a6ebd",s:["洪运路","那历村","金阳路","通源路","楞塘村","龙岗","五象火车站","清平坡"]},
+    {n:"5号线",c:"#e2b400",s:["国凯大道","那洪立交","金凯路","江南公园","明秀路","狮山公园","小鸡村","金桥客运站"]}
+  ]},
+  {em:"⛰️",nm:"贵阳",lines:[
+    {n:"1号线",c:"#e60012",s:["窦官","贵阳北站","雅关","南垭路","北京路","喷水池","中山西路","河滨公园","贵阳火车站","沙冲路","珠江路","小孟工业园"]},
+    {n:"2号线",c:"#009b77",s:["白云北路","诚信路","金阳医院","观山湖公园","林城西路","喷水池","阳明祠","宝山南路","油榨街","龙洞堡机场","中兴路"]},
+    {n:"3号线",c:"#ff8c00",s:["桐木岭","浪风关","花溪南","中曹司","四方河","皂角井","太慈桥","花果园","浣纱路","北京路","顺海","洛湾"]}
+  ]},
+  {em:"🏛️",nm:"石家庄",lines:[
+    {n:"1号线",c:"#e60012",s:["西王","和平医院","烈士陵园","新百广场","解放广场","北国商城","博物院","体育场","北宋","谈固","朝晖桥","白佛","石家庄东站","中仰陵","南村","洨河大道"]},
+    {n:"2号线",c:"#009b77",s:["柳辛庄","庄窠·铁道大学","长安公园","北国商城","裕华路","槐中路","世纪公园","石家庄站","嘉华路"]},
+    {n:"3号线",c:"#ff8c00",s:["西三庄","高柱","柏林庄","市庄","新百广场","东里","槐安桥","孙村","塔冢","位同","乐乡"]}
+  ]},
+  {em:"🏯",nm:"太原",lines:[
+    {n:"1号线",c:"#e60012",s:["河龙湾","西铭路","下元","迎泽桥西","桃园路","柳巷南口","五一广场","太原站","郝家沟","武宿机场","武宿1号2号航站楼"]},
+    {n:"2号线",c:"#009b77",s:["尖草坪","大北门","缉虎营","府西街","开化寺街","大南门","南中环","晋阳街","龙兴街","龙城公园","通达街","化章西街"]}
+  ]},
+  {em:"🏭",nm:"常州",lines:[
+    {n:"1号线",c:"#e60012",s:["森林公园","新龙","常州北站","北郊中学","奥体中心","市民广场","文化宫","同济桥","科教城","武进沿江城际"]},
+    {n:"2号线",c:"#009b77",s:["青枫公园","五星","勤业","怀德","南大街","文化宫","红梅公园","紫云","青洋路","五一路"]}
+  ]},
+  {em:"🚉",nm:"徐州",lines:[
+    {n:"1号线",c:"#e60012",s:["路窝","杏山子","人民广场","通达路","徐医附院","徐州火车站","黄山垅","庆丰路","徐州东站"]},
+    {n:"2号线",c:"#009b77",s:["客运北站","九里山","九龙湖","奔腾大道","徐州火车站","汉源大道","新元大道","新城区东"]},
+    {n:"3号线",c:"#ff8c00",s:["高新区南","钱楼","焦山","师范大学","浦江路","无名山公园","淮塔","矿大文昌校区","南三环路","翟山"]}
+  ]},
+  {em:"🏞️",nm:"绍兴",lines:[
+    {n:"1号线",c:"#e60012",s:["姑娘桥","中国轻纺城","越州大道","鲁迅故里","城市广场","凤林","黄酒小镇","绍兴北站"]},
+    {n:"2号线",c:"#009b77",s:["镜湖医院","后墅路","袍谷","袍中路","洋泾湖","檀渎"]}
+  ]},
+  {em:"🏯",nm:"洛阳",lines:[
+    {n:"1号线",c:"#e60012",s:["红山","谷水","秦岭路","武汉路","长安路","牡丹广场","七里河","王城公园","解放路","周王城广场","应天门","丽景门","青年宫","夹马营","启明南路","塔湾","史家湾","杨湾"]},
+    {n:"2号线",c:"#009b77",s:["二乔路","邙岭","国花路","洛阳火车站","纱厂路","解放路","牡丹桥","文博园","开元湖","兴洛湖","龙门高铁站"]}
+  ]},
+  {em:"🌊",nm:"芜湖",lines:[
+    {n:"1号线",c:"#e60012",s:["保顺路","武夷山路","港一路","赭山公园","鸠兹广场","会展中心","泰山路","芜湖南站","白马山"]},
+    {n:"2号线",c:"#009b77",s:["万春湖路","梦溪路","徽州路","政务中心","鸠兹广场","中山北路","芜湖火车站"]}
+  ]},
+  {em:"🌊",nm:"南通",lines:[
+    {n:"1号线",c:"#e60012",s:["平潮","南通西站","集成村","茶庵殿","孩儿巷","和平桥","友谊桥","学田","青年路","南通大学","静海大道","大剧院","紫琅湖","能达商务区","振兴路"]},
+    {n:"2号线",c:"#009b77",s:["幸福","园林路","北大街","和平桥","体育公园","汽车东站"]}
+  ]},
+  {em:"🌊",nm:"温州",lines:[
+    {n:"S1线",c:"#e60012",s:["桐岭","潘桥","动车南","新桥","龙霞路","惠民路","三垟湿地","龙腾路","科技城","瑶溪","奥体中心","永中","机场","灵昆","瓯江口","双瓯大道"]},
+    {n:"S2线",c:"#009b77",s:["清东路","旭阳路","万岙","盐盆","新望","翁垟","柳市","黄华","机场","永兴","沙城","天河","海城","东山"]}
+  ]},
+  {em:"🌾",nm:"呼和浩特",lines:[
+    {n:"1号线",c:"#e60012",s:["伊利健康谷","西二环路","孔家营","呼钢东路","乌兰夫纪念馆","附属医院","新华广场","艺术学院","东影路","内蒙古博物院","呼和浩特东站","坝堰"]},
+    {n:"2号线",c:"#009b77",s:["塔利东","新店","成吉思汗公园","一家村","呼和浩特火车站","新华广场","大学西街","诺和木勒","帅家营"]}
+  ]},
+  {em:"🏔️",nm:"乌鲁木齐",lines:[
+    {n:"1号线",c:"#e60012",s:["三屯碑","新疆大学","二道桥","南门","新华南路","人民广场","北门","新兴街","王家梁","八楼","新疆图书馆","铁路局","体育中心","三工","国际机场"]},
+    {n:"2号线",c:"#009b77",s:["华山街","乌鲁木齐站","南梁坡","农业大学","南门","新兴街"]}
+  ]},
+  {em:"🌉",nm:"兰州",lines:[
+    {n:"1号线",c:"#e60012",s:["陈官营","奥体中心","兰州城市学院","深安大桥南","兰州海关","马滩","土门墩","兰州西站北广场","西站什字","七里河","小西湖","文化宫","西关","省政府","东方红广场","兰州大学","五里铺","省气象局","拱星墩","焦家湾","东岗"]},
+    {n:"2号线",c:"#009b77",s:["东方红广场","邮电大楼","兰州火车站","红星巷","团结新村","五里铺","张苏滩","均家滩","雁白大桥"]}
+  ]},
+  {em:"🌆",nm:"中国香港",lines:[
+    {n:"港岛线",c:"#009b77",s:["坚尼地城","西营盘","中环","金钟","湾仔","铜锣湾","北角","鲗鱼涌","太古","筲箕湾","柴湾"]},
+    {n:"荃湾线",c:"#e60012",s:["中环","金钟","尖沙咀","佐敦","油麻地","旺角","太子","深水埗","长沙湾","荃湾"]},
+    {n:"观塘线",c:"#7a5c00",s:["黄埔","油麻地","旺角","太子","石硖尾","九龙塘","乐富","黄大仙","钻石山","观塘","调景岭"]},
+    {n:"东涌线",c:"#ff8c00",s:["香港","九龙","奥运","青衣","欣澳","东涌","迪士尼"]},
+    {n:"将军澳线",c:"#a5243d",s:["北角","鲗鱼涌","油塘","调景岭","将军澳","坑口","宝琳"]},
+    {n:"南港岛线",c:"#0a6ebd",s:["金钟","海洋公园","黄竹坑","利东","海怡半岛"]},
+    {n:"东铁线",c:"#009bdf",s:["金钟","红磡","旺角东","九龙塘","大围","沙田","大埔墟","粉岭","上水","罗湖","落马洲"]}
+  ]},
+  {em:"🏙️",nm:"中国台湾",lines:[
+    {n:"文湖线",c:"#a5243d",s:["动物园","木栅","辛亥","科技大楼","六张犁","忠孝复兴","南京复兴","中山国中","剑南路","大直","松山机场","内湖","葫洲","东湖","南港软件园区"]},
+    {n:"淡水信义线",c:"#e60012",s:["淡水","红树林","士林","剑潭","圆山","台北车站","台大医院","中正纪念堂","东门","信义安和","台北101/世贸","象山"]},
+    {n:"松山新店线",c:"#009b77",s:["松山","南京三民","台北小巨蛋","南京复兴","中山","台大医院","古亭","公馆","景美","新店"]},
+    {n:"中和新芦线",c:"#ff8c00",s:["回龙","丹凤","辅大","三重","中山国小","松江南京","东门","古亭","顶溪","南势角"]},
+    {n:"板南线",c:"#1e73b8",s:["南港展览馆","南港","昆阳","后山埤","忠孝复兴","国父纪念馆","市政府","永春","板桥","新埔","江子翠","龙山寺","西门","台北车站","忠孝新生","南势角"]}
+  ]}
+];
+
+/* ===== 状态 ===== */
+var cv, ctx, DPR=1;
+var cur = {city:null, line:null, stations:[], color:"#3da9fc", idx:0, x:0, speed:0, doorOpen:false, docking:false, score:0, running:false, raf:0, dist:0, lineLen:0, seg:0, voice:true};
+
+/* ===== 屏幕切换 ===== */
+var elHome=document.getElementById('home'), elCity=document.getElementById('city'), elPlay=document.getElementById('play');
+var elTitle=document.getElementById('title'), elSub=document.getElementById('subtitle');
+function show(sec){
+  elHome.style.display = sec==='home'?'block':'none';
+  elCity.style.display = sec==='city'?'block':'none';
+  elPlay.style.display = sec==='play'?'block':'none';
+}
+document.getElementById('backBtn').addEventListener('click', function(){
+  if(elPlay.style.display==='block'){ stopGame(); show('city'); }
+  else if(elCity.style.display==='block'){ show('home'); renderTitle(); }
+  else { location.href = "../"; } // 返回上级（地铁模拟器菜单）
+});
+
+function renderTitle(){
+  elTitle.textContent="中国地铁模拟器";
+  elSub.textContent="选择一个城市开始";
+}
+function toast(msg){
+  var t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show');
+  clearTimeout(t._t); t._t=setTimeout(function(){t.classList.remove('show');},1800);
+}
+
+/* ===== 城市网格 ===== */
+function renderCities(filter){
+  var grid=document.getElementById('cityGrid'); grid.innerHTML='';
+  var list = CITIES.filter(function(c){
+    if(!filter) return true;
+    return c.nm.indexOf(filter)>-1;
+  });
+  if(!list.length){ grid.innerHTML='<div class="empty">没有找到该城市</div>'; return; }
+  list.forEach(function(c){
+    var d=document.createElement('div'); d.className='city';
+    d.innerHTML='<div class="em">'+c.em+'</div><div class="nm">'+c.nm+'</div><div class="ct">'+c.lines.length+' 条线</div>';
+    d.addEventListener('click', function(){ openCity(c); });
+    grid.appendChild(d);
+  });
+}
+document.getElementById('search').addEventListener('input', function(e){ renderCities(e.target.value.trim()); });
+
+function openCity(c){
+  cur.city=c;
+  elTitle.textContent=c.nm+" · 选择线路";
+  elSub.textContent="共 "+c.lines.length+" 条线路";
+  var box=document.getElementById('lineList'); box.innerHTML='';
+  c.lines.forEach(function(ln){
+    var el=document.createElement('div'); el.className='line';
+    var term = ln.s[0]+" ⇄ "+ln.s[ln.s.length-1];
+    el.innerHTML='<span class="dot" style="background:'+ln.c+'"></span>'+
+      '<span class="meta"><span class="ln">'+ln.n+'</span><span class="st">'+term+' · '+ln.s.length+' 站</span></span>'+
+      '<span class="go">进入 →</span>';
+    el.addEventListener('click', function(){ startLine(c, ln); });
+    box.appendChild(el);
+  });
+  show('city');
+}
+
+/* ===== 驾驶模拟 ===== */
+function startLine(c, ln){
+  cur.line=ln; cur.color=ln.c;
+  cur.stations=ln.s.slice();
+  cur.idx=0; cur.x=0; cur.speed=0; cur.doorOpen=false; cur.docking=false; cur.score=0; cur.running=true;
+  cur.seg = Math.max(140, 360 - cur.stations.length*4); // 站间距（像素，折算后）
+  cur.lineLen = cur.seg*(cur.stations.length-1);
+  elTitle.textContent=c.nm+" "+ln.n;
+  elSub.textContent="从 "+cur.stations[0]+" 发车";
+  document.getElementById('hLine').textContent=ln.n;
+  document.getElementById('hTot').textContent=cur.stations.length;
+  document.getElementById('hIdx').textContent=0;
+  document.getElementById('hScore').textContent=0;
+  document.getElementById('hSpeed').textContent=0;
+  document.getElementById('bDoor').style.display='none';
+  buildMap();
+  show('play');
+  resize();
+  announce("欢迎乘坐 "+c.nm+ln.n+"，本次列车开往 "+cur.stations[cur.stations.length-1]+" 方向");
+  loop();
+}
+function resize(){
+  if(!cv) cv=document.getElementById('cv');
+  var stage=cv.parentElement;
+  DPR=window.devicePixelRatio||1;
+  cv.width=stage.clientWidth*DPR; cv.height=stage.clientHeight*DPR;
+  ctx=cv.getContext('2d'); ctx.setTransform(DPR,0,0,DPR,0,0);
+}
+window.addEventListener('resize', function(){ if(elPlay.style.display==='block') resize(); });
+
+var acc=false, brk=false;
+function loop(){
+  if(!cur.running) return;
+  // 物理
+  var maxV = 3.4; // 单位/帧
+  if(cur.docking){
+    // 进站停靠：强制减速
+    cur.speed *= 0.82;
+    if(cur.speed<0.04){ cur.speed=0; }
+  } else {
+    if(acc) cur.speed += 0.045;
+    if(brk) cur.speed -= 0.10;
+    if(!acc && !brk) cur.speed *= 0.985; // 轻微滑行阻力
+    if(cur.speed<0) cur.speed=0;
+    if(cur.speed>maxV) cur.speed=maxV;
+  }
+  cur.x += cur.speed;
+  // 到站检测：接近下一站站台区
+  if(cur.idx < cur.stations.length-1){
+    var targetX = cur.seg*(cur.idx+1);
+    var zone = 26; // 站台区半宽
+    if(cur.x >= targetX - zone && cur.x <= targetX + zone){
+      // 在站台区内且速度够低 -> 停靠成功
+      if(cur.speed < 0.5 && !cur.docking){
+        cur.docking=true;
+        arriveStation();
+      }
+    } else if(cur.x > targetX + zone && !cur.docking){
+      // 过站未停
+      missStation();
+    }
+  } else {
+    // 终点
+    if(cur.x >= cur.lineLen - 2 && !cur.docking){
+      cur.docking=true; terminate();
+    }
+  }
+  draw();
+  updateHud();
+  cur.raf=requestAnimationFrame(loop);
+}
+
+function arriveStation(){
+  cur.idx++;
+  var smooth = cur.speed<0.18 ? 20 : (cur.speed<0.32?10:0);
+  cur.score += 10 + smooth;
+  var name = cur.stations[cur.idx];
+  announce((cur.idx===cur.stations.length-1?"终点站 ":"")+name+" 到了，请便乘降");
+  document.getElementById('hIdx').textContent=cur.idx;
+  document.getElementById('hScore').textContent=cur.score;
+  highlightMap();
+  // 开门-关门
+  cur.doorOpen=true;
+  document.getElementById('bDoor').style.display='none';
+  setTimeout(function(){
+    cur.doorOpen=false;
+    cur.docking=false;
+    // 离站
+    announce("开往 "+cur.stations[cur.stations.length-1]+" 方向，下一站 "+cur.stations[Math.min(cur.idx+1,cur.stations.length-1)]);
+  }, 1100);
+}
+function missStation(){
+  cur.idx++;
+  cur.score = Math.max(0, cur.score-15);
+  announce("⚠️ 未停靠 "+cur.stations[cur.idx]+"，本次扣分");
+  document.getElementById('hIdx').textContent=cur.idx;
+  document.getElementById('hScore').textContent=cur.score;
+  highlightMap();
+}
+function terminate(){
+  cur.running=false;
+  cancelAnimationFrame(cur.raf);
+  announce("列车到达终点 "+cur.stations[cur.stations.length-1]+"，本次得分 "+cur.score);
+  toast("到达终点，得分 "+cur.score);
+  document.getElementById('bDoor').style.display='none';
+}
+function stopGame(){
+  cur.running=false;
+  if(cur.raf) cancelAnimationFrame(cur.raf);
+}
+
+function updateHud(){
+  document.getElementById('hSpeed').textContent=Math.round(cur.speed*22);
+}
+function announce(text){
+  var a=document.getElementById('ann'); a.textContent=text; a.classList.add('show');
+  clearTimeout(a._t); a._t=setTimeout(function(){a.classList.remove('show');}, 2200);
+  if(cur.voice && window.speechSynthesis){
+    try{
+      window.speechSynthesis.cancel();
+      var u=new SpeechSynthesisUtterance(text);
+      u.lang='zh-CN'; u.rate=1.05; u.pitch=1;
+      window.speechSynthesis.speak(u);
+    }catch(e){}
+  }
+}
+
+/* ===== 绘制 ===== */
+function draw(){
+  if(!ctx) return;
+  var W=cv.width/DPR, H=cv.height/DPR;
+  ctx.clearRect(0,0,W,H);
+  // 天空渐变已由 CSS 提供，画地面与轨道
+  var groundY=H*0.72;
+  ctx.fillStyle = htmlLight()? "#c7d4e8" : "#0b1228";
+  ctx.fillRect(0,groundY,W,H-groundY);
+  // 隧道/远景
+  ctx.fillStyle = htmlLight()? "rgba(120,150,190,.18)":"rgba(80,120,200,.12)";
+  for(var i=0;i<6;i++){ ctx.fillRect((i*W/6 - (cur.x*0.2)% (W/6)), groundY-40, W/6-14, 40); }
+  // 轨道
+  ctx.strokeStyle = htmlLight()? "#7d8aa3":"#37405e";
+  ctx.lineWidth=3;
+  ctx.beginPath(); ctx.moveTo(0,groundY+14); ctx.lineTo(W,groundY+14); ctx.stroke();
+  // 站台区（下一站）
+  if(cur.idx < cur.stations.length-1){
+    var tx = stationScreenX(cur.idx+1);
+    ctx.fillStyle = "rgba(94,224,160,.20)";
+    ctx.fillRect(tx-26, groundY-2, 52, 20);
+    ctx.fillStyle = htmlLight()? "#1faa6a":"#5ee0a0";
+    ctx.fillRect(tx-26, groundY+8, 52, 4);
+    ctx.fillStyle = htmlLight()? "#16203a":"#cfe";
+    ctx.font="11px sans-serif"; ctx.textAlign="center";
+    ctx.fillText(cur.stations[cur.idx+1], tx, groundY-8);
+  }
+  // 列车
+  var trainX = cur.x; // 逻辑坐标≈屏幕坐标（以起点为左）
+  // 让列车大致居中：相机跟随
+  var camX = Math.max(0, trainX - W*0.35);
+  var sx = trainX - camX;
+  drawTrain(sx, groundY);
+  // 起点站标记
+  drawStationLabel(0 - camX, groundY, cur.stations[0], true);
+  // HUD 顶部进度
+  ctx.fillStyle = htmlLight()? "rgba(20,30,50,.06)":"rgba(255,255,255,.05)";
+  ctx.fillRect(0,0,W,6);
+  ctx.fillStyle = cur.color;
+  ctx.fillRect(0,0, W*(cur.idx/(cur.stations.length-1||1)), 6);
+}
+function stationScreenX(i){
+  // 屏幕坐标（相机跟随，列车居中 35%）
+  var camX=Math.max(0, cur.x - (cv.width/DPR)*0.35);
+  return cur.seg*i - camX;
+}
+function drawStationLabel(sx, groundY, name, isStart){
+  if(sx<-60||sx>cv.width/DPR+60) return;
+  ctx.fillStyle = htmlLight()? "#5a667e":"#9aa6bd";
+  ctx.font="11px sans-serif"; ctx.textAlign="center";
+  ctx.fillText(name, sx, groundY+30);
+}
+function drawTrain(x, groundY){
+  var w=86, h=34;
+  ctx.fillStyle = cur.color;
+  roundRect(x-w/2, groundY-h+6, w, h, 8); ctx.fill();
+  // 车窗
+  ctx.fillStyle = "rgba(255,255,255,.85)";
+  for(var i=0;i<3;i++){ ctx.fillRect(x-w/2+12+i*22, groundY-h+12, 14, 12); }
+  // 车头灯
+  ctx.fillStyle="#ffe9a8"; ctx.beginPath(); ctx.arc(x+w/2-6, groundY-8, 3, 0, 7); ctx.fill();
+  // 阴影
+  ctx.fillStyle="rgba(0,0,0,.25)"; ctx.beginPath(); ctx.ellipse(x, groundY+16, w/2, 5, 0, 0, 7); ctx.fill();
+}
+function roundRect(x,y,w,h,r){ ctx.beginPath(); ctx.moveTo(x+r,y); ctx.arcTo(x+w,y,x+w,y+h,r); ctx.arcTo(x+w,y+h,x,y+h,r); ctx.arcTo(x,y+h,x,y,r); ctx.arcTo(x,y,x+w,y,r); ctx.closePath(); }
+function htmlLight(){ return document.documentElement.getAttribute('data-theme')==='light'; }
+
+/* ===== 线路图 ===== */
+function buildMap(){
+  var row=document.getElementById('mapRow'); row.innerHTML='';
+  cur.stations.forEach(function(st,i){
+    var dot=document.createElement('span'); dot.className='mdot'; dot.style.background=cur.color; dot.id='mdot'+i;
+    dot.style.borderColor = htmlLight()? "#16203a":"#fff";
+    var seg=document.createElement('span'); seg.className='mseg'; seg.style.background=cur.color;
+    var lab=document.createElement('div'); lab.className='mlabel'; lab.id='mlab'+i; lab.textContent=st;
+    var wrap=document.createElement('span'); wrap.className='ms'; wrap.style.flexDirection='column'; wrap.style.alignItems='center';
+    var top=document.createElement('span'); top.style.display='flex'; top.style.alignItems='center';
+    top.appendChild(dot);
+    if(i<cur.stations.length-1) top.appendChild(seg);
+    wrap.appendChild(top); wrap.appendChild(lab);
+    row.appendChild(wrap);
+  });
+  highlightMap();
+}
+function highlightMap(){
+  for(var i=0;i<cur.stations.length;i++){
+    var d=document.getElementById('mdot'+i), l=document.getElementById('mlab'+i);
+    if(d) d.className='mdot'+(i===cur.idx?' mcur':'');
+    if(l) l.style.color = i===cur.idx ? (cur.color) : (htmlLight()?"#5a667e":"#9aa6bd");
+  }
+}
+
+/* ===== 控制 ===== */
+function bindBtn(id, on, off){
+  var el=document.getElementById(id);
+  var set=function(v){ if(v) on(); else off(); };
+  el.addEventListener('touchstart', function(e){ e.preventDefault(); set(true); }, {passive:false});
+  el.addEventListener('touchend', function(e){ e.preventDefault(); set(false); }, {passive:false});
+  el.addEventListener('mousedown', function(e){ e.preventDefault(); set(true); });
+  el.addEventListener('mouseup', function(){ set(false); });
+  el.addEventListener('mouseleave', function(){ set(false); });
+}
+bindBtn('bAcc', function(){ acc=true; }, function(){ acc=false; });
+bindBtn('bBrake', function(){ brk=true; }, function(){ brk=false; });
+document.getElementById('bDoor').addEventListener('click', function(){
+  if(cur.docking && cur.doorOpen){ cur.doorOpen=false; cur.docking=false; }
+});
+document.addEventListener('keydown', function(e){
+  if(e.key==='ArrowUp'||e.key==='w'||e.key==='W'){ acc=true; }
+  if(e.key==='ArrowDown'||e.key==='s'||e.key==='S'){ brk=true; }
+});
+document.addEventListener('keyup', function(e){
+  if(e.key==='ArrowUp'||e.key==='w'||e.key==='W'){ acc=false; }
+  if(e.key==='ArrowDown'||e.key==='s'||e.key==='S'){ brk=false; }
+});
+document.getElementById('voi').addEventListener('change', function(e){ cur.voice=e.target.checked; });
+
+/* ===== 初始化 ===== */
+(function(){ try{ var t=localStorage.getItem('theme'); if(t) document.documentElement.setAttribute('data-theme',t); }catch(e){} })();
+window.addEventListener('load', function(){ resize(); });
+renderCities('');
+renderTitle();
+</script>
+</body>
+</html>

@@ -2,164 +2,271 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-<title>中国地铁模拟器</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+<meta name="format-detection" content="telephone=no" />
+<title>中国地铁驾驶模拟器</title>
+<script>window.__BUILD_TOKEN__="eXR5MTY=";</script>
 <style>
-  :root{
-    --bg:#f0f2f5; --card-bg:rgba(255,255,255,.7); --card-border:rgba(255,255,255,.3);
-    --text:#1a1a2e; --text2:#666; --accent:#6c5ce7; --accent2:#a29bfe;
-  }
-  [data-theme="dark"]{
-    --bg:#1a1a2e; --card-bg:rgba(255,255,255,.05); --card-border:rgba(255,255,255,.1);
-    --text:#eee; --text2:#aaa; --accent:#a29bfe; --accent2:#6c5ce7;
-  }
-  *{margin:0;padding:0;box-sizing:border-box}
-  body{
-    font-family:'Inter','Microsoft YaHei',sans-serif; background:var(--bg); color:var(--text);
-    min-height:100vh; padding:20px; transition:background .3s,color .3s;
-    display:flex; flex-direction:column; align-items:center;
-  }
-  .container{max-width:760px;width:100%}
-  .back-btn{
-    display:inline-flex;align-items:center;gap:6px;color:var(--accent);text-decoration:none;
-    font-size:14px;margin-bottom:16px;padding:8px 16px;border-radius:8px;
-    background:var(--card-bg);border:1px solid var(--card-border);backdrop-filter:blur(10px);
-    transition:all .2s;align-self:flex-start;
-  }
-  .back-btn:hover{background:var(--accent);color:#fff}
-  .card{
-    background:var(--card-bg);border:1px solid var(--card-border);border-radius:16px;
-    padding:20px;margin-bottom:18px;backdrop-filter:blur(20px);box-shadow:0 8px 32px rgba(0,0,0,.1);width:100%;
-  }
-  h1{font-size:26px;margin-bottom:6px;text-align:center}
-  .subtitle{text-align:center;font-size:13px;color:var(--text2);margin-bottom:4px}
-  .section-title{font-size:16px;font-weight:600;margin:4px 0 14px;display:flex;align-items:center;gap:8px}
-  .note{font-size:12px;color:var(--text2);line-height:1.7;background:rgba(108,92,231,.08);border-radius:10px;padding:10px 14px;margin-bottom:14px}
-  .search{
-    width:100%;padding:11px 14px;border-radius:12px;border:1px solid var(--card-border);
-    background:var(--card-bg);color:var(--text);font-size:15px;margin-bottom:14px;outline:none;
-  }
-  .search::placeholder{color:var(--text2)}
-  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:10px}
-  .city{
-    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;
-    padding:12px 6px;border-radius:12px;text-decoration:none;color:var(--text);
-    background:var(--card-bg);border:1px solid var(--card-border);font-size:14px;font-weight:500;
-    transition:all .18s;backdrop-filter:blur(8px);position:relative;overflow:hidden;
-  }
-  .city:hover{background:var(--accent);color:#fff;transform:translateY(-2px);box-shadow:0 4px 12px rgba(108,92,231,.35)}
-  .city .emoji{font-size:20px}
-  .city .badge{
-    position:absolute;top:5px;right:5px;font-size:9px;background:var(--accent);color:#fff;
-    padding:1px 6px;border-radius:7px;opacity:.92;font-weight:600;
-  }
-  .empty{text-align:center;color:var(--text2);padding:24px 0}
-  .divider{height:1px;background:var(--card-border);margin:8px 0 16px}
-  @media(max-width:600px){ body{padding:12px} h1{font-size:22px} .card{padding:16px} }
+  :root{ --bg:#0b0f1c; --bg2:#121a30; --glass:rgba(255,255,255,.06); --glass2:rgba(255,255,255,.10); --line:rgba(255,255,255,.12); --txt:#eaf0ff; --sub:#9fb0d0; --acc:#4f8cff; }
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+  html,body{margin:0;height:100%;background:radial-gradient(120% 120% at 50% 0%, #16203c 0%, var(--bg) 60%);color:var(--txt);font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;}
+  #app{max-width:760px;margin:0 auto;min-height:100%;position:relative;overflow:hidden;}
+  .ec{position:relative;z-index:1;}
+  .topbar{display:flex;align-items:center;gap:10px;padding:14px 16px;background:var(--glass);backdrop-filter:blur(12px);border-bottom:1px solid var(--line);}
+  .topbar b{font-size:16px;} .topbar small{color:var(--sub);font-size:12px;display:block;}
+  .icon-btn{background:var(--glass2);border:1px solid var(--line);color:var(--txt);width:36px;height:36px;border-radius:10px;font-size:20px;cursor:pointer;}
+  .spacer{flex:1;}
+  .home{padding:8vh 22px;text-align:center;}
+  .home .eyebrow{letter-spacing:3px;color:var(--acc);font-size:12px;}
+  .home h1{font-size:30px;margin:10px 0 6px;}
+  .home h1 span{color:var(--acc);}
+  .home .lead{color:var(--sub);font-size:14px;line-height:1.7;margin:0 auto 18px;max-width:420px;}
+  .home .specs{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:14px;}
+  .home .specs span{background:var(--glass);border:1px solid var(--line);border-radius:12px;padding:8px 12px;font-size:13px;color:var(--sub);}
+  .home .specs b{color:var(--txt);font-size:16px;margin-right:4px;}
+  .home .note{color:var(--sub);font-size:12px;margin-top:16px;line-height:1.6;}
+  .btn{background:var(--glass2);border:1px solid var(--line);color:var(--txt);border-radius:12px;padding:12px 18px;font-size:15px;cursor:pointer;display:inline-flex;flex-direction:column;align-items:center;gap:2px;}
+  .btn small{color:var(--sub);font-size:11px;font-weight:400;}
+  .btn.primary{background:linear-gradient(135deg,#4f8cff,#3a6fe0);border-color:transparent;}
+  .btn.wide{width:100%;}
+  .home .acts{display:flex;flex-direction:column;gap:10px;max-width:280px;margin:0 auto;}
+  .sel{padding:0 0 90px;}
+  .field{padding:16px;border-bottom:1px solid var(--line);}
+  .field-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;}
+  .field-head b{font-size:15px;} .field-head span{color:var(--sub);font-size:12px;}
+  .search{width:100%;padding:11px 14px;border-radius:12px;background:var(--glass);border:1px solid var(--line);color:var(--txt);font-size:15px;margin-bottom:10px;}
+  .city-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(84px,1fr));gap:8px;}
+  .city{background:var(--glass);border:1px solid var(--line);border-radius:12px;padding:12px 4px;text-align:center;font-size:14px;cursor:pointer;color:var(--txt);}
+  .city.on{background:linear-gradient(135deg,#4f8cff,#3a6fe0);border-color:transparent;}
+  .city small{display:block;color:var(--sub);font-size:10px;margin-top:3px;}
+  .city.on small{color:rgba(255,255,255,.8);}
+  .line-list{display:flex;flex-direction:column;gap:8px;}
+  .line{display:flex;align-items:center;gap:12px;background:var(--glass);border:1px solid var(--line);border-radius:12px;padding:12px 14px;cursor:pointer;}
+  .line.on{border-color:var(--acc);background:var(--glass2);}
+  .line .dot{width:12px;height:12px;border-radius:50%;flex:none;}
+  .line .nm{font-size:15px;font-weight:600;}
+  .line .st{color:var(--sub);font-size:12px;}
+  .mode-list{display:flex;gap:8px;}
+  .mode{flex:1;background:var(--glass);border:1px solid var(--line);border-radius:12px;padding:10px;text-align:center;font-size:13px;cursor:pointer;color:var(--sub);}
+  .mode.on{background:var(--glass2);border-color:var(--acc);color:var(--txt);}
+  .two-col{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+  .picker{display:flex;align-items:center;justify-content:space-between;background:var(--glass);border:1px solid var(--line);border-radius:12px;padding:8px 10px;}
+  .picker b{font-size:15px;} .picker small{color:var(--sub);font-size:11px;display:block;}
+  .seg{display:flex;gap:6px;}
+  .seg button{flex:1;background:var(--glass);border:1px solid var(--line);border-radius:10px;padding:9px 0;color:var(--sub);font-size:13px;cursor:pointer;}
+  .seg button.is-on{background:var(--acc);border-color:transparent;color:#fff;}
+  .bottom-safe{position:fixed;left:0;right:0;bottom:0;max-width:760px;margin:0 auto;padding:12px 16px;background:linear-gradient(0deg,var(--bg) 30%,transparent);}
+  .tmpl{display:flex;flex-direction:column;gap:8px;padding:16px;}
+  .tmpl a{display:flex;align-items:center;gap:10px;background:var(--glass);border:1px solid var(--line);border-radius:12px;padding:12px 14px;color:var(--txt);text-decoration:none;}
+  .tmpl a .ic{font-size:20px;} .tmpl a .meta b{font-size:14px;} .tmpl a .meta small{color:var(--sub);font-size:11px;display:block;} .tmpl a .go{margin-left:auto;color:var(--acc);}
+  #game{position:absolute;inset:0;z-index:5;background:var(--bg);overflow-y:auto;}
+  .cm-cab{min-height:100%;padding-bottom:20px;}
+  .cm-fwd{width:100%;display:block;background:#0b1020;}
+  .cm-cabframe{position:relative;height:0;}
+  .cm-pillar{position:absolute;top:-6px;width:10px;height:160px;background:linear-gradient(#2a3550,#10182c);} .cm-pillar.l{left:6px;} .cm-pillar.r{right:6px;}
+  .cm-roof{position:absolute;top:-6px;left:0;right:0;height:10px;background:linear-gradient(#2a3550,#10182c);}
+  .cm-desk{position:absolute;top:140px;left:0;right:0;height:24px;background:linear-gradient(#1a2238,#0d1322);}
+  .cm-led{display:flex;align-items:center;gap:10px;padding:10px 14px;background:rgba(8,12,24,.9);border-bottom:1px solid var(--line);}
+  .cm-pause{background:var(--glass2);border:1px solid var(--line);color:var(--txt);width:32px;height:32px;border-radius:8px;cursor:pointer;font-size:14px;}
+  .cm-ledline{padding:4px 10px;border-radius:8px;color:#fff;font-weight:700;font-size:13px;}
+  .cm-next{display:flex;flex-direction:column;} .cm-next small{color:var(--sub);font-size:10px;} .cm-next b{font-size:15px;}
+  .cm-door{margin-left:auto;color:#7fd1ff;font-size:12px;border:1px solid var(--line);padding:4px 8px;border-radius:8px;}
+  .cm-ann{padding:8px 14px;background:rgba(20,30,55,.7);border-bottom:1px solid var(--line);}
+  .cm-ann b{font-size:14px;}
+  .cm-topwrap{padding:10px 14px;}
+  .cm-tophead{display:flex;justify-content:space-between;color:var(--sub);font-size:12px;margin-bottom:6px;}
+  .cm-top{width:100%;border-radius:12px;border:1px solid var(--line);background:#0c1226;}
+  .cm-topleg{display:flex;gap:12px;color:var(--sub);font-size:11px;margin-top:6px;align-items:center;}
+  .cm-topleg .lg{width:10px;height:10px;border-radius:2px;display:inline-block;margin-right:3px;vertical-align:middle;}
+  .cm-topleg .lg.g{background:rgba(46,204,113,.6);} .cm-topleg .lg.h{background:#fff;} .cm-topleg .lg.p{background:#ffb13c;}
+  .cm-marker{text-align:center;margin:6px 0;} .cm-marker b{font-size:22px;color:#ffd166;} .cm-marker span{color:var(--sub);font-size:11px;display:block;}
+  .cm-controls{display:grid;grid-template-columns:1fr 1.2fr 1.3fr;gap:8px;padding:8px 14px;}
+  .panel{background:var(--glass);border:1px solid var(--line);border-radius:14px;padding:10px;}
+  .cm-ptitle{display:flex;justify-content:space-between;font-size:12px;color:var(--sub);margin-bottom:8px;} .cm-ptitle b{color:var(--txt);} .cm-ptitle span{color:var(--acc);}
+  .cm-lever{position:relative;height:120px;background:linear-gradient(#0e1530,#1a2546);border-radius:10px;border:1px solid var(--line);overflow:hidden;}
+  .cm-zone{position:absolute;left:0;right:0;top:0;height:100%;opacity:.35;}
+  .cm-knob{position:absolute;left:50%;transform:translateX(-50%);width:30px;height:18px;background:#eaf0ff;border-radius:6px;top:50%;margin-top:-9px;transition:top .08s;border:2px solid #2a3550;}
+  .cm-knob i{display:block;height:2px;background:#2a3550;margin:3px 4px;}
+  .cm-nudge{display:flex;gap:6px;margin-top:6px;} .cm-nudge button{flex:1;background:var(--glass2);border:1px solid var(--line);color:var(--txt);border-radius:8px;padding:6px;cursor:pointer;}
+  .cm-dial{position:relative;width:84px;height:84px;border-radius:50%;background:radial-gradient(#16203c,#0c1326);border:3px solid var(--line);margin:0 auto 8px;display:flex;align-items:center;justify-content:center;}
+  .cm-num{font-size:30px;font-weight:800;} .cm-dial span{position:absolute;bottom:8px;font-size:10px;color:var(--sub);}
+  .cm-dial i{position:absolute;bottom:8px;left:50%;width:3px;height:30px;background:var(--acc);transform-origin:bottom center;transform:rotate(-110deg);border-radius:2px;}
+  .cm-metrics{display:grid;grid-template-columns:1fr 1fr;gap:6px;} .cm-metrics div{background:var(--glass);border-radius:8px;padding:5px 7px;}
+  .cm-metrics small{color:var(--sub);font-size:10px;display:block;} .cm-metrics b{font-size:14px;} .cm-metrics em{color:var(--sub);font-size:10px;font-style:normal;}
+  .cm-agrid{display:grid;grid-template-columns:1fr 1fr;gap:6px;}
+  .cm-agrid button{background:var(--glass2);border:1px solid var(--line);color:var(--txt);border-radius:10px;padding:9px 4px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px;}
+  .cm-agrid button b{font-size:13px;} .cm-agrid button small{color:var(--sub);font-size:9px;}
+  .cm-agrid .ac{background:linear-gradient(135deg,#2ecc71,#27ae60);border-color:transparent;} .cm-agrid .ac small{color:rgba(255,255,255,.8);}
+  .cm-agrid .dz{background:linear-gradient(135deg,#e74c3c,#c0392b);border-color:transparent;} .cm-agrid .dz small{color:rgba(255,255,255,.8);}
+  .cm-toast{position:fixed;left:50%;top:64px;transform:translateX(-50%);background:rgba(10,16,32,.95);border:1px solid var(--acc);color:#fff;padding:10px 16px;border-radius:12px;font-size:13px;opacity:0;transition:opacity .2s;pointer-events:none;z-index:20;max-width:80%;text-align:center;}
+  .cm-toast.show{opacity:1;}
+  .cm-hint{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);color:var(--sub);font-size:11px;text-align:center;width:90%;}
+  .cm-result{padding:8vh 22px;text-align:center;}
+  .cm-eyebrow{letter-spacing:3px;color:var(--acc);font-size:12px;}
+  .cm-score{font-size:64px;font-weight:900;line-height:1;} .cm-grade{font-size:26px;color:#ffd166;font-weight:800;margin-top:4px;}
+  .cm-sub{color:var(--sub);font-size:13px;margin:8px 0 16px;}
+  .cm-reslist{display:flex;flex-direction:column;gap:6px;max-width:420px;margin:0 auto 18px;}
+  .cm-row{display:flex;align-items:center;gap:10px;background:var(--glass);border:1px solid var(--line);border-radius:10px;padding:9px 12px;}
+  .cm-idx{width:22px;height:22px;border-radius:50%;background:var(--glass2);display:flex;align-items:center;justify-content:center;font-size:12px;}
+  .cm-row b{flex:1;text-align:left;font-size:14px;} .cm-er{color:var(--sub);font-size:12px;} .cm-pts{font-weight:800;font-size:16px;width:34px;text-align:right;}
+  .cm-pts.g{color:#2ecc71;} .cm-pts.y{color:#ffd166;} .cm-pts.r{color:#e74c3c;}
+  .cm-raction{display:flex;gap:10px;max-width:300px;margin:0 auto;}
+  .cm-btn{flex:1;background:var(--glass2);border:1px solid var(--line);color:var(--txt);border-radius:12px;padding:12px;font-size:14px;cursor:pointer;}
+  .cm-btn:first-child{background:linear-gradient(135deg,#4f8cff,#3a6fe0);border-color:transparent;}
+  .hidden{display:none!important;}
+  @media (max-width:520px){ .cm-controls{grid-template-columns:1fr 1fr;} .panel:first-child{grid-column:1/3;} }
 </style>
 </head>
 <body>
-<script>
-(function(){
-  var _0x4a=[function(){return[atob('eXR5MTYuZ2l0aHViLmlv'),atob('eXR5MTYucGFnZXMuZGV2')]},function(){return location.hostname}];
-  var _0x4b=_0x4a[0]();var _0x4c=_0x4a[1]();var _0x4d=false;
-  for(var i=0;i<_0x4b.length;i++){if(_0x4c===_0x4b[i]){_0x4d=true;break;}}
-  if(!_0x4d){
-    window.addEventListener('DOMContentLoaded',function(){
-      document.body.innerHTML='<div style="position:fixed;top:0;left:0;width:100%;height:100%;background:#f5f5f5;display:flex;align-items:center;justify-content:center;z-index:99999;font-family:sans-serif;color:#666"><div style="text-align:center"><h2 style="margin:20px 0 10px;font-weight:500">页面加载异常</h2><p style="font-size:14px;color:#999">请访问正常渠道获取资源</p></div></div>';
-    });
-  }
-})();
-</script>
-<script>
-(function(){
-  var t=localStorage.getItem('theme');
-  if(t){document.documentElement.setAttribute('data-theme',t);}
-  else if(window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches){document.documentElement.setAttribute('data-theme','dark');}
-})();
-</script>
-<div class="container">
-  <a href="../" class="back-btn">← 返回地铁模拟器</a>
-
-  <div class="card">
-    <h1>🚇 中国地铁模拟器</h1>
-    <p class="subtitle">选择一个城市，跳转到该城市的真实地铁模拟器</p>
-  </div>
-
-  <div class="card" style="border-color:var(--accent);background:linear-gradient(135deg,rgba(108,92,231,.18),rgba(108,92,231,.06));">
-    <div class="section-title">🏙️ 本地 / 专属真实模拟器</div>
-    <div class="note">
-      以下两座城市为「真实可玩」的专属模拟器，非本站虚构：<br>
-      • <b>济南</b>：本站本地复刻的 3D 驾驶模拟器（含真实线网，可离线运行）。<br>
-      • <b>南京</b>：B 站原作者「城市地铁驾驶」真实作品（外部链接）。
+<div id="app">
+  <section id="screen-home" class="ec home">
+    <div class="eyebrow">CHINA METRO · DRIVER SIM</div>
+    <h1>中国地铁<span>驾驶模拟器</span></h1>
+    <p class="lead">真实站名线网 · 自研驾驶引擎 · 手柄牵引制动、门对门精确停车、中文报站</p>
+    <div class="specs">
+      <span><b id="city-count">—</b>座城市</span>
+      <span><b id="line-count">—</b>条线路</span>
+      <span><b>离线</b>运行</span>
+      <span><b>ATP</b>保护</span>
     </div>
-    <div class="grid" id="featuredGrid"></div>
-  </div>
-
-  <div class="card">
-    <div class="section-title">🌐 城市设计师（真实线网模拟平台）</div>
-    <div class="note">
-      其余城市接入第三方真实平台「城市设计师」（citiesdesigners.com），基于真实地图与线网数据，
-      支持全球 90+ 城市地铁的线网规划与客流模拟。点击下方城市，将直接打开该城市的真实模拟页面。
+    <div class="acts">
+      <button class="btn primary" id="go-select"><strong>开始驾驶</strong><small>选择城市与线路</small></button>
+      <button class="btn" id="go-tmpl"><strong>模板原版</strong><small>济南 / 南京 原版模拟器</small></button>
     </div>
-    <input class="search" id="search" placeholder="搜索城市，如 北京 / 上海 / 成都 …" />
-    <div class="grid" id="cityGrid"></div>
-    <div class="empty" id="empty" style="display:none">没有找到该城市</div>
-  </div>
+    <div class="note">站名为各地铁真实运营站名；站间距按平均约 1.2km 模拟，仅供驾驶体验。引擎为自研，不含任何外部平台。</div>
+  </section>
+
+  <section id="screen-select" class="ec sel hidden">
+    <div class="topbar"><button class="icon-btn" id="back-home">‹</button><div><b>运行设置</b><small>选择城市、线路与模式</small></div><span class="spacer"></span></div>
+    <div class="field">
+      <div class="field-head"><b>城市</b><span>搜索或点选</span></div>
+      <input class="search" id="city-search" placeholder="搜索城市，如：北京 / 上海" />
+      <div class="city-grid" id="city-grid"></div>
+    </div>
+    <div class="field">
+      <div class="field-head"><b>线路与车辆</b><span id="vehicle-meta">—</span></div>
+      <div class="line-list" id="line-list"></div>
+    </div>
+    <div class="field">
+      <div class="field-head"><b>驾驶模式</b><span>ATP 超速保护始终启用</span></div>
+      <div class="mode-list" id="mode-list">
+        <div class="mode on" data-mode="manual">人工驾驶</div>
+        <div class="mode" data-mode="semi">半自动</div>
+        <div class="mode" data-mode="auto">全自动</div>
+      </div>
+    </div>
+    <div class="field two-col">
+      <div><div class="field-head" style="margin-bottom:6px"><b>起始站</b></div>
+        <div class="picker"><button class="icon-btn" id="sta-prev" style="width:30px;height:30px;font-size:16px">‹</button><div style="text-align:center"><b id="sta-name">—</b><small id="sta-en">—</small></div><button class="icon-btn" id="sta-next" style="width:30px;height:30px;font-size:16px">›</button></div></div>
+      <div><div class="field-head" style="margin-bottom:6px"><b>连续驾驶</b></div>
+        <div class="seg" id="leg-seg"><button data-legs="1">1 站</button><button class="is-on" data-legs="3">3 站</button><button data-legs="5">5 站</button></div></div>
+    </div>
+    <div class="bottom-safe"><button class="btn primary wide" id="begin-run"><strong>进入驾驶室</strong><small>从当前站发车</small></button></div>
+  </section>
+
+  <section id="screen-tmpl" class="ec tmpl hidden">
+    <div class="topbar"><button class="icon-btn" id="tmpl-back">‹</button><div><b>模板原版</b><small>济南 / 南京 原版模拟器</small></div><span class="spacer"></span></div>
+    <div id="tmpl-list"></div>
+  </section>
+
+  <div id="game" class="hidden"></div>
 </div>
 
+<script src="data.js"></script>
+<script src="engine.js"></script>
 <script>
-/* 隐藏署名（yty16） */
-var _attr="eXR5MTY=";
+(function(){
+  var D = window.METRO_DATA || {};
+  var TMPL = window.METRO_TEMPLATE_LINKS || {};
+  var cities = Object.keys(D);
+  var lc = 0; cities.forEach(function(c){ lc += (D[c].lines||[]).length; });
+  document.getElementById("city-count").textContent = cities.length;
+  document.getElementById("line-count").textContent = lc;
 
-/* 专属真实模拟器（本地 / 外部，非虚构） */
-var FEATURED=[
-  {nm:"济南",e:"🚆",url:"../jinan/",badge:"自制·3D驾驶",ext:false},
-  {nm:"南京",e:"🚇",url:"https://www.bilibili.com/toy/njmetro-sim/index.html",badge:"B站·原作者",ext:true}
-];
+  var state = { city:null, lineIdx:0, mode:"manual", startIdx:0, legs:3 };
+  var sim = null;
 
-/* 其余城市 → 城市设计师真实平台（按拼音打开对应城市） */
-var CITIES=[
-  {nm:"北京",e:"🏛️",s:"beijing"},{nm:"上海",e:"🌃",s:"shanghai"},{nm:"广州",e:"🏙️",s:"guangzhou"},
-  {nm:"深圳",e:"💡",s:"shenzhen"},{nm:"成都",e:"🐼",s:"chengdu"},{nm:"重庆",e:"🌉",s:"chongqing"},
-  {nm:"武汉",e:"🌊",s:"wuhan"},{nm:"西安",e:"🏯",s:"xian"},{nm:"杭州",e:"⛩️",s:"hangzhou"},
-  {nm:"天津",e:"🌆",s:"tianjin"},{nm:"苏州",e:"🏞️",s:"suzhou"},{nm:"郑州",e:"🐉",s:"zhengzhou"},
-  {nm:"长沙",e:"🌶️",s:"changsha"},{nm:"青岛",e:"⚓",s:"qingdao"},{nm:"宁波",e:"⚓",s:"ningbo"},
-  {nm:"无锡",e:"🌺",s:"wuxi"},{nm:"昆明",e:"❄️",s:"kunming"},{nm:"沈阳",e:"❄️",s:"shenyang"},
-  {nm:"大连",e:"🌊",s:"dalian"},{nm:"厦门",e:"🏝️",s:"xiamen"},{nm:"合肥",e:"🌅",s:"hefei"},
-  {nm:"福州",e:"🌳",s:"fuzhou"},{nm:"哈尔滨",e:"❄️",s:"harbin"},{nm:"长春",e:"🌲",s:"changchun"},
-  {nm:"南昌",e:"🌷",s:"nanchang"},{nm:"南宁",e:"🌴",s:"nanning"},{nm:"贵阳",e:"⛰️",s:"guiyang"},
-  {nm:"石家庄",e:"🏛️",s:"shijiazhuang"},{nm:"太原",e:"🏯",s:"taiyuan"},{nm:"常州",e:"🏭",s:"changzhou"},
-  {nm:"徐州",e:"🚉",s:"xuzhou"},{nm:"绍兴",e:"🏞️",s:"shaoxing"},{nm:"洛阳",e:"🏯",s:"luoyang"},
-  {nm:"芜湖",e:"🌊",s:"wuhu"},{nm:"南通",e:"🌊",s:"nantong"},{nm:"温州",e:"🌾",s:"wenzhou"},
-  {nm:"呼和浩特",e:"🌾",s:"hohhot"},{nm:"乌鲁木齐",e:"🏔️",s:"urumqi"},{nm:"兰州",e:"🌉",s:"lanzhou"},
-  {nm:"东莞",e:"🏭",s:"dongguan"},{nm:"香港",e:"🌆",s:"hongkong"},{nm:"台北",e:"🏙️",s:"taipei"}
-];
+  function show(id){
+    ["screen-home","screen-select","screen-tmpl","game"].forEach(function(s){
+      document.getElementById(s).classList.toggle("hidden", s!==id);
+    });
+  }
 
-function makeCity(c, isFeatured){
-  var a=document.createElement('a');
-  a.className='city';
-  a.href = isFeatured ? c.url : ('https://www.citiesdesigners.com/'+c.s);
-  a.target='_blank'; a.rel='noopener';
-  a.title = c.nm+' 地铁模拟（'+(isFeatured?'专属真实模拟器':('城市设计师 · '+c.s)+')');
-  a.innerHTML='<span class="emoji">'+c.e+'</span><span>'+c.nm+'</span>'+(c.badge?'<span class="badge">'+c.badge+'</span>':'');
-  return a;
-}
+  function renderCities(filter){
+    var grid = document.getElementById("city-grid"); grid.innerHTML="";
+    var list = cities.filter(function(c){ return !filter || c.indexOf(filter)>=0; });
+    list.forEach(function(c){
+      var el = document.createElement("div");
+      el.className = "city" + (state.city===c?" on":"");
+      el.innerHTML = c + "<small>"+(D[c].lines?D[c].lines.length:0)+"线</small>";
+      el.onclick = function(){ state.city=c; state.lineIdx=0; state.startIdx=0; renderCities(document.getElementById("city-search").value); renderLines(); };
+      grid.appendChild(el);
+    });
+  }
+  function renderLines(){
+    var box = document.getElementById("line-list"); box.innerHTML="";
+    if(!state.city){ box.innerHTML='<div style="color:var(--sub);font-size:13px">请先选择城市</div>'; return; }
+    var lines = D[state.city].lines;
+    lines.forEach(function(ln,i){
+      var el = document.createElement("div");
+      el.className = "line" + (i===state.lineIdx?" on":"");
+      el.innerHTML = '<span class="dot" style="background:'+ln.color+'"></span><div><div class="nm">'+ln.name+'</div><div class="st">'+ln.stations.length+' 站 · '+(ln.stations[0])+' → '+(ln.stations[ln.stations.length-1])+'</div></div>';
+      el.onclick = function(){ state.lineIdx=i; state.startIdx=0; renderLines(); renderStart(); };
+      box.appendChild(el);
+    });
+    document.getElementById("vehicle-meta").textContent = lines[state.lineIdx] ? lines[state.lineIdx].stations.length+" 座车站" : "—";
+    renderStart();
+  }
+  function renderStart(){
+    if(!state.city) return;
+    var st = D[state.city].lines[state.lineIdx].stations;
+    var maxStart = Math.max(0, st.length-2);
+    state.startIdx = clampIdx(state.startIdx, maxStart);
+    document.getElementById("sta-name").textContent = st[state.startIdx];
+    document.getElementById("sta-en").textContent = "开往 "+st[st.length-1];
+  }
+  function clampIdx(v,max){ if(v<0)return 0; if(v>max)return max; return v; }
 
-/* 渲染专属 */
-var fg=document.getElementById('featuredGrid');
-FEATURED.forEach(function(c){ fg.appendChild(makeCity(c,true)); });
+  document.getElementById("go-select").onclick = function(){ renderCities(""); renderLines(); show("screen-select"); };
+  document.getElementById("back-home").onclick = function(){ show("screen-home"); };
+  document.getElementById("city-search").oninput = function(e){ renderCities(e.target.value); };
+  document.getElementById("sta-prev").onclick = function(){ state.startIdx=Math.max(0,state.startIdx-1); renderStart(); };
+  document.getElementById("sta-next").onclick = function(){
+    var n = D[state.city].lines[state.lineIdx].stations.length;
+    state.startIdx=Math.min(n-2, state.startIdx+1); renderStart();
+  };
+  Array.prototype.forEach.call(document.querySelectorAll("#mode-list .mode"), function(m){
+    m.onclick = function(){ state.mode=m.getAttribute("data-mode"); Array.prototype.forEach.call(document.querySelectorAll("#mode-list .mode"),function(x){x.classList.remove("on");}); m.classList.add("on"); };
+  });
+  Array.prototype.forEach.call(document.querySelectorAll("#leg-seg button"), function(b){
+    b.onclick = function(){ state.legs=parseInt(b.getAttribute("data-legs"),10); Array.prototype.forEach.call(document.querySelectorAll("#leg-seg button"),function(x){x.classList.remove("is-on");}); b.classList.add("is-on"); };
+  });
 
-/* 渲染其余城市 */
-var cg=document.getElementById('cityGrid');
-function renderCities(filter){
-  cg.innerHTML='';
-  var list=CITIES.filter(function(c){ return !filter || c.nm.indexOf(filter)>-1; });
-  document.getElementById('empty').style.display = list.length?'none':'block';
-  list.forEach(function(c){ cg.appendChild(makeCity(c,false)); });
-}
-document.getElementById('search').addEventListener('input',function(e){ renderCities(e.target.value.trim()); });
-renderCities('');
+  document.getElementById("go-tmpl").onclick = function(){
+    var list = document.getElementById("tmpl-list"); list.innerHTML="";
+    Object.keys(TMPL).forEach(function(k){
+      var t = TMPL[k];
+      var a = document.createElement("a");
+      a.href = t.url; a.target="_blank"; a.rel="noopener";
+      a.innerHTML = '<span class="ic">🚇</span><span class="meta"><b>'+k+' · '+t.title+'</b><small>'+t.note+'</small></span><span class="go">打开 →</span>';
+      list.appendChild(a);
+    });
+    if(!Object.keys(TMPL).length) list.innerHTML='<div style="padding:16px;color:var(--sub)">暂无</div>';
+    show("screen-tmpl");
+  };
+  document.getElementById("tmpl-back").onclick = function(){ show("screen-home"); };
+
+  document.getElementById("begin-run").onclick = function(){
+    if(!state.city){ return; }
+    var ln = D[state.city].lines[state.lineIdx];
+    var mount = document.getElementById("game");
+    show("game");
+    if(sim) sim.destroy();
+    sim = new ChinaMetroSim({ mount:mount, onExit:function(){ if(sim) sim.destroy(); show("screen-select"); } });
+    sim.start({ city:state.city, lineName:ln.name, color:ln.color, stations:ln.stations, startIdx:state.startIdx, legs:state.legs, mode:state.mode });
+    window.scrollTo(0,0);
+  };
+})();
 </script>
 </body>
 </html>

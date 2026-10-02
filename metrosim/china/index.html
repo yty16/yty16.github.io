@@ -131,7 +131,6 @@
     </div>
     <div class="acts">
       <button class="btn primary" id="go-select"><strong>开始驾驶</strong><small>选择城市与线路</small></button>
-      <button class="btn" id="go-tmpl"><strong>模板原版</strong><small>济南 / 南京 原版模拟器</small></button>
     </div>
     <div class="note">站名为各地铁真实运营站名；站间距按平均约 1.2km 模拟，仅供驾驶体验。引擎为自研，不含任何外部平台。</div>
   </section>
@@ -164,11 +163,6 @@
     <div class="bottom-safe"><button class="btn primary wide" id="begin-run"><strong>进入驾驶室</strong><small>从当前站发车</small></button></div>
   </section>
 
-  <section id="screen-tmpl" class="ec tmpl hidden">
-    <div class="topbar"><button class="icon-btn" id="tmpl-back">‹</button><div><b>模板原版</b><small>济南 / 南京 原版模拟器</small></div><span class="spacer"></span></div>
-    <div id="tmpl-list"></div>
-  </section>
-
   <div id="game" class="hidden"></div>
 </div>
 
@@ -177,7 +171,6 @@
 <script>
 (function(){
   var D = window.METRO_DATA || {};
-  var TMPL = window.METRO_TEMPLATE_LINKS || {};
   var cities = Object.keys(D);
   var lc = 0; cities.forEach(function(c){ lc += (D[c].lines||[]).length; });
   document.getElementById("city-count").textContent = cities.length;
@@ -187,7 +180,7 @@
   var sim = null;
 
   function show(id){
-    ["screen-home","screen-select","screen-tmpl","game"].forEach(function(s){
+    ["screen-home","screen-select","game"].forEach(function(s){
       document.getElementById(s).classList.toggle("hidden", s!==id);
     });
   }
@@ -241,20 +234,6 @@
   Array.prototype.forEach.call(document.querySelectorAll("#leg-seg button"), function(b){
     b.onclick = function(){ state.legs=parseInt(b.getAttribute("data-legs"),10); Array.prototype.forEach.call(document.querySelectorAll("#leg-seg button"),function(x){x.classList.remove("is-on");}); b.classList.add("is-on"); };
   });
-
-  document.getElementById("go-tmpl").onclick = function(){
-    var list = document.getElementById("tmpl-list"); list.innerHTML="";
-    Object.keys(TMPL).forEach(function(k){
-      var t = TMPL[k];
-      var a = document.createElement("a");
-      a.href = t.url; a.target="_blank"; a.rel="noopener";
-      a.innerHTML = '<span class="ic">🚇</span><span class="meta"><b>'+k+' · '+t.title+'</b><small>'+t.note+'</small></span><span class="go">打开 →</span>';
-      list.appendChild(a);
-    });
-    if(!Object.keys(TMPL).length) list.innerHTML='<div style="padding:16px;color:var(--sub)">暂无</div>';
-    show("screen-tmpl");
-  };
-  document.getElementById("tmpl-back").onclick = function(){ show("screen-home"); };
 
   document.getElementById("begin-run").onclick = function(){
     if(!state.city){ return; }

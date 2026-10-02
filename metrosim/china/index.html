@@ -40,6 +40,8 @@
   .city.on{background:linear-gradient(135deg,#4f8cff,#3a6fe0);border-color:transparent;}
   .city small{display:block;color:var(--sub);font-size:10px;margin-top:3px;}
   .city.on small{color:rgba(255,255,255,.8);}
+  .city.orig{border-color:var(--acc);}
+  .city.orig small{color:var(--acc);}
   .line-list{display:flex;flex-direction:column;gap:8px;}
   .line{display:flex;align-items:center;gap:12px;background:var(--glass);border:1px solid var(--line);border-radius:12px;padding:12px 14px;cursor:pointer;}
   .line.on{border-color:var(--acc);background:var(--glass2);}
@@ -132,7 +134,7 @@
     <div class="acts">
       <button class="btn primary" id="go-select"><strong>开始驾驶</strong><small>选择城市与线路</small></button>
     </div>
-    <div class="note">站名为各地铁真实运营站名；站间距按平均约 1.2km 模拟，仅供驾驶体验。引擎为自研，不含任何外部平台。</div>
+    <div class="note">站名为各地铁真实运营站名；站间距按平均约 1.2km 模拟，仅供驾驶体验。引擎为自研，不含任何外部平台。济南 / 南京保留其原版专属模拟器（城市列表中标注「原版 ▶」，点击直达）。</div>
   </section>
 
   <section id="screen-select" class="ec sel hidden">
@@ -171,6 +173,7 @@
 <script>
 (function(){
   var D = window.METRO_DATA || {};
+  var ORIG = window.METRO_ORIGINALS || {};
   var cities = Object.keys(D);
   var lc = 0; cities.forEach(function(c){ lc += (D[c].lines||[]).length; });
   document.getElementById("city-count").textContent = cities.length;
@@ -193,6 +196,15 @@
       el.className = "city" + (state.city===c?" on":"");
       el.innerHTML = c + "<small>"+(D[c].lines?D[c].lines.length:0)+"线</small>";
       el.onclick = function(){ state.city=c; state.lineIdx=0; state.startIdx=0; renderCities(document.getElementById("city-search").value); renderLines(); };
+      grid.appendChild(el);
+    });
+    // 原版专属模拟器（济南 / 南京）：点击直达，不进入引擎
+    Object.keys(ORIG).forEach(function(c){
+      if(filter && c.indexOf(filter)<0) return;
+      var el = document.createElement("div");
+      el.className = "city orig";
+      el.innerHTML = c + "<small>原版 ▶</small>";
+      el.onclick = function(){ window.open(ORIG[c].url, "_blank", "noopener"); };
       grid.appendChild(el);
     });
   }

@@ -129,25 +129,20 @@ document.body.innerHTML='<div style="position:fixed;top:0;left:0;width:100%;heig
             <div class="section-title">🎮 中国地铁模拟器（全城市）</div>
             <a class="sim-item" href="china/" target="_blank" rel="noopener">
                 <span class="ic">🚇</span>
-                <span class="meta"><span class="name">自研驾驶模拟器 <span class="tag">新</span></span><span class="desc">选城市 → 真实站名线网 + 自研驾驶引擎（手柄牵引制动、门对门停车报站）；济南/南京附原版模板入口</span></span>
+                <span class="meta"><span class="name">真实驾驶模拟器 <span class="tag">新</span></span><span class="desc">11 城真实 WebGL 3D 驾驶模拟（北京/上海/广州…）+ 更多城市自研引擎版；济南为自制原版</span></span>
                 <span class="go">进入 →</span>
             </a>
         </div>
 
         <div class="card">
-            <div class="section-title">🌐 选择城市</div>
-            <div class="note">「城市设计师」平台基于真实地图与客流模型，支持全球 90+ 国家/地区的地铁系统。点击下方城市，将在该平台内打开对应城市的地铁模拟（北京、上海、东京、伦敦、纽约、莫斯科等均可玩）。</div>
+            <div class="section-title">🌐 选择城市（真实 WebGL 驾驶模拟）</div>
+            <div class="note">以下城市为本地真实 WebGL 3D 驾驶模拟（与济南原版同款架构，完全离线运行）。点击即进入该城市的地铁驾驶模拟器。</div>
             <div class="city-grid" id="cityGrid"></div>
         </div>
 
         <div class="card">
-            <div class="section-title">🚆 驾驶 / 规划类模拟器</div>
+            <div class="section-title">🚆 其他驾驶 / 规划类模拟（外部平台）</div>
             <div class="sim-list">
-                <a class="sim-item" href="https://www.citiesdesigners.com/intro" target="_blank" rel="noopener">
-                    <span class="ic">🗺️</span>
-                    <span class="meta"><span class="name">城市设计师 Cities Designers</span><span class="desc">全球 90+ 城市地铁线网规划与客流模拟</span></span>
-                    <span class="go">进入 →</span>
-                </a>
                 <a class="sim-item" href="https://www.silvergames.com/en/metro-simulator" target="_blank" rel="noopener">
                     <span class="ic">🚇</span>
                     <span class="meta"><span class="name">Metro Simulator（驾驶）</span><span class="desc">驾驶地铁列车、停靠站台、运送乘客</span></span>
@@ -168,16 +163,16 @@ document.body.innerHTML='<div style="position:fixed;top:0;left:0;width:100%;heig
 
         <div class="card">
             <div class="section-title">🏙️ 国内城市专属模拟器</div>
-            <div class="note">国内城市定制版：南京为 B站 Toy 原作者作品（外部链接）；济南为本地复刻的 3D 驾驶模拟器，含 1/2/3/4/6/7/8/9 号线真实线网，可离线运行。</div>
+            <div class="note">南京为本地真实 WebGL 3D 驾驶模拟器（与济南原版同款架构）；济南为自制 3D 驾驶模拟器，均离线可玩。更多城市见上方「中国地铁模拟器」。</div>
             <div class="sim-list">
-                <a class="sim-item" href="https://www.bilibili.com/toy/njmetro-sim/index.html" target="_blank" rel="noopener">
+                <a class="sim-item" href="china/南京/" target="_blank" rel="noopener">
                     <span class="ic">🚇</span>
-                    <span class="meta"><span class="name">南京地铁驾驶模拟器 <span class="tag">B站</span></span><span class="desc">原作者作品 · 外部链接，在 B站打开</span></span>
+                    <span class="meta"><span class="name">南京地铁驾驶模拟器 <span class="tag">本地</span></span><span class="desc">真实 WebGL 3D 驾驶 · 18 条线路真实线网 · 离线可玩</span></span>
                     <span class="go">进入 →</span>
                 </a>
                 <a class="sim-item" href="jinan/" target="_blank" rel="noopener">
                     <span class="ic">🚆</span>
-                    <span class="meta"><span class="name">济南地铁驾驶模拟器 <span class="tag">自制</span></span><span class="desc">3D 驾驶模拟 · 8 条线路真实线网 · 离线可玩</span></span>
+                    <span class="meta"><span class="name">济南地铁驾驶模拟器 <span class="tag">自制</span></span><span class="desc">3D 驾驶模拟 · 真实线网 · 离线可玩</span></span>
                     <span class="go">进入 →</span>
                 </a>
             </div>
@@ -188,22 +183,17 @@ document.body.innerHTML='<div style="position:fixed;top:0;left:0;width:100%;heig
     (function(){
         var cities = [
             {n:'北京', e:'🏛️'}, {n:'上海', e:'🌃'}, {n:'广州', e:'🏙️'}, {n:'深圳', e:'💡'},
-            {n:'香港', e:'🌆'}, {n:'成都', e:'🐼'}, {n:'重庆', e:'🌉'}, {n:'杭州', e:'⛩️'},
-            {n:'武汉', e:'🌊'}, {n:'东京', e:'🗼'}, {n:'首尔', e:'🏯'}, {n:'新加坡', e:'🌴'},
-            {n:'曼谷', e:'🛕'}, {n:'伦敦', e:'🎡'}, {n:'巴黎', e:'🗼'}, {n:'柏林', e:'🏰'},
-            {n:'莫斯科', e:'⛪'}, {n:'纽约', e:'🗽'}, {n:'多伦多', e:'🍁'}, {n:'悉尼', e:'🌅'},
-            {n:'洛杉矶', e:'🌴'}, {n:'旧金山', e:'🌉'}, {n:'马德里', e:'🐂'}, {n:'罗马', e:'🏛️'},
-            {n:'迪拜', e:'🕌'}, {n:'孟买', e:'🛕'}
+            {n:'成都', e:'🐼'}, {n:'重庆', e:'🌉'}, {n:'杭州', e:'⛩️'},
+            {n:'武汉', e:'🌊'}, {n:'南京', e:'🏯'}, {n:'天津', e:'🌆'}, {n:'西安', e:'🕍'}
         ];
         var grid = document.getElementById('cityGrid');
-        var url = 'https://www.citiesdesigners.com/intro';
         cities.forEach(function(c){
             var a = document.createElement('a');
             a.className = 'city-btn';
-            a.href = url;
+            a.href = 'china/' + c.n + '/';
             a.target = '_blank';
             a.rel = 'noopener';
-            a.title = c.n + ' 地铁模拟（城市设计师）';
+            a.title = c.n + ' 地铁驾驶模拟器（真实 WebGL）';
             a.innerHTML = '<span class="emoji">'+c.e+'</span><span>'+c.n+'</span>';
             grid.appendChild(a);
         });

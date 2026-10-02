@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+<meta name="format-detection" content="telephone=no" />
+<title>重庆地铁驾驶模拟器</title>
+<link rel="stylesheet" href="./assets/style.css" />
+<script>window.__BUILD_TOKEN__="eXR5MTY=";</script>
+</head>
+<body>
+<div id="app">
+  <canvas id="gl" aria-label="重庆三维驾驶场景"></canvas>
+  <div class="cab-overlay" id="cab-overlay"><i class="cab-pillar l"></i><i class="cab-pillar r"></i><i class="cab-roof"></i><i class="cab-desk"></i></div>
+
+  <section class="screen is-active" id="screen-home">
+    <div class="home-card glass">
+      <div class="eyebrow">CHONGQING METRO · DRIVER SIM</div>
+      <h1>重庆地铁<span>驾驶模拟器</span></h1>
+      <p class="lead">真实比例车辆 · 分级牵引制动 · 门对门精确停车</p>
+      <div class="home-specs">
+        <span><b>4/6/8</b> 节编组</span><span><b>A/B/D/单</b> 型车</span><span><b>13</b> 条线路</span><span><b>离线</b> WebGL</span>
+      </div>
+      <div class="home-legend">
+        <span class="lg-dot op">运营中</span><span class="lg-dot part">部分运营</span><span class="lg-dot build">建设中</span>
+      </div>
+      <div class="home-actions">
+        <button class="btn primary" data-act="go-select"><strong>开始驾驶</strong><small>进入司机台</small></button>
+        <button class="btn" data-act="open-help">操作说明</button>
+        <button class="btn" data-act="open-settings">模拟器设置</button>
+      </div>
+      <div class="home-note">车辆外形与尺寸按重庆地铁常见 A/B/D/单 型车比例重建；站台语音由系统中文语音实时合成。</div>
+    </div>
+  </section>
+
+  <section class="screen" id="screen-select">
+    <header class="topbar glass"><button class="icon-btn" data-act="back-home">‹</button><div><b>运行设置</b><small>选择线路、模式与起始站</small></div><span class="spacer"></span></header>
+    <div class="scroll-pane select-pane">
+      <div class="field"><div class="field-head"><b>线路与车辆</b><span id="vehicle-meta">—</span></div><div id="line-list" class="line-list"></div></div>
+      <div class="field"><div class="field-head"><b>驾驶模式</b><span>ATP 超速保护始终启用</span></div><div id="mode-list" class="mode-list"></div></div>
+      <div class="field two-col">
+        <div><div class="field-label">起始站</div><div class="picker"><button class="icon-btn small" data-act="sta-prev">‹</button><div><b id="sta-name">—</b><small id="sta-en">—</small></div><button class="icon-btn small" data-act="sta-next">›</button></div></div>
+        <div><div class="field-label">连续驾驶</div><div class="seg" id="leg-seg"><button data-legs="1">1 站</button><button class="is-on" data-legs="3">3 站</button><button data-legs="5">5 站</button></div></div>
+      </div>
+      <div class="field train-card glass-soft"><div class="train-swatch" id="train-swatch"></div><div><b id="train-title">—</b><p id="train-desc">—</p></div></div>
+    </div>
+    <div class="bottom-safe"><button class="btn primary wide" data-act="begin-run"><strong>进入驾驶室</strong><small>从当前站发车</small></button></div>
+  </section>
+
+  <section class="screen" id="screen-game">
+    <!-- 顶部：车内走字屏（替代旧HUD，左侧集成暂停键+线路牌） -->
+    <div class="led-top" id="led-board">
+      <div class="led-head">
+        <button class="led-pause" data-act="pause" aria-label="暂停">Ⅱ</button>
+        <span class="led-line" id="led-line">2号线</span>
+        <span class="led-next"><small id="led-next-label">下一站 NEXT</small><b id="led-next-station">—</b></span>
+        <span class="led-door" id="led-door"><i class="door-ico"></i><b id="led-door-text">本侧开门</b></span>
+      </div>
+      <div class="led-route" id="led-route"><svg id="led-svg" preserveAspectRatio="none"></svg><div class="led-labels" id="led-labels"></div></div>
+    </div>
+    <div class="announce glass-soft" id="announce"><b id="announce-zh">欢迎乘坐地铁</b><span id="announce-en">Welcome aboard Metro</span></div>
+
+    <div class="topview" id="topview">
+      <div class="topview-head"><span>对位俯视图</span><span class="tv-dist" id="tv-dist">—</span></div>
+      <canvas id="tv-canvas"></canvas>
+      <div class="topview-legend"><i class="lg green"></i>停车区<i class="lg head"></i>车头<i class="lg pred"></i>预计停车<span>上门=屏蔽门 · 下门=列车门，门对门即对准</span></div>
+    </div>
+
+    <div class="approach-marker" id="approach-marker"><b id="marker-distance">—</b><span>停车标</span></div>
+
+    <div class="cockpit">
+      <div class="master panel glass">
+        <div class="panel-title"><b>主控手柄</b><span id="handle-state">B3</span></div>
+        <div class="handle-wrap"><div id="lever-track" class="lever-track"><div id="lever-zone" class="lever-zone"></div><div id="lever-knob" class="lever-knob"><i></i></div><div id="lever-ticks" class="lever-ticks"></div></div></div>
+        <div class="handle-nudge"><button data-act="notch-up">▲</button><button data-act="notch-down">▼</button></div>
+      </div>
+
+      <div class="instruments panel glass">
+        <div class="speed-dial"><div class="speed-number" id="hud-speed">0</div><span>km/h</span><i id="speed-needle"></i></div>
+        <div class="metrics">
+          <div><small>限速</small><b><span id="hud-limit">80</span><em> km/h</em></b></div>
+          <div><small>距停车标</small><b id="hud-dist">—</b></div>
+          <div><small>制动缸</small><b><span id="hud-bc">0</span><em> kPa</em></b></div>
+          <div><small>纵向加速度</small><b><span id="hud-accel">0.00</span><em> m/s²</em></b></div>
+          <div><small>牵引力</small><b><span id="hud-force">0</span><em> kN</em></b></div>
+          <div class="atp-cell">
+            <div class="atp-read"><small>ATP</small><b id="hud-atp">监控</b></div>
+            <button class="view-cycle" data-act="cycle-view">
+              <b id="view-cycle-name">驾驶室</b>
+              <small>点击切换视角</small>
+            </button>
+          </div>
+        </div>
+        <div class="force-bars"><label>牵引<i><span id="bar-power"></span></i></label><label>制动<i><span id="bar-brake"></span></i></label></div>
+      </div>
+
+      <div class="actions panel glass">
+        <div class="panel-title"><b>车门 / 行车</b><span id="door-side">右侧开门</span></div>
+        <div class="action-grid">
+          <button data-act="open-door" id="btn-open"><b>开门</b><small>DOOR OPEN</small></button>
+          <button data-act="close-door" id="btn-close"><b>关门</b><small>DOOR CLOSE</small></button>
+          <button class="accent" data-act="confirm-depart" id="btn-depart"><b>发车确认</b><small>DEPART</small></button>
+          <button class="danger" data-act="emergency"><b>紧急制动</b><small>EB</small></button>
+          <button data-act="release-eb"><b>缓解 EB</b><small>RELEASE</small></button>
+          <button data-act="horn"><b>鸣笛</b><small>HORN</small></button>
+        </div>
+        <div class="reposition" id="reposition"><button data-act="repo-back">按住退行</button><button data-act="repo-fwd">按住前进</button></div>
+      </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+    <div class="hint" id="hint"></div>
+  </section>
+
+  <section class="screen" id="screen-result">
+    <div class="result-card glass">
+      <div class="eyebrow">RUN COMPLETE</div><div class="score" id="res-score">0</div><div class="grade" id="res-grade">—</div><p id="res-sub">—</p>
+      <div id="res-list" class="result-list"></div>
+      <div class="result-actions"><button class="btn" data-act="save-card">保存成绩卡</button><button class="btn" data-act="share-note">分享</button><button class="btn" data-act="open-rank">排行榜</button><button class="btn" data-act="back-select">换线路</button><button class="btn primary" data-act="again">再跑一次</button></div>
+    </div>
+  </section>
+
+  <div class="modal" id="modal-pause"><div class="modal-card glass"><h2>运行暂停</h2><p>制动与计时已冻结。</p><button class="btn primary wide" data-act="resume">继续驾驶</button><button class="btn wide" data-act="open-settings">设置</button><button class="btn wide" data-act="quit-run">退出本次运行</button></div></div>
+
+  <div class="modal" id="modal-help"><div class="modal-card glass tall"><h2>司机操作说明</h2><div class="doc">
+    <h3>主控手柄</h3><p>上方 P1–P4 为牵引，中位 N 为惰行，下方 B1–B7 为常用制动，FB 为快速制动，EB 为紧急制动。手柄具有级位吸附，制动力不是瞬间建立，提前给制动才能停准。</p>
+    <h3>制动手感</h3><p>模拟器分别计算牵引建立、制动缸充气、再生制动、低速空气制动和纵向冲动。高速段先用 B4–B6 建立减速度，进入站台后逐级缓解到 B1–B3，停车会更平顺。</p>
+    <h3>停车与车门</h3><p>停车标对应列车车头位置。误差越小，列车门与屏蔽门越接近。停稳后才能开门；严重错位时需按住“退行 / 前进”低速对位。</p>
+    <h3>三种模式</h3><p>人工驾驶全部手动；半自动在距停车标约 65 米时交还控制；全自动完成牵引、巡航与停车，你仍可随时用紧急制动接管。</p>
+    <h3>声音</h3><p>牵引逆变器、轮轨、风噪、制动摩擦与空气制动声均由 WebAudio 实时生成。站台与到站语音由系统中文语音实时合成（离线可用）。</p>
+    <div class="key-help"><h3>键盘 / 鼠标（电脑端）</h3>
+     <b>↑ / ↓</b> 升降级位 &nbsp; <b>D</b> 发车确认 &nbsp; <b>O / C</b> 开 / 关门<br>
+     <b>E</b> 紧急制动 &nbsp; <b>R</b> 缓解 EB &nbsp; <b>H / 回车</b> 鸣笛 &nbsp; <b>V</b> 切视角 &nbsp; <b>空格</b> 暂停<br>按住鼠标左键拖动可环视驾驶室。</div>
+  </div><button class="btn primary wide" data-act="close-modal">知道了</button></div></div>
+
+  <div class="modal" id="modal-settings"><div class="modal-card glass"><h2>模拟器设置</h2>
+    <label class="switch-row"><span><b>行车音效</b><small>牵引、轮轨、制动、风噪</small></span><input id="set-sound" type="checkbox" checked><i></i></label>
+    <label class="switch-row"><span><b>站台 / 到站语音</b><small>系统中文语音合成</small></span><input id="set-voice" type="checkbox" checked><i></i></label>
+    <div class="slider-row"><span>音量</span><input id="set-volume" type="range" min="0" max="100" value="72"></div>
+    <div class="slider-row"><span>视角灵敏度</span><input id="set-look" type="range" min="50" max="160" value="100"></div>
+    <div class="field-label">画质</div><div class="seg" id="quality-seg"><button data-q="low">流畅</button><button class="is-on" data-q="medium">均衡</button><button data-q="high">高清</button></div>
+    <button class="btn primary wide" data-act="close-modal">完成</button>
+  </div></div>
+
+  <div class="modal" id="modal-rank"><div class="modal-card glass tall"><h2>停车排行榜</h2><div class="rank-mine" id="rank-mine"></div><div id="rank-body"><p>加载中…</p></div><button class="btn primary wide" data-act="close-modal">知道了</button></div></div>
+
+  <div class="modal" id="modal-share"><div class="modal-card glass"><h2>分享给好友</h2><div class="share-qr" id="share-qr"></div><p class="share-tip">网页端请扫码，或点下方按钮复制分享文案。</p><button class="btn wide" data-act="copy-share">复制分享文案</button><button class="btn primary wide" data-act="close-modal">完成</button></div></div>
+</div>
+<script src="./assets/data.js"></script>
+<script src="./assets/engine.js"></script>
+</body>
+</html>

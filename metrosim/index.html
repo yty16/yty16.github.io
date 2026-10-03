@@ -16,21 +16,25 @@ document.body.innerHTML='<div style="position:fixed;top:0;left:0;width:100%;heig
     <style>
         :root {
             --bg: #f0f2f5;
-            --card-bg: rgba(255, 255, 255, 0.7);
-            --card-border: rgba(255, 255, 255, 0.3);
+            --card-bg: rgba(255, 255, 255, 0.85);
+            --card-border: rgba(0, 0, 0, 0.06);
             --text: #1a1a2e;
-            --text-secondary: #666;
-            --accent: #6c5ce7;
-            --accent-light: #a29bfe;
+            --text-secondary: #4a5568;
+            --accent: #6366f1;
+            --accent2: #4f46e5;
+            --accent-light: rgba(99, 102, 241, 0.1);
+            --shadow-card: 0 2px 8px rgba(0, 0, 0, 0.04);
         }
         [data-theme="dark"] {
-            --bg: #1a1a2e;
-            --card-bg: rgba(255, 255, 255, 0.05);
-            --card-border: rgba(255, 255, 255, 0.1);
-            --text: #eee;
-            --text-secondary: #aaa;
-            --accent: #a29bfe;
-            --accent-light: #6c5ce7;
+            --bg: #0f0f1a;
+            --card-bg: rgba(30, 30, 50, 0.85);
+            --card-border: rgba(255, 255, 255, 0.06);
+            --text: #e2e8f0;
+            --text-secondary: #a0aec0;
+            --accent: #818cf8;
+            --accent2: #6366f1;
+            --accent-light: rgba(129, 140, 248, 0.15);
+            --shadow-card: 0 2px 8px rgba(0, 0, 0, 0.2);
         }
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -43,8 +47,11 @@ document.body.innerHTML='<div style="position:fixed;top:0;left:0;width:100%;heig
             display: flex;
             flex-direction: column;
             align-items: center;
+            position: relative;
         }
-        .container { max-width: 560px; width: 100%; }
+        /* 粒子背景（与站点首页一致） */
+        #particles { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
+        .container { max-width: 560px; width: 100%; position: relative; z-index: 1; }
         .back-btn {
             display: inline-flex;
             align-items: center;
@@ -69,13 +76,13 @@ document.body.innerHTML='<div style="position:fixed;top:0;left:0;width:100%;heig
             padding: 22px;
             margin-bottom: 18px;
             backdrop-filter: blur(20px);
-            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            box-shadow: var(--shadow-card);
             width: 100%;
         }
         h1 { font-size: 28px; margin-bottom: 8px; text-align: center; }
         .subtitle { text-align: center; font-size: 13px; color: var(--text-secondary); margin-bottom: 4px; }
         .section-title { font-size: 16px; font-weight: 600; margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
-        .note { font-size: 12px; color: var(--text-secondary); line-height: 1.7; margin-bottom: 16px; background: rgba(108,92,231,0.08); border-radius: 10px; padding: 10px 14px; }
+        .note { font-size: 12px; color: var(--text-secondary); line-height: 1.7; margin-bottom: 16px; background: var(--accent-light); border-radius: 10px; padding: 10px 14px; }
         .city-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
         .city-btn {
             display: flex; flex-direction: column; align-items: center; justify-content: center;
@@ -84,7 +91,7 @@ document.body.innerHTML='<div style="position:fixed;top:0;left:0;width:100%;heig
             color: var(--text); font-size: 14px; font-weight: 500;
             transition: all 0.18s; backdrop-filter: blur(8px);
         }
-        .city-btn:hover { background: var(--accent); color: #fff; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(108,92,231,0.35); }
+        .city-btn:hover { background: linear-gradient(135deg, var(--accent), var(--accent2)); color: #fff; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(99,102,241,0.35); }
         .city-btn .emoji { font-size: 20px; margin-bottom: 4px; }
         .sim-list { display: flex; flex-direction: column; gap: 10px; }
         .sim-item {
@@ -92,7 +99,7 @@ document.body.innerHTML='<div style="position:fixed;top:0;left:0;width:100%;heig
             padding: 12px 14px; border-radius: 12px; background: var(--card-bg);
             border: 1px solid var(--card-border); transition: all 0.18s; backdrop-filter: blur(8px);
         }
-        .sim-item:hover { background: var(--accent); color: #fff; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(108,92,231,0.3); }
+        .sim-item:hover { background: linear-gradient(135deg, var(--accent), var(--accent2)); color: #fff; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(99,102,241,0.3); }
         .sim-item .ic { font-size: 22px; flex-shrink: 0; }
         .sim-item .meta { flex: 1; min-width: 0; }
         .sim-item .name { font-size: 14px; font-weight: 600; }
@@ -118,6 +125,7 @@ document.body.innerHTML='<div style="position:fixed;top:0;left:0;width:100%;heig
             }
         })();
     </script>
+    <canvas id="particles"></canvas>
     <div class="container">
         <a href="/" class="back-btn">← 返回</a>
         <div class="card">
@@ -125,7 +133,7 @@ document.body.innerHTML='<div style="position:fixed;top:0;left:0;width:100%;heig
             <p class="subtitle">点选城市，进入真实线网与客流的地铁模拟世界</p>
         </div>
 
-        <div class="card" style="border-color: var(--accent); background: linear-gradient(135deg, rgba(108,92,231,0.18), rgba(108,92,231,0.06));">
+        <div class="card" style="border-color: var(--accent); background: linear-gradient(135deg, var(--accent-light), transparent);">
             <div class="section-title">🎮 中国地铁模拟器（全城市）</div>
             <a class="sim-item" href="china/" target="_blank" rel="noopener">
                 <span class="ic">🚇</span>
@@ -176,6 +184,45 @@ document.body.innerHTML='<div style="position:fixed;top:0;left:0;width:100%;heig
             a.innerHTML = '<span class="emoji">'+c.e+'</span><span>'+c.n+'</span>';
             grid.appendChild(a);
         });
+    })();
+
+    // 粒子背景（与站点首页同款）
+    (function(){
+        var e = document.getElementById('particles');
+        if (!e || !e.getContext) return;
+        var t = e.getContext('2d'), n, o = [];
+        function i(){ e.width = window.innerWidth; e.height = window.innerHeight; }
+        function a(){
+            var cnt = Math.min(60, Math.floor(window.innerWidth / 20));
+            o = [];
+            for (var k = 0; k < cnt; k++) o.push({
+                x: Math.random() * e.width, y: Math.random() * e.height,
+                vx: 0.5 * (Math.random() - 0.5), vy: 0.5 * (Math.random() - 0.5),
+                radius: 2 * Math.random() + 0.5, opacity: 0.3 * Math.random() + 0.1
+            });
+        }
+        i(); a();
+        (function loop(){
+            t.clearRect(0, 0, e.width, e.height);
+            var c = document.documentElement.getAttribute('data-theme') === 'dark' ? '129, 140, 248' : '99, 102, 241';
+            o.forEach(function(p){
+                p.x += p.vx; p.y += p.vy;
+                if (p.x < 0 || p.x > e.width) p.vx *= -1;
+                if (p.y < 0 || p.y > e.height) p.vy *= -1;
+                t.beginPath(); t.arc(p.x, p.y, p.radius, 0, 2 * Math.PI);
+                t.fillStyle = 'rgba(' + c + ', ' + p.opacity + ')'; t.fill();
+            });
+            for (var m = 0; m < o.length; m++) for (var q = m + 1; q < o.length; q++) {
+                var dx = o[m].x - o[q].x, dy = o[m].y - o[q].y, d = Math.sqrt(dx * dx + dy * dy);
+                if (d < 120) {
+                    t.beginPath(); t.moveTo(o[m].x, o[m].y); t.lineTo(o[q].x, o[q].y);
+                    t.strokeStyle = 'rgba(' + c + ', ' + (0.08 * (1 - d / 120)) + ')';
+                    t.lineWidth = 0.5; t.stroke();
+                }
+            }
+            n = requestAnimationFrame(loop);
+        })();
+        window.addEventListener('resize', function(){ i(); a(); });
     })();
     </script>
 </body>

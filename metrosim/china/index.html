@@ -71,19 +71,6 @@ document.body.innerHTML='<div style="position:fixed;top:0;left:0;width:100%;heig
         .city-btn .emoji { font-size: 22px; margin-bottom: 4px; }
         .city-btn .cnt { font-size: 11px; color: var(--text-secondary); font-weight: 400; margin-top: 3px; }
         .city-btn:hover .cnt { color: rgba(255,255,255,0.85); }
-        .sim-list { display: flex; flex-direction: column; gap: 10px; }
-        .sim-item {
-            display: flex; align-items: center; gap: 12px; text-decoration: none; color: var(--text);
-            padding: 12px 14px; border-radius: 12px; background: var(--card-bg);
-            border: 1px solid var(--card-border); transition: all 0.18s; backdrop-filter: blur(8px);
-        }
-        .sim-item:hover { background: linear-gradient(135deg, var(--accent), var(--accent2)); color: #fff; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(79,140,255,0.3); }
-        .sim-item .ic { font-size: 22px; flex-shrink: 0; }
-        .sim-item .meta { flex: 1; min-width: 0; }
-        .sim-item .name { font-size: 14px; font-weight: 600; }
-        .sim-item .desc { font-size: 12px; opacity: 0.8; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .sim-item .go { font-size: 12px; opacity: 0.7; flex-shrink: 0; }
-        .tag { font-size: 11px; padding: 1px 7px; border-radius: 6px; background: var(--accent); color: #fff; opacity: 0.9; font-weight: 500; margin-left: 4px; }
         @media (max-width: 600px) {
             body { padding: 12px; }
             .hero h1 { font-size: 22px; }
@@ -106,17 +93,6 @@ document.body.innerHTML='<div style="position:fixed;top:0;left:0;width:100%;heig
             <div class="note">由B站大佬梦想成为测评博主的<a href="https://www.bilibili.com/toy/njmetro-sim/index.html" target="_blank" rel="noopener" style="color:#6ea8ff;text-decoration:underline;">南京地铁模拟器</a>改编，真实线网 + 真实 3D 驾驶模拟。</div>
             <div class="city-grid" id="cityGrid"></div>
         </div>
-
-        <div class="card">
-            <div class="section-title">🚆 自制原版模拟器</div>
-            <div class="sim-list">
-                <a class="sim-item" href="../jinan/">
-                    <span class="ic">🚆</span>
-                    <span class="meta"><span class="name">济南地铁驾驶模拟器 <span class="tag">自制原版</span></span><span class="desc">3D 驾驶模拟 · 真实线网 · 离线可玩</span></span>
-                    <span class="go">进入 →</span>
-                </a>
-            </div>
-        </div>
     </div>
 
     <script>
@@ -124,13 +100,14 @@ document.body.innerHTML='<div style="position:fixed;top:0;left:0;width:100%;heig
         var cities = [
             {n:'北京', e:'🏛️', c:31}, {n:'上海', e:'🌃', c:29}, {n:'广州', e:'🏙️', c:18}, {n:'深圳', e:'💡', c:17},
             {n:'成都', e:'🐼', c:17}, {n:'杭州', e:'⛩️', c:17}, {n:'武汉', e:'🌊', c:13}, {n:'重庆', e:'🌉', c:13},
-            {n:'南京', e:'🏯', c:18}, {n:'天津', e:'🌆', c:13}, {n:'西安', e:'🕍', c:12}
+            {n:'南京', e:'🏯', c:18}, {n:'天津', e:'🌆', c:13}, {n:'西安', e:'🕍', c:12},
+            {n:'济南', e:'⛲', c:8, u:'../jinan/'}
         ];
         var grid = document.getElementById('cityGrid');
         cities.forEach(function(c){
             var a = document.createElement('a');
             a.className = 'city-btn';
-            a.href = './' + c.n + '/';
+            a.href = c.u || ('./' + c.n + '/');
             a.target = '_blank';
             a.rel = 'noopener';
             a.title = c.n + ' 地铁驾驶模拟器（真实 WebGL）';

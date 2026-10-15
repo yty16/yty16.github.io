@@ -1,0 +1,384 @@
+{
+  "date": "2026-10-15",
+  "updatedAt": "2026-10-15T10:38:14+08:00",
+  "sources": [
+    {
+      "name": "百度",
+      "items": [
+        {
+          "title": "习近平向中国进出口商品交易会致贺信",
+          "url": "https://www.baidu.com/s?wd=%E4%B9%A0%E8%BF%91%E5%B9%B3%E5%90%91%E4%B8%AD%E5%9B%BD%E8%BF%9B%E5%87%BA%E5%8F%A3%E5%95%86%E5%93%81%E4%BA%A4%E6%98%93%E4%BC%9A%E8%87%B4%E8%B4%BA%E4%BF%A1&sa=fyb_news&rsv_dl=fyb_news"
+        },
+        {
+          "title": "以后办退休只需一张身份证",
+          "url": "https://www.baidu.com/s?wd=%E4%BB%A5%E5%90%8E%E5%8A%9E%E9%80%80%E4%BC%91%E5%8F%AA%E9%9C%80%E4%B8%80%E5%BC%A0%E8%BA%AB%E4%BB%BD%E8%AF%81&sa=fyb_news&rsv_dl=fyb_news"
+        },
+        {
+          "title": "中国发现侏罗纪新鸟",
+          "url": "https://www.baidu.com/s?wd=%E4%B8%AD%E5%9B%BD%E5%8F%91%E7%8E%B0%E4%BE%8F%E7%BD%97%E7%BA%AA%E6%96%B0%E9%B8%9F&sa=fyb_news&rsv_dl=fyb_news"
+        },
+        {
+          "title": "今年国庆消费 有啥不一样",
+          "url": "https://www.baidu.com/s?wd=%E4%BB%8A%E5%B9%B4%E5%9B%BD%E5%BA%86%E6%B6%88%E8%B4%B9+%E6%9C%89%E5%95%A5%E4%B8%8D%E4%B8%80%E6%A0%B7&sa=fyb_news&rsv_dl=fyb_news"
+        },
+        {
+          "title": "DeepSeek崩了",
+          "url": "https://www.baidu.com/s?wd=DeepSeek%E5%B4%A9%E4%BA%86&sa=fyb_news&rsv_dl=fyb_news"
+        },
+        {
+          "title": "1岁男童误食毒鸡蛋中毒后邻居自首",
+          "url": "https://www.baidu.com/s?wd=1%E5%B2%81%E7%94%B7%E7%AB%A5%E8%AF%AF%E9%A3%9F%E6%AF%92%E9%B8%A1%E8%9B%8B%E4%B8%AD%E6%AF%92%E5%90%8E%E9%82%BB%E5%B1%85%E8%87%AA%E9%A6%96&sa=fyb_news&rsv_dl=fyb_news"
+        },
+        {
+          "title": "日韩股市跌到刹不住车",
+          "url": "https://www.baidu.com/s?wd=%E6%97%A5%E9%9F%A9%E8%82%A1%E5%B8%82%E8%B7%8C%E5%88%B0%E5%88%B9%E4%B8%8D%E4%BD%8F%E8%BD%A6&sa=fyb_news&rsv_dl=fyb_news"
+        },
+        {
+          "title": "男子在高铁座位脱裤排便 官方：行拘",
+          "url": "https://www.baidu.com/s?wd=%E7%94%B7%E5%AD%90%E5%9C%A8%E9%AB%98%E9%93%81%E5%BA%A7%E4%BD%8D%E8%84%B1%E8%A3%A4%E6%8E%92%E4%BE%BF+%E5%AE%98%E6%96%B9%EF%BC%9A%E8%A1%8C%E6%8B%98&sa=fyb_news&rsv_dl=fyb_news"
+        },
+        {
+          "title": "“你爸爸叫什么？”“他叫老公！”",
+          "url": "https://www.baidu.com/s?wd=%E2%80%9C%E4%BD%A0%E7%88%B8%E7%88%B8%E5%8F%AB%E4%BB%80%E4%B9%88%EF%BC%9F%E2%80%9D%E2%80%9C%E4%BB%96%E5%8F%AB%E8%80%81%E5%85%AC%EF%BC%81%E2%80%9D&sa=fyb_news&rsv_dl=fyb_news"
+        },
+        {
+          "title": "综艺里真的有那么多NPD吗",
+          "url": "https://www.baidu.com/s?wd=%E7%BB%BC%E8%89%BA%E9%87%8C%E7%9C%9F%E7%9A%84%E6%9C%89%E9%82%A3%E4%B9%88%E5%A4%9ANPD%E5%90%97&sa=fyb_news&rsv_dl=fyb_news"
+        },
+        {
+          "title": "黄牛回应演唱会门票25万：实际约5万",
+          "url": "https://www.baidu.com/s?wd=%E9%BB%84%E7%89%9B%E5%9B%9E%E5%BA%94%E6%BC%94%E5%94%B1%E4%BC%9A%E9%97%A8%E7%A5%A825%E4%B8%87%EF%BC%9A%E5%AE%9E%E9%99%85%E7%BA%A65%E4%B8%87&sa=fyb_news&rsv_dl=fyb_news"
+        },
+        {
+          "title": "1张脸标价500块 小心人脸授权陷阱",
+          "url": "https://www.baidu.com/s?wd=1%E5%BC%A0%E8%84%B8%E6%A0%87%E4%BB%B7500%E5%9D%97+%E5%B0%8F%E5%BF%83%E4%BA%BA%E8%84%B8%E6%8E%88%E6%9D%83%E9%99%B7%E9%98%B1&sa=fyb_news&rsv_dl=fyb_news"
+        },
+        {
+          "title": "考研报名",
+          "url": "https://www.baidu.com/s?wd=%E8%80%83%E7%A0%94%E6%8A%A5%E5%90%8D&sa=fyb_news&rsv_dl=fyb_news"
+        },
+        {
+          "title": "因差评轻生摊主遗书称以为能陪娃长大",
+          "url": "https://www.baidu.com/s?wd=%E5%9B%A0%E5%B7%AE%E8%AF%84%E8%BD%BB%E7%94%9F%E6%91%8A%E4%B8%BB%E9%81%97%E4%B9%A6%E7%A7%B0%E4%BB%A5%E4%B8%BA%E8%83%BD%E9%99%AA%E5%A8%83%E9%95%BF%E5%A4%A7&sa=fyb_news&rsv_dl=fyb_news"
+        },
+        {
+          "title": "新规来了！买牙膏避坑必看",
+          "url": "https://www.baidu.com/s?wd=%E6%96%B0%E8%A7%84%E6%9D%A5%E4%BA%86%EF%BC%81%E4%B9%B0%E7%89%99%E8%86%8F%E9%81%BF%E5%9D%91%E5%BF%85%E7%9C%8B&sa=fyb_news&rsv_dl=fyb_news"
+        },
+        {
+          "title": "A股",
+          "url": "https://www.baidu.com/s?wd=A%E8%82%A1&sa=fyb_news&rsv_dl=fyb_news"
+        },
+        {
+          "title": "肖战演唱会秒售罄",
+          "url": "https://www.baidu.com/s?wd=%E8%82%96%E6%88%98%E6%BC%94%E5%94%B1%E4%BC%9A%E7%A7%92%E5%94%AE%E7%BD%84&sa=fyb_news&rsv_dl=fyb_news"
+        },
+        {
+          "title": "韩国股市上演“瀑布杀”",
+          "url": "https://www.baidu.com/s?wd=%E9%9F%A9%E5%9B%BD%E8%82%A1%E5%B8%82%E4%B8%8A%E6%BC%94%E2%80%9C%E7%80%91%E5%B8%83%E6%9D%80%E2%80%9D&sa=fyb_news&rsv_dl=fyb_news"
+        },
+        {
+          "title": "“看病请人陪”有国家标准了",
+          "url": "https://www.baidu.com/s?wd=%E2%80%9C%E7%9C%8B%E7%97%85%E8%AF%B7%E4%BA%BA%E9%99%AA%E2%80%9D%E6%9C%89%E5%9B%BD%E5%AE%B6%E6%A0%87%E5%87%86%E4%BA%86&sa=fyb_news&rsv_dl=fyb_news"
+        },
+        {
+          "title": "闫妮像极了上班摸鱼的我",
+          "url": "https://www.baidu.com/s?wd=%E9%97%AB%E5%A6%AE%E5%83%8F%E6%9E%81%E4%BA%86%E4%B8%8A%E7%8F%AD%E6%91%B8%E9%B1%BC%E7%9A%84%E6%88%91&sa=fyb_news&rsv_dl=fyb_news"
+        },
+        {
+          "title": "部级干部带队！8个督察组即将赴地方",
+          "url": "https://www.baidu.com/s?wd=%E9%83%A8%E7%BA%A7%E5%B9%B2%E9%83%A8%E5%B8%A6%E9%98%9F%EF%BC%818%E4%B8%AA%E7%9D%A3%E5%AF%9F%E7%BB%84%E5%8D%B3%E5%B0%86%E8%B5%B4%E5%9C%B0%E6%96%B9&sa=fyb_news&rsv_dl=fyb_news"
+        },
+        {
+          "title": "黄金白银断崖式大跌",
+          "url": "https://www.baidu.com/s?wd=%E9%BB%84%E9%87%91%E7%99%BD%E9%93%B6%E6%96%AD%E5%B4%96%E5%BC%8F%E5%A4%A7%E8%B7%8C&sa=fyb_news&rsv_dl=fyb_news"
+        },
+        {
+          "title": "王凤朝被提起公诉",
+          "url": "https://www.baidu.com/s?wd=%E7%8E%8B%E5%87%A4%E6%9C%9D%E8%A2%AB%E6%8F%90%E8%B5%B7%E5%85%AC%E8%AF%89&sa=fyb_news&rsv_dl=fyb_news"
+        },
+        {
+          "title": "“绿泡泡”对决“红果果”",
+          "url": "https://www.baidu.com/s?wd=%E2%80%9C%E7%BB%BF%E6%B3%A1%E6%B3%A1%E2%80%9D%E5%AF%B9%E5%86%B3%E2%80%9C%E7%BA%A2%E6%9E%9C%E6%9E%9C%E2%80%9D&sa=fyb_news&rsv_dl=fyb_news"
+        },
+        {
+          "title": "酒店因肖战演唱会从179涨到2193元",
+          "url": "https://www.baidu.com/s?wd=%E9%85%92%E5%BA%97%E5%9B%A0%E8%82%96%E6%88%98%E6%BC%94%E5%94%B1%E4%BC%9A%E4%BB%8E179%E6%B6%A8%E5%88%B02193%E5%85%83&sa=fyb_news&rsv_dl=fyb_news"
+        },
+        {
+          "title": "7天6夜堵截蒙古国火灾330余公里",
+          "url": "https://www.baidu.com/s?wd=7%E5%A4%A96%E5%A4%9C%E5%A0%B5%E6%88%AA%E8%92%99%E5%8F%A4%E5%9B%BD%E7%81%AB%E7%81%BE330%E4%BD%99%E5%85%AC%E9%87%8C&sa=fyb_news&rsv_dl=fyb_news"
+        },
+        {
+          "title": "今年双11告别算数题",
+          "url": "https://www.baidu.com/s?wd=%E4%BB%8A%E5%B9%B4%E5%8F%8C11%E5%91%8A%E5%88%AB%E7%AE%97%E6%95%B0%E9%A2%98&sa=fyb_news&rsv_dl=fyb_news"
+        },
+        {
+          "title": "官方通报女子高铁开免提电话1小时",
+          "url": "https://www.baidu.com/s?wd=%E5%AE%98%E6%96%B9%E9%80%9A%E6%8A%A5%E5%A5%B3%E5%AD%90%E9%AB%98%E9%93%81%E5%BC%80%E5%85%8D%E6%8F%90%E7%94%B5%E8%AF%9D1%E5%B0%8F%E6%97%B6&sa=fyb_news&rsv_dl=fyb_news"
+        },
+        {
+          "title": "这21小时23分 载入史册",
+          "url": "https://www.baidu.com/s?wd=%E8%BF%9921%E5%B0%8F%E6%97%B623%E5%88%86+%E8%BD%BD%E5%85%A5%E5%8F%B2%E5%86%8C&sa=fyb_news&rsv_dl=fyb_news"
+        },
+        {
+          "title": "女子小区坠井遇难 当地成立调查组",
+          "url": "https://www.baidu.com/s?wd=%E5%A5%B3%E5%AD%90%E5%B0%8F%E5%8C%BA%E5%9D%A0%E4%BA%95%E9%81%87%E9%9A%BE+%E5%BD%93%E5%9C%B0%E6%88%90%E7%AB%8B%E8%B0%83%E6%9F%A5%E7%BB%84&sa=fyb_news&rsv_dl=fyb_news"
+        }
+      ]
+    },
+    {
+      "name": "B站",
+      "items": [
+        {
+          "title": "OpenAI称攻克NS方程问题为何引争议",
+          "url": "https://search.bilibili.com/all?keyword=OpenAI%E7%A7%B0%E6%94%BB%E5%85%8BNS%E6%96%B9%E7%A8%8B%E9%97%AE%E9%A2%98%E4%B8%BA%E4%BD%95%E5%BC%95%E4%BA%89%E8%AE%AE"
+        },
+        {
+          "title": "长鑫发布4F²架构",
+          "url": "https://search.bilibili.com/all?keyword=%E9%95%BF%E9%91%AB%E5%8F%91%E5%B8%834F%C2%B2%E6%9E%B6%E6%9E%84"
+        },
+        {
+          "title": "DeepSeek崩了",
+          "url": "https://search.bilibili.com/all?keyword=DeepSeek%E5%B4%A9%E4%BA%86"
+        },
+        {
+          "title": "巴黎终结曼城8连胜",
+          "url": "https://search.bilibili.com/all?keyword=%E5%B7%B4%E9%BB%8E%E7%BB%88%E7%BB%93%E6%9B%BC%E5%9F%8E8%E8%BF%9E%E8%83%9C"
+        },
+        {
+          "title": "如何从零开始学习AI",
+          "url": "https://search.bilibili.com/all?keyword=%E5%A6%82%E4%BD%95%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E5%AD%A6%E4%B9%A0AI"
+        },
+        {
+          "title": "AppleWatch睡眠呼吸暂停功能",
+          "url": "https://search.bilibili.com/all?keyword=AppleWatch%E7%9D%A1%E7%9C%A0%E5%91%BC%E5%90%B8%E6%9A%82%E5%81%9C%E5%8A%9F%E8%83%BD"
+        },
+        {
+          "title": "AI逐回实景还原红楼梦原著",
+          "url": "https://search.bilibili.com/all?keyword=AI%E9%80%90%E5%9B%9E%E5%AE%9E%E6%99%AF%E8%BF%98%E5%8E%9F%E7%BA%A2%E6%A5%BC%E6%A2%A6%E5%8E%9F%E8%91%97"
+        },
+        {
+          "title": "Falcons 2-0 NIP",
+          "url": "https://search.bilibili.com/all?keyword=Falcons%202-0%20NIP"
+        },
+        {
+          "title": "皇马4-3罗马",
+          "url": "https://search.bilibili.com/all?keyword=%E7%9A%87%E9%A9%AC4-3%E7%BD%97%E9%A9%AC"
+        },
+        {
+          "title": "杭州LGD.NBW战胜重庆狼队赛后数据",
+          "url": "https://search.bilibili.com/all?keyword=%E6%9D%AD%E5%B7%9ELGD.NBW%E6%88%98%E8%83%9C%E9%87%8D%E5%BA%86%E7%8B%BC%E9%98%9F%E8%B5%9B%E5%90%8E%E6%95%B0%E6%8D%AE"
+        },
+        {
+          "title": "韩国普通人的人生是什么样的",
+          "url": "https://search.bilibili.com/all?keyword=%E9%9F%A9%E5%9B%BD%E6%99%AE%E9%80%9A%E4%BA%BA%E7%9A%84%E4%BA%BA%E7%94%9F%E6%98%AF%E4%BB%80%E4%B9%88%E6%A0%B7%E7%9A%84"
+        },
+        {
+          "title": "当KerryDowdle重回球场",
+          "url": "https://search.bilibili.com/all?keyword=%E5%BD%93KerryDowdle%E9%87%8D%E5%9B%9E%E7%90%83%E5%9C%BA"
+        },
+        {
+          "title": "波尔津吉斯否认感染艾滋",
+          "url": "https://search.bilibili.com/all?keyword=%E6%B3%A2%E5%B0%94%E6%B4%A5%E5%90%89%E6%96%AF%E5%90%A6%E8%AE%A4%E6%84%9F%E6%9F%93%E8%89%BE%E6%BB%8B"
+        },
+        {
+          "title": "为何飞机不能直线飞过太平洋",
+          "url": "https://search.bilibili.com/all?keyword=%E4%B8%BA%E4%BD%95%E9%A3%9E%E6%9C%BA%E4%B8%8D%E8%83%BD%E7%9B%B4%E7%BA%BF%E9%A3%9E%E8%BF%87%E5%A4%AA%E5%B9%B3%E6%B4%8B"
+        },
+        {
+          "title": "红牛续约梅基斯至2031年",
+          "url": "https://search.bilibili.com/all?keyword=%E7%BA%A2%E7%89%9B%E7%BB%AD%E7%BA%A6%E6%A2%85%E5%9F%BA%E6%96%AF%E8%87%B32031%E5%B9%B4"
+        },
+        {
+          "title": "赵露思监制新剧讲了什么事",
+          "url": "https://search.bilibili.com/all?keyword=%E8%B5%B5%E9%9C%B2%E6%80%9D%E7%9B%91%E5%88%B6%E6%96%B0%E5%89%A7%E8%AE%B2%E4%BA%86%E4%BB%80%E4%B9%88%E4%BA%8B"
+        },
+        {
+          "title": "用十三年去拍一部纪录片",
+          "url": "https://search.bilibili.com/all?keyword=%E7%94%A8%E5%8D%81%E4%B8%89%E5%B9%B4%E5%8E%BB%E6%8B%8D%E4%B8%80%E9%83%A8%E7%BA%AA%E5%BD%95%E7%89%87"
+        },
+        {
+          "title": "大范围雨雪将至山东",
+          "url": "https://search.bilibili.com/all?keyword=%E5%A4%A7%E8%8C%83%E5%9B%B4%E9%9B%A8%E9%9B%AA%E5%B0%86%E8%87%B3%E5%B1%B1%E4%B8%9C"
+        },
+        {
+          "title": "铺绳子种菜是什么黑科技",
+          "url": "https://search.bilibili.com/all?keyword=%E9%93%BA%E7%BB%B3%E5%AD%90%E7%A7%8D%E8%8F%9C%E6%98%AF%E4%BB%80%E4%B9%88%E9%BB%91%E7%A7%91%E6%8A%80"
+        },
+        {
+          "title": "沙特重金防空为何拦不住胡塞导弹",
+          "url": "https://search.bilibili.com/all?keyword=%E6%B2%99%E7%89%B9%E9%87%8D%E9%87%91%E9%98%B2%E7%A9%BA%E4%B8%BA%E4%BD%95%E6%8B%A6%E4%B8%8D%E4%BD%8F%E8%83%A1%E5%A1%9E%E5%AF%BC%E5%BC%B9"
+        },
+        {
+          "title": "用西班牙语打开迪士尼",
+          "url": "https://search.bilibili.com/all?keyword=%E7%94%A8%E8%A5%BF%E7%8F%AD%E7%89%99%E8%AF%AD%E6%89%93%E5%BC%80%E8%BF%AA%E5%A3%AB%E5%B0%BC"
+        },
+        {
+          "title": "AI再现十七勇士强渡大渡河",
+          "url": "https://search.bilibili.com/all?keyword=AI%E5%86%8D%E7%8E%B0%E5%8D%81%E4%B8%83%E5%8B%87%E5%A3%AB%E5%BC%BA%E6%B8%A1%E5%A4%A7%E6%B8%A1%E6%B2%B3"
+        },
+        {
+          "title": "住手你们不要再摇花手了",
+          "url": "https://search.bilibili.com/all?keyword=%E4%BD%8F%E6%89%8B%E4%BD%A0%E4%BB%AC%E4%B8%8D%E8%A6%81%E5%86%8D%E6%91%87%E8%8A%B1%E6%89%8B%E4%BA%86"
+        },
+        {
+          "title": "韩国人评李秀满新女团A2OLITE",
+          "url": "https://search.bilibili.com/all?keyword=%E9%9F%A9%E5%9B%BD%E4%BA%BA%E8%AF%84%E6%9D%8E%E7%A7%80%E6%BB%A1%E6%96%B0%E5%A5%B3%E5%9B%A2A2OLITE"
+        },
+        {
+          "title": "日本白菜成高价菜",
+          "url": "https://search.bilibili.com/all?keyword=%E6%97%A5%E6%9C%AC%E7%99%BD%E8%8F%9C%E6%88%90%E9%AB%98%E4%BB%B7%E8%8F%9C"
+        },
+        {
+          "title": "王者限定皮肤盾山爆料",
+          "url": "https://search.bilibili.com/all?keyword=%E7%8E%8B%E8%80%85%E9%99%90%E5%AE%9A%E7%9A%AE%E8%82%A4%E7%9B%BE%E5%B1%B1%E7%88%86%E6%96%99"
+        },
+        {
+          "title": "Donk在游戏中为何总被针对",
+          "url": "https://search.bilibili.com/all?keyword=Donk%E5%9C%A8%E6%B8%B8%E6%88%8F%E4%B8%AD%E4%B8%BA%E4%BD%95%E6%80%BB%E8%A2%AB%E9%92%88%E5%AF%B9"
+        },
+        {
+          "title": "王者十一周年庆福利爆料",
+          "url": "https://search.bilibili.com/all?keyword=%E7%8E%8B%E8%80%85%E5%8D%81%E4%B8%80%E5%91%A8%E5%B9%B4%E5%BA%86%E7%A6%8F%E5%88%A9%E7%88%86%E6%96%99"
+        },
+        {
+          "title": "S16全球总决赛入围赛首轮抽签结果",
+          "url": "https://search.bilibili.com/all?keyword=S16%E5%85%A8%E7%90%83%E6%80%BB%E5%86%B3%E8%B5%9B%E5%85%A5%E5%9B%B4%E8%B5%9B%E9%A6%96%E8%BD%AE%E6%8A%BD%E7%AD%BE%E7%BB%93%E6%9E%9C"
+        },
+        {
+          "title": "火影手游迪鲁达技能全爆料",
+          "url": "https://search.bilibili.com/all?keyword=%E7%81%AB%E5%BD%B1%E6%89%8B%E6%B8%B8%E8%BF%AA%E9%B2%81%E8%BE%BE%E6%8A%80%E8%83%BD%E5%85%A8%E7%88%86%E6%96%99"
+        }
+      ]
+    },
+    {
+      "name": "Hacker News",
+      "items": [
+        {
+          "title": "Things to know when you get cancer",
+          "url": "https://jjmaxwell4.com/writing/things-to-know-when-you-get-cancer/"
+        },
+        {
+          "title": "Containment and monitoring failures are to blame for AI hacking reports: experts",
+          "url": "https://www.csoonline.com/article/4234854/ai-agents-arent-going-rogue-frontier-labs-are-skipping-security-basics.html"
+        },
+        {
+          "title": "How Amazon pushes up prices all across the Internet",
+          "url": "https://www.not-ship.com/how-amazon-pushes-up-prices-all-across-the-internet/"
+        },
+        {
+          "title": "Passkeys are not a trap",
+          "url": "https://scotthelme.co.uk/passkeys-are-not-a-trap/"
+        },
+        {
+          "title": "Do dentists know what they're doing?",
+          "url": "https://mapwriting.substack.com/p/dentists"
+        },
+        {
+          "title": "Google is silently linking your phone number across all signed-in accounts",
+          "url": "https://www.androidauthority.com/google-auto-phone-number-verification-android-3723117/"
+        },
+        {
+          "title": "OpenCode 2.0",
+          "url": "https://anoma.ly/notes/opencode-2-0/"
+        },
+        {
+          "title": "Banks are now trying to offload the AI data center debt they just underwrote",
+          "url": "https://startupfortune.com/banks-are-now-trying-to-offload-the-ai-data-center-debt-they-just-underwrote/"
+        },
+        {
+          "title": "Fire at Starlink site in Bulgaria after suspected sabotage in Poland",
+          "url": "https://dpa-international.com/politics/urn:newsml:dpa.com:20090101:261014-930-839530/"
+        },
+        {
+          "title": "Suicide rates highest ever among middle-aged men",
+          "url": "https://www.telegraph.co.uk/news/2026/10/13/suicide-rates-highest-ever-among-middle-aged-men/"
+        },
+        {
+          "title": "Anthropic's Scion is heavily inspired by Mononoke",
+          "url": "https://sunshowers.io/posts/anthropic-mononoke/"
+        },
+        {
+          "title": "Americans' social activity has steeply declined in the past 30 years",
+          "url": "https://www.dataforprogress.org/blog/2026/9/29/americans-social-activity-has-steeply-declined-in-the-past-30-years"
+        },
+        {
+          "title": "Yandex outage: data shows that instead of going dark, malicious bots moved",
+          "url": "https://blog.cloudflare.com/yandex-outage/"
+        },
+        {
+          "title": "Why is every rationalist blog post way too long?",
+          "url": "https://alexwennerberg.com/blog/2026-10-13-long.html"
+        },
+        {
+          "title": "Better HTTP/1 connection reuse in Go 1.27",
+          "url": "https://go.dev/blog/http-connection-reuse"
+        },
+        {
+          "title": "We’re releasing Jev 1.14.0 along with experimental features for dreamers",
+          "url": "https://typesafe.ai/blog/jev-1-14"
+        },
+        {
+          "title": "Tiny Little Office",
+          "url": "https://tinylittleoffice.com/"
+        },
+        {
+          "title": "Submarine cable resilience",
+          "url": "https://blog.apnic.net/2026/10/14/submarine-cable-resilience/"
+        },
+        {
+          "title": "Show HN: Petal, open-source CoScreen/ScreenHero finally free",
+          "url": "https://petal.live/"
+        },
+        {
+          "title": "Show HN: I wrote an email app that accepts only one sender per inbox",
+          "url": "https://clova.email/"
+        },
+        {
+          "title": "Fancy Curl Sites",
+          "url": "https://nytpu.com/gemlog/2026-03-18"
+        },
+        {
+          "title": "Has AI tells",
+          "url": "https://theconsensus.dev/blog/2026/10/14/has-ai-tells.html?focus=1"
+        },
+        {
+          "title": "Phloem: Git history grown like a slime mold",
+          "url": "https://phloem.stemdeck.app/"
+        },
+        {
+          "title": "LFM2.5-24B-A2B: Built for fast on-device agents",
+          "url": "https://www.liquid.ai/blog/lfm2-5-24b-a2b"
+        },
+        {
+          "title": "Virtual Oxide Labs: Emulating a Full Oxide Rack",
+          "url": "https://oxide.computer/blog/voxel-labs"
+        },
+        {
+          "title": "your C is not standard C",
+          "url": "https://sebsite.pw/w/20261012-notstdc.html"
+        },
+        {
+          "title": "Ask HN: CAD for wood working with LLM support?",
+          "url": ""
+        },
+        {
+          "title": "Catch a Bird – I made it for my own sanity",
+          "url": "https://catchabird.com"
+        },
+        {
+          "title": "The Double Headed Stack Allocator",
+          "url": "https://blog.demofox.org/2026/10/03/the-double-headed-stack-allocator/"
+        },
+        {
+          "title": "Capsem – a Rust hypervisor sandboxing AI agents in air-gapped Linux VMs",
+          "url": "https://capsem.org/"
+        }
+      ]
+    }
+  ],
+  "note": "",
+  "zh": "# 今日 AI 与科技、消费政策等多领域出现关键动态\n## AI 与科技\n- **DeepSeek 服务中断**：全球开发者反馈 API 不可用，凸显服务稳定性仍是 AI 产品的短板。\n- **OpenAI 攻克 NS 方程**：声称解决 Navier‑Stokes 问题引发学术争议，可能影响未来科学计算范式。\n- **长鑫 4F² 架构**：国产存储芯片采用新架构，预计提升带宽并降低功耗，加速国产化进程。\n## 消费与市场\n- **国庆消费 新趋势**：今年国庆假期消费呈现体验式和线上线下融合新特点，反映居民支付偏好变化。\n## 政策与治理\n- **退休办理 身份证**：退休申请仅需身份证即可完成，简化流程有望提升老年人办事效率。\n- **督察组 下沉 一线**：八部级督察组赴基层检查，表明中央对落实政策的监督力度加强。\n## 金融与大宗\n- **金属价格 断崖 下跌**：黄金白银遭遇罕见暴跌，市场避险情绪降温及美元走强是主要诱因。",
+  "en": "# Today’s highlights: AI outage, OpenAI NS claim, China memory chip, holiday consumption shift, retirement‑ID reform, inspection teams, precious‑metal crash\n## AI & Tech\n- **DeepSeek service outage**: Developers worldwide report API failures, exposing reliability gaps in AI infrastructure.\n- **OpenAI Navier‑Stokes claim**: The lab says it solved the famous fluid‑dynamics problem, sparking debate over proof validity and impact on scientific computing.\n- **CXMT 4F² architecture**: China’s leading memory maker unveils a new chip design promising higher bandwidth and lower power, boosting domestic semiconductor ambitions.\n## Consumption & Market\n- **Holiday consumption trends**: National Day spending shows a shift toward experiential and online‑offline blended purchases, signalling changing consumer habits.\n## Policy & Governance\n- **Retirement ID‑only processing**: Retirees can now complete pension formalities with just an ID card, streamlining bureaucracy for seniors.\n- **Central inspection teams deployment**: Eight ministerial‑level inspection groups are sent to localities, indicating tighter central oversight of policy implementation.\n## Finance & Commodities\n- **Precious metals price plunge**: Gold and silver suffer a sharp drop as risk‑off sentiment wanes and the dollar strengthens, affecting investors and markets."
+}

@@ -1,0 +1,384 @@
+{
+  "date": "2026-10-18",
+  "updatedAt": "2026-10-18T10:26:29+08:00",
+  "sources": [
+    {
+      "name": "百度",
+      "items": [
+        {
+          "title": "总书记心系万里绿色长城",
+          "url": "https://www.baidu.com/s?wd=%E6%80%BB%E4%B9%A6%E8%AE%B0%E5%BF%83%E7%B3%BB%E4%B8%87%E9%87%8C%E7%BB%BF%E8%89%B2%E9%95%BF%E5%9F%8E&sa=fyb_news&rsv_dl=fyb_news"
+        },
+        {
+          "title": "公交转型：大车退场",
+          "url": "https://www.baidu.com/s?wd=%E5%85%AC%E4%BA%A4%E8%BD%AC%E5%9E%8B%EF%BC%9A%E5%A4%A7%E8%BD%A6%E9%80%80%E5%9C%BA&sa=fyb_news&rsv_dl=fyb_news"
+        },
+        {
+          "title": "爸爸AB型血妈妈A型血 女儿O型血",
+          "url": "https://www.baidu.com/s?wd=%E7%88%B8%E7%88%B8AB%E5%9E%8B%E8%A1%80%E5%A6%88%E5%A6%88A%E5%9E%8B%E8%A1%80+%E5%A5%B3%E5%84%BFO%E5%9E%8B%E8%A1%80&sa=fyb_news&rsv_dl=fyb_news"
+        },
+        {
+          "title": "电影院玩法持续“上新”",
+          "url": "https://www.baidu.com/s?wd=%E7%94%B5%E5%BD%B1%E9%99%A2%E7%8E%A9%E6%B3%95%E6%8C%81%E7%BB%AD%E2%80%9C%E4%B8%8A%E6%96%B0%E2%80%9D&sa=fyb_news&rsv_dl=fyb_news"
+        },
+        {
+          "title": "94岁独闯西藏的谭爷爷火了",
+          "url": "https://www.baidu.com/s?wd=94%E5%B2%81%E7%8B%AC%E9%97%AF%E8%A5%BF%E8%97%8F%E7%9A%84%E8%B0%AD%E7%88%B7%E7%88%B7%E7%81%AB%E4%BA%86&sa=fyb_news&rsv_dl=fyb_news"
+        },
+        {
+          "title": "开奶茶店月销百万大学生：到手七八千",
+          "url": "https://www.baidu.com/s?wd=%E5%BC%80%E5%A5%B6%E8%8C%B6%E5%BA%97%E6%9C%88%E9%94%80%E7%99%BE%E4%B8%87%E5%A4%A7%E5%AD%A6%E7%94%9F%EF%BC%9A%E5%88%B0%E6%89%8B%E4%B8%83%E5%85%AB%E5%8D%83&sa=fyb_news&rsv_dl=fyb_news"
+        },
+        {
+          "title": "“2700元搞死一家店铺”",
+          "url": "https://www.baidu.com/s?wd=%E2%80%9C2700%E5%85%83%E6%90%9E%E6%AD%BB%E4%B8%80%E5%AE%B6%E5%BA%97%E9%93%BA%E2%80%9D&sa=fyb_news&rsv_dl=fyb_news"
+        },
+        {
+          "title": "重阳节",
+          "url": "https://www.baidu.com/s?wd=%E9%87%8D%E9%98%B3%E8%8A%82&sa=fyb_news&rsv_dl=fyb_news"
+        },
+        {
+          "title": "2小时03分10秒！北马诞生新的赛会纪录",
+          "url": "https://www.baidu.com/s?wd=2%E5%B0%8F%E6%97%B603%E5%88%8610%E7%A7%92%EF%BC%81%E5%8C%97%E9%A9%AC%E8%AF%9E%E7%94%9F%E6%96%B0%E7%9A%84%E8%B5%9B%E4%BC%9A%E7%BA%AA%E5%BD%95&sa=fyb_news&rsv_dl=fyb_news"
+        },
+        {
+          "title": "92岁崔道植是警界“定海神针”",
+          "url": "https://www.baidu.com/s?wd=92%E5%B2%81%E5%B4%94%E9%81%93%E6%A4%8D%E6%98%AF%E8%AD%A6%E7%95%8C%E2%80%9C%E5%AE%9A%E6%B5%B7%E7%A5%9E%E9%92%88%E2%80%9D&sa=fyb_news&rsv_dl=fyb_news"
+        },
+        {
+          "title": "顶级富豪集体成银幕“反派”",
+          "url": "https://www.baidu.com/s?wd=%E9%A1%B6%E7%BA%A7%E5%AF%8C%E8%B1%AA%E9%9B%86%E4%BD%93%E6%88%90%E9%93%B6%E5%B9%95%E2%80%9C%E5%8F%8D%E6%B4%BE%E2%80%9D&sa=fyb_news&rsv_dl=fyb_news"
+        },
+        {
+          "title": "内部人员代缴采暖费能打折系谣言",
+          "url": "https://www.baidu.com/s?wd=%E5%86%85%E9%83%A8%E4%BA%BA%E5%91%98%E4%BB%A3%E7%BC%B4%E9%87%87%E6%9A%96%E8%B4%B9%E8%83%BD%E6%89%93%E6%8A%98%E7%B3%BB%E8%B0%A3%E8%A8%80&sa=fyb_news&rsv_dl=fyb_news"
+        },
+        {
+          "title": "救援队吊车时车辆掉落 司机被砸身亡",
+          "url": "https://www.baidu.com/s?wd=%E6%95%91%E6%8F%B4%E9%98%9F%E5%90%8A%E8%BD%A6%E6%97%B6%E8%BD%A6%E8%BE%86%E6%8E%89%E8%90%BD+%E5%8F%B8%E6%9C%BA%E8%A2%AB%E7%A0%B8%E8%BA%AB%E4%BA%A1&sa=fyb_news&rsv_dl=fyb_news"
+        },
+        {
+          "title": "司机将女子放进后备箱致其失温死亡",
+          "url": "https://www.baidu.com/s?wd=%E5%8F%B8%E6%9C%BA%E5%B0%86%E5%A5%B3%E5%AD%90%E6%94%BE%E8%BF%9B%E5%90%8E%E5%A4%87%E7%AE%B1%E8%87%B4%E5%85%B6%E5%A4%B1%E6%B8%A9%E6%AD%BB%E4%BA%A1&sa=fyb_news&rsv_dl=fyb_news"
+        },
+        {
+          "title": "这些素菜是“升糖陷阱”",
+          "url": "https://www.baidu.com/s?wd=%E8%BF%99%E4%BA%9B%E7%B4%A0%E8%8F%9C%E6%98%AF%E2%80%9C%E5%8D%87%E7%B3%96%E9%99%B7%E9%98%B1%E2%80%9D&sa=fyb_news&rsv_dl=fyb_news"
+        },
+        {
+          "title": "“赤马重阳”60年一遇？专家解读",
+          "url": "https://www.baidu.com/s?wd=%E2%80%9C%E8%B5%A4%E9%A9%AC%E9%87%8D%E9%98%B3%E2%80%9D60%E5%B9%B4%E4%B8%80%E9%81%87%EF%BC%9F%E4%B8%93%E5%AE%B6%E8%A7%A3%E8%AF%BB&sa=fyb_news&rsv_dl=fyb_news"
+        },
+        {
+          "title": "广西大学通报一学生校内死亡",
+          "url": "https://www.baidu.com/s?wd=%E5%B9%BF%E8%A5%BF%E5%A4%A7%E5%AD%A6%E9%80%9A%E6%8A%A5%E4%B8%80%E5%AD%A6%E7%94%9F%E6%A0%A1%E5%86%85%E6%AD%BB%E4%BA%A1&sa=fyb_news&rsv_dl=fyb_news"
+        },
+        {
+          "title": "员工没来上班 老板1个电话救了两条命",
+          "url": "https://www.baidu.com/s?wd=%E5%91%98%E5%B7%A5%E6%B2%A1%E6%9D%A5%E4%B8%8A%E7%8F%AD+%E8%80%81%E6%9D%BF1%E4%B8%AA%E7%94%B5%E8%AF%9D%E6%95%91%E4%BA%86%E4%B8%A4%E6%9D%A1%E5%91%BD&sa=fyb_news&rsv_dl=fyb_news"
+        },
+        {
+          "title": "普京：包围并消灭2000名乌军",
+          "url": "https://www.baidu.com/s?wd=%E6%99%AE%E4%BA%AC%EF%BC%9A%E5%8C%85%E5%9B%B4%E5%B9%B6%E6%B6%88%E7%81%AD2000%E5%90%8D%E4%B9%8C%E5%86%9B&sa=fyb_news&rsv_dl=fyb_news"
+        },
+        {
+          "title": "演员吴越遭AI假冒带货 凌晨发文怒斥",
+          "url": "https://www.baidu.com/s?wd=%E6%BC%94%E5%91%98%E5%90%B4%E8%B6%8A%E9%81%ADAI%E5%81%87%E5%86%92%E5%B8%A6%E8%B4%A7+%E5%87%8C%E6%99%A8%E5%8F%91%E6%96%87%E6%80%92%E6%96%A5&sa=fyb_news&rsv_dl=fyb_news"
+        },
+        {
+          "title": "徐艺洋弟弟发长文",
+          "url": "https://www.baidu.com/s?wd=%E5%BE%90%E8%89%BA%E6%B4%8B%E5%BC%9F%E5%BC%9F%E5%8F%91%E9%95%BF%E6%96%87&sa=fyb_news&rsv_dl=fyb_news"
+        },
+        {
+          "title": "超强厄尔尼诺来了 大气污染会严重吗",
+          "url": "https://www.baidu.com/s?wd=%E8%B6%85%E5%BC%BA%E5%8E%84%E5%B0%94%E5%B0%BC%E8%AF%BA%E6%9D%A5%E4%BA%86+%E5%A4%A7%E6%B0%94%E6%B1%A1%E6%9F%93%E4%BC%9A%E4%B8%A5%E9%87%8D%E5%90%97&sa=fyb_news&rsv_dl=fyb_news"
+        },
+        {
+          "title": "今日重阳 你多久没对爸妈说心里话了",
+          "url": "https://www.baidu.com/s?wd=%E4%BB%8A%E6%97%A5%E9%87%8D%E9%98%B3+%E4%BD%A0%E5%A4%9A%E4%B9%85%E6%B2%A1%E5%AF%B9%E7%88%B8%E5%A6%88%E8%AF%B4%E5%BF%83%E9%87%8C%E8%AF%9D%E4%BA%86&sa=fyb_news&rsv_dl=fyb_news"
+        },
+        {
+          "title": "机器人出口暴增1220%！全球资本涌入",
+          "url": "https://www.baidu.com/s?wd=%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%87%BA%E5%8F%A3%E6%9A%B4%E5%A2%9E1220%25%EF%BC%81%E5%85%A8%E7%90%83%E8%B5%84%E6%9C%AC%E6%B6%8C%E5%85%A5&sa=fyb_news&rsv_dl=fyb_news"
+        },
+        {
+          "title": "多地试点直升高中",
+          "url": "https://www.baidu.com/s?wd=%E5%A4%9A%E5%9C%B0%E8%AF%95%E7%82%B9%E7%9B%B4%E5%8D%87%E9%AB%98%E4%B8%AD&sa=fyb_news&rsv_dl=fyb_news"
+        },
+        {
+          "title": "蒋依依方辟谣与郭麒麟结婚传闻",
+          "url": "https://www.baidu.com/s?wd=%E8%92%8B%E4%BE%9D%E4%BE%9D%E6%96%B9%E8%BE%9F%E8%B0%A3%E4%B8%8E%E9%83%AD%E9%BA%92%E9%BA%9F%E7%BB%93%E5%A9%9A%E4%BC%A0%E9%97%BB&sa=fyb_news&rsv_dl=fyb_news"
+        },
+        {
+          "title": "特斯拉飞行汽车被质疑是噱头",
+          "url": "https://www.baidu.com/s?wd=%E7%89%B9%E6%96%AF%E6%8B%89%E9%A3%9E%E8%A1%8C%E6%B1%BD%E8%BD%A6%E8%A2%AB%E8%B4%A8%E7%96%91%E6%98%AF%E5%99%B1%E5%A4%B4&sa=fyb_news&rsv_dl=fyb_news"
+        },
+        {
+          "title": "员工仅1人的空壳公司中标3000万项目",
+          "url": "https://www.baidu.com/s?wd=%E5%91%98%E5%B7%A5%E4%BB%851%E4%BA%BA%E7%9A%84%E7%A9%BA%E5%A3%B3%E5%85%AC%E5%8F%B8%E4%B8%AD%E6%A0%873000%E4%B8%87%E9%A1%B9%E7%9B%AE&sa=fyb_news&rsv_dl=fyb_news"
+        },
+        {
+          "title": "中国人靠数羊入眠竟是翻译事故",
+          "url": "https://www.baidu.com/s?wd=%E4%B8%AD%E5%9B%BD%E4%BA%BA%E9%9D%A0%E6%95%B0%E7%BE%8A%E5%85%A5%E7%9C%A0%E7%AB%9F%E6%98%AF%E7%BF%BB%E8%AF%91%E4%BA%8B%E6%95%85&sa=fyb_news&rsv_dl=fyb_news"
+        },
+        {
+          "title": "13岁中国女孩在韩出道 父母却在欠薪",
+          "url": "https://www.baidu.com/s?wd=13%E5%B2%81%E4%B8%AD%E5%9B%BD%E5%A5%B3%E5%AD%A9%E5%9C%A8%E9%9F%A9%E5%87%BA%E9%81%93+%E7%88%B6%E6%AF%8D%E5%8D%B4%E5%9C%A8%E6%AC%A0%E8%96%AA&sa=fyb_news&rsv_dl=fyb_news"
+        }
+      ]
+    },
+    {
+      "name": "B站",
+      "items": [
+        {
+          "title": "科学家们用物理智斗爱因斯坦",
+          "url": "https://search.bilibili.com/all?keyword=%E7%A7%91%E5%AD%A6%E5%AE%B6%E4%BB%AC%E7%94%A8%E7%89%A9%E7%90%86%E6%99%BA%E6%96%97%E7%88%B1%E5%9B%A0%E6%96%AF%E5%9D%A6"
+        },
+        {
+          "title": "猎鹰爆冷无缘决赛",
+          "url": "https://search.bilibili.com/all?keyword=%E7%8C%8E%E9%B9%B0%E7%88%86%E5%86%B7%E6%97%A0%E7%BC%98%E5%86%B3%E8%B5%9B"
+        },
+        {
+          "title": "DeepSeek新模型对比Astra",
+          "url": "https://search.bilibili.com/all?keyword=DeepSeek%E6%96%B0%E6%A8%A1%E5%9E%8B%E5%AF%B9%E6%AF%94Astra"
+        },
+        {
+          "title": "UP主自制CG动画明日香",
+          "url": "https://search.bilibili.com/all?keyword=UP%E4%B8%BB%E8%87%AA%E5%88%B6CG%E5%8A%A8%E7%94%BB%E6%98%8E%E6%97%A5%E9%A6%99"
+        },
+        {
+          "title": "MVK FUR",
+          "url": "https://search.bilibili.com/all?keyword=MVK%20FUR"
+        },
+        {
+          "title": "胡塞武装为何猛攻沙特",
+          "url": "https://search.bilibili.com/all?keyword=%E8%83%A1%E5%A1%9E%E6%AD%A6%E8%A3%85%E4%B8%BA%E4%BD%95%E7%8C%9B%E6%94%BB%E6%B2%99%E7%89%B9"
+        },
+        {
+          "title": "文化中国行九九重阳节",
+          "url": "https://search.bilibili.com/all?keyword=%E6%96%87%E5%8C%96%E4%B8%AD%E5%9B%BD%E8%A1%8C%E4%B9%9D%E4%B9%9D%E9%87%8D%E9%98%B3%E8%8A%82"
+        },
+        {
+          "title": "DeepSeek新模型实测",
+          "url": "https://search.bilibili.com/all?keyword=DeepSeek%E6%96%B0%E6%A8%A1%E5%9E%8B%E5%AE%9E%E6%B5%8B"
+        },
+        {
+          "title": "曼城3-2伊普斯维奇",
+          "url": "https://search.bilibili.com/all?keyword=%E6%9B%BC%E5%9F%8E3-2%E4%BC%8A%E6%99%AE%E6%96%AF%E7%BB%B4%E5%A5%87"
+        },
+        {
+          "title": "锐评BFX战胜WE选手表现",
+          "url": "https://search.bilibili.com/all?keyword=%E9%94%90%E8%AF%84BFX%E6%88%98%E8%83%9CWE%E9%80%89%E6%89%8B%E8%A1%A8%E7%8E%B0"
+        },
+        {
+          "title": "央视记者再走长征路",
+          "url": "https://search.bilibili.com/all?keyword=%E5%A4%AE%E8%A7%86%E8%AE%B0%E8%80%85%E5%86%8D%E8%B5%B0%E9%95%BF%E5%BE%81%E8%B7%AF"
+        },
+        {
+          "title": "休宁凯和羊PD喝豆汁",
+          "url": "https://search.bilibili.com/all?keyword=%E4%BC%91%E5%AE%81%E5%87%AF%E5%92%8C%E7%BE%8APD%E5%96%9D%E8%B1%86%E6%B1%81"
+        },
+        {
+          "title": "带给我们童年回忆的王老大去哪了",
+          "url": "https://search.bilibili.com/all?keyword=%E5%B8%A6%E7%BB%99%E6%88%91%E4%BB%AC%E7%AB%A5%E5%B9%B4%E5%9B%9E%E5%BF%86%E7%9A%84%E7%8E%8B%E8%80%81%E5%A4%A7%E5%8E%BB%E5%93%AA%E4%BA%86"
+        },
+        {
+          "title": "小沈阳唐九洲颜安在梅边好惊艳",
+          "url": "https://search.bilibili.com/all?keyword=%E5%B0%8F%E6%B2%88%E9%98%B3%E5%94%90%E4%B9%9D%E6%B4%B2%E9%A2%9C%E5%AE%89%E5%9C%A8%E6%A2%85%E8%BE%B9%E5%A5%BD%E6%83%8A%E8%89%B3"
+        },
+        {
+          "title": "OK哥斐济赶海硬刚米级大马鲛",
+          "url": "https://search.bilibili.com/all?keyword=OK%E5%93%A5%E6%96%90%E6%B5%8E%E8%B5%B6%E6%B5%B7%E7%A1%AC%E5%88%9A%E7%B1%B3%E7%BA%A7%E5%A4%A7%E9%A9%AC%E9%B2%9B"
+        },
+        {
+          "title": "NBA东部常规赛各队问题是什么",
+          "url": "https://search.bilibili.com/all?keyword=NBA%E4%B8%9C%E9%83%A8%E5%B8%B8%E8%A7%84%E8%B5%9B%E5%90%84%E9%98%9F%E9%97%AE%E9%A2%98%E6%98%AF%E4%BB%80%E4%B9%88"
+        },
+        {
+          "title": "凡人天恨老怪为何而来",
+          "url": "https://search.bilibili.com/all?keyword=%E5%87%A1%E4%BA%BA%E5%A4%A9%E6%81%A8%E8%80%81%E6%80%AA%E4%B8%BA%E4%BD%95%E8%80%8C%E6%9D%A5"
+        },
+        {
+          "title": "英伟达称RTX5090没有停产",
+          "url": "https://search.bilibili.com/all?keyword=%E8%8B%B1%E4%BC%9F%E8%BE%BE%E7%A7%B0RTX5090%E6%B2%A1%E6%9C%89%E5%81%9C%E4%BA%A7"
+        },
+        {
+          "title": "某些大学老师水课belike",
+          "url": "https://search.bilibili.com/all?keyword=%E6%9F%90%E4%BA%9B%E5%A4%A7%E5%AD%A6%E8%80%81%E5%B8%88%E6%B0%B4%E8%AF%BEbelike"
+        },
+        {
+          "title": "毕导 科普UP主会被AI取代吗",
+          "url": "https://search.bilibili.com/all?keyword=%E6%AF%95%E5%AF%BC%20%E7%A7%91%E6%99%AEUP%E4%B8%BB%E4%BC%9A%E8%A2%ABAI%E5%8F%96%E4%BB%A3%E5%90%97"
+        },
+        {
+          "title": "特斯拉Roadster为何能飞",
+          "url": "https://search.bilibili.com/all?keyword=%E7%89%B9%E6%96%AF%E6%8B%89Roadster%E4%B8%BA%E4%BD%95%E8%83%BD%E9%A3%9E"
+        },
+        {
+          "title": "UP主手搓飞行滑板",
+          "url": "https://search.bilibili.com/all?keyword=UP%E4%B8%BB%E6%89%8B%E6%90%93%E9%A3%9E%E8%A1%8C%E6%BB%91%E6%9D%BF"
+        },
+        {
+          "title": "人形机器人产业前景究竟如何",
+          "url": "https://search.bilibili.com/all?keyword=%E4%BA%BA%E5%BD%A2%E6%9C%BA%E5%99%A8%E4%BA%BA%E4%BA%A7%E4%B8%9A%E5%89%8D%E6%99%AF%E7%A9%B6%E7%AB%9F%E5%A6%82%E4%BD%95"
+        },
+        {
+          "title": "维斯塔潘从P24超到P9",
+          "url": "https://search.bilibili.com/all?keyword=%E7%BB%B4%E6%96%AF%E5%A1%94%E6%BD%98%E4%BB%8EP24%E8%B6%85%E5%88%B0P9"
+        },
+        {
+          "title": "挑战全程扛共享单车登顶峨眉山",
+          "url": "https://search.bilibili.com/all?keyword=%E6%8C%91%E6%88%98%E5%85%A8%E7%A8%8B%E6%89%9B%E5%85%B1%E4%BA%AB%E5%8D%95%E8%BD%A6%E7%99%BB%E9%A1%B6%E5%B3%A8%E7%9C%89%E5%B1%B1"
+        },
+        {
+          "title": "绝区零菲欧妮角色展示",
+          "url": "https://search.bilibili.com/all?keyword=%E7%BB%9D%E5%8C%BA%E9%9B%B6%E8%8F%B2%E6%AC%A7%E5%A6%AE%E8%A7%92%E8%89%B2%E5%B1%95%E7%A4%BA"
+        },
+        {
+          "title": "灭霸 打响指我也认",
+          "url": "https://search.bilibili.com/all?keyword=%E7%81%AD%E9%9C%B8%20%E6%89%93%E5%93%8D%E6%8C%87%E6%88%91%E4%B9%9F%E8%AE%A4"
+        },
+        {
+          "title": "结过婚我也认是什么梗",
+          "url": "https://search.bilibili.com/all?keyword=%E7%BB%93%E8%BF%87%E5%A9%9A%E6%88%91%E4%B9%9F%E8%AE%A4%E6%98%AF%E4%BB%80%E4%B9%88%E6%A2%97"
+        },
+        {
+          "title": "凡人魏无涯和仲神师对战细节",
+          "url": "https://search.bilibili.com/all?keyword=%E5%87%A1%E4%BA%BA%E9%AD%8F%E6%97%A0%E6%B6%AF%E5%92%8C%E4%BB%B2%E7%A5%9E%E5%B8%88%E5%AF%B9%E6%88%98%E7%BB%86%E8%8A%82"
+        },
+        {
+          "title": "用DeepSeek翻唱人是猫",
+          "url": "https://search.bilibili.com/all?keyword=%E7%94%A8DeepSeek%E7%BF%BB%E5%94%B1%E4%BA%BA%E6%98%AF%E7%8C%AB"
+        }
+      ]
+    },
+    {
+      "name": "Hacker News",
+      "items": [
+        {
+          "title": "DeepSeek-v4.1-Flash-1017",
+          "url": "https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash-1017"
+        },
+        {
+          "title": "You could have invented transformers from memory",
+          "url": "https://alexwang.ai/posts/associative-memory/"
+        },
+        {
+          "title": "Solar surpasses nuclear power globally for first time",
+          "url": "https://www.pv-magazine.com/2026/09/29/solar-surpasses-nuclear-power-globally-for-first-time/"
+        },
+        {
+          "title": "Bleached corals thrive within days when touching healthy neighbour",
+          "url": "https://www.nature.com/articles/d41586-026-03266-x"
+        },
+        {
+          "title": "Furifont, a Japanese font that shows furigana",
+          "url": "https://furifont.antfu.me/"
+        },
+        {
+          "title": "Making chicken transparent using Dorito dust",
+          "url": "https://chillphysicsenjoyer.substack.com/p/making-chicken-transparent-using"
+        },
+        {
+          "title": "Show HN: Llmspeed – feel how fast a local LLM runs before you buy the hardware",
+          "url": "https://llmspeed.dev/"
+        },
+        {
+          "title": "Pele – Mermaid diagrams as themeable SVG",
+          "url": "https://pele.run/"
+        },
+        {
+          "title": "Gold is now the top U.S. export",
+          "url": "https://www.numismaticnews.net/gold-now-top-u-s-export"
+        },
+        {
+          "title": "Zuckerberg's Meta Takes Down No Kings Instagram During Protest Day",
+          "url": "https://meidasnews.com/news/zuckerbergs-meta-takes-down-no-kings-instagram-during-massive-protest-day"
+        },
+        {
+          "title": "Dam removals are bringing fish back across the northeastern United States",
+          "url": "https://www.smithsonianmag.com/science-nature/dam-removals-are-bringing-fish-back-across-the-northeastern-united-states-striking-down-one-tiny-barrier-at-a-time-180989679/"
+        },
+        {
+          "title": "Source code of the Estonian online voting system",
+          "url": "https://github.com/valimised/ivxv"
+        },
+        {
+          "title": "I Became a Citizen of Japan",
+          "url": "https://www.derekwessman.com/blog-1/natural"
+        },
+        {
+          "title": "The Commodore 64 hardware simulator: break chips and pins, see the results",
+          "url": "https://github.com/antirez/c64-hw-simulator"
+        },
+        {
+          "title": "Rendering pretty sky in Around The World game",
+          "url": "https://frozenfractal.com/blog/2026/10/12/around-the-world-34-a-pretty-sky/"
+        },
+        {
+          "title": "Show HN: Esp32sim – Run ESP32 firmware in the browser",
+          "url": "https://github.com/mikroverk/esp32sim"
+        },
+        {
+          "title": "Chrome and Edge are removing XSLT: what breaks and what does not",
+          "url": "https://doctor-seo.net/en/blog/news/chrome-edge-removing-xslt/"
+        },
+        {
+          "title": "Show HN: High-quality duck audio synthesizer",
+          "url": "https://celphase.github.io/duck-pond/"
+        },
+        {
+          "title": "A skeptic's first contact with Kubernetes (2024)",
+          "url": "https://blog.davidv.dev/posts/first-contact-with-k8s/"
+        },
+        {
+          "title": "Codex Desktop continuously generates Crashpad pending dumps",
+          "url": "https://github.com/openai/codex/issues/25921"
+        },
+        {
+          "title": "NY announces game ownership bill requiring ownership rather than licensing",
+          "url": "https://www.tomshardware.com/video-games/new-york-rep-announces-game-ownership-bill-that-would-require-consumer-ownership-rather-than-sale-of-licenses-would-also-require-publishers-to-keep-the-game-functional-after-support-ends"
+        },
+        {
+          "title": "JDK 28",
+          "url": "https://openjdk.org/projects/jdk/28/"
+        },
+        {
+          "title": "Types of types: Haskell's Kind system",
+          "url": "https://thunk.blog/posts/types-of-types-haskell-kind-system/"
+        },
+        {
+          "title": "Vintage Cassettes: 1963-2010",
+          "url": "http://vintagecassettes.com/"
+        },
+        {
+          "title": "Show HN: Parin – A 2D game engine between raylib and Godot, written in Dlang",
+          "url": "https://github.com/Kapendev/parin"
+        },
+        {
+          "title": "Laser Fault Injection on a Budget: RP2350 Edition",
+          "url": "https://courk.cc/rp2350-challenge-laser"
+        },
+        {
+          "title": "Each step of decoding a PNG (2022)",
+          "url": "https://iter.ca/post/png/"
+        },
+        {
+          "title": "Custom server to revive neato bots",
+          "url": "https://github.com/vacuula/vacuula"
+        },
+        {
+          "title": "Lean Now Ships with Verified Kernels",
+          "url": "https://leodemoura.github.io/blog/2026-10-15-lean-now-ships-with-verified-kernels/"
+        },
+        {
+          "title": "Artie (YC S23) Is Hiring Enterprise AES and Senior Engineers",
+          "url": "https://www.artie.com/careers"
+        }
+      ]
+    }
+  ],
+  "note": "",
+  "zh": "# 今日热点聚焦AI模型发布与深度伪造、机器人出口激增及国际局势\n## AI 与科技\n- **DeepSeek V4.1 Flash 模型**：该模型在推理速度与资源消耗上实现突破，或将加速边缘设备上的AI应用。\n- **演员吴越 AI 假冒带货**：明星形象被AI深度伪造用于带货，凸显内容安全与版权风险亟待监管。\n- **人形机器人产业前景**：产业链加速成熟，资本与技术双向驱动，预示服务机器人将迎爆发式增长。\n## 产业动向\n- **机器人出口暴增1220%**：出口数据激增反映全球制造业对自动化需求急升，中国机器人企业获重要市场机遇。\n- **特斯拉飞行汽车质疑**：尽管概念吸睛，但技术可行性与监管尚存疑问，需警惕过度炒作带来的投资风险。\n- **英伟达 RTX5090 未停产**：英伟达明确高端显卡继续供应，缓解了游戏与AI计算领域的硬件短期紧张。\n## 国际视野\n- **普京称消灭2000名乌军**：俄方宣称在战场上取得重大战果，真实性有待验证，但对冲突走向具重要信号价值。\n- **太阳能首次超过核能**：太阳能发电量首次超越核能，标志全球能源结构向可再生能源加速转型。",
+  "en": "# Today's highlights center on AI model launches, deepfake controversies, surging robot exports, and key international developments.\n## AI & Tech\n- **DeepSeek V4.1 Flash model release**：Its inference speed and low resource consumption mark a breakthrough, poised to accelerate AI deployment on edge devices.\n- **Actor Wu Yue deepfake endorsement scandal**：The misuse of AI to fake a celebrity promoting products highlights urgent needs for content security and copyright regulation.\n- **Humanoid robot industry outlook**：Maturing supply chains and dual capital-tech drivers signal imminent explosive growth in service robots.\n## Industry Trends\n- **Robot exports surge 1220%**：The spike reflects soaring global demand for automation, presenting major market opportunities for Chinese robot makers.\n- **Tesla flying car faces skepticism**：While the concept grabs headlines, technical feasibility and regulatory hurdles remain uncertain, warning against hype‑driven investment.\n- **NVIDIA confirms RTX 5090 still in production**：NVIDIA's assurance eases short-term supply concerns for gamers and AI workloads relying on high-end GPUs.\n## International\n- **Russia claims killing 2,000 Ukrainian troops**: Moscow's battlefield claim, though unverified, carries significant signaling weight for the conflict’s trajectory.\n- **Solar power surpasses nuclear globally**: Solar electricity output exceeding nuclear for the first time marks a decisive shift toward renewable‑dominant energy systems."
+}

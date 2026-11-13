@@ -1,0 +1,630 @@
+{
+  "date": "2026-11-13",
+  "updatedAt": "2026-11-13T12:27:42+08:00",
+  "sources": [
+    {
+      "name": "百度",
+      "items": [
+        {
+          "title": "同心协力共襄中华民族伟大复兴盛举",
+          "url": "https://www.baidu.com/s?wd=%E5%90%8C%E5%BF%83%E5%8D%8F%E5%8A%9B%E5%85%B1%E8%A5%84%E4%B8%AD%E5%8D%8E%E6%B0%91%E6%97%8F%E4%BC%9F%E5%A4%A7%E5%A4%8D%E5%85%B4%E7%9B%9B%E4%B8%BE&sa=fyb_news&rsv_dl=fyb_news"
+        },
+        {
+          "title": "男子失业断供房贷 法院暂不拍卖房产",
+          "url": "https://www.baidu.com/s?wd=%E7%94%B7%E5%AD%90%E5%A4%B1%E4%B8%9A%E6%96%AD%E4%BE%9B%E6%88%BF%E8%B4%B7+%E6%B3%95%E9%99%A2%E6%9A%82%E4%B8%8D%E6%8B%8D%E5%8D%96%E6%88%BF%E4%BA%A7&sa=fyb_news&rsv_dl=fyb_news"
+        },
+        {
+          "title": "王晶贺岁片上映8天 内地票房4455元",
+          "url": "https://www.baidu.com/s?wd=%E7%8E%8B%E6%99%B6%E8%B4%BA%E5%B2%81%E7%89%87%E4%B8%8A%E6%98%A08%E5%A4%A9+%E5%86%85%E5%9C%B0%E7%A5%A8%E6%88%BF4455%E5%85%83&sa=fyb_news&rsv_dl=fyb_news"
+        },
+        {
+          "title": "一站式打卡“未来之城”",
+          "url": "https://www.baidu.com/s?wd=%E4%B8%80%E7%AB%99%E5%BC%8F%E6%89%93%E5%8D%A1%E2%80%9C%E6%9C%AA%E6%9D%A5%E4%B9%8B%E5%9F%8E%E2%80%9D&sa=fyb_news&rsv_dl=fyb_news"
+        },
+        {
+          "title": "徐峥刷到自己的AI换脸视频惊了",
+          "url": "https://www.baidu.com/s?wd=%E5%BE%90%E5%B3%A5%E5%88%B7%E5%88%B0%E8%87%AA%E5%B7%B1%E7%9A%84AI%E6%8D%A2%E8%84%B8%E8%A7%86%E9%A2%91%E6%83%8A%E4%BA%86&sa=fyb_news&rsv_dl=fyb_news"
+        },
+        {
+          "title": "国产苹果卷出新高度",
+          "url": "https://www.baidu.com/s?wd=%E5%9B%BD%E4%BA%A7%E8%8B%B9%E6%9E%9C%E5%8D%B7%E5%87%BA%E6%96%B0%E9%AB%98%E5%BA%A6&sa=fyb_news&rsv_dl=fyb_news"
+        },
+        {
+          "title": "刘欢妻子不到10个月失去两个至亲",
+          "url": "https://www.baidu.com/s?wd=%E5%88%98%E6%AC%A2%E5%A6%BB%E5%AD%90%E4%B8%8D%E5%88%B010%E4%B8%AA%E6%9C%88%E5%A4%B1%E5%8E%BB%E4%B8%A4%E4%B8%AA%E8%87%B3%E4%BA%B2&sa=fyb_news&rsv_dl=fyb_news"
+        },
+        {
+          "title": "“一代腿王”黄正利去世",
+          "url": "https://www.baidu.com/s?wd=%E2%80%9C%E4%B8%80%E4%BB%A3%E8%85%BF%E7%8E%8B%E2%80%9D%E9%BB%84%E6%AD%A3%E5%88%A9%E5%8E%BB%E4%B8%96&sa=fyb_news&rsv_dl=fyb_news"
+        },
+        {
+          "title": "台湾青年：我们的身份证写的是台湾省",
+          "url": "https://www.baidu.com/s?wd=%E5%8F%B0%E6%B9%BE%E9%9D%92%E5%B9%B4%EF%BC%9A%E6%88%91%E4%BB%AC%E7%9A%84%E8%BA%AB%E4%BB%BD%E8%AF%81%E5%86%99%E7%9A%84%E6%98%AF%E5%8F%B0%E6%B9%BE%E7%9C%81&sa=fyb_news&rsv_dl=fyb_news"
+        },
+        {
+          "title": "控烟不能总让乘客忍着",
+          "url": "https://www.baidu.com/s?wd=%E6%8E%A7%E7%83%9F%E4%B8%8D%E8%83%BD%E6%80%BB%E8%AE%A9%E4%B9%98%E5%AE%A2%E5%BF%8D%E7%9D%80&sa=fyb_news&rsv_dl=fyb_news"
+        },
+        {
+          "title": "微软大规模宕机持续数小时",
+          "url": "https://www.baidu.com/s?wd=%E5%BE%AE%E8%BD%AF%E5%A4%A7%E8%A7%84%E6%A8%A1%E5%AE%95%E6%9C%BA%E6%8C%81%E7%BB%AD%E6%95%B0%E5%B0%8F%E6%97%B6&sa=fyb_news&rsv_dl=fyb_news"
+        },
+        {
+          "title": "破译流言 不可不知的100个真相",
+          "url": "https://www.baidu.com/s?wd=%E7%A0%B4%E8%AF%91%E6%B5%81%E8%A8%80+%E4%B8%8D%E5%8F%AF%E4%B8%8D%E7%9F%A5%E7%9A%84100%E4%B8%AA%E7%9C%9F%E7%9B%B8&sa=fyb_news&rsv_dl=fyb_news"
+        },
+        {
+          "title": "每天坐车吸二手烟 18岁女孩确诊肺癌",
+          "url": "https://www.baidu.com/s?wd=%E6%AF%8F%E5%A4%A9%E5%9D%90%E8%BD%A6%E5%90%B8%E4%BA%8C%E6%89%8B%E7%83%9F+18%E5%B2%81%E5%A5%B3%E5%AD%A9%E7%A1%AE%E8%AF%8A%E8%82%BA%E7%99%8C&sa=fyb_news&rsv_dl=fyb_news"
+        },
+        {
+          "title": "张颂文新剧喊李小冉“妈妈”",
+          "url": "https://www.baidu.com/s?wd=%E5%BC%A0%E9%A2%82%E6%96%87%E6%96%B0%E5%89%A7%E5%96%8A%E6%9D%8E%E5%B0%8F%E5%86%89%E2%80%9C%E5%A6%88%E5%A6%88%E2%80%9D&sa=fyb_news&rsv_dl=fyb_news"
+        },
+        {
+          "title": "谁在经营这些“日本制造”洗发水",
+          "url": "https://www.baidu.com/s?wd=%E8%B0%81%E5%9C%A8%E7%BB%8F%E8%90%A5%E8%BF%99%E4%BA%9B%E2%80%9C%E6%97%A5%E6%9C%AC%E5%88%B6%E9%80%A0%E2%80%9D%E6%B4%97%E5%8F%91%E6%B0%B4&sa=fyb_news&rsv_dl=fyb_news"
+        },
+        {
+          "title": "梁家辉高铁站安慰哭泣小朋友",
+          "url": "https://www.baidu.com/s?wd=%E6%A2%81%E5%AE%B6%E8%BE%89%E9%AB%98%E9%93%81%E7%AB%99%E5%AE%89%E6%85%B0%E5%93%AD%E6%B3%A3%E5%B0%8F%E6%9C%8B%E5%8F%8B&sa=fyb_news&rsv_dl=fyb_news"
+        },
+        {
+          "title": "黄仁勋将失去1亿美元未归属股权奖励",
+          "url": "https://www.baidu.com/s?wd=%E9%BB%84%E4%BB%81%E5%8B%8B%E5%B0%86%E5%A4%B1%E5%8E%BB1%E4%BA%BF%E7%BE%8E%E5%85%83%E6%9C%AA%E5%BD%92%E5%B1%9E%E8%82%A1%E6%9D%83%E5%A5%96%E5%8A%B1&sa=fyb_news&rsv_dl=fyb_news"
+        },
+        {
+          "title": "刘欢癌症扩散后曾放手一搏试新药",
+          "url": "https://www.baidu.com/s?wd=%E5%88%98%E6%AC%A2%E7%99%8C%E7%97%87%E6%89%A9%E6%95%A3%E5%90%8E%E6%9B%BE%E6%94%BE%E6%89%8B%E4%B8%80%E6%90%8F%E8%AF%95%E6%96%B0%E8%8D%AF&sa=fyb_news&rsv_dl=fyb_news"
+        },
+        {
+          "title": "金晨凌晨发文秒删",
+          "url": "https://www.baidu.com/s?wd=%E9%87%91%E6%99%A8%E5%87%8C%E6%99%A8%E5%8F%91%E6%96%87%E7%A7%92%E5%88%A0&sa=fyb_news&rsv_dl=fyb_news"
+        },
+        {
+          "title": "《伟大的长征》大结局封神",
+          "url": "https://www.baidu.com/s?wd=%E3%80%8A%E4%BC%9F%E5%A4%A7%E7%9A%84%E9%95%BF%E5%BE%81%E3%80%8B%E5%A4%A7%E7%BB%93%E5%B1%80%E5%B0%81%E7%A5%9E&sa=fyb_news&rsv_dl=fyb_news"
+        },
+        {
+          "title": "刘欢曾说“宁死不背尿袋”",
+          "url": "https://www.baidu.com/s?wd=%E5%88%98%E6%AC%A2%E6%9B%BE%E8%AF%B4%E2%80%9C%E5%AE%81%E6%AD%BB%E4%B8%8D%E8%83%8C%E5%B0%BF%E8%A2%8B%E2%80%9D&sa=fyb_news&rsv_dl=fyb_news"
+        },
+        {
+          "title": "市民捐赠公交车保暖坐垫4天被拿光",
+          "url": "https://www.baidu.com/s?wd=%E5%B8%82%E6%B0%91%E6%8D%90%E8%B5%A0%E5%85%AC%E4%BA%A4%E8%BD%A6%E4%BF%9D%E6%9A%96%E5%9D%90%E5%9E%AB4%E5%A4%A9%E8%A2%AB%E6%8B%BF%E5%85%89&sa=fyb_news&rsv_dl=fyb_news"
+        },
+        {
+          "title": "年年体检血糖“正常” 却查出糖尿病",
+          "url": "https://www.baidu.com/s?wd=%E5%B9%B4%E5%B9%B4%E4%BD%93%E6%A3%80%E8%A1%80%E7%B3%96%E2%80%9C%E6%AD%A3%E5%B8%B8%E2%80%9D+%E5%8D%B4%E6%9F%A5%E5%87%BA%E7%B3%96%E5%B0%BF%E7%97%85&sa=fyb_news&rsv_dl=fyb_news"
+        },
+        {
+          "title": "《给阿嬷的情书》获奖被冷落了吗",
+          "url": "https://www.baidu.com/s?wd=%E3%80%8A%E7%BB%99%E9%98%BF%E5%AC%B7%E7%9A%84%E6%83%85%E4%B9%A6%E3%80%8B%E8%8E%B7%E5%A5%96%E8%A2%AB%E5%86%B7%E8%90%BD%E4%BA%86%E5%90%97&sa=fyb_news&rsv_dl=fyb_news"
+        },
+        {
+          "title": "双11为何“无感”了",
+          "url": "https://www.baidu.com/s?wd=%E5%8F%8C11%E4%B8%BA%E4%BD%95%E2%80%9C%E6%97%A0%E6%84%9F%E2%80%9D%E4%BA%86&sa=fyb_news&rsv_dl=fyb_news"
+        },
+        {
+          "title": "阿姨顶风言风语照料患癌男同事14年",
+          "url": "https://www.baidu.com/s?wd=%E9%98%BF%E5%A7%A8%E9%A1%B6%E9%A3%8E%E8%A8%80%E9%A3%8E%E8%AF%AD%E7%85%A7%E6%96%99%E6%82%A3%E7%99%8C%E7%94%B7%E5%90%8C%E4%BA%8B14%E5%B9%B4&sa=fyb_news&rsv_dl=fyb_news"
+        },
+        {
+          "title": "年轻人为什么不爱买皮鞋了",
+          "url": "https://www.baidu.com/s?wd=%E5%B9%B4%E8%BD%BB%E4%BA%BA%E4%B8%BA%E4%BB%80%E4%B9%88%E4%B8%8D%E7%88%B1%E4%B9%B0%E7%9A%AE%E9%9E%8B%E4%BA%86&sa=fyb_news&rsv_dl=fyb_news"
+        },
+        {
+          "title": "爸爸兑现承诺请奥特曼接儿子放学",
+          "url": "https://www.baidu.com/s?wd=%E7%88%B8%E7%88%B8%E5%85%91%E7%8E%B0%E6%89%BF%E8%AF%BA%E8%AF%B7%E5%A5%A5%E7%89%B9%E6%9B%BC%E6%8E%A5%E5%84%BF%E5%AD%90%E6%94%BE%E5%AD%A6&sa=fyb_news&rsv_dl=fyb_news"
+        },
+        {
+          "title": "9类高危习惯悄悄诱发膀胱癌",
+          "url": "https://www.baidu.com/s?wd=9%E7%B1%BB%E9%AB%98%E5%8D%B1%E4%B9%A0%E6%83%AF%E6%82%84%E6%82%84%E8%AF%B1%E5%8F%91%E8%86%80%E8%83%B1%E7%99%8C&sa=fyb_news&rsv_dl=fyb_news"
+        },
+        {
+          "title": "品牌牙膏被质疑虚假宣传",
+          "url": "https://www.baidu.com/s?wd=%E5%93%81%E7%89%8C%E7%89%99%E8%86%8F%E8%A2%AB%E8%B4%A8%E7%96%91%E8%99%9A%E5%81%87%E5%AE%A3%E4%BC%A0&sa=fyb_news&rsv_dl=fyb_news"
+        }
+      ]
+    },
+    {
+      "name": "微博",
+      "items": [
+        {
+          "title": "考研人数",
+          "url": "https://s.weibo.com/weibo?q=%E8%80%83%E7%A0%94%E4%BA%BA%E6%95%B0"
+        },
+        {
+          "title": "2027研究生报考人数347万",
+          "url": "https://s.weibo.com/weibo?q=2027%E7%A0%94%E7%A9%B6%E7%94%9F%E6%8A%A5%E8%80%83%E4%BA%BA%E6%95%B0347%E4%B8%87"
+        },
+        {
+          "title": "多元供给赋能线上消费新活力",
+          "url": "https://s.weibo.com/weibo?q=%E5%A4%9A%E5%85%83%E4%BE%9B%E7%BB%99%E8%B5%8B%E8%83%BD%E7%BA%BF%E4%B8%8A%E6%B6%88%E8%B4%B9%E6%96%B0%E6%B4%BB%E5%8A%9B"
+        },
+        {
+          "title": "张萌后悔叫马天宇上节目",
+          "url": "https://s.weibo.com/weibo?q=%E5%BC%A0%E8%90%8C%E5%90%8E%E6%82%94%E5%8F%AB%E9%A9%AC%E5%A4%A9%E5%AE%87%E4%B8%8A%E8%8A%82%E7%9B%AE"
+        },
+        {
+          "title": "男子花四千多元做AI短剧火了",
+          "url": "https://s.weibo.com/weibo?q=%E7%94%B7%E5%AD%90%E8%8A%B1%E5%9B%9B%E5%8D%83%E5%A4%9A%E5%85%83%E5%81%9AAI%E7%9F%AD%E5%89%A7%E7%81%AB%E4%BA%86"
+        },
+        {
+          "title": "女子忍耐噪音8年楼上孩子2个变5个",
+          "url": "https://s.weibo.com/weibo?q=%E5%A5%B3%E5%AD%90%E5%BF%8D%E8%80%90%E5%99%AA%E9%9F%B38%E5%B9%B4%E6%A5%BC%E4%B8%8A%E5%AD%A9%E5%AD%902%E4%B8%AA%E5%8F%985%E4%B8%AA"
+        },
+        {
+          "title": "上海00后女生靠AI卖穿戴甲月入10万",
+          "url": "https://s.weibo.com/weibo?q=%E4%B8%8A%E6%B5%B700%E5%90%8E%E5%A5%B3%E7%94%9F%E9%9D%A0AI%E5%8D%96%E7%A9%BF%E6%88%B4%E7%94%B2%E6%9C%88%E5%85%A510%E4%B8%87"
+        },
+        {
+          "title": "文吉儿后面几期要怎么办",
+          "url": "https://s.weibo.com/weibo?q=%E6%96%87%E5%90%89%E5%84%BF%E5%90%8E%E9%9D%A2%E5%87%A0%E6%9C%9F%E8%A6%81%E6%80%8E%E4%B9%88%E5%8A%9E"
+        },
+        {
+          "title": "疑遭拘禁殴打死亡男子1米9才60斤",
+          "url": "https://s.weibo.com/weibo?q=%E7%96%91%E9%81%AD%E6%8B%98%E7%A6%81%E6%AE%B4%E6%89%93%E6%AD%BB%E4%BA%A1%E7%94%B7%E5%AD%901%E7%B1%B39%E6%89%8D60%E6%96%A4"
+        },
+        {
+          "title": "7碗米饭摆拍到底骗了多少善意",
+          "url": "https://s.weibo.com/weibo?q=7%E7%A2%97%E7%B1%B3%E9%A5%AD%E6%91%86%E6%8B%8D%E5%88%B0%E5%BA%95%E9%AA%97%E4%BA%86%E5%A4%9A%E5%B0%91%E5%96%84%E6%84%8F"
+        },
+        {
+          "title": "英伟达更新黄仁勋为创始人",
+          "url": "https://s.weibo.com/weibo?q=%E8%8B%B1%E4%BC%9F%E8%BE%BE%E6%9B%B4%E6%96%B0%E9%BB%84%E4%BB%81%E5%8B%8B%E4%B8%BA%E5%88%9B%E5%A7%8B%E4%BA%BA"
+        },
+        {
+          "title": "金晨发文秒删",
+          "url": "https://s.weibo.com/weibo?q=%E9%87%91%E6%99%A8%E5%8F%91%E6%96%87%E7%A7%92%E5%88%A0"
+        },
+        {
+          "title": "曝许飞厉娜解约雪藏原因",
+          "url": "https://s.weibo.com/weibo?q=%E6%9B%9D%E8%AE%B8%E9%A3%9E%E5%8E%89%E5%A8%9C%E8%A7%A3%E7%BA%A6%E9%9B%AA%E8%97%8F%E5%8E%9F%E5%9B%A0"
+        },
+        {
+          "title": "刘欢得知癌细胞疑似转移仍跨年献唱",
+          "url": "https://s.weibo.com/weibo?q=%E5%88%98%E6%AC%A2%E5%BE%97%E7%9F%A5%E7%99%8C%E7%BB%86%E8%83%9E%E7%96%91%E4%BC%BC%E8%BD%AC%E7%A7%BB%E4%BB%8D%E8%B7%A8%E5%B9%B4%E7%8C%AE%E5%94%B1"
+        },
+        {
+          "title": "曝汤臣二公子和90花隐婚",
+          "url": "https://s.weibo.com/weibo?q=%E6%9B%9D%E6%B1%A4%E8%87%A3%E4%BA%8C%E5%85%AC%E5%AD%90%E5%92%8C90%E8%8A%B1%E9%9A%90%E5%A9%9A"
+        },
+        {
+          "title": "AMD",
+          "url": "https://s.weibo.com/weibo?q=AMD"
+        },
+        {
+          "title": "白小纯 王子璇",
+          "url": "https://s.weibo.com/weibo?q=%E7%99%BD%E5%B0%8F%E7%BA%AF%20%E7%8E%8B%E5%AD%90%E7%92%87"
+        },
+        {
+          "title": "向太说厉娜许飞不需要告密",
+          "url": "https://s.weibo.com/weibo?q=%E5%90%91%E5%A4%AA%E8%AF%B4%E5%8E%89%E5%A8%9C%E8%AE%B8%E9%A3%9E%E4%B8%8D%E9%9C%80%E8%A6%81%E5%91%8A%E5%AF%86"
+        },
+        {
+          "title": "微软Outlook服务宕机",
+          "url": "https://s.weibo.com/weibo?q=%E5%BE%AE%E8%BD%AFOutlook%E6%9C%8D%E5%8A%A1%E5%AE%95%E6%9C%BA"
+        },
+        {
+          "title": "后会友期接人vs花少接人",
+          "url": "https://s.weibo.com/weibo?q=%E5%90%8E%E4%BC%9A%E5%8F%8B%E6%9C%9F%E6%8E%A5%E4%BA%BAvs%E8%8A%B1%E5%B0%91%E6%8E%A5%E4%BA%BA"
+        },
+        {
+          "title": "周边商家若受损失零元面馆愿补偿",
+          "url": "https://s.weibo.com/weibo?q=%E5%91%A8%E8%BE%B9%E5%95%86%E5%AE%B6%E8%8B%A5%E5%8F%97%E6%8D%9F%E5%A4%B1%E9%9B%B6%E5%85%83%E9%9D%A2%E9%A6%86%E6%84%BF%E8%A1%A5%E5%81%BF"
+        },
+        {
+          "title": "王子璇白小纯4公里开了三小时",
+          "url": "https://s.weibo.com/weibo?q=%E7%8E%8B%E5%AD%90%E7%92%87%E7%99%BD%E5%B0%8F%E7%BA%AF4%E5%85%AC%E9%87%8C%E5%BC%80%E4%BA%86%E4%B8%89%E5%B0%8F%E6%97%B6"
+        },
+        {
+          "title": "刘欢癌症扩散后曾放手一搏试新药",
+          "url": "https://s.weibo.com/weibo?q=%E5%88%98%E6%AC%A2%E7%99%8C%E7%97%87%E6%89%A9%E6%95%A3%E5%90%8E%E6%9B%BE%E6%94%BE%E6%89%8B%E4%B8%80%E6%90%8F%E8%AF%95%E6%96%B0%E8%8D%AF"
+        },
+        {
+          "title": "张小斐 杨幂坐在我的玉腿上",
+          "url": "https://s.weibo.com/weibo?q=%E5%BC%A0%E5%B0%8F%E6%96%90%20%E6%9D%A8%E5%B9%82%E5%9D%90%E5%9C%A8%E6%88%91%E7%9A%84%E7%8E%89%E8%85%BF%E4%B8%8A"
+        },
+        {
+          "title": "张颂文无实物表演抽烟",
+          "url": "https://s.weibo.com/weibo?q=%E5%BC%A0%E9%A2%82%E6%96%87%E6%97%A0%E5%AE%9E%E7%89%A9%E8%A1%A8%E6%BC%94%E6%8A%BD%E7%83%9F"
+        },
+        {
+          "title": "独生女陪护母亲后想生孩子",
+          "url": "https://s.weibo.com/weibo?q=%E7%8B%AC%E7%94%9F%E5%A5%B3%E9%99%AA%E6%8A%A4%E6%AF%8D%E4%BA%B2%E5%90%8E%E6%83%B3%E7%94%9F%E5%AD%A9%E5%AD%90"
+        },
+        {
+          "title": "鞠婧祎代言荣耀700系列",
+          "url": "https://s.weibo.com/weibo?q=%E9%9E%A0%E5%A9%A7%E7%A5%8E%E4%BB%A3%E8%A8%80%E8%8D%A3%E8%80%80700%E7%B3%BB%E5%88%97"
+        },
+        {
+          "title": "女孩帮老人带路后脊背发凉",
+          "url": "https://s.weibo.com/weibo?q=%E5%A5%B3%E5%AD%A9%E5%B8%AE%E8%80%81%E4%BA%BA%E5%B8%A6%E8%B7%AF%E5%90%8E%E8%84%8A%E8%83%8C%E5%8F%91%E5%87%89"
+        },
+        {
+          "title": "余承东用上MateX8了",
+          "url": "https://s.weibo.com/weibo?q=%E4%BD%99%E6%89%BF%E4%B8%9C%E7%94%A8%E4%B8%8AMateX8%E4%BA%86"
+        },
+        {
+          "title": "AI找到BLG赢GEN的办法了",
+          "url": "https://s.weibo.com/weibo?q=AI%E6%89%BE%E5%88%B0BLG%E8%B5%A2GEN%E7%9A%84%E5%8A%9E%E6%B3%95%E4%BA%86"
+        }
+      ]
+    },
+    {
+      "name": "B站",
+      "items": [
+        {
+          "title": "学前篇无限小黑重逢",
+          "url": "https://search.bilibili.com/all?keyword=%E5%AD%A6%E5%89%8D%E7%AF%87%E6%97%A0%E9%99%90%E5%B0%8F%E9%BB%91%E9%87%8D%E9%80%A2"
+        },
+        {
+          "title": "S16决赛各选手对位胜率如何",
+          "url": "https://search.bilibili.com/all?keyword=S16%E5%86%B3%E8%B5%9B%E5%90%84%E9%80%89%E6%89%8B%E5%AF%B9%E4%BD%8D%E8%83%9C%E7%8E%87%E5%A6%82%E4%BD%95"
+        },
+        {
+          "title": "APEC时刻 华强北如何创造奇迹",
+          "url": "https://search.bilibili.com/all?keyword=APEC%E6%97%B6%E5%88%BB%20%E5%8D%8E%E5%BC%BA%E5%8C%97%E5%A6%82%E4%BD%95%E5%88%9B%E9%80%A0%E5%A5%87%E8%BF%B9"
+        },
+        {
+          "title": "LOL教练揭秘S赛BP思路",
+          "url": "https://search.bilibili.com/all?keyword=LOL%E6%95%99%E7%BB%83%E6%8F%AD%E7%A7%98S%E8%B5%9BBP%E6%80%9D%E8%B7%AF"
+        },
+        {
+          "title": "美以领导人就伊朗问题吵翻了",
+          "url": "https://search.bilibili.com/all?keyword=%E7%BE%8E%E4%BB%A5%E9%A2%86%E5%AF%BC%E4%BA%BA%E5%B0%B1%E4%BC%8A%E6%9C%97%E9%97%AE%E9%A2%98%E5%90%B5%E7%BF%BB%E4%BA%86"
+        },
+        {
+          "title": "灰太狼红太狼版非凡之爱",
+          "url": "https://search.bilibili.com/all?keyword=%E7%81%B0%E5%A4%AA%E7%8B%BC%E7%BA%A2%E5%A4%AA%E7%8B%BC%E7%89%88%E9%9D%9E%E5%87%A1%E4%B9%8B%E7%88%B1"
+        },
+        {
+          "title": "特雷杨压哨三分绝平",
+          "url": "https://search.bilibili.com/all?keyword=%E7%89%B9%E9%9B%B7%E6%9D%A8%E5%8E%8B%E5%93%A8%E4%B8%89%E5%88%86%E7%BB%9D%E5%B9%B3"
+        },
+        {
+          "title": "iPhone销量为何能逆势领跑",
+          "url": "https://search.bilibili.com/all?keyword=iPhone%E9%94%80%E9%87%8F%E4%B8%BA%E4%BD%95%E8%83%BD%E9%80%86%E5%8A%BF%E9%A2%86%E8%B7%91"
+        },
+        {
+          "title": "奚梦瑶参演盆栽哥HongKongMV",
+          "url": "https://search.bilibili.com/all?keyword=%E5%A5%9A%E6%A2%A6%E7%91%B6%E5%8F%82%E6%BC%94%E7%9B%86%E6%A0%BD%E5%93%A5HongKongMV"
+        },
+        {
+          "title": "Bin vs Kiin生涯英雄池全数据",
+          "url": "https://search.bilibili.com/all?keyword=Bin%20vs%20Kiin%E7%94%9F%E6%B6%AF%E8%8B%B1%E9%9B%84%E6%B1%A0%E5%85%A8%E6%95%B0%E6%8D%AE"
+        },
+        {
+          "title": "原神过场动画雷与永恒",
+          "url": "https://search.bilibili.com/all?keyword=%E5%8E%9F%E7%A5%9E%E8%BF%87%E5%9C%BA%E5%8A%A8%E7%94%BB%E9%9B%B7%E4%B8%8E%E6%B0%B8%E6%81%92"
+        },
+        {
+          "title": "宿舍版后会友期",
+          "url": "https://search.bilibili.com/all?keyword=%E5%AE%BF%E8%88%8D%E7%89%88%E5%90%8E%E4%BC%9A%E5%8F%8B%E6%9C%9F"
+        },
+        {
+          "title": "英格兰2-1克罗地亚",
+          "url": "https://search.bilibili.com/all?keyword=%E8%8B%B1%E6%A0%BC%E5%85%B02-1%E5%85%8B%E7%BD%97%E5%9C%B0%E4%BA%9A"
+        },
+        {
+          "title": "黄仁勋辞职马斯克回应",
+          "url": "https://search.bilibili.com/all?keyword=%E9%BB%84%E4%BB%81%E5%8B%8B%E8%BE%9E%E8%81%8C%E9%A9%AC%E6%96%AF%E5%85%8B%E5%9B%9E%E5%BA%94"
+        },
+        {
+          "title": "AI预测BLG与GenG谁将夺冠",
+          "url": "https://search.bilibili.com/all?keyword=AI%E9%A2%84%E6%B5%8BBLG%E4%B8%8EGenG%E8%B0%81%E5%B0%86%E5%A4%BA%E5%86%A0"
+        },
+        {
+          "title": "火影手游永夜扉间技能初爆料",
+          "url": "https://search.bilibili.com/all?keyword=%E7%81%AB%E5%BD%B1%E6%89%8B%E6%B8%B8%E6%B0%B8%E5%A4%9C%E6%89%89%E9%97%B4%E6%8A%80%E8%83%BD%E5%88%9D%E7%88%86%E6%96%99"
+        },
+        {
+          "title": "臣妾要线上告发熹贵妃",
+          "url": "https://search.bilibili.com/all?keyword=%E8%87%A3%E5%A6%BE%E8%A6%81%E7%BA%BF%E4%B8%8A%E5%91%8A%E5%8F%91%E7%86%B9%E8%B4%B5%E5%A6%83"
+        },
+        {
+          "title": "白银之城馨西亚二世角色PV",
+          "url": "https://search.bilibili.com/all?keyword=%E7%99%BD%E9%93%B6%E4%B9%8B%E5%9F%8E%E9%A6%A8%E8%A5%BF%E4%BA%9A%E4%BA%8C%E4%B8%96%E8%A7%92%E8%89%B2PV"
+        },
+        {
+          "title": "疑似崩坏真人角色PV流出",
+          "url": "https://search.bilibili.com/all?keyword=%E7%96%91%E4%BC%BC%E5%B4%A9%E5%9D%8F%E7%9C%9F%E4%BA%BA%E8%A7%92%E8%89%B2PV%E6%B5%81%E5%87%BA"
+        },
+        {
+          "title": "原神过场动画岩与契约",
+          "url": "https://search.bilibili.com/all?keyword=%E5%8E%9F%E7%A5%9E%E8%BF%87%E5%9C%BA%E5%8A%A8%E7%94%BB%E5%B2%A9%E4%B8%8E%E5%A5%91%E7%BA%A6"
+        },
+        {
+          "title": "从BP策略看BLG如何应对GEN",
+          "url": "https://search.bilibili.com/all?keyword=%E4%BB%8EBP%E7%AD%96%E7%95%A5%E7%9C%8BBLG%E5%A6%82%E4%BD%95%E5%BA%94%E5%AF%B9GEN"
+        },
+        {
+          "title": "UP主回归原始手搓铁器",
+          "url": "https://search.bilibili.com/all?keyword=UP%E4%B8%BB%E5%9B%9E%E5%BD%92%E5%8E%9F%E5%A7%8B%E6%89%8B%E6%90%93%E9%93%81%E5%99%A8"
+        },
+        {
+          "title": "星穹铁道最新EP无中生有",
+          "url": "https://search.bilibili.com/all?keyword=%E6%98%9F%E7%A9%B9%E9%93%81%E9%81%93%E6%9C%80%E6%96%B0EP%E6%97%A0%E4%B8%AD%E7%94%9F%E6%9C%89"
+        },
+        {
+          "title": "天南海北猎奇烧烤大赏",
+          "url": "https://search.bilibili.com/all?keyword=%E5%A4%A9%E5%8D%97%E6%B5%B7%E5%8C%97%E7%8C%8E%E5%A5%87%E7%83%A7%E7%83%A4%E5%A4%A7%E8%B5%8F"
+        },
+        {
+          "title": "用AI制作灭霸全家福MV",
+          "url": "https://search.bilibili.com/all?keyword=%E7%94%A8AI%E5%88%B6%E4%BD%9C%E7%81%AD%E9%9C%B8%E5%85%A8%E5%AE%B6%E7%A6%8FMV"
+        },
+        {
+          "title": "如何看懂新剧谷雨中的底层博弈",
+          "url": "https://search.bilibili.com/all?keyword=%E5%A6%82%E4%BD%95%E7%9C%8B%E6%87%82%E6%96%B0%E5%89%A7%E8%B0%B7%E9%9B%A8%E4%B8%AD%E7%9A%84%E5%BA%95%E5%B1%82%E5%8D%9A%E5%BC%88"
+        },
+        {
+          "title": "泽连斯基会脱离美欧掌控吗",
+          "url": "https://search.bilibili.com/all?keyword=%E6%B3%BD%E8%BF%9E%E6%96%AF%E5%9F%BA%E4%BC%9A%E8%84%B1%E7%A6%BB%E7%BE%8E%E6%AC%A7%E6%8E%8C%E6%8E%A7%E5%90%97"
+        },
+        {
+          "title": "谷歌发布Gemini 4 Hydroge",
+          "url": "https://search.bilibili.com/all?keyword=%E8%B0%B7%E6%AD%8C%E5%8F%91%E5%B8%83Gemini%204%20Hydroge"
+        },
+        {
+          "title": "回顾BLG战胜T1的突围之路",
+          "url": "https://search.bilibili.com/all?keyword=%E5%9B%9E%E9%A1%BEBLG%E6%88%98%E8%83%9CT1%E7%9A%84%E7%AA%81%E5%9B%B4%E4%B9%8B%E8%B7%AF"
+        },
+        {
+          "title": "世一上短剧之最后一战",
+          "url": "https://search.bilibili.com/all?keyword=%E4%B8%96%E4%B8%80%E4%B8%8A%E7%9F%AD%E5%89%A7%E4%B9%8B%E6%9C%80%E5%90%8E%E4%B8%80%E6%88%98"
+        }
+      ]
+    },
+    {
+      "name": "知乎",
+      "items": [
+        {
+          "title": "被曝大裁员的腾讯，是业务出了什么问题吗？",
+          "url": "https://www.zhihu.com/question/2104225780083286957"
+        },
+        {
+          "title": "如何看待28岁中国留学毕业生在墨尔本遇袭，两根手指被砍断，膝盖被砍伤，还遭朋友卷走5.4万澳元医药费？",
+          "url": "https://www.zhihu.com/question/2103997936267019794"
+        },
+        {
+          "title": "成都成中国唯一入选美国《国家地理》全球最佳旅行地城市，凭什么吸引世界目光？",
+          "url": "https://www.zhihu.com/question/2101800244514121260"
+        },
+        {
+          "title": "微软多项服务发生大规模故障，Outlook异常报告超13万起，问题可能出在哪？你现在还能正常登录吗？",
+          "url": "https://www.zhihu.com/question/2104481527711143901"
+        },
+        {
+          "title": "库里喊话阿里纳斯等人「别对我老婆指指点点，这反映了你们如何看待女性」，对此你怎么看？",
+          "url": "https://www.zhihu.com/question/2104150592633272299"
+        },
+        {
+          "title": "乡干部捅伤村民潜逃 15 年，其间违规吃空饷 140 万元并升为正科，暴露出哪些问题？",
+          "url": "https://www.zhihu.com/question/2101649988895904476"
+        },
+        {
+          "title": "张雪回应「读书无用论」，称这种定义很 low，自己几乎每天都学习，如何看待这一表态？",
+          "url": "https://www.zhihu.com/question/2103876810748453802"
+        },
+        {
+          "title": "大学保研中举报现象越来越频发，背后原因是什么？为了保研主动切断同学关系是否可取？",
+          "url": "https://www.zhihu.com/question/2103788856000755554"
+        },
+        {
+          "title": "禅让制为何在尧舜禹之间传了三代就玩不下去了？",
+          "url": "https://www.zhihu.com/question/2103759019978630326"
+        },
+        {
+          "title": "《福尔摩斯》原著里头的房东太太为什么会像个仆人一样伺候她的租客？",
+          "url": "https://www.zhihu.com/question/266192012"
+        },
+        {
+          "title": "如何评价Google 11月13日发布的模型Gemini 4 Hydrogen？",
+          "url": "https://www.zhihu.com/question/2104402653010834622"
+        },
+        {
+          "title": "如何看待2026年10月特斯拉国内销量暴跌？",
+          "url": "https://www.zhihu.com/question/2103258099138172807"
+        },
+        {
+          "title": "《密档》口碑、票房均不如《给阿嬷的情书》《南京照相馆》，其导演却拿下最佳导演，金鸡奖的评审逻辑是什么？",
+          "url": "https://www.zhihu.com/question/2103800406706841399"
+        },
+        {
+          "title": "网友称高铁座椅 USB 口充手机越充越掉电，12306 称电压更低，用于应急补电，这个设计合理吗？",
+          "url": "https://www.zhihu.com/question/2103538454634180703"
+        },
+        {
+          "title": "房子已经过剩，为什么一直还在新盖楼盘？",
+          "url": "https://www.zhihu.com/question/2075640740537963785"
+        },
+        {
+          "title": "黄仁勋算是美国中期选举的牺牲品吗？为什么偏偏是他？",
+          "url": "https://www.zhihu.com/question/2104350711869698691"
+        },
+        {
+          "title": "刘欢死因首次曝光，系感染性休克，生前与膀胱癌斗争十几年，膀胱癌有多危险？该怎样预防？",
+          "url": "https://www.zhihu.com/question/2104319975074656932"
+        },
+        {
+          "title": "怎么看待美国众议院对赫格塞斯的弹劾失败？",
+          "url": "https://www.zhihu.com/question/2103833946626774703"
+        },
+        {
+          "title": "凯文·加内特称早年凌晨 4 点半起床跑 90 分钟，现在球员不这么练，是训练理念变了吗？",
+          "url": "https://www.zhihu.com/question/2104236092748718951"
+        },
+        {
+          "title": "如何看待马化腾在腾讯 28 周年庆全员会上的讲话？",
+          "url": "https://www.zhihu.com/question/2104232899662669796"
+        },
+        {
+          "title": "感觉影之刃里的各种字体都好帅啊，比如“决战、殒命”等，这是单独请人写的吗，还是说能靠AI跑一批出来？",
+          "url": "https://www.zhihu.com/question/2101991601568536184"
+        },
+        {
+          "title": "为什么人到中年，很多人会觉得友情没那么重要？还有些人会觉得这是成熟的表现？",
+          "url": "https://www.zhihu.com/question/2103417826614538383"
+        },
+        {
+          "title": "为什么伽利略、爱因斯坦没有成为物理学单位？",
+          "url": "https://www.zhihu.com/question/14403971689"
+        },
+        {
+          "title": "女子在西西弗书店买了200元的书，想坐咖啡区却被拒，店方称需另行消费才能入座，这一规定合理吗？",
+          "url": "https://www.zhihu.com/question/2104110182112482058"
+        },
+        {
+          "title": "如何评价崩坏·星穹铁道从4.0到4.7的二相乐园版本？对未来的崩铁又有什么建议和期待？",
+          "url": "https://www.zhihu.com/question/2104143746388514562"
+        },
+        {
+          "title": "德芙因七夕广告宣扬错误婚恋观，代运营方被罚 80 万，怎样看待这一结果？",
+          "url": "https://www.zhihu.com/question/2104239650290098778"
+        },
+        {
+          "title": "如何评价《影之刃：零》中戏院部分的皮影戏桥段？",
+          "url": "https://www.zhihu.com/question/2100609569751934444"
+        },
+        {
+          "title": "如何做一个沉稳的人？",
+          "url": "https://www.zhihu.com/question/298243670"
+        },
+        {
+          "title": "你认为江苏有什么好吃的菜？？",
+          "url": "https://www.zhihu.com/question/2016949073161241221"
+        },
+        {
+          "title": "如何评价专访《崩坏：星穹铁道》安承男：当星神步入战局，回合制策略的演进、颠覆与平衡？",
+          "url": "https://www.zhihu.com/question/2103532543316326327"
+        }
+      ]
+    },
+    {
+      "name": "Hacker News",
+      "items": [
+        {
+          "title": "Jensen Huang resigns",
+          "url": "https://apnews.com/article/nvidia-megaspeed-china-singapore-huang-5403f152a601cf82ce939f1d24fffa0f"
+        },
+        {
+          "title": "Anthropic IPO",
+          "url": "https://ipo.anthropic.com/us/"
+        },
+        {
+          "title": "Service degradation on Microsoft 365",
+          "url": "https://status.cloud.microsoft/"
+        },
+        {
+          "title": "Rust 1.100",
+          "url": "https://blog.rust-lang.org/2026/11/12/Rust-1.100.0/"
+        },
+        {
+          "title": "Gemini 4 Hydrogen",
+          "url": "https://blog.google/innovation-and-ai/models-and-research/gemini-models/introducing-gemini-4-hydrogen/"
+        },
+        {
+          "title": "Show HN: My $300 embroidery machine needed a subscription, so I built my own app",
+          "url": "https://github.com/simpsoka/zigzag"
+        },
+        {
+          "title": "Gemini 4 Hydrogen and Orchestrator",
+          "url": "https://antigravity.google/blog/gemini-4-hydrogen-in-google-antigravity/"
+        },
+        {
+          "title": "I'm making LLMs work on small and old devices",
+          "url": "https://github.com/hyperionaidev/smolmaxxing/"
+        },
+        {
+          "title": "Abandoned Quake 4 expansion finished by modders and now playable",
+          "url": "https://www.moddb.com/mods/openq4/downloads/openq4-0141-windows-x64"
+        },
+        {
+          "title": "Dwarf planet candidate appears which takes roughly 280 years to orbit our sun",
+          "url": "https://www.smithsonianmag.com/smart-news/astronomers-found-a-mysterious-object-orbiting-far-beyond-pluto-it-could-be-a-new-dwarf-planet-hidden-in-our-solar-system-180989857/"
+        },
+        {
+          "title": "Chinese frontier AI models carry the fingerprint of export-controlled GPUs",
+          "url": "https://unemploymentlabs.com/checkpoint-forensics"
+        },
+        {
+          "title": "Nvidia employees petition to bring back Jensen Huang",
+          "url": "https://www.wired.com/story/nvidia-employees-petition-for-jensen-huangs-return/"
+        },
+        {
+          "title": "Talking Zen 6 with Mike Clark at AMD In-Depth",
+          "url": "https://chipsandcheese.com/p/talking-zen-6-with-mike-clark-at"
+        },
+        {
+          "title": "Our software engineering interviews are changing a little",
+          "url": "https://blog.janestreet.com/software-engineering-interviews-are-changing-a-little/"
+        },
+        {
+          "title": "Foundation Models framework",
+          "url": "https://developer.apple.com/foundation-models-framework/"
+        },
+        {
+          "title": "Turning a 22-year-old Postgres type-confusion primitive into RCE",
+          "url": "https://mehmetince.net/part-3-6-how-i-ended-up-turning-a-22-year-old-postgresql-type-confusion-primitive-into-rce-cve-2026-6460/"
+        },
+        {
+          "title": "Former Nvidia CEO Huang had a relationship with a second employee, sources say",
+          "url": "https://www.reuters.com/technology/former-nvidia-ceo-huang-had-relationship-with-second-employee-sources-say-2026-11-12/"
+        },
+        {
+          "title": "Relax: JIT compiler for Rust to reduce build times",
+          "url": "https://makepad.github.io/relax/"
+        },
+        {
+          "title": "AI is turning Apple's app review process into a nightmare for synth developers",
+          "url": "https://synthanatomy.com/2026/11/ai-is-turning-apples-app-review-process-into-a-nightmare-for-developers.html"
+        },
+        {
+          "title": "Edge0-145B: Frontier AI Capabilities on Your Own Computer",
+          "url": "https://edge0.ai/blog/introducing-edge0-145b-frontier-ai-capabilities-on-your-own-computer"
+        },
+        {
+          "title": "ExcalidrawZ: Local Native Excalidraw on macOS/iOS",
+          "url": "https://github.com/chocoford/ExcalidrawZ"
+        },
+        {
+          "title": "Show HN: AgentRun – open-source, Self-improving Managed Agents",
+          "url": "https://github.com/Parcha-ai/agentrun/blob/main/README.md"
+        },
+        {
+          "title": "Adapting CPython for Yk",
+          "url": "https://tratt.net/laurie/blog/2026/adapting_cpython_for_yk.html"
+        },
+        {
+          "title": "Show HN: Kapso – Iterative learning from enterprise data",
+          "url": ""
+        },
+        {
+          "title": "Switcher (2004)",
+          "url": "https://folklore.org/Switcher.html"
+        },
+        {
+          "title": "Sift: LSP, Lint, Format Lisp, Scheme and Emacs Lisp",
+          "url": "https://github.com/jjba23/sift"
+        },
+        {
+          "title": "Announcement: Conductor Is Back",
+          "url": "https://twitter.com/charlieholtz/status/2120973052024598620"
+        },
+        {
+          "title": "Before Pixels: Speed-Minder",
+          "url": "https://unsung.aresluna.org/before-pixels-speed-minder/"
+        },
+        {
+          "title": "Show HN: RealtimeVAD – trading false positives for 110ms earlier end-of-speech",
+          "url": "https://github.com/KoljaB/RealtimeVAD"
+        }
+      ]
+    }
+  ],
+  "note": "",
+  "zh": "# AI新模型发布、Nvidia高管离职、腾讯裁员、健康议题突出。\n## AI & Tech\n- **Gemini 4 Hydrogen model release**：该模型在对抗能力和多模态理解上取得显著进展，引发行业关注。\n- **Jensen Huang resigns from Nvidia**：创始人离职引发市场波动，员工呼吁复职表态。\n- **Chinese frontier AI models**：国产AI模型在数据安全与性能方面展示独特优势。\n## Business & Health\n- **腾讯大规模裁员**：科技巨头进行大规模人员调整，影响股市和行业竞争格局。\n- **刘欢癌症扩散与治疗**：患者在多学科合作下尝试新疗法，反映医学进步。\n- **微软服务宕机**：云服务异常导致用户体验受损，需快速恢复与补偿。",
+  "en": "# AI breakthroughs, Nvidia leadership change, Chinese corporate restructuring, health concerns.\n## AI & Tech\n- **Gemini 4 Hydrogen model release**：The model shows significant progress in adversarial capability and multimodal understanding, sparking industry attention.\n- **Jensen Huang resigns from Nvidia**：The founder's departure causes market volatility, with employees calling for his return.\n- **Chinese frontier AI models**：Domestic AI models demonstrate unique strengths in data security and performance.\n## Business & Health\n- **Tencent mass layoffs**：The tech giant conducts large-scale personnel adjustments, affecting stock markets and industry competition.\n- **Liuhuan cancer spread and treatment**：The patient attempts new therapies through multidisciplinary cooperation, reflecting medical progress.\n- **Microsoft service outage**：Cloud services experience anomalies, causing user experience degradation, requiring rapid recovery and compensation."
+}

@@ -1,0 +1,634 @@
+{
+  "date": "2026-11-17",
+  "updatedAt": "2026-11-17T13:56:32+08:00",
+  "sources": [
+    {
+      "name": "百度",
+      "items": [
+        {
+          "title": "习近平主席引航亚太开放合作",
+          "url": "https://www.baidu.com/s?wd=%E4%B9%A0%E8%BF%91%E5%B9%B3%E4%B8%BB%E5%B8%AD%E5%BC%95%E8%88%AA%E4%BA%9A%E5%A4%AA%E5%BC%80%E6%94%BE%E5%90%88%E4%BD%9C&sa=fyb_news&rsv_dl=fyb_news"
+        },
+        {
+          "title": "智利总统夫人与中方女保镖互动",
+          "url": "https://www.baidu.com/s?wd=%E6%99%BA%E5%88%A9%E6%80%BB%E7%BB%9F%E5%A4%AB%E4%BA%BA%E4%B8%8E%E4%B8%AD%E6%96%B9%E5%A5%B3%E4%BF%9D%E9%95%96%E4%BA%92%E5%8A%A8&sa=fyb_news&rsv_dl=fyb_news"
+        },
+        {
+          "title": "俄美运输机已率先抵达深圳",
+          "url": "https://www.baidu.com/s?wd=%E4%BF%84%E7%BE%8E%E8%BF%90%E8%BE%93%E6%9C%BA%E5%B7%B2%E7%8E%87%E5%85%88%E6%8A%B5%E8%BE%BE%E6%B7%B1%E5%9C%B3&sa=fyb_news&rsv_dl=fyb_news"
+        },
+        {
+          "title": "APEC“中国年”",
+          "url": "https://www.baidu.com/s?wd=APEC%E2%80%9C%E4%B8%AD%E5%9B%BD%E5%B9%B4%E2%80%9D&sa=fyb_news&rsv_dl=fyb_news"
+        },
+        {
+          "title": "APEC来了 华强北生意爆了",
+          "url": "https://www.baidu.com/s?wd=APEC%E6%9D%A5%E4%BA%86+%E5%8D%8E%E5%BC%BA%E5%8C%97%E7%94%9F%E6%84%8F%E7%88%86%E4%BA%86&sa=fyb_news&rsv_dl=fyb_news"
+        },
+        {
+          "title": "高达近800℃！被窝被它暖“没”了",
+          "url": "https://www.baidu.com/s?wd=%E9%AB%98%E8%BE%BE%E8%BF%91800%E2%84%83%EF%BC%81%E8%A2%AB%E7%AA%9D%E8%A2%AB%E5%AE%83%E6%9A%96%E2%80%9C%E6%B2%A1%E2%80%9D%E4%BA%86&sa=fyb_news&rsv_dl=fyb_news"
+        },
+        {
+          "title": "特朗普将成首位到访深圳的在任美总统",
+          "url": "https://www.baidu.com/s?wd=%E7%89%B9%E6%9C%97%E6%99%AE%E5%B0%86%E6%88%90%E9%A6%96%E4%BD%8D%E5%88%B0%E8%AE%BF%E6%B7%B1%E5%9C%B3%E7%9A%84%E5%9C%A8%E4%BB%BB%E7%BE%8E%E6%80%BB%E7%BB%9F&sa=fyb_news&rsv_dl=fyb_news"
+        },
+        {
+          "title": "“公安局的 怎么会要钱呢！”",
+          "url": "https://www.baidu.com/s?wd=%E2%80%9C%E5%85%AC%E5%AE%89%E5%B1%80%E7%9A%84+%E6%80%8E%E4%B9%88%E4%BC%9A%E8%A6%81%E9%92%B1%E5%91%A2%EF%BC%81%E2%80%9D&sa=fyb_news&rsv_dl=fyb_news"
+        },
+        {
+          "title": "梅德韦杰夫取得总决赛开门红",
+          "url": "https://www.baidu.com/s?wd=%E6%A2%85%E5%BE%B7%E9%9F%A6%E6%9D%B0%E5%A4%AB%E5%8F%96%E5%BE%97%E6%80%BB%E5%86%B3%E8%B5%9B%E5%BC%80%E9%97%A8%E7%BA%A2&sa=fyb_news&rsv_dl=fyb_news"
+        },
+        {
+          "title": "用24小时 看深圳的APEC日常故事",
+          "url": "https://www.baidu.com/s?wd=%E7%94%A824%E5%B0%8F%E6%97%B6+%E7%9C%8B%E6%B7%B1%E5%9C%B3%E7%9A%84APEC%E6%97%A5%E5%B8%B8%E6%95%85%E4%BA%8B&sa=fyb_news&rsv_dl=fyb_news"
+        },
+        {
+          "title": "越共中央总书记苏林抵达深圳",
+          "url": "https://www.baidu.com/s?wd=%E8%B6%8A%E5%85%B1%E4%B8%AD%E5%A4%AE%E6%80%BB%E4%B9%A6%E8%AE%B0%E8%8B%8F%E6%9E%97%E6%8A%B5%E8%BE%BE%E6%B7%B1%E5%9C%B3&sa=fyb_news&rsv_dl=fyb_news"
+        },
+        {
+          "title": "别让谣言骗了你",
+          "url": "https://www.baidu.com/s?wd=%E5%88%AB%E8%AE%A9%E8%B0%A3%E8%A8%80%E9%AA%97%E4%BA%86%E4%BD%A0&sa=fyb_news&rsv_dl=fyb_news"
+        },
+        {
+          "title": "新郎听不懂司仪暗示急得朋友上脚",
+          "url": "https://www.baidu.com/s?wd=%E6%96%B0%E9%83%8E%E5%90%AC%E4%B8%8D%E6%87%82%E5%8F%B8%E4%BB%AA%E6%9A%97%E7%A4%BA%E6%80%A5%E5%BE%97%E6%9C%8B%E5%8F%8B%E4%B8%8A%E8%84%9A&sa=fyb_news&rsv_dl=fyb_news"
+        },
+        {
+          "title": "14岁男孩住校一周伙食费仅花50元",
+          "url": "https://www.baidu.com/s?wd=14%E5%B2%81%E7%94%B7%E5%AD%A9%E4%BD%8F%E6%A0%A1%E4%B8%80%E5%91%A8%E4%BC%99%E9%A3%9F%E8%B4%B9%E4%BB%85%E8%8A%B150%E5%85%83&sa=fyb_news&rsv_dl=fyb_news"
+        },
+        {
+          "title": "蒋欣这段哭戏可以进北影教材",
+          "url": "https://www.baidu.com/s?wd=%E8%92%8B%E6%AC%A3%E8%BF%99%E6%AE%B5%E5%93%AD%E6%88%8F%E5%8F%AF%E4%BB%A5%E8%BF%9B%E5%8C%97%E5%BD%B1%E6%95%99%E6%9D%90&sa=fyb_news&rsv_dl=fyb_news"
+        },
+        {
+          "title": "周润发组团跑山自嘲“怕蛇又怕鬼”",
+          "url": "https://www.baidu.com/s?wd=%E5%91%A8%E6%B6%A6%E5%8F%91%E7%BB%84%E5%9B%A2%E8%B7%91%E5%B1%B1%E8%87%AA%E5%98%B2%E2%80%9C%E6%80%95%E8%9B%87%E5%8F%88%E6%80%95%E9%AC%BC%E2%80%9D&sa=fyb_news&rsv_dl=fyb_news"
+        },
+        {
+          "title": "公公婆婆拿钱催生如今抱娃到手软",
+          "url": "https://www.baidu.com/s?wd=%E5%85%AC%E5%85%AC%E5%A9%86%E5%A9%86%E6%8B%BF%E9%92%B1%E5%82%AC%E7%94%9F%E5%A6%82%E4%BB%8A%E6%8A%B1%E5%A8%83%E5%88%B0%E6%89%8B%E8%BD%AF&sa=fyb_news&rsv_dl=fyb_news"
+        },
+        {
+          "title": "外卖员在屋外拿出女鞋疑似靠近面部",
+          "url": "https://www.baidu.com/s?wd=%E5%A4%96%E5%8D%96%E5%91%98%E5%9C%A8%E5%B1%8B%E5%A4%96%E6%8B%BF%E5%87%BA%E5%A5%B3%E9%9E%8B%E7%96%91%E4%BC%BC%E9%9D%A0%E8%BF%91%E9%9D%A2%E9%83%A8&sa=fyb_news&rsv_dl=fyb_news"
+        },
+        {
+          "title": "小米辟谣汽车召回短信",
+          "url": "https://www.baidu.com/s?wd=%E5%B0%8F%E7%B1%B3%E8%BE%9F%E8%B0%A3%E6%B1%BD%E8%BD%A6%E5%8F%AC%E5%9B%9E%E7%9F%AD%E4%BF%A1&sa=fyb_news&rsv_dl=fyb_news"
+        },
+        {
+          "title": "打工者的拖鞋梳子都成了展品",
+          "url": "https://www.baidu.com/s?wd=%E6%89%93%E5%B7%A5%E8%80%85%E7%9A%84%E6%8B%96%E9%9E%8B%E6%A2%B3%E5%AD%90%E9%83%BD%E6%88%90%E4%BA%86%E5%B1%95%E5%93%81&sa=fyb_news&rsv_dl=fyb_news"
+        },
+        {
+          "title": "河南一理发师用碎发拼画像太牛了",
+          "url": "https://www.baidu.com/s?wd=%E6%B2%B3%E5%8D%97%E4%B8%80%E7%90%86%E5%8F%91%E5%B8%88%E7%94%A8%E7%A2%8E%E5%8F%91%E6%8B%BC%E7%94%BB%E5%83%8F%E5%A4%AA%E7%89%9B%E4%BA%86&sa=fyb_news&rsv_dl=fyb_news"
+        },
+        {
+          "title": "360集团副总裁卜思南被带走调查",
+          "url": "https://www.baidu.com/s?wd=360%E9%9B%86%E5%9B%A2%E5%89%AF%E6%80%BB%E8%A3%81%E5%8D%9C%E6%80%9D%E5%8D%97%E8%A2%AB%E5%B8%A6%E8%B5%B0%E8%B0%83%E6%9F%A5&sa=fyb_news&rsv_dl=fyb_news"
+        },
+        {
+          "title": "首饰金价格跌破每克千元关口",
+          "url": "https://www.baidu.com/s?wd=%E9%A6%96%E9%A5%B0%E9%87%91%E4%BB%B7%E6%A0%BC%E8%B7%8C%E7%A0%B4%E6%AF%8F%E5%85%8B%E5%8D%83%E5%85%83%E5%85%B3%E5%8F%A3&sa=fyb_news&rsv_dl=fyb_news"
+        },
+        {
+          "title": "深圳APEC主持人阵容拉满",
+          "url": "https://www.baidu.com/s?wd=%E6%B7%B1%E5%9C%B3APEC%E4%B8%BB%E6%8C%81%E4%BA%BA%E9%98%B5%E5%AE%B9%E6%8B%89%E6%BB%A1&sa=fyb_news&rsv_dl=fyb_news"
+        },
+        {
+          "title": "AI漫剧看多了觉得真人变丑 专家回应",
+          "url": "https://www.baidu.com/s?wd=AI%E6%BC%AB%E5%89%A7%E7%9C%8B%E5%A4%9A%E4%BA%86%E8%A7%89%E5%BE%97%E7%9C%9F%E4%BA%BA%E5%8F%98%E4%B8%91+%E4%B8%93%E5%AE%B6%E5%9B%9E%E5%BA%94&sa=fyb_news&rsv_dl=fyb_news"
+        },
+        {
+          "title": "瘫痪博主把自己交给AI管了7天",
+          "url": "https://www.baidu.com/s?wd=%E7%98%AB%E7%97%AA%E5%8D%9A%E4%B8%BB%E6%8A%8A%E8%87%AA%E5%B7%B1%E4%BA%A4%E7%BB%99AI%E7%AE%A1%E4%BA%867%E5%A4%A9&sa=fyb_news&rsv_dl=fyb_news"
+        },
+        {
+          "title": "APEC现场王兴兴埋头看议程",
+          "url": "https://www.baidu.com/s?wd=APEC%E7%8E%B0%E5%9C%BA%E7%8E%8B%E5%85%B4%E5%85%B4%E5%9F%8B%E5%A4%B4%E7%9C%8B%E8%AE%AE%E7%A8%8B&sa=fyb_news&rsv_dl=fyb_news"
+        },
+        {
+          "title": "干部引用涉密文件发在微信群征求意见",
+          "url": "https://www.baidu.com/s?wd=%E5%B9%B2%E9%83%A8%E5%BC%95%E7%94%A8%E6%B6%89%E5%AF%86%E6%96%87%E4%BB%B6%E5%8F%91%E5%9C%A8%E5%BE%AE%E4%BF%A1%E7%BE%A4%E5%BE%81%E6%B1%82%E6%84%8F%E8%A7%81&sa=fyb_news&rsv_dl=fyb_news"
+        },
+        {
+          "title": "中国超算再夺世界第一",
+          "url": "https://www.baidu.com/s?wd=%E4%B8%AD%E5%9B%BD%E8%B6%85%E7%AE%97%E5%86%8D%E5%A4%BA%E4%B8%96%E7%95%8C%E7%AC%AC%E4%B8%80&sa=fyb_news&rsv_dl=fyb_news"
+        },
+        {
+          "title": "2209元苹果手表维修报价2309元",
+          "url": "https://www.baidu.com/s?wd=2209%E5%85%83%E8%8B%B9%E6%9E%9C%E6%89%8B%E8%A1%A8%E7%BB%B4%E4%BF%AE%E6%8A%A5%E4%BB%B72309%E5%85%83&sa=fyb_news&rsv_dl=fyb_news"
+        }
+      ]
+    },
+    {
+      "name": "微博",
+      "items": [
+        {
+          "title": "于东来奖励员工310辆坦克700",
+          "url": "https://s.weibo.com/weibo?q=%E4%BA%8E%E4%B8%9C%E6%9D%A5%E5%A5%96%E5%8A%B1%E5%91%98%E5%B7%A5310%E8%BE%86%E5%9D%A6%E5%85%8B700"
+        },
+        {
+          "title": "深圳APEC主持人阵容拉满",
+          "url": "https://s.weibo.com/weibo?q=%E6%B7%B1%E5%9C%B3APEC%E4%B8%BB%E6%8C%81%E4%BA%BA%E9%98%B5%E5%AE%B9%E6%8B%89%E6%BB%A1"
+        },
+        {
+          "title": "数说APEC中国年经贸成果",
+          "url": "https://s.weibo.com/weibo?q=%E6%95%B0%E8%AF%B4APEC%E4%B8%AD%E5%9B%BD%E5%B9%B4%E7%BB%8F%E8%B4%B8%E6%88%90%E6%9E%9C"
+        },
+        {
+          "title": "信小呆中奖后抑郁了",
+          "url": "https://s.weibo.com/weibo?q=%E4%BF%A1%E5%B0%8F%E5%91%86%E4%B8%AD%E5%A5%96%E5%90%8E%E6%8A%91%E9%83%81%E4%BA%86"
+        },
+        {
+          "title": "从100斤瘦到80斤堪比整容",
+          "url": "https://s.weibo.com/weibo?q=%E4%BB%8E100%E6%96%A4%E7%98%A6%E5%88%B080%E6%96%A4%E5%A0%AA%E6%AF%94%E6%95%B4%E5%AE%B9"
+        },
+        {
+          "title": "虞书欣新综艺开机",
+          "url": "https://s.weibo.com/weibo?q=%E8%99%9E%E4%B9%A6%E6%AC%A3%E6%96%B0%E7%BB%BC%E8%89%BA%E5%BC%80%E6%9C%BA"
+        },
+        {
+          "title": "杨瀚森砍鲨战术",
+          "url": "https://s.weibo.com/weibo?q=%E6%9D%A8%E7%80%9A%E6%A3%AE%E7%A0%8D%E9%B2%A8%E6%88%98%E6%9C%AF"
+        },
+        {
+          "title": "经常朝左边睡觉对心脏的影响",
+          "url": "https://s.weibo.com/weibo?q=%E7%BB%8F%E5%B8%B8%E6%9C%9D%E5%B7%A6%E8%BE%B9%E7%9D%A1%E8%A7%89%E5%AF%B9%E5%BF%83%E8%84%8F%E7%9A%84%E5%BD%B1%E5%93%8D"
+        },
+        {
+          "title": "10月货物进出口同比增长31.2%",
+          "url": "https://s.weibo.com/weibo?q=10%E6%9C%88%E8%B4%A7%E7%89%A9%E8%BF%9B%E5%87%BA%E5%8F%A3%E5%90%8C%E6%AF%94%E5%A2%9E%E9%95%BF31.2%25"
+        },
+        {
+          "title": "声生不息2定档",
+          "url": "https://s.weibo.com/weibo?q=%E5%A3%B0%E7%94%9F%E4%B8%8D%E6%81%AF2%E5%AE%9A%E6%A1%A3"
+        },
+        {
+          "title": "霸王茶姬宋雨琦大大杯撕杯",
+          "url": "https://s.weibo.com/weibo?q=%E9%9C%B8%E7%8E%8B%E8%8C%B6%E5%A7%AC%E5%AE%8B%E9%9B%A8%E7%90%A6%E5%A4%A7%E5%A4%A7%E6%9D%AF%E6%92%95%E6%9D%AF"
+        },
+        {
+          "title": "字节只差一个聊天软件了",
+          "url": "https://s.weibo.com/weibo?q=%E5%AD%97%E8%8A%82%E5%8F%AA%E5%B7%AE%E4%B8%80%E4%B8%AA%E8%81%8A%E5%A4%A9%E8%BD%AF%E4%BB%B6%E4%BA%86"
+        },
+        {
+          "title": "原来王子璇去了不止一趟医院",
+          "url": "https://s.weibo.com/weibo?q=%E5%8E%9F%E6%9D%A5%E7%8E%8B%E5%AD%90%E7%92%87%E5%8E%BB%E4%BA%86%E4%B8%8D%E6%AD%A2%E4%B8%80%E8%B6%9F%E5%8C%BB%E9%99%A2"
+        },
+        {
+          "title": "虞书欣明示",
+          "url": "https://s.weibo.com/weibo?q=%E8%99%9E%E4%B9%A6%E6%AC%A3%E6%98%8E%E7%A4%BA"
+        },
+        {
+          "title": "张檬和儿子断母乳抱头痛哭",
+          "url": "https://s.weibo.com/weibo?q=%E5%BC%A0%E6%AA%AC%E5%92%8C%E5%84%BF%E5%AD%90%E6%96%AD%E6%AF%8D%E4%B9%B3%E6%8A%B1%E5%A4%B4%E7%97%9B%E5%93%AD"
+        },
+        {
+          "title": "Zeus换T1头像",
+          "url": "https://s.weibo.com/weibo?q=Zeus%E6%8D%A2T1%E5%A4%B4%E5%83%8F"
+        },
+        {
+          "title": "许飞穿了殷世航的增高鞋",
+          "url": "https://s.weibo.com/weibo?q=%E8%AE%B8%E9%A3%9E%E7%A9%BF%E4%BA%86%E6%AE%B7%E4%B8%96%E8%88%AA%E7%9A%84%E5%A2%9E%E9%AB%98%E9%9E%8B"
+        },
+        {
+          "title": "NBA回应BLG现场观战篮网76人比赛",
+          "url": "https://s.weibo.com/weibo?q=NBA%E5%9B%9E%E5%BA%94BLG%E7%8E%B0%E5%9C%BA%E8%A7%82%E6%88%98%E7%AF%AE%E7%BD%9176%E4%BA%BA%E6%AF%94%E8%B5%9B"
+        },
+        {
+          "title": "特朗普启程亚洲行现场画面",
+          "url": "https://s.weibo.com/weibo?q=%E7%89%B9%E6%9C%97%E6%99%AE%E5%90%AF%E7%A8%8B%E4%BA%9A%E6%B4%B2%E8%A1%8C%E7%8E%B0%E5%9C%BA%E7%94%BB%E9%9D%A2"
+        },
+        {
+          "title": "王兴兴低调进入APEC会场",
+          "url": "https://s.weibo.com/weibo?q=%E7%8E%8B%E5%85%B4%E5%85%B4%E4%BD%8E%E8%B0%83%E8%BF%9B%E5%85%A5APEC%E4%BC%9A%E5%9C%BA"
+        },
+        {
+          "title": "引用涉密文件发微信群被处分",
+          "url": "https://s.weibo.com/weibo?q=%E5%BC%95%E7%94%A8%E6%B6%89%E5%AF%86%E6%96%87%E4%BB%B6%E5%8F%91%E5%BE%AE%E4%BF%A1%E7%BE%A4%E8%A2%AB%E5%A4%84%E5%88%86"
+        },
+        {
+          "title": "甄嬛传这三集播放量最高",
+          "url": "https://s.weibo.com/weibo?q=%E7%94%84%E5%AC%9B%E4%BC%A0%E8%BF%99%E4%B8%89%E9%9B%86%E6%92%AD%E6%94%BE%E9%87%8F%E6%9C%80%E9%AB%98"
+        },
+        {
+          "title": "信小呆辞职兑奖花光积蓄",
+          "url": "https://s.weibo.com/weibo?q=%E4%BF%A1%E5%B0%8F%E5%91%86%E8%BE%9E%E8%81%8C%E5%85%91%E5%A5%96%E8%8A%B1%E5%85%89%E7%A7%AF%E8%93%84"
+        },
+        {
+          "title": "8小时600块钱一般人这钱都不敢赚",
+          "url": "https://s.weibo.com/weibo?q=8%E5%B0%8F%E6%97%B6600%E5%9D%97%E9%92%B1%E4%B8%80%E8%88%AC%E4%BA%BA%E8%BF%99%E9%92%B1%E9%83%BD%E4%B8%8D%E6%95%A2%E8%B5%9A"
+        },
+        {
+          "title": "吃了点didi喂",
+          "url": "https://s.weibo.com/weibo?q=%E5%90%83%E4%BA%86%E7%82%B9didi%E5%96%82"
+        },
+        {
+          "title": "信小呆曾说没钱没工作有抑郁倾向",
+          "url": "https://s.weibo.com/weibo?q=%E4%BF%A1%E5%B0%8F%E5%91%86%E6%9B%BE%E8%AF%B4%E6%B2%A1%E9%92%B1%E6%B2%A1%E5%B7%A5%E4%BD%9C%E6%9C%89%E6%8A%91%E9%83%81%E5%80%BE%E5%90%91"
+        },
+        {
+          "title": "华为门店曝星芒阔直板4000元起",
+          "url": "https://s.weibo.com/weibo?q=%E5%8D%8E%E4%B8%BA%E9%97%A8%E5%BA%97%E6%9B%9D%E6%98%9F%E8%8A%92%E9%98%94%E7%9B%B4%E6%9D%BF4000%E5%85%83%E8%B5%B7"
+        },
+        {
+          "title": "40岁孕妇羊水穿刺牵出丈夫肠道癌变",
+          "url": "https://s.weibo.com/weibo?q=40%E5%B2%81%E5%AD%95%E5%A6%87%E7%BE%8A%E6%B0%B4%E7%A9%BF%E5%88%BA%E7%89%B5%E5%87%BA%E4%B8%88%E5%A4%AB%E8%82%A0%E9%81%93%E7%99%8C%E5%8F%98"
+        },
+        {
+          "title": "Junjia前女友发文道歉",
+          "url": "https://s.weibo.com/weibo?q=Junjia%E5%89%8D%E5%A5%B3%E5%8F%8B%E5%8F%91%E6%96%87%E9%81%93%E6%AD%89"
+        },
+        {
+          "title": "央视给C罗配乐用了泪海",
+          "url": "https://s.weibo.com/weibo?q=%E5%A4%AE%E8%A7%86%E7%BB%99C%E7%BD%97%E9%85%8D%E4%B9%90%E7%94%A8%E4%BA%86%E6%B3%AA%E6%B5%B7"
+        }
+      ]
+    },
+    {
+      "name": "B站",
+      "items": [
+        {
+          "title": "外交部谈中俄美元首会晤",
+          "url": "https://search.bilibili.com/all?keyword=%E5%A4%96%E4%BA%A4%E9%83%A8%E8%B0%88%E4%B8%AD%E4%BF%84%E7%BE%8E%E5%85%83%E9%A6%96%E4%BC%9A%E6%99%A4"
+        },
+        {
+          "title": "APEC紫藏着中国红和深圳蓝",
+          "url": "https://search.bilibili.com/all?keyword=APEC%E7%B4%AB%E8%97%8F%E7%9D%80%E4%B8%AD%E5%9B%BD%E7%BA%A2%E5%92%8C%E6%B7%B1%E5%9C%B3%E8%93%9D"
+        },
+        {
+          "title": "印尼驻华大使用中文歌祝福APEC",
+          "url": "https://search.bilibili.com/all?keyword=%E5%8D%B0%E5%B0%BC%E9%A9%BB%E5%8D%8E%E5%A4%A7%E4%BD%BF%E7%94%A8%E4%B8%AD%E6%96%87%E6%AD%8C%E7%A5%9D%E7%A6%8FAPEC"
+        },
+        {
+          "title": "BLG现场观战76人vs篮网",
+          "url": "https://search.bilibili.com/all?keyword=BLG%E7%8E%B0%E5%9C%BA%E8%A7%82%E6%88%9876%E4%BA%BAvs%E7%AF%AE%E7%BD%91"
+        },
+        {
+          "title": "看深圳APEC藏着哪些巧思",
+          "url": "https://search.bilibili.com/all?keyword=%E7%9C%8B%E6%B7%B1%E5%9C%B3APEC%E8%97%8F%E7%9D%80%E5%93%AA%E4%BA%9B%E5%B7%A7%E6%80%9D"
+        },
+        {
+          "title": "Bin冠军皮肤格温票数反超武器",
+          "url": "https://search.bilibili.com/all?keyword=Bin%E5%86%A0%E5%86%9B%E7%9A%AE%E8%82%A4%E6%A0%BC%E6%B8%A9%E7%A5%A8%E6%95%B0%E5%8F%8D%E8%B6%85%E6%AD%A6%E5%99%A8"
+        },
+        {
+          "title": "BLG决赛语音 我们是冠军",
+          "url": "https://search.bilibili.com/all?keyword=BLG%E5%86%B3%E8%B5%9B%E8%AF%AD%E9%9F%B3%20%E6%88%91%E4%BB%AC%E6%98%AF%E5%86%A0%E5%86%9B"
+        },
+        {
+          "title": "GEN官宣Canyon与Kiin离队",
+          "url": "https://search.bilibili.com/all?keyword=GEN%E5%AE%98%E5%AE%A3Canyon%E4%B8%8EKiin%E7%A6%BB%E9%98%9F"
+        },
+        {
+          "title": "BLG成员获赠专属篮网球衣",
+          "url": "https://search.bilibili.com/all?keyword=BLG%E6%88%90%E5%91%98%E8%8E%B7%E8%B5%A0%E4%B8%93%E5%B1%9E%E7%AF%AE%E7%BD%91%E7%90%83%E8%A1%A3"
+        },
+        {
+          "title": "杨瀚森连送3次助攻",
+          "url": "https://search.bilibili.com/all?keyword=%E6%9D%A8%E7%80%9A%E6%A3%AE%E8%BF%9E%E9%80%813%E6%AC%A1%E5%8A%A9%E6%94%BB"
+        },
+        {
+          "title": "韩网单曲 Chovy的根号4",
+          "url": "https://search.bilibili.com/all?keyword=%E9%9F%A9%E7%BD%91%E5%8D%95%E6%9B%B2%20Chovy%E7%9A%84%E6%A0%B9%E5%8F%B74"
+        },
+        {
+          "title": "后会友期真人秀剧本边界在哪",
+          "url": "https://search.bilibili.com/all?keyword=%E5%90%8E%E4%BC%9A%E5%8F%8B%E6%9C%9F%E7%9C%9F%E4%BA%BA%E7%A7%80%E5%89%A7%E6%9C%AC%E8%BE%B9%E7%95%8C%E5%9C%A8%E5%93%AA"
+        },
+        {
+          "title": "电影挽救计划为何口碑票房双爆",
+          "url": "https://search.bilibili.com/all?keyword=%E7%94%B5%E5%BD%B1%E6%8C%BD%E6%95%91%E8%AE%A1%E5%88%92%E4%B8%BA%E4%BD%95%E5%8F%A3%E7%A2%91%E7%A5%A8%E6%88%BF%E5%8F%8C%E7%88%86"
+        },
+        {
+          "title": "食贫道闯关东吃饭故事上新",
+          "url": "https://search.bilibili.com/all?keyword=%E9%A3%9F%E8%B4%AB%E9%81%93%E9%97%AF%E5%85%B3%E4%B8%9C%E5%90%83%E9%A5%AD%E6%95%85%E4%BA%8B%E4%B8%8A%E6%96%B0"
+        },
+        {
+          "title": "根本没有这样的长尾夹",
+          "url": "https://search.bilibili.com/all?keyword=%E6%A0%B9%E6%9C%AC%E6%B2%A1%E6%9C%89%E8%BF%99%E6%A0%B7%E7%9A%84%E9%95%BF%E5%B0%BE%E5%A4%B9"
+        },
+        {
+          "title": "别人看骑行我在吴磊小课堂听课",
+          "url": "https://search.bilibili.com/all?keyword=%E5%88%AB%E4%BA%BA%E7%9C%8B%E9%AA%91%E8%A1%8C%E6%88%91%E5%9C%A8%E5%90%B4%E7%A3%8A%E5%B0%8F%E8%AF%BE%E5%A0%82%E5%90%AC%E8%AF%BE"
+        },
+        {
+          "title": "非凡之爱演绎经典漫画父与子",
+          "url": "https://search.bilibili.com/all?keyword=%E9%9D%9E%E5%87%A1%E4%B9%8B%E7%88%B1%E6%BC%94%E7%BB%8E%E7%BB%8F%E5%85%B8%E6%BC%AB%E7%94%BB%E7%88%B6%E4%B8%8E%E5%AD%90"
+        },
+        {
+          "title": "鹅城Dangerous",
+          "url": "https://search.bilibili.com/all?keyword=%E9%B9%85%E5%9F%8EDangerous"
+        },
+        {
+          "title": "BLG破三路为何还打到53分钟",
+          "url": "https://search.bilibili.com/all?keyword=BLG%E7%A0%B4%E4%B8%89%E8%B7%AF%E4%B8%BA%E4%BD%95%E8%BF%98%E6%89%93%E5%88%B053%E5%88%86%E9%92%9F"
+        },
+        {
+          "title": "BLG 此刻故事由我们执笔",
+          "url": "https://search.bilibili.com/all?keyword=BLG%20%E6%AD%A4%E5%88%BB%E6%95%85%E4%BA%8B%E7%94%B1%E6%88%91%E4%BB%AC%E6%89%A7%E7%AC%94"
+        },
+        {
+          "title": "BLG夺冠UP主开启抽奖团建",
+          "url": "https://search.bilibili.com/all?keyword=BLG%E5%A4%BA%E5%86%A0UP%E4%B8%BB%E5%BC%80%E5%90%AF%E6%8A%BD%E5%A5%96%E5%9B%A2%E5%BB%BA"
+        },
+        {
+          "title": "RAY评S16决赛开幕式K/DA表演",
+          "url": "https://search.bilibili.com/all?keyword=RAY%E8%AF%84S16%E5%86%B3%E8%B5%9B%E5%BC%80%E5%B9%95%E5%BC%8FK/DA%E8%A1%A8%E6%BC%94"
+        },
+        {
+          "title": "Xun 篮球练习时长一小时",
+          "url": "https://search.bilibili.com/all?keyword=Xun%20%E7%AF%AE%E7%90%83%E7%BB%83%E4%B9%A0%E6%97%B6%E9%95%BF%E4%B8%80%E5%B0%8F%E6%97%B6"
+        },
+        {
+          "title": "谭乔二仙桥大爷单曲",
+          "url": "https://search.bilibili.com/all?keyword=%E8%B0%AD%E4%B9%94%E4%BA%8C%E4%BB%99%E6%A1%A5%E5%A4%A7%E7%88%B7%E5%8D%95%E6%9B%B2"
+        },
+        {
+          "title": "天下足球回顾C罗国家队生涯",
+          "url": "https://search.bilibili.com/all?keyword=%E5%A4%A9%E4%B8%8B%E8%B6%B3%E7%90%83%E5%9B%9E%E9%A1%BEC%E7%BD%97%E5%9B%BD%E5%AE%B6%E9%98%9F%E7%94%9F%E6%B6%AF"
+        },
+        {
+          "title": "第一视角看Bin格温",
+          "url": "https://search.bilibili.com/all?keyword=%E7%AC%AC%E4%B8%80%E8%A7%86%E8%A7%92%E7%9C%8BBin%E6%A0%BC%E6%B8%A9"
+        },
+        {
+          "title": "火影手游永夜扉间技能全爆料",
+          "url": "https://search.bilibili.com/all?keyword=%E7%81%AB%E5%BD%B1%E6%89%8B%E6%B8%B8%E6%B0%B8%E5%A4%9C%E6%89%89%E9%97%B4%E6%8A%80%E8%83%BD%E5%85%A8%E7%88%86%E6%96%99"
+        },
+        {
+          "title": "国产模型为何在海外悄然走红",
+          "url": "https://search.bilibili.com/all?keyword=%E5%9B%BD%E4%BA%A7%E6%A8%A1%E5%9E%8B%E4%B8%BA%E4%BD%95%E5%9C%A8%E6%B5%B7%E5%A4%96%E6%82%84%E7%84%B6%E8%B5%B0%E7%BA%A2"
+        },
+        {
+          "title": "考研区年更UP主大牙考研上线了",
+          "url": "https://search.bilibili.com/all?keyword=%E8%80%83%E7%A0%94%E5%8C%BA%E5%B9%B4%E6%9B%B4UP%E4%B8%BB%E5%A4%A7%E7%89%99%E8%80%83%E7%A0%94%E4%B8%8A%E7%BA%BF%E4%BA%86"
+        },
+        {
+          "title": "黄龄恭喜BLG夺冠",
+          "url": "https://search.bilibili.com/all?keyword=%E9%BB%84%E9%BE%84%E6%81%AD%E5%96%9CBLG%E5%A4%BA%E5%86%A0"
+        }
+      ]
+    },
+    {
+      "name": "知乎",
+      "items": [
+        {
+          "title": "传腾讯内部陷空前危机感，因为AI正在冲击其以社交为核心的商业模式，是真的吗？腾讯的商业模式会被颠覆吗？",
+          "url": "https://www.zhihu.com/question/2105734658377741339"
+        },
+        {
+          "title": "北大新款羽绒服 399 元含鹅绒量 90%卖断货，校外人士求代购，这类高校文创比商业品牌更有性价比吗？",
+          "url": "https://www.zhihu.com/question/2105477478731067979"
+        },
+        {
+          "title": "南京无门槛的「零元面馆」为什么招来那么多质疑与批评？",
+          "url": "https://www.zhihu.com/question/2104559437331568051"
+        },
+        {
+          "title": "如何看待中南大学湘雅二医院被曝医学sci论文图片为AI生成？",
+          "url": "https://www.zhihu.com/question/2104854026030522823"
+        },
+        {
+          "title": "为什么中国式刺身（鱼脍）在明中期被逐渐淘汰了？",
+          "url": "https://www.zhihu.com/question/470428983"
+        },
+        {
+          "title": "罗伯特⋅帕丁森将出演新一任 007，如何评价这一选角？",
+          "url": "https://www.zhihu.com/question/2105811112532899617"
+        },
+        {
+          "title": "为什么AI生成一条5秒钟的视频费用很高，而类似漫剧这样的内容却能大批量生产？",
+          "url": "https://www.zhihu.com/question/2071378238237053951"
+        },
+        {
+          "title": "为什么现在的中小学普遍开始春秋假期？",
+          "url": "https://www.zhihu.com/question/2105586557558199490"
+        },
+        {
+          "title": "剧版《哈利·波特》正片片段首曝光，公开了霍格沃茨入学仪式的盛宴片段，角色和场景符合你的预期吗？",
+          "url": "https://www.zhihu.com/question/2105583961661339147"
+        },
+        {
+          "title": "中汽协将对比亚迪、小米等 17 家重点车企开展供应商账款支付情况调研评估，哪些信息值得关注？",
+          "url": "https://www.zhihu.com/question/2105956358176469828"
+        },
+        {
+          "title": "10 月消费数据低于预期，人民日报发文「怎样看待当前消费形势」，哪些细节值得关注？",
+          "url": "https://www.zhihu.com/question/2105739356858054266"
+        },
+        {
+          "title": "《哈利波特：魔法觉醒》官宣 2027 年 3 月停服，授权到期，怎么看待这款手游落幕？",
+          "url": "https://www.zhihu.com/question/2105686582837748403"
+        },
+        {
+          "title": "如何评价 ON 在 S16 全球总决赛上的表现？",
+          "url": "https://www.zhihu.com/question/2105148679128442434"
+        },
+        {
+          "title": "射击教练被控走私武器获刑 10 年，丈夫称涉案物品都是训练耗材，该判罚依据是什么？",
+          "url": "https://www.zhihu.com/question/2104327585756979347"
+        },
+        {
+          "title": "怎么看谷歌员工成功在  iPhone Duo 上运行 Windows 11 系统？",
+          "url": "https://www.zhihu.com/question/2105723098595059429"
+        },
+        {
+          "title": "决赛赛后采访，Viper称希望继续留在BLG，但目前有较多因素待考虑，你觉得Viper会继续留下吗？",
+          "url": "https://www.zhihu.com/question/2105299093589157095"
+        },
+        {
+          "title": "校招进了一个大公司新成立的部门，只有自己一个人，且直接跟大领导汇报，求经验？",
+          "url": "https://www.zhihu.com/question/2104002868328001728"
+        },
+        {
+          "title": "纵观历史几千年，为什么科技才近一两百年发生了质的飞跃，有了电话、飞机、火车，那么之前的人们在干嘛去了？",
+          "url": "https://www.zhihu.com/question/46853150"
+        },
+        {
+          "title": "70 城最新房价出炉，一线城市商品住宅销售价格环比总体上涨，二三线城市环比下降，哪些信息值得关注？",
+          "url": "https://www.zhihu.com/question/2105595287469290375"
+        },
+        {
+          "title": "江苏3岁女童被父亲女友杀害案即将宣判，凶手作案时怀孕、庭上多次撒谎毫无悔意，最终会面临怎样的刑罚？",
+          "url": "https://www.zhihu.com/question/2105941919675242453"
+        },
+        {
+          "title": "多地医院陆续关闭部分院区急诊科，背后的原因是啥？患者就医会受影响吗？",
+          "url": "https://www.zhihu.com/question/2105432310078076163"
+        },
+        {
+          "title": "如何看待OpenAI解散独立机器人团队，并将相关研究人员并入其他团队？商业和公司战略方面有哪些考量？",
+          "url": "https://www.zhihu.com/question/2105002257389560850"
+        },
+        {
+          "title": "为什么有些沙漠不适合种树？如果我们把所有沙漠都种满树，那不就能消灭沙漠了吗？",
+          "url": "https://www.zhihu.com/question/2105578024976631285"
+        },
+        {
+          "title": "研究称吃对「好碳水」不易长胖，还能让人一个月生理年龄「年轻」4 岁，真的是这样吗？背后有什么科学依据？",
+          "url": "https://www.zhihu.com/question/2042594588980765376"
+        },
+        {
+          "title": "2627赛季NBA常规赛开拓者 98:106 森林狼，杨瀚森对戈贝尔执行砍鲨战术，如何评价这场比赛？",
+          "url": "https://www.zhihu.com/question/2105951285207906216"
+        },
+        {
+          "title": "《西游记》第十回，为何称刘备为“刘蜀主”，难道吴承恩老先生不知道刘备的国号是叫汉吗？为何以蜀主称之？",
+          "url": "https://www.zhihu.com/question/2008182127070561880"
+        },
+        {
+          "title": "《影之刃零》曾称首发不做 Boss 连战，玩家发起请愿，后续会推出该模式吗？",
+          "url": "https://www.zhihu.com/question/2105584835385365249"
+        },
+        {
+          "title": "字节被曝正研发「中国版Muse」，Personal Agent会成为大厂争夺的新方向吗？字节有何优势？",
+          "url": "https://www.zhihu.com/question/2104136484013826621"
+        },
+        {
+          "title": "为什么在 S16 几乎所有人都不看好的情况下，LPL 反而两支队伍跻身四强，最后还爆冷夺冠了？",
+          "url": "https://www.zhihu.com/question/2105608935478490215"
+        },
+        {
+          "title": "后世称赞孔老夫子，知不可为而为之，儒家给他了很大很高的赞誉，您觉得夫子真的是知不可为而为之吗？",
+          "url": "https://www.zhihu.com/question/2095518237240906708"
+        }
+      ]
+    },
+    {
+      "name": "Hacker News",
+      "items": [
+        {
+          "title": "Carnegie Mellon is putting computer science courses on YouTube for free",
+          "url": "https://www.cs.cmu.edu/learn/"
+        },
+        {
+          "title": "Technical issue at JPMorgan Chase triggers online banking delays for US banks",
+          "url": "https://apnews.com/article/bank-outage-chase-wells-fargo-truist-50fee2693c22f597fa6ca51a97ef2cda"
+        },
+        {
+          "title": "BugMeNot has closed",
+          "url": "https://www.bugmenot.com/"
+        },
+        {
+          "title": "Windows 11 Is Collecting Data on Which Coding Agents and Developer Tools You Use",
+          "url": "https://xusheng.dev/posts/windows-coding-agent-telemetry/"
+        },
+        {
+          "title": "Frame – 31.5\" color ePaper display",
+          "url": "https://trmnl.com/blog/introducing-frame"
+        },
+        {
+          "title": "Jiff 1.0: A datetime library for Rust",
+          "url": "https://burntsushi.net/jiff/"
+        },
+        {
+          "title": "Microsoft blames monster email outage on software defect introduced in July fix",
+          "url": "https://www.theregister.com/saas/2026/11/16/microsoft-blames-monster-email-outage-on-software-defect-introduced-in-july-fix/5310026"
+        },
+        {
+          "title": "Grazing sheep in fields with solar arrays",
+          "url": "https://news.cornell.edu/stories/2026/10/sheep-grazing-solar-fields-offers-farmers-economic-ecological-gains"
+        },
+        {
+          "title": "Rust changed me as a developer",
+          "url": "https://blog.startifact.com/posts/how-rust-changed-me/"
+        },
+        {
+          "title": "Optimizely compromised, served malware on Zoom, GitLab",
+          "url": "https://blog.report-uri.com/worlds-largest-brands-infected-with-malware-via-optimizely/"
+        },
+        {
+          "title": "United Airlines experiencing a widespread system outage, airline says",
+          "url": "https://www.cnn.com/2026/11/16/us/united-airlines-outage"
+        },
+        {
+          "title": "OpenCode Browse",
+          "url": "https://opencode.ai/product/browse"
+        },
+        {
+          "title": "Chemistry is Actually Geometry",
+          "url": "https://chillphysicsenjoyer.substack.com/p/chemistry-is-actually-geometry"
+        },
+        {
+          "title": "Squircles",
+          "url": "https://linebender.org/wiki/curves/squircle/"
+        },
+        {
+          "title": "My Quest to push native Three.js quality match AAA Game Engines",
+          "url": "https://ben3d.ca/blog/building-the-aaa-lighting-pipeline-in-threejs"
+        },
+        {
+          "title": "Comcast's \"fiber-powered Wi-Fi\" is cable, AT&T says in false advertising case",
+          "url": "https://arstechnica.com/tech-policy/2026/11/comcast-falsely-advertises-cable-internet-as-fiber-powered-att-lawsuit-says/"
+        },
+        {
+          "title": "Formal Verification Is Not Verifiable",
+          "url": "https://alperenkeles.com/posts/formal-verification-is-not-verifiable/"
+        },
+        {
+          "title": "How to Break into Security, Ptacek Edition (2012)",
+          "url": "https://krebsonsecurity.com/2012/06/how-to-break-into-security-ptacek-edition/"
+        },
+        {
+          "title": "Pentagon fails ninth straight audit despite progress in organizing finances",
+          "url": "https://www.reuters.com/business/aerospace-defense/pentagon-fails-ninth-straight-audit-despite-progress-organizing-finances-2026-11-16/"
+        },
+        {
+          "title": "Spamhaus new email sender requirements in November",
+          "url": "https://www.spamhaus.org/sender-guidelines/"
+        },
+        {
+          "title": "Running coding agents without handing them my credentials",
+          "url": "https://blog.antonio.cx/running-agents-with-lend"
+        },
+        {
+          "title": "Do Repeat Yourself",
+          "url": "https://arcentry.com/blog/do-repeat-yourself/"
+        },
+        {
+          "title": "Why 3dfx 1 cards had such a washed out color output?",
+          "url": "https://twitter.com/id_aa_carmack/status/2122478083319992513"
+        },
+        {
+          "title": "Show HN: Sutra-OS – A self-hosted ontology platform",
+          "url": "https://github.com/0nelight/sutra-os"
+        },
+        {
+          "title": "Launch HN: Axonnic (YC F26) – Sleeves that track fingers and estimate force",
+          "url": ""
+        },
+        {
+          "title": "Atomic Nuked Veteran",
+          "url": "https://www.armscontrolwonk.com/archive/201309/atomic-nuked-veteran/"
+        },
+        {
+          "title": "Why did modems have speakers? (2019)",
+          "url": "https://retrocomputing.stackexchange.com/questions/11765"
+        },
+        {
+          "title": "Unkernel: Linux kernel in WASM",
+          "url": "https://unkernel.dev"
+        },
+        {
+          "title": "Test/verification technique effectiveness with Astra",
+          "url": "https://danluu.com/astra-testing/"
+        },
+        {
+          "title": "Tokendoctor – the same Claude Code for up to 38% less",
+          "url": "https://github.com/localixai/tokendoctor"
+        }
+      ]
+    }
+  ],
+  "note": "",
+  "zh": "# APEC 深圳峰会主导外交，AI 超算突破，金价贸易波动，医疗民生受关注\n## 国际外交\n- **APEC 中国年**：深圳主场外交秀，彰显中国在亚太合规与合作的领航地位。\n- **特朗普访深圳**：现任美总统首访深圳，释放中美高层互动新信号。\n## 科技AI\n- **中国超算夺冠**：国产超算再登顶，算力自主可控再获硬核证明。\n- **OpenAI 解散机器人团队**：OpenAI 收缩机器人业务，聚焦大模型商业化路径。\n## 经济市场\n- **金价跌破千元**：黄金回落破千元关口，避险情绪降温引发投资重估。\n- **10月进出口增长31%**：外贸强劲反弹，显示外需复苏与供应链韧性。\n## 社会民生\n- **瘫痪博主 AI 托管7天**：瘫痪博主让 AI 全权管理生活，探索辅助技术边界。\n- **多地医院 关闭急诊**：多地急诊缩编引发就医焦虑，公共卫生资源分配待解。",
+  "en": "# APEC Shenzhen summit drives diplomacy; AI and supercomputing breakthroughs; gold and trade swing; healthcare concerns rise.\n## Intl Diplomacy\n- **APEC China Year**: Shenzhen hosts a diplomatic showcase, underscoring China's leadership in Asia‑Pacific cooperation.\n- **Trump Visits Shenzhen**: The sitting U.S. president makes his first trip to Shenzhen, signaling a new high‑level engagement.\n## Tech & AI\n- **China Supercomputer Tops World**: Domestic supercomputer reclaims the top spot, proving self‑reliant computing power.\n- **OpenAI Disbands Robotics Team**: OpenAI winds down its robotics unit to focus on large‑model commercialization.\n## Economy & Market\n- **Gold Price Falls Below 1000 Yuan**: Gold drops under the 1,000 yuan/gram threshold as safe‑haven demand eases.\n- **October Trade Surges 31 Percent**: Exports and imports jump 31%, reflecting resilient global demand and supply chains.\n## Society & Livelihood\n- **Paralyzed Blogger Hands Life to AI**: A paralyzed blogger lets AI manage daily life for a week, testing assistive tech limits.\n- **Hospitals Close Emergency Departments**: Multiple hospitals shutter ERs, raising public anxiety over medical access."
+}
